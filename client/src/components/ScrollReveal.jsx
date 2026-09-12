@@ -1,0 +1,2 @@
+import { useEffect,useRef,useState } from "react";
+export default function ScrollReveal({children,delay=0,className=""}){const ref=useRef();const[show,setShow]=useState(false);useEffect(()=>{if(!ref.current)return;const ob=new IntersectionObserver(([e])=>{if(e.isIntersecting){setShow(true);ob.disconnect()}},{threshold:.1});ob.observe(ref.current);return()=>ob.disconnect()},[]);return <div ref={ref} className={`reveal ${show?"visible":""} ${className}`} style={{"--delay":`${delay}ms`}}>{children}</div>}
