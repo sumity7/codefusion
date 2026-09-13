@@ -762,3 +762,8 @@ main{animation:pageIn .4s ease}
 
 /* Generic disabled state for every .button (primary/ghost/outline) in both themes */
 .button:disabled{opacity:.55;cursor:not-allowed;transform:none!important;filter:grayscale(.15)}
+
+.subscription-was{display:inline-block;margin-right:9px;font:600 22px "Space Grotesk";color:#5f5a6b;text-decoration:line-through;opacity:.65;vertical-align:middle}
+.subscription-discount{display:inline-block;margin-top:8px;padding:4px 10px;border-radius:999px;background:#101f14;border:1px solid #2f5a3a;color:#8fd9a0;font-size:9px;font-weight:700;letter-spacing:.04em}
+[data-theme="light"] .subscription-was{color:#9b96a8}
+[data-theme="light"] .subscription-discount{background:#eafaf0;border-color:#bfe3c4;color:#2c7a37}

@@ -3,6 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { Check } from "lucide-react";
 import { api } from "../services/api";
 
+// Reference "was" price shown struck through next to the real (discounted) price.
+// Purely a marketing display value — the amount actually charged always comes
+// from plan.monthlyPrice, fetched live from the server.
+const COMPARE_AT_PRICE = 499;
+
 function loadRazorpay() {
   if (window.Razorpay) return Promise.resolve(true);
   return new Promise((resolve, reject) => {
@@ -75,9 +80,15 @@ export default function Subscription() {
       <section className="account-panel subscription-card">
         <h2>CodeFusion Monthly</h2>
         <div className="subscription-price">
+          {plan.monthlyPrice < COMPARE_AT_PRICE && <span className="subscription-was">₹{COMPARE_AT_PRICE}</span>}
           ₹{plan.monthlyPrice}
           <small> / month</small>
         </div>
+        {plan.monthlyPrice < COMPARE_AT_PRICE && (
+          <span className="subscription-discount">
+            {Math.round((1 - plan.monthlyPrice / COMPARE_AT_PRICE) * 100)}% off
+          </span>
+        )}
         <strong>
           {plan.monthlyTokens} tokens every {plan.durationDays} days
         </strong>
