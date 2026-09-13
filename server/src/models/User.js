@@ -10,6 +10,12 @@ const userSchema = new mongoose.Schema({
   resetOtpExpires: { type: Date, default: null },
   resetOtpAttempts: { type: Number, default: 0 },
   resetOtpSentAt: { type: Date, default: null },
+  subscriptionStatus: { type: String, enum: ["NONE", "ACTIVE", "EXPIRED"], default: "NONE", index: true },
+  subscriptionStartDate: { type: Date, default: null },
+  subscriptionEndDate: { type: Date, default: null },
+  subscriptionPlan: { type: String, default: "CodeFusion Monthly" },
+  tokenBalance: { type: Number, default: 0, min: 0 },
+  monthlyTokenAllocation: { type: Number, default: 100, min: 0 },
   createdAt: { type: Date, default: Date.now }
 });
 

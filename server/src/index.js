@@ -8,9 +8,7 @@ import auth from "./routes/auth.js";
 import products from "./routes/products.js";
 import wishlist from "./routes/wishlist.js";
 import reviews from "./routes/reviews.js";
-import orders from "./routes/orders.js";
-import downloads from "./routes/downloads.js";
-import coupons from "./routes/coupons.js";
+import subscription from "./routes/subscription.js";
 import analytics from "./routes/analytics.js";
 import admin from "./routes/admin.js";
 import { notFound, errorHandler } from "./middleware/error.js";
@@ -31,7 +29,7 @@ app.use(morgan("dev"));
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 500,
+    max: 3000,
     standardHeaders: true,
     legacyHeaders: false,
   })
@@ -48,9 +46,7 @@ app.use("/api/auth", auth);
 app.use("/api/products", products);
 app.use("/api/wishlist", wishlist);
 app.use("/api/reviews", reviews);
-app.use("/api/orders", orders);
-app.use("/api/downloads", downloads);
-app.use("/api/coupons", coupons);
+app.use("/api/subscription", subscription);
 app.use("/api/analytics", analytics);
 app.use("/api/admin", admin);
 

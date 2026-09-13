@@ -12,6 +12,8 @@ import {
   Tablet,
   Smartphone,
   Check,
+  Clipboard,
+  FileText,
 } from "lucide-react";
 
 import {
@@ -27,7 +29,6 @@ import {
 import ProductVisual from "../components/ProductVisual";
 import ProductCard from "../components/ProductCard";
 import ScrollReveal from "../components/ScrollReveal";
-import UnifiedCode from "../components/UnifiedCode";
 import Modal from "../components/Modal";
 
 export default function ProductDetails() {
@@ -43,8 +44,6 @@ export default function ProductDetails() {
   const [product, setProduct] =
     useState(fallback);
 
-  const [source, setSource] =
-    useState(null);
 
   const [device, setDevice] =
     useState("desktop");
@@ -55,11 +54,22 @@ export default function ProductDetails() {
   const [saved, setSaved] =
     useState(false);
 
-  const [buyOpen, setBuyOpen] =
-    useState(false);
+  const [copying, setCopying] = useState("");
+
+  const [toast, setToast] = useState("");
+
+  const [accessGate, setAccessGate] = useState(null);
 
   const [loading, setLoading] =
     useState(true);
+
+  const [related, setRelated] = useState([]);
+
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => setToast(""), 3200);
+    return () => clearTimeout(timer);
+  }, [toast]);
 
   useEffect(() => {
     let mounted = true;
@@ -124,6 +134,16 @@ export default function ProductDetails() {
         setProduct(
           normalizedProduct
         );
+
+        if (remote?.category) {
+          api.products
+            .list(`?category=${encodeURIComponent(remote.category)}`)
+            .then((result) => {
+              if (!mounted) return;
+              setRelated((result.products || []).filter((item) => item.slug !== slug).slice(0, 3));
+            })
+            .catch(() => {});
+        }
       } catch {
         if (mounted) {
           setProduct(fallback);
@@ -162,23 +182,22 @@ export default function ProductDetails() {
     };
   }, [slug]);
 
-  async function getSource() {
+  async function copy(kind) {
     try {
-      const response =
-        await api.products.source(
-          slug
-        );
-
-      if (response?.code) {
-        setSource(
-          response.code
-        );
-      }
+      setCopying(kind);
+      const response = await (kind === "code" ? api.products.copyCode(slug) : api.products.copyPrompt(slug));
+      const text = kind === "code" ? [response.content.html, response.content.css, response.content.javascript].join("\n") : response.content;
+      await navigator.clipboard.writeText(text || "");
+      const label = kind === "code" ? "Code" : "Prompt";
+      setToast(response.remaining === null ? `${label} copied successfully.` : `${label} copied successfully • 1 token used • ${response.remaining} remaining`);
     } catch (error) {
-      alert(
-        error?.message ||
-          "Unable to load source code."
-      );
+      if (error?.code === "SUBSCRIPTION_REQUIRED" || error?.code === "NO_TOKENS") {
+        setAccessGate({ code: error.code, message: error.message });
+      } else {
+        setToast(error?.message || "Unable to copy.");
+      }
+    } finally {
+      setCopying("");
     }
   }
 
@@ -231,23 +250,6 @@ export default function ProductDetails() {
     product?.productType ||
     product?.product_type ||
     "FREE";
-
-  const productCode = {
-    html:
-      product?.code?.html ||
-      "",
-
-    css:
-      product?.code?.css ||
-      "",
-
-    javascript:
-      product?.code?.javascript ||
-      "",
-  };
-
-  const codeForViewer =
-    source || productCode;
 
   if (loading) {
     return (
@@ -339,13 +341,9 @@ export default function ProductDetails() {
             <button
               type="button"
               className="button primary"
-              onClick={() =>
-                setBuyOpen(true)
-              }
+              onClick={() => copy("code")}
             >
-              {type === "FREE"
-                ? "Get this product"
-                : `Buy ${product.price}`}
+              {copying === "code" ? "Copying..." : "Copy All Code"}
             </button>
           </div>
         </div>
@@ -574,20 +572,17 @@ export default function ProductDetails() {
         </section>
       </ScrollReveal>
 
-      <ScrollReveal className="container">
-        <section className="code-wrap">
-          <UnifiedCode
-            product={{
-              ...product,
-              code:
-                codeForViewer,
-            }}
-            onLoadSource={
-              getSource
-            }
-          />
-        </section>
-      </ScrollReveal>
+      <section className="container code-wrap">
+        <div className="access-panel">
+          <span className="eyebrow">CODEFUSION PRO ACCESS</span>
+          <h2>Included with CodeFusion Pro</h2>
+          <p>Source code and premium prompts are delivered securely after spending 1 token per copy.</p>
+          <div className="modal-actions">
+            <button className="button primary copy-code-btn" onClick={() => copy("code")} disabled={Boolean(copying)}><Clipboard size={15} />{copying === "code" ? "Copying..." : "Copy All Code"}</button>
+            <button className="button ghost copy-prompt-btn" onClick={() => copy("prompt")} disabled={Boolean(copying)}><FileText size={15} />{copying === "prompt" ? "Copying..." : "Copy Prompt"}</button>
+          </div>
+        </div>
+      </section>
 
       <section className="container related">
         <div className="section-head">
@@ -613,84 +608,32 @@ export default function ProductDetails() {
         </div>
 
         <div className="product-grid">
-          {fallbackProducts
-            .filter(
-              (item) =>
-                item.slug !==
-                slug
-            )
-            .slice(0, 3)
-            .map((item) => (
-              <ProductCard
-                key={item.slug}
-                product={item}
-              />
-            ))}
+          {(related.length
+            ? related
+            : fallbackProducts.filter((item) => item.slug !== slug).slice(0, 3)
+          ).map((item) => (
+            <ProductCard
+              key={item.slug}
+              product={item}
+            />
+          ))}
         </div>
       </section>
 
+      {toast && <div className="copy-toast">{toast}</div>}
+
       <Modal
-        open={buyOpen}
-        title={
-          type === "FREE"
-            ? "Add this product"
-            : "Complete your purchase"
-        }
-        onClose={() =>
-          setBuyOpen(false)
-        }
+        open={Boolean(accessGate)}
+        title={accessGate?.code === "NO_TOKENS" ? "You're out of tokens" : "Subscription required"}
+        onClose={() => setAccessGate(null)}
         size="small"
       >
-        <div className="confirm-modal">
-          <span className="eyebrow">
-            {product.badge}
-          </span>
-
-          <h3>
-            {product.name}
-          </h3>
-
-          <p>
-            {type === "FREE"
-              ? "This product is free. Open the product page or get its ready-to-use source."
-              : `You're continuing to checkout for ${product.price}.`}
-          </p>
-
-          <div className="modal-actions">
-            <Link
-              className="button primary"
-              to={
-                type === "FREE"
-                  ? `/products/${slug}`
-                  : `/checkout/${slug}`
-              }
-              onClick={() =>
-                setBuyOpen(
-                  false
-                )
-              }
-            >
-              {type === "FREE"
-                ? "Open product"
-                : "Continue to checkout"}
-
-              <ArrowRight
-                size={14}
-              />
-            </Link>
-
-            <button
-              type="button"
-              className="button ghost"
-              onClick={() =>
-                setBuyOpen(
-                  false
-                )
-              }
-            >
-              Cancel
-            </button>
-          </div>
+        <p>{accessGate?.message}</p>
+        <div className="modal-actions">
+          <Link to="/subscription" className="button primary" onClick={() => setAccessGate(null)}>
+            {accessGate?.code === "NO_TOKENS" ? "View Subscription" : "Subscribe Now"}
+          </Link>
+          <button type="button" className="button ghost" onClick={() => setAccessGate(null)}>Close</button>
         </div>
       </Modal>
     </main>

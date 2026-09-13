@@ -154,6 +154,12 @@ const productSchema = new mongoose.Schema(
       default: false
     },
 
+    isVerified: {
+      type: Boolean,
+      default: false,
+      index: true
+    },
+
     isPublished: {
       type: Boolean,
       default: false,

@@ -4,8 +4,8 @@ import { Routes, Route, Link, useParams } from "react-router-dom";
 import {
   Boxes,
   Users,
-  ShoppingBag,
-  Download,
+  CreditCard,
+  Zap,
   BarChart3,
   Plus,
   Trash2,
@@ -31,12 +31,12 @@ const menu = [
   "Categories",
   "Collections",
   "Prompts",
-  "Orders",
+  "Subscribers",
   "Users",
   "Reviews",
-  "Downloads",
+  "Tokens",
   "Analytics",
-  "Coupons",
+  "Plan",
   "Settings",
 ];
 
@@ -134,8 +134,8 @@ export default function Admin() {
             />
 
             <Route
-              path="orders"
-              element={<Orders />}
+              path="subscribers"
+              element={<Subscribers />}
             />
 
             <Route
@@ -149,8 +149,8 @@ export default function Admin() {
             />
 
             <Route
-              path="downloads"
-              element={<Downloads />}
+              path="tokens"
+              element={<TokenActivity />}
             />
 
             <Route
@@ -159,8 +159,8 @@ export default function Admin() {
             />
 
             <Route
-              path="coupons"
-              element={<Coupons />}
+              path="plan"
+              element={<PlanSettings />}
             />
 
             <Route
@@ -178,13 +178,13 @@ function Overview() {
   const [stats, setStats] = useState({
     products: 0,
     users: 0,
-    orders: 0,
-    downloads: 0,
+    activeSubscribers: 0,
+    tokensRedeemed: 0,
     revenue: 0,
     pendingReviews: 0,
   });
 
-  const [recentOrders, setRecentOrders] = useState([]);
+  const [recentSubscribers, setRecentSubscribers] = useState([]);
 
   useEffect(() => {
     Promise.all([
@@ -197,8 +197,8 @@ function Overview() {
           ...(dashboard.stats || {}),
         }));
 
-        setRecentOrders(
-          summary.recentOrders || []
+        setRecentSubscribers(
+          summary.recentSubscribers || []
         );
       })
       .catch(() => {});
@@ -233,15 +233,15 @@ function Overview() {
         />
 
         <K
-          icon={<ShoppingBag />}
-          label="Orders"
-          value={stats.orders}
+          icon={<CreditCard />}
+          label="Active subscribers"
+          value={stats.activeSubscribers}
         />
 
         <K
-          icon={<Download />}
-          label="Downloads"
-          value={stats.downloads}
+          icon={<Zap />}
+          label="Tokens redeemed"
+          value={stats.tokensRedeemed}
         />
 
         <K
@@ -260,39 +260,44 @@ function Overview() {
       <div className="admin-overview-grid">
         <div className="admin-panel">
           <div className="admin-panel-head">
-            <b>Recent orders</b>
-            <Link to="/admin/orders">
+            <b>Recent subscribers</b>
+            <Link to="/admin/subscribers">
               View all →
             </Link>
           </div>
 
-          {recentOrders.length ? (
-            recentOrders.map((order) => (
+          {recentSubscribers.length ? (
+            recentSubscribers.map((subscriber) => (
               <div
                 className="admin-row"
-                key={order._id}
+                key={subscriber._id}
               >
                 <strong>
-                  {order.user?.name ||
+                  {subscriber.name ||
                     "Customer"}
                 </strong>
 
                 <small>
-                  {order.user?.email || ""}
+                  {subscriber.email || ""}
                 </small>
 
-                <em>{order.status}</em>
+                <em>
+                  Until{" "}
+                  {new Date(
+                    subscriber.subscriptionEndDate
+                  ).toLocaleDateString()}
+                </em>
 
                 <small>
                   {new Date(
-                    order.createdAt
+                    subscriber.subscriptionStartDate
                   ).toLocaleDateString()}
                 </small>
               </div>
             ))
           ) : (
             <div className="admin-placeholder">
-              No orders yet.
+              No subscribers yet.
             </div>
           )}
         </div>
@@ -319,9 +324,9 @@ function Overview() {
               Prompts
             </Link>
 
-            <Link to="/admin/coupons">
+            <Link to="/admin/plan">
               <Tag />
-              Coupons
+              Plan
             </Link>
           </div>
         </div>
@@ -494,6 +499,10 @@ function Products() {
                   {product.isFeatured
                     ? " · Featured"
                     : ""}
+
+                  {product.isVerified
+                    ? " · Verified"
+                    : ""}
                 </small>
               </div>
 
@@ -612,6 +621,7 @@ function Editor() {
     version: "1.0.0",
     isPublished: false,
     isFeatured: false,
+    isVerified: false,
     previewType: "card",
     tags: [],
     features: [],
@@ -637,6 +647,20 @@ function Editor() {
 
   const [saved, setSaved] =
     useState(false);
+
+  const [categoryOptions, setCategoryOptions] =
+    useState([]);
+
+  useEffect(() => {
+    api.admin
+      .categories()
+      .then((result) =>
+        setCategoryOptions(
+          result.categories || []
+        )
+      )
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (!editing) {
@@ -940,7 +964,7 @@ function Editor() {
                 <label>
                   Category
 
-                  <input
+                  <select
                     required
                     value={
                       form.category
@@ -951,7 +975,33 @@ function Editor() {
                         event.target.value
                       )
                     }
-                  />
+                  >
+                    {!categoryOptions.some(
+                      (cat) =>
+                        cat.name ===
+                        form.category
+                    ) &&
+                      form.category && (
+                        <option
+                          value={
+                            form.category
+                          }
+                        >
+                          {form.category}
+                        </option>
+                      )}
+
+                    {categoryOptions.map(
+                      (cat) => (
+                        <option
+                          key={cat.name}
+                          value={cat.name}
+                        >
+                          {cat.name}
+                        </option>
+                      )
+                    )}
+                  </select>
                 </label>
 
                 <label>
@@ -1289,6 +1339,23 @@ function Editor() {
                 />
 
                 Featured
+              </label>
+
+              <label className="check-label">
+                <input
+                  type="checkbox"
+                  checked={Boolean(
+                    form.isVerified
+                  )}
+                  onChange={(event) =>
+                    setField(
+                      "isVerified",
+                      event.target.checked
+                    )
+                  }
+                />
+
+                Verified product
               </label>
             </div>
           )}
@@ -1755,106 +1822,68 @@ function Prompts() {
   );
 }
 
-function Orders() {
-  const [orders, setOrders] =
+function Subscribers() {
+  const [subscribers, setSubscribers] =
     useState([]);
 
-  const load = () =>
-    api.orders
-      .admin()
+  useEffect(() => {
+    api.subscription
+      .adminSubscribers()
       .then((result) =>
-        setOrders(
-          result.orders || []
+        setSubscribers(
+          result.subscribers || []
         )
       )
       .catch(() => {});
-
-  useEffect(() => {
-    load();
   }, []);
-
-  async function updateStatus(
-    id,
-    status
-  ) {
-    try {
-      await api.orders.update(
-        id,
-        status
-      );
-
-      load();
-    } catch (error) {
-      alert(
-        error?.message ||
-          "Unable to update order."
-      );
-    }
-  }
 
   return (
     <>
       <Head
-        eyebrow="ORDERS"
-        title="Manage orders."
+        eyebrow="SUBSCRIBERS"
+        title="Manage subscriptions."
       />
 
       <div className="admin-panel">
-        {orders.length ? (
-          orders.map((order) => (
+        {subscribers.length ? (
+          subscribers.map((subscriber) => (
             <div
               className="admin-row"
-              key={order._id}
+              key={subscriber._id}
             >
               <strong>
-                {order.user?.name ||
+                {subscriber.name ||
                   "Customer"}
               </strong>
 
               <small>
-                {order.user?.email ||
+                {subscriber.email ||
                   ""}
               </small>
 
               <em>
-                {order.status}
+                {subscriber.subscriptionStatus}
               </em>
 
               <small>
-                {order.currency}{" "}
-                {order.totalAmount}
+                {subscriber.tokenBalance}/
+                {subscriber.monthlyTokenAllocation}{" "}
+                tokens
               </small>
 
-              <select
-                value={order.status}
-                onChange={(event) =>
-                  updateStatus(
-                    order._id,
-                    event.target.value
-                  )
-                }
-              >
-                <option value="pending">
-                  pending
-                </option>
-
-                <option value="paid">
-                  paid
-                </option>
-
-                <option value="refunded">
-                  refunded
-                </option>
-
-                <option value="cancelled">
-                  cancelled
-                </option>
-              </select>
+              <small>
+                Until{" "}
+                {subscriber.subscriptionEndDate
+                  ? new Date(
+                      subscriber.subscriptionEndDate
+                    ).toLocaleDateString()
+                  : "—"}
+              </small>
             </div>
           ))
         ) : (
           <div className="admin-placeholder">
-            No orders yet.
+            No subscribers yet.
           </div>
         )}
       </div>
@@ -2017,16 +2046,16 @@ function Reviews() {
   );
 }
 
-function Downloads() {
-  const [downloads, setDownloads] =
+function TokenActivity() {
+  const [transactions, setTransactions] =
     useState([]);
 
   useEffect(() => {
-    api.downloads
-      .admin()
+    api.subscription
+      .adminTransactions()
       .then((result) =>
-        setDownloads(
-          result.downloads || []
+        setTransactions(
+          result.transactions || []
         )
       )
       .catch(() => {});
@@ -2035,46 +2064,50 @@ function Downloads() {
   return (
     <>
       <Head
-        eyebrow="DOWNLOADS"
-        title="Download activity."
+        eyebrow="TOKENS"
+        title="Token activity."
       />
 
       <div className="admin-panel">
-        {downloads.length ? (
-          downloads.map((download) => (
+        {transactions.length ? (
+          transactions.map((transaction) => (
             <div
               className="admin-row"
-              key={download._id}
+              key={transaction._id}
             >
               <strong>
-                {download.user?.name ||
+                {transaction.userId?.name ||
                   "User"}
               </strong>
 
               <small>
-                {download.user?.email ||
+                {transaction.userId?.email ||
                   ""}
               </small>
 
               <em>
-                {download.product?.name ||
-                  "Product"}
+                {transaction.productName ||
+                  transaction.productId?.name ||
+                  "CodeFusion"}
               </em>
 
               <small>
-                v{download.version}
+                {transaction.actionType.replace(
+                  "_",
+                  " "
+                )}
               </small>
 
               <small>
                 {new Date(
-                  download.createdAt
+                  transaction.createdAt
                 ).toLocaleString()}
               </small>
             </div>
           ))
         ) : (
           <div className="admin-placeholder">
-            No downloads yet.
+            No token activity yet.
           </div>
         )}
       </div>
@@ -2174,205 +2207,109 @@ function Analytics() {
   );
 }
 
-function Coupons() {
-  const [coupons, setCoupons] =
-    useState([]);
+function PlanSettings() {
+  const [plan, setPlan] = useState({
+    monthlyPrice: 499,
+    monthlyTokens: 100,
+    durationDays: 30,
+  });
 
-  const [form, setForm] =
-    useState({
-      code: "",
-      discountType:
-        "percentage",
-      discountValue: 10,
-      expiresAt: "",
-      usageLimit: "",
-      isActive: true,
-    });
-
-  const load = () =>
-    api.coupons
-      .admin()
-      .then((result) =>
-        setCoupons(
-          result.coupons || []
-        )
-      )
-      .catch(() => {});
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    load();
+    api.subscription
+      .adminSettings()
+      .then((result) => {
+        if (result.plan) setPlan(result.plan);
+      })
+      .catch(() => {});
   }, []);
 
-  async function add(event) {
-    event.preventDefault();
+  function change(key, value) {
+    setPlan((current) => ({
+      ...current,
+      [key]: value,
+    }));
 
-    try {
-      await api.coupons.create({
-        ...form,
-        usageLimit:
-          form.usageLimit
-            ? Number(
-                form.usageLimit
-              )
-            : null,
-        discountValue: Number(
-          form.discountValue
-        ),
-        expiresAt:
-          form.expiresAt
-            ? new Date(
-                form.expiresAt
-              )
-            : null,
-      });
-
-      setForm({
-        code: "",
-        discountType:
-          "percentage",
-        discountValue: 10,
-        expiresAt: "",
-        usageLimit: "",
-        isActive: true,
-      });
-
-      load();
-    } catch (error) {
-      alert(
-        error?.message ||
-          "Unable to create coupon."
-      );
-    }
+    setSaved(false);
   }
 
   return (
     <>
       <Head
-        eyebrow="COUPONS"
-        title="Manage discounts."
+        eyebrow="PLAN"
+        title="Subscription plan."
       />
 
-      <form
-        className="inline-add coupon-add"
-        onSubmit={add}
-      >
-        <input
-          required
-          placeholder="CODE"
-          value={form.code}
-          onChange={(event) =>
-            setForm((current) => ({
-              ...current,
-              code: event.target.value.toUpperCase(),
-            }))
-          }
-        />
+      <div className="admin-editor">
+        <div className="settings-list">
+          <label>
+            Monthly price (₹)
+            <input
+              type="number"
+              value={plan.monthlyPrice}
+              onChange={(event) =>
+                change(
+                  "monthlyPrice",
+                  event.target.value
+                )
+              }
+            />
+          </label>
 
-        <select
-          value={form.discountType}
-          onChange={(event) =>
-            setForm((current) => ({
-              ...current,
-              discountType:
-                event.target.value,
-            }))
-          }
+          <label>
+            Monthly tokens
+            <input
+              type="number"
+              value={plan.monthlyTokens}
+              onChange={(event) =>
+                change(
+                  "monthlyTokens",
+                  event.target.value
+                )
+              }
+            />
+          </label>
+
+          <label>
+            Duration (days)
+            <input
+              type="number"
+              value={plan.durationDays}
+              onChange={(event) =>
+                change(
+                  "durationDays",
+                  event.target.value
+                )
+              }
+            />
+          </label>
+        </div>
+
+        <button
+          type="button"
+          className="button primary"
+          onClick={async () => {
+            try {
+              await api.subscription.updateAdminSettings(
+                plan
+              );
+
+              setSaved(true);
+            } catch (error) {
+              alert(
+                error?.message ||
+                  "Unable to save plan."
+              );
+            }
+          }}
         >
-          <option value="percentage">
-            %
-          </option>
+          <SettingsIcon size={14} />
 
-          <option value="fixed">
-            Fixed
-          </option>
-        </select>
-
-        <input
-          type="number"
-          min="0"
-          value={
-            form.discountValue
-          }
-          onChange={(event) =>
-            setForm((current) => ({
-              ...current,
-              discountValue:
-                event.target.value,
-            }))
-          }
-        />
-
-        <input
-          type="datetime-local"
-          value={form.expiresAt}
-          onChange={(event) =>
-            setForm((current) => ({
-              ...current,
-              expiresAt:
-                event.target.value,
-            }))
-          }
-        />
-
-        <button className="button primary">
-          <Plus size={13} />
-          Create
+          {saved
+            ? "Plan saved ✓"
+            : "Save plan"}
         </button>
-      </form>
-
-      <div className="admin-panel">
-        {coupons.map((coupon) => (
-          <div
-            className="admin-row"
-            key={coupon._id}
-          >
-            <strong>
-              {coupon.code}
-            </strong>
-
-            <em>
-              {coupon.discountType ===
-              "percentage"
-                ? `${coupon.discountValue}%`
-                : `${coupon.discountValue} off`}
-            </em>
-
-            <small>
-              {coupon.expiresAt
-                ? new Date(
-                    coupon.expiresAt
-                  ).toLocaleDateString()
-                : "No expiry"}
-            </small>
-
-            <small>
-              {coupon.usedCount}/
-              {coupon.usageLimit ||
-                "∞"}
-            </small>
-
-            <button
-              type="button"
-              className="icon-action danger"
-              onClick={async () => {
-                try {
-                  await api.coupons.remove(
-                    coupon._id
-                  );
-
-                  load();
-                } catch (error) {
-                  alert(
-                    error?.message ||
-                      "Unable to remove coupon."
-                  );
-                }
-              }}
-            >
-              <Trash2 size={13} />
-            </button>
-          </div>
-        ))}
       </div>
     </>
   );

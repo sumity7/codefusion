@@ -34,10 +34,6 @@ function buildPreviewSource(
           overflow: hidden !important;
         }
 
-        body {
-          background: #050507 !important;
-        }
-
         img,
         video,
         svg,
@@ -64,7 +60,6 @@ function buildPreviewSource(
           display: block !important;
           overflow-x: hidden !important;
           overflow-y: auto !important;
-          background: #050507 !important;
         }
 
         *,

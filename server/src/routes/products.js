@@ -1,7 +1,9 @@
 import { Router } from "express";
 
 import Product from "../models/Product.js";
-import Order from "../models/Order.js";
+import User from "../models/User.js";
+import TokenTransaction from "../models/TokenTransaction.js";
+import Category from "../models/Category.js";
 
 import {
   authOptional,
@@ -127,13 +129,19 @@ function publicProduct(product) {
       ? product.toObject()
       : product;
 
+  // Premium payloads never leave the server unauthorized. `code` and `prompt` are
+  // only ever returned by the token-gated copy endpoints. `previewCode` stays so the
+  // sandboxed iframe can render a preview for guests.
   const {
     code,
+    prompt,
     ...safe
   } = obj;
 
   return {
     ...safe,
+
+    hasPrompt: Boolean(prompt),
 
     previewCode:
       obj.previewCode || "",
@@ -397,6 +405,41 @@ router.delete(
 );
 
 /*
+ * PUBLIC — CATEGORIES WITH COUNTS
+ */
+router.get(
+  "/categories",
+  async (_req, res, next) => {
+    try {
+      const [categories, counts] = await Promise.all([
+        Category.find({ isActive: true }).sort({ name: 1 }).lean(),
+        Product.aggregate([
+          { $match: { isPublished: true } },
+          { $group: { _id: "$category", count: { $sum: 1 } } },
+        ]),
+      ]);
+
+      const countMap = Object.fromEntries(counts.map((row) => [row._id, row.count]));
+      const known = new Set(categories.map((cat) => cat.name));
+
+      const result = categories.map((cat) => ({ name: cat.name, slug: cat.slug, count: countMap[cat.name] || 0 }));
+
+      for (const row of counts) {
+        if (row._id && !known.has(row._id)) {
+          result.push({ name: row._id, slug: row._id.toLowerCase().replace(/[^a-z0-9]+/g, "-"), count: row.count });
+        }
+      }
+
+      const total = counts.reduce((sum, row) => sum + row.count, 0);
+
+      res.json({ categories: result, total });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/*
  * PUBLIC — PRODUCT LIST
  */
 router.get(
@@ -409,6 +452,7 @@ router.get(
         collection,
         sort = "newest",
         featured,
+        plan,
       } = req.query;
 
       const filter = {
@@ -442,6 +486,14 @@ router.get(
         featured === "true"
       ) {
         filter.isFeatured = true;
+      }
+
+      if (plan === "free") {
+        filter.productType = "FREE";
+      } else if (plan === "plan") {
+        filter.productType = { $in: ["PRO", "PREMIUM"] };
+      } else if (plan === "verified") {
+        filter.isVerified = true;
       }
 
       let query = search
@@ -554,10 +606,9 @@ router.get(
 /*
  * PROTECTED — SOURCE CODE
  */
-router.get(
-  "/:slug/source",
-  authOptional,
-  async (req, res, next) => {
+router.get("/:slug/source", (_req, res) => res.status(410).json({ message: "Source access has moved to metered copy actions." }));
+
+async function copyContent(req, res, next, actionType) {
     try {
       const product =
         await Product.findOne({
@@ -574,70 +625,49 @@ router.get(
           });
       }
 
-      const isAdmin =
-        req.user?.role ===
-        "admin";
+      const content = actionType === "PROMPT_COPY" ? product.prompt : { html: product.code?.html || "", css: product.code?.css || "", javascript: product.code?.javascript || "" };
 
-      const isFree =
-        product.productType ===
-        "FREE";
-
-      if (
-        !isFree &&
-        !isAdmin
-      ) {
-        if (!req.user?.id) {
-          return res
-            .status(401)
-            .json({
-              message:
-                "Sign in and purchase this product to unlock its source.",
-            });
-        }
-
-        const purchased =
-          await Order.exists({
-            user:
-              req.user.id,
-
-            status: "paid",
-
-            "items.product":
-              product._id,
-          });
-
-        if (!purchased) {
-          return res
-            .status(403)
-            .json({
-              message:
-                "Purchase required to unlock source code.",
-            });
-        }
+      if (product.productType === "FREE") {
+        return res.json({ content, remaining: null });
       }
 
-      res.json({
-        code: {
-          html:
-            product.code
-              ?.html || "",
+      const now = new Date();
 
-          css:
-            product.code
-              ?.css || "",
+      // Single conditional update = atomic. Two concurrent copies can never spend
+      // the same token: whichever request loses the race fails the tokenBalance
+      // guard and gets rejected below.
+      const user = await User.findOneAndUpdate(
+        { _id: req.user.id, subscriptionStatus: "ACTIVE", subscriptionEndDate: { $gt: now }, tokenBalance: { $gte: 1 } },
+        { $inc: { tokenBalance: -1 } },
+        { new: true }
+      );
 
-          javascript:
-            product.code
-              ?.javascript || "",
-        },
+      if (!user) {
+        // Re-read only to classify *why* it failed — this can never grant access.
+        const current = await User.findById(req.user.id).select("subscriptionStatus subscriptionEndDate tokenBalance").lean();
+        const subscribed = current?.subscriptionStatus === "ACTIVE" && current?.subscriptionEndDate > now;
 
-        productId:
-          product._id,
-      });
+        if (!subscribed) {
+          return res.status(403).json({
+            code: "SUBSCRIPTION_REQUIRED",
+            message: "Subscribe to access premium boilerplates, source code and prompts.",
+          });
+        }
+
+        return res.status(409).json({
+          code: "NO_TOKENS",
+          message: "Your monthly token balance has been used. Renew your subscription or wait for your next token cycle.",
+          remaining: 0,
+        });
+      }
+
+      await TokenTransaction.create({ userId: user._id, productId: product._id, productName: product.name, actionType, tokensUsed: 1 });
+      res.json({ content, remaining: user.tokenBalance });
     } catch (error) {
       next(error);
     }
   }
-);
+router.post("/:slug/copy-code", authRequired, (req, res, next) => copyContent(req, res, next, "CODE_COPY"));
+router.post("/:slug/copy-prompt", authRequired, (req, res, next) => copyContent(req, res, next, "PROMPT_COPY"));
 
 export default router;
