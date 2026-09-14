@@ -27,6 +27,48 @@ const LIGHT_CANVAS_CSS = `
         [data-theme="light"] .kicker{ color: #5b5470 !important; }
 `;
 
+/*
+ * The canvas override above only touches `body` and `--bg`. Most component demos
+ * also paint their own inner cards/panels from hardcoded near-black hex values
+ * (not the `--bg` variable), so those stay dark even once the page behind them
+ * is light — reading as a solid black card.
+ *
+ * Rather than hand-patching every product's markup, this walks the rendered
+ * iframe after load and flips any element whose *computed* background is a dark,
+ * low-saturation neutral (near-black/near-gray) to a light one, and flips its own
+ * text colour along with it if that text was light-on-dark. Saturated accent
+ * colours (lavender, green, gold, brand gradients) are never neutral enough to
+ * match, so intentional colour design is left untouched.
+ */
+const LIGHT_CANVAS_SCRIPT = `
+<script>
+(function(){
+  function run(){
+    document.querySelectorAll("*").forEach(function(el){
+      var cs = getComputedStyle(el);
+      var m = cs.backgroundColor.match(/rgba?\\((\\d+),\\s*(\\d+),\\s*(\\d+)(?:,\\s*([\\d.]+))?\\)/);
+      if (!m) return;
+      var r = +m[1], g = +m[2], b = +m[3];
+      var a = m[4] !== undefined ? +m[4] : 1;
+      if (a < 0.4) return;
+      var max = Math.max(r, g, b), min = Math.min(r, g, b);
+      var lum = 0.299 * r + 0.587 * g + 0.114 * b;
+      if (max - min >= 28 || lum >= 70) return;
+      el.style.setProperty("background-color", lum < 25 ? "#f4f3fa" : "#ffffff", "important");
+      var tm = cs.color.match(/rgba?\\((\\d+),\\s*(\\d+),\\s*(\\d+)/);
+      if (tm) {
+        var tr = +tm[1], tg = +tm[2], tb = +tm[3];
+        var tlum = 0.299 * tr + 0.587 * tg + 0.114 * tb;
+        if (tlum > 150) el.style.setProperty("color", "#15131c", "important");
+      }
+    });
+  }
+  if (document.readyState === "complete") requestAnimationFrame(run);
+  else window.addEventListener("load", function(){ requestAnimationFrame(run); });
+})();
+</script>
+`;
+
 function usesLightCanvas(product) {
   return product?.category !== "Boilerplates";
 }
@@ -124,6 +166,8 @@ function buildPreviewSource(
 
   const themedCSS = lightCanvas ? previewCSS + LIGHT_CANVAS_CSS : previewCSS;
 
+  const themedScript = lightCanvas ? LIGHT_CANVAS_SCRIPT : "";
+
   if (/<\/head>/i.test(output)) {
     output = output.replace(
       /<\/head>/i,
@@ -133,6 +177,12 @@ ${themedCSS}
 </style>
 </head>`
     );
+
+    if (themedScript) {
+      output = /<\/body>/i.test(output)
+        ? output.replace(/<\/body>/i, `${themedScript}\n</body>`)
+        : output + themedScript;
+    }
   } else {
     output = `
 <!DOCTYPE html>
@@ -152,6 +202,7 @@ ${themedCSS}
 
 <body>
 ${output}
+${themedScript}
 </body>
 </html>`;
   }
