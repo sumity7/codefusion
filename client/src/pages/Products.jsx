@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUpRight, Search, SlidersHorizontal, Sparkles } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { api } from "../services/api";
 import { fallbackProducts } from "../data/fallbackProducts";
 import ProductCard from "../components/ProductCard";
@@ -16,23 +16,37 @@ const PLAN_TABS = [
 ];
 
 export default function Products() {
-  const location = useLocation();
-  const [query, setQuery] = useState(new URLSearchParams(location.search).get("search") || "");
-  const [category, setCategory] = useState(new URLSearchParams(location.search).get("category") || "All");
-  const [plan, setPlan] = useState("all");
-  const [sort, setSort] = useState("newest");
+  /*
+   * Every filter lives in the query string rather than component state. Keeping
+   * them in state meant leaving for a product and pressing Back returned you to a
+   * bare /products with the category reset to All — the filters simply weren't
+   * part of the history entry. The URL is also what makes a filtered view
+   * shareable, and what the navbar search already navigates to.
+   */
+  const [searchParams, setSearchParams] = useSearchParams();
+  const category = searchParams.get("category") || "All";
+  const plan = searchParams.get("plan") || "all";
+  const sort = searchParams.get("sort") || "newest";
+  const urlSearch = searchParams.get("search") || "";
+
+  // The text input stays local so typing feels immediate; the URL catches up on
+  // the same debounce as the fetch.
+  const [query, setQuery] = useState(urlSearch);
   const [data, setData] = useState(fallbackProducts);
 
-  // Navigating to /products?search=... from elsewhere on the site (e.g. the navbar
-  // search) doesn't remount this page if you're already on it, so the URL has to be
-  // re-read explicitly whenever it changes rather than only once via useState.
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const urlSearch = params.get("search") || "";
-    const urlCategory = params.get("category") || "All";
     setQuery((current) => (current === urlSearch ? current : urlSearch));
-    setCategory((current) => (current === urlCategory ? current : urlCategory));
-  }, [location.search]);
+  }, [urlSearch]);
+
+  // replace, not push: a category or sort change shouldn't add a history entry
+  // the reader has to press Back through. It also tells ScrollManager this is an
+  // in-page update and scroll should be left alone.
+  function setParam(key, value, fallback) {
+    const next = new URLSearchParams(searchParams);
+    if (!value || value === fallback) next.delete(key);
+    else next.set(key, value);
+    setSearchParams(next, { replace: true });
+  }
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -60,13 +74,20 @@ export default function Products() {
     return () => clearTimeout(timeout);
   }, [category, query, plan, sort]);
 
+  // Mirror the debounced search term into the URL so it survives Back as well.
+  useEffect(() => {
+    if (query === urlSearch) return;
+    const timeout = setTimeout(() => setParam("search", query, ""), 300);
+    return () => clearTimeout(timeout);
+  }, [query, urlSearch]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const shown = useMemo(() => data, [data]);
   const spotlight = shown[0] || fallbackProducts[0];
   const feature = shown[2] || fallbackProducts[2];
 
   const browseRef = useRef(null);
   function handleCategorySelect(name) {
-    setCategory(name);
+    setParam("category", name, "All");
     requestAnimationFrame(() => {
       browseRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
@@ -145,12 +166,12 @@ export default function Products() {
               <div className="browse-toolbar">
                 <div className="plan-tabs">
                   {PLAN_TABS.map((tab) => (
-                    <button key={tab.key} type="button" className={plan === tab.key ? "active" : ""} onClick={() => setPlan(tab.key)}>
+                    <button key={tab.key} type="button" className={plan === tab.key ? "active" : ""} onClick={() => setParam("plan", tab.key, "all")}>
                       {tab.label}
                     </button>
                   ))}
                 </div>
-                <select className="sort-select" value={sort} onChange={(event) => setSort(event.target.value)}>
+                <select className="sort-select" value={sort} onChange={(event) => setParam("sort", event.target.value, "newest")}>
                   <option value="newest">Newest</option>
                   <option value="popular">Most popular</option>
                   <option value="rating">Top rated</option>

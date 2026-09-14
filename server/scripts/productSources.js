@@ -2967,4 +2967,672 @@ button{padding:12px;border:0;border-radius:10px;background:#f7f5fb;color:#0a090f
 </style></head>
 <body><div class="wrap"><h2>Stop rebuilding the basics.</h2><button class="shimmer-btn">Start building free →</button></div>
 </body></html>`,
+
+  "circuit-trace-border": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Circuit Trace Border</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#050507;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:26px}
+.stage{display:grid;gap:20px;place-items:center}
+.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
+.board{position:relative;width:min(300px,84vw);aspect-ratio:1.55/1;border-radius:10px;background:#07120d;
+  background-image:radial-gradient(circle at 50% 40%,rgba(54,211,153,.09),transparent 60%);overflow:hidden}
+svg{position:absolute;inset:0;width:100%;height:100%}
+.rail{fill:none;stroke:#13462f;stroke-width:1.6}
+.pulse{fill:none;stroke:#4ade9b;stroke-width:1.8;stroke-linecap:round;
+  filter:drop-shadow(0 0 4px rgba(74,222,155,.9));stroke-dasharray:26 320;animation:travel 3.4s linear infinite}
+.pulse.b{animation-delay:-1.15s;stroke:#7dd3fc;filter:drop-shadow(0 0 4px rgba(125,211,252,.9))}
+.pulse.c{animation-delay:-2.3s;stroke:#c4b5fd;filter:drop-shadow(0 0 4px rgba(196,181,253,.9))}
+@keyframes travel{to{stroke-dashoffset:-346}}
+.pad{fill:#0d2a1d;stroke:#2f7f57;stroke-width:1.4}
+.label{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:26px}
+.label b{display:block;color:#d7fbe8;font-size:14px;letter-spacing:-.01em}
+.label small{display:block;margin-top:5px;color:#5f9d81;font-size:9px;letter-spacing:1.5px;font-family:ui-monospace,Menlo,monospace}
+@media(prefers-reduced-motion:reduce){.pulse{animation:none;stroke-dasharray:none;opacity:.5}}
+</style></head>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">SIGNAL ON THE TRACE</span>
+<div class="board">
+<svg viewBox="0 0 310 200" preserveAspectRatio="none">
+  <path class="rail" d="M20 14 H290 V186 H20 Z"/>
+  <path class="pulse"   d="M20 14 H290 V186 H20 Z"/>
+  <path class="pulse b" d="M20 14 H290 V186 H20 Z"/>
+  <path class="pulse c" d="M20 14 H290 V186 H20 Z"/>
+  <circle class="pad" cx="20" cy="14" r="4.5"/><circle class="pad" cx="290" cy="14" r="4.5"/>
+  <circle class="pad" cx="290" cy="186" r="4.5"/><circle class="pad" cx="20" cy="186" r="4.5"/>
+</svg>
+<div class="label"><b>Edge Controller</b><small>REV 2.4 · ONLINE</small></div>
+</div>
+</div>
+</body></html>`,
+
+  "kinetic-cursor-grid": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Kinetic Cursor Grid</title><style>
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:#05060a;font-family:Inter,ui-sans-serif,Arial,sans-serif;overflow:hidden}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+.copy{position:relative;z-index:1;height:100%;display:grid;place-items:center;text-align:center;padding:26px;pointer-events:none}
+.copy small{color:#6f7ea8;font-size:8px;letter-spacing:2.5px;font-weight:700}
+.copy h1{margin:10px 0 8px;color:#eaf1ff;font-size:clamp(19px,5.5vw,30px);letter-spacing:-.03em;line-height:1.15}
+.copy p{margin:0;color:#7e8db5;font-size:11px;line-height:1.6;max-width:30ch}
+</style></head>
+<body data-cf-keep-dark>
+<canvas id="c"></canvas>
+<div class="copy"><div><small>INTERACTIVE BACKGROUND</small>
+<h1>Move your cursor.<br>Click anywhere.</h1>
+<p>A kinetic grid that warps toward the pointer and ripples on every click.</p></div></div>
+<script>
+var c=document.getElementById("c"),x=c.getContext("2d"),W,H,GAP=26;
+var mx=-999,my=-999,ripples=[];
+function size(){W=c.width=innerWidth;H=c.height=innerHeight}
+size();addEventListener("resize",size);
+addEventListener("pointermove",function(e){mx=e.clientX;my=e.clientY});
+addEventListener("pointerleave",function(){mx=-999;my=-999});
+addEventListener("click",function(e){ripples.push({x:e.clientX,y:e.clientY,r:0})});
+function frame(){
+  x.clearRect(0,0,W,H);
+  for(var i=ripples.length-1;i>=0;i--){ripples[i].r+=6;if(ripples[i].r>Math.max(W,H))ripples.splice(i,1)}
+  for(var gx=GAP/2;gx<W;gx+=GAP){
+    for(var gy=GAP/2;gy<H;gy+=GAP){
+      var dx=gx-mx,dy=gy-my,d=Math.hypot(dx,dy),ox=0,oy=0,glow=0;
+      if(d<150){var pull=(1-d/150);ox=-dx/d*pull*11;oy=-dy/d*pull*11;glow=pull}
+      for(var k=0;k<ripples.length;k++){
+        var rp=ripples[k],rd=Math.abs(Math.hypot(gx-rp.x,gy-rp.y)-rp.r);
+        if(rd<34){var w=(1-rd/34);glow=Math.max(glow,w*.9)}
+      }
+      var s=1.1+glow*2.1;
+      x.fillStyle="rgba("+Math.round(110+glow*145)+","+Math.round(140+glow*110)+",255,"+(0.2+glow*0.8)+")";
+      x.beginPath();x.arc(gx+ox,gy+oy,s,0,6.283);x.fill();
+    }
+  }
+  requestAnimationFrame(frame);
+}
+frame();
+</script>
+</body></html>`,
+
+  "dot-pattern-spotlight": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Dot Pattern Spotlight</title><style>
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:#08080c;font-family:Inter,ui-sans-serif,Arial,sans-serif;overflow:hidden;position:relative}
+/* Two identical dot layers: a dim one always on, and a bright one revealed only
+   inside a mask that follows the pointer. */
+.dots{position:fixed;inset:0;background-image:radial-gradient(#2a2a39 1.4px,transparent 1.4px);background-size:22px 22px}
+.dots.lit{background-image:radial-gradient(#b9a8ff 1.6px,transparent 1.6px);
+  -webkit-mask:radial-gradient(190px circle at var(--x,-300px) var(--y,-300px),#000 0%,rgba(0,0,0,.35) 45%,transparent 72%);
+  mask:radial-gradient(190px circle at var(--x,-300px) var(--y,-300px),#000 0%,rgba(0,0,0,.35) 45%,transparent 72%)}
+.copy{position:relative;z-index:1;height:100%;display:grid;place-items:center;text-align:center;padding:26px;pointer-events:none}
+.copy h1{margin:0;color:#f2efff;font-size:clamp(22px,7vw,38px);letter-spacing:-.04em}
+.copy p{margin:9px 0 0;color:#767089;font-size:11px}
+</style></head>
+<body data-cf-keep-dark>
+<div class="dots"></div><div class="dots lit" id="lit"></div>
+<div class="copy"><div><h1>Dot Pattern</h1><p>The grid only lights where you point.</p></div></div>
+<script>
+var lit=document.getElementById("lit");
+addEventListener("pointermove",function(e){lit.style.setProperty("--x",e.clientX+"px");lit.style.setProperty("--y",e.clientY+"px")});
+</script>
+</body></html>`,
+
+  "aurora-mesh-drift": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Aurora Mesh Drift</title><style>
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:#04040a;font-family:Inter,ui-sans-serif,Arial,sans-serif;overflow:hidden;position:relative}
+.mesh{position:fixed;inset:-30%;filter:blur(70px);opacity:.9}
+.mesh i{position:absolute;display:block;border-radius:50%;mix-blend-mode:screen}
+.m1{width:52%;aspect-ratio:1;background:#4c1d95;left:2%;top:6%;animation:d1 17s ease-in-out infinite alternate}
+.m2{width:44%;aspect-ratio:1;background:#0369a1;right:3%;top:18%;animation:d2 21s ease-in-out infinite alternate}
+.m3{width:48%;aspect-ratio:1;background:#be185d;left:26%;bottom:2%;animation:d3 19s ease-in-out infinite alternate}
+.m4{width:36%;aspect-ratio:1;background:#0d9488;right:22%;bottom:12%;animation:d1 23s ease-in-out infinite alternate-reverse}
+@keyframes d1{to{transform:translate(26%,-18%) scale(1.22)}}
+@keyframes d2{to{transform:translate(-22%,20%) scale(.84)}}
+@keyframes d3{to{transform:translate(16%,-24%) scale(1.14)}}
+.copy{position:relative;z-index:1;height:100%;display:grid;place-items:center;text-align:center;padding:26px;pointer-events:none}
+.copy h1{margin:0;color:#fff;font-size:clamp(21px,6.5vw,34px);letter-spacing:-.035em}
+.copy p{margin:9px 0 0;color:rgba(255,255,255,.62);font-size:11px}
+@media(prefers-reduced-motion:reduce){.mesh i{animation:none}}
+</style></head>
+<body data-cf-keep-dark>
+<div class="mesh"><i class="m1"></i><i class="m2"></i><i class="m3"></i><i class="m4"></i></div>
+<div class="copy"><div><h1>Aurora Mesh</h1><p>Four screen-blended fields drifting out of sync.</p></div></div>
+</body></html>`,
+
+  "gradient-wave-field": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Gradient Wave Field</title><style>
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;overflow:hidden;font-family:Inter,ui-sans-serif,Arial,sans-serif;
+  background:linear-gradient(180deg,#eaf6ff 0%,#cfe9ff 42%,#9fd2ff 100%)}
+.waves{position:fixed;inset:0}
+svg{position:absolute;bottom:0;left:0;width:260%;height:auto}
+.w1{fill:rgba(255,255,255,.55);animation:slide 18s linear infinite}
+.w2{fill:rgba(126,196,255,.5);animation:slide 26s linear infinite;bottom:-12px}
+.w3{fill:rgba(56,152,236,.42);animation:slide 34s linear infinite reverse;bottom:-26px}
+@keyframes slide{to{transform:translateX(-38.4%)}}
+.copy{position:relative;z-index:1;height:100%;display:grid;place-items:center;text-align:center;padding:26px;pointer-events:none}
+.copy h1{margin:0;color:#0b3a63;font-size:clamp(22px,7vw,36px);letter-spacing:-.04em}
+.copy p{margin:9px 0 0;color:#3a6d99;font-size:11px}
+@media(prefers-reduced-motion:reduce){svg{animation:none}}
+</style></head>
+<body>
+<div class="waves">
+<svg class="w1" viewBox="0 0 1440 220" preserveAspectRatio="none"><path d="M0 120 C180 60 300 180 480 130 C660 80 780 170 960 120 C1140 70 1260 160 1440 110 V220 H0 Z"/></svg>
+<svg class="w2" viewBox="0 0 1440 220" preserveAspectRatio="none"><path d="M0 150 C200 100 320 200 520 155 C720 110 840 195 1040 150 C1240 105 1330 180 1440 145 V220 H0 Z"/></svg>
+<svg class="w3" viewBox="0 0 1440 220" preserveAspectRatio="none"><path d="M0 175 C160 140 340 210 520 178 C700 146 860 205 1040 175 C1220 145 1350 195 1440 172 V220 H0 Z"/></svg>
+</div>
+<div class="copy"><div><h1>Gradient Wave</h1><p>Three wave bands sliding at different speeds.</p></div></div>
+</body></html>`,
+
+  "starfield-parallax": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Starfield Parallax</title><style>
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:radial-gradient(circle at 50% 40%,#14162c,#04040a 70%);font-family:Inter,ui-sans-serif,Arial,sans-serif;overflow:hidden}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+.copy{position:relative;z-index:1;height:100%;display:grid;place-items:center;text-align:center;padding:26px;pointer-events:none}
+.copy h1{margin:0;color:#eef1ff;font-size:clamp(21px,6.5vw,34px);letter-spacing:-.035em}
+.copy p{margin:9px 0 0;color:#7d84a8;font-size:11px}
+</style></head>
+<body data-cf-keep-dark>
+<canvas id="c"></canvas>
+<div class="copy"><div><h1>Starfield</h1><p>Three depth layers, each tracking the pointer by a different amount.</p></div></div>
+<script>
+var c=document.getElementById("c"),x=c.getContext("2d"),W,H,stars=[],tx=0,ty=0,cx=0,cy=0;
+function size(){W=c.width=innerWidth;H=c.height=innerHeight;build()}
+function build(){
+  stars=[];
+  for(var i=0;i<190;i++){
+    var depth=Math.random();
+    stars.push({x:Math.random()*W,y:Math.random()*H,d:depth,r:depth*1.5+.35});
+  }
+}
+size();addEventListener("resize",size);
+addEventListener("pointermove",function(e){tx=(e.clientX/innerWidth-.5);ty=(e.clientY/innerHeight-.5)});
+function frame(){
+  cx+=(tx-cx)*.05;cy+=(ty-cy)*.05;
+  x.clearRect(0,0,W,H);
+  for(var i=0;i<stars.length;i++){
+    var s=stars[i],shift=(s.d*34+6);
+    var px=s.x-cx*shift,py=s.y-cy*shift;
+    x.globalAlpha=.25+s.d*.75;
+    x.fillStyle=s.d>.72?"#c9d4ff":"#ffffff";
+    x.beginPath();x.arc(px,py,s.r,0,6.283);x.fill();
+  }
+  x.globalAlpha=1;
+  requestAnimationFrame(frame);
+}
+frame();
+</script>
+</body></html>`,
+
+  "grain-gradient-bg": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Grain Gradient</title><style>
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;overflow:hidden;font-family:Inter,ui-sans-serif,Arial,sans-serif;position:relative;background:#0a0713}
+.tint{position:fixed;inset:0;background:linear-gradient(125deg,#3b1d6e,#7a2f6b 32%,#b4573f 62%,#1d3b6e 100%);
+  background-size:280% 280%;animation:shift 16s ease-in-out infinite}
+@keyframes shift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+/* Real film grain rather than a tiled PNG: turbulence rendered once, then held
+   above the gradient at low opacity. */
+.grain{position:fixed;inset:-50%;opacity:.26;pointer-events:none;mix-blend-mode:overlay;animation:jitter .6s steps(3) infinite}
+@keyframes jitter{0%{transform:translate(0,0)}33%{transform:translate(-2%,1.5%)}66%{transform:translate(1.5%,-1%)}}
+.copy{position:relative;z-index:2;height:100%;display:grid;place-items:center;text-align:center;padding:26px;pointer-events:none}
+.copy h1{margin:0;color:#fff;font-size:clamp(21px,6.5vw,34px);letter-spacing:-.035em}
+.copy p{margin:9px 0 0;color:rgba(255,255,255,.66);font-size:11px}
+@media(prefers-reduced-motion:reduce){.tint,.grain{animation:none}}
+</style></head>
+<body data-cf-keep-dark>
+<div class="tint"></div>
+<svg class="grain" xmlns="http://www.w3.org/2000/svg"><filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.82" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(#g)"/></svg>
+<div class="copy"><div><h1>Grain Gradient</h1><p>A drifting gradient under live turbulence grain.</p></div></div>
+</body></html>`,
+
+  "topographic-flow-lines": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Topographic Flow Lines</title><style>
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:#070709;font-family:Inter,ui-sans-serif,Arial,sans-serif;overflow:hidden}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+.copy{position:relative;z-index:1;height:100%;display:grid;place-items:center;text-align:center;padding:26px;pointer-events:none}
+.copy h1{margin:0;color:#ececf2;font-size:clamp(21px,6.5vw,34px);letter-spacing:-.035em}
+.copy p{margin:9px 0 0;color:#6e6e7d;font-size:11px}
+</style></head>
+<body data-cf-keep-dark>
+<canvas id="c"></canvas>
+<div class="copy"><div><h1>Flow Lines</h1><p>Contours redrawn each frame from a drifting noise field.</p></div></div>
+<script>
+var c=document.getElementById("c"),x=c.getContext("2d"),W,H,t=0,mx=.5;
+function size(){W=c.width=innerWidth;H=c.height=innerHeight}
+size();addEventListener("resize",size);
+addEventListener("pointermove",function(e){mx=e.clientX/innerWidth});
+function frame(){
+  x.clearRect(0,0,W,H);
+  var lines=26;
+  for(var i=0;i<lines;i++){
+    var p=i/lines;
+    x.beginPath();
+    for(var px=0;px<=W;px+=8){
+      var u=px/W;
+      var y=H*(0.12+p*0.78)
+        + Math.sin(u*5.1+t*0.6+i*0.24)*22*(0.4+mx)
+        + Math.sin(u*11.3-t*0.34+i*0.11)*9;
+      if(px===0)x.moveTo(px,y);else x.lineTo(px,y);
+    }
+    x.strokeStyle="rgba(190,190,215,"+(0.06+0.16*Math.sin(p*3.14))+")";
+    x.lineWidth=1;x.stroke();
+  }
+  t+=0.012;
+  requestAnimationFrame(frame);
+}
+frame();
+</script>
+</body></html>`,
+
+  "ripple-surface-bg": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Ripple Surface</title><style>
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;overflow:hidden;font-family:Inter,ui-sans-serif,Arial,sans-serif;
+  background:linear-gradient(160deg,#06283d,#0b4f6c 55%,#01baef 190%)}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+.copy{position:relative;z-index:1;height:100%;display:grid;place-items:center;text-align:center;padding:26px;pointer-events:none}
+.copy h1{margin:0;color:#eaf8ff;font-size:clamp(21px,6.5vw,34px);letter-spacing:-.035em}
+.copy p{margin:9px 0 0;color:#8fc3dc;font-size:11px}
+</style></head>
+<body data-cf-keep-dark>
+<canvas id="c"></canvas>
+<div class="copy"><div><h1>Ripple Surface</h1><p>Click or drag to disturb the water.</p></div></div>
+<script>
+var c=document.getElementById("c"),x=c.getContext("2d"),W,H,drops=[];
+function size(){W=c.width=innerWidth;H=c.height=innerHeight}
+size();addEventListener("resize",size);
+function drop(e){drops.push({x:e.clientX,y:e.clientY,r:0,a:.55})}
+addEventListener("click",drop);
+addEventListener("pointermove",function(e){if(Math.random()<.12)drop(e)});
+function frame(){
+  x.clearRect(0,0,W,H);
+  for(var i=drops.length-1;i>=0;i--){
+    var d=drops[i];
+    d.r+=2.4;d.a-=.006;
+    if(d.a<=0){drops.splice(i,1);continue}
+    x.beginPath();x.arc(d.x,d.y,d.r,0,6.283);
+    x.strokeStyle="rgba(210,245,255,"+d.a+")";x.lineWidth=1.4;x.stroke();
+    x.beginPath();x.arc(d.x,d.y,d.r*.66,0,6.283);
+    x.strokeStyle="rgba(150,220,255,"+(d.a*.5)+")";x.lineWidth=1;x.stroke();
+  }
+  requestAnimationFrame(frame);
+}
+frame();
+</script>
+</body></html>`,
+
+  "border-beam-comet": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Border Beam</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#07070c;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:24px}
+/* Oversized conic square spinning behind the card; the inner panel covers all of
+   it except a 3px rim, so only the beam arc shows along the edge. */
+.rim{position:relative;width:min(300px,86vw);aspect-ratio:1.55/1;border-radius:18px;padding:3px;overflow:hidden;
+  background:#1a1a26;box-shadow:0 0 34px rgba(56,189,248,.16)}
+.rim::before{content:"";position:absolute;left:50%;top:50%;width:200%;aspect-ratio:1;translate:-50% -50%;
+  background:conic-gradient(from 0deg,transparent 0 62%,rgba(56,189,248,.35) 74%,#38bdf8 86%,#ffffff 92%,transparent 96%);
+  animation:beam 2.6s linear infinite}
+@keyframes beam{to{rotate:360deg}}
+.panel{position:relative;z-index:1;height:100%;border-radius:15px;background:#0b0b12;
+  display:grid;place-items:center;text-align:center;padding:24px}
+.panel b{display:block;color:#eaf6ff;font-size:16px;letter-spacing:-.02em}
+.panel small{display:block;margin-top:6px;color:#5e7691;font-size:9px;letter-spacing:2px}
+@media(prefers-reduced-motion:reduce){.rim::before{animation:none}}
+</style></head>
+<body data-cf-keep-dark>
+<div class="rim"><div class="panel"><div><b>Border Beam</b><small>ONE COMET · 2.6S LAP</small></div></div></div>
+</body></html>`,
+
+  "rainbow-spin-border": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Rainbow Spin Border</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#07070c;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:24px}
+.rim{position:relative;width:min(300px,86vw);aspect-ratio:1.55/1;border-radius:18px;padding:3px;overflow:hidden;
+  box-shadow:0 0 40px rgba(168,85,247,.22)}
+.rim::before{content:"";position:absolute;left:50%;top:50%;width:200%;aspect-ratio:1;translate:-50% -50%;
+  background:conic-gradient(#f43f5e,#f59e0b,#84cc16,#06b6d4,#6366f1,#a855f7,#f43f5e);
+  animation:spin 4s linear infinite;filter:saturate(1.3)}
+@keyframes spin{to{rotate:360deg}}
+.panel{position:relative;z-index:1;height:100%;border-radius:15px;background:#0b0b12;
+  display:grid;place-items:center;text-align:center;padding:24px}
+.panel b{display:block;color:#f6f2ff;font-size:16px;letter-spacing:-.02em}
+.panel small{display:block;margin-top:6px;color:#7b6f92;font-size:9px;letter-spacing:2px}
+@media(prefers-reduced-motion:reduce){.rim::before{animation:none}}
+</style></head>
+<body data-cf-keep-dark>
+<div class="rim"><div class="panel"><div><b>Rainbow Spin</b><small>FULL SPECTRUM RIM</small></div></div></div>
+</body></html>`,
+
+  "snake-chase-border": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Snake Chase Border</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#07070c;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:24px}
+.wrap{position:relative;width:min(300px,86vw);aspect-ratio:1.55/1}
+svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.track{fill:none;stroke:#1c1c2a;stroke-width:3}
+/* A long dash with a long gap is all a "snake" is — the offset animation is what
+   makes the segment travel instead of the whole outline lighting up. */
+.snake{fill:none;stroke-width:3;stroke-linecap:round;stroke-dasharray:110 560;
+  animation:chase 3s linear infinite}
+.s1{stroke:#22d3ee;filter:drop-shadow(0 0 6px rgba(34,211,238,.85))}
+.s2{stroke:#a855f7;filter:drop-shadow(0 0 6px rgba(168,85,247,.85));animation-delay:-1.5s}
+@keyframes chase{to{stroke-dashoffset:-670}}
+.panel{position:absolute;inset:8px;border-radius:13px;background:#0b0b12;display:grid;place-items:center;text-align:center;padding:22px}
+.panel b{display:block;color:#eafcff;font-size:16px;letter-spacing:-.02em}
+.panel small{display:block;margin-top:6px;color:#5d7a84;font-size:9px;letter-spacing:2px}
+@media(prefers-reduced-motion:reduce){.snake{animation:none;stroke-dasharray:none;opacity:.45}}
+</style></head>
+<body data-cf-keep-dark>
+<div class="wrap">
+<svg viewBox="0 0 310 200" preserveAspectRatio="none">
+  <rect class="track" x="4" y="4" width="302" height="192" rx="16"/>
+  <rect class="snake s1" x="4" y="4" width="302" height="192" rx="16"/>
+  <rect class="snake s2" x="4" y="4" width="302" height="192" rx="16"/>
+</svg>
+<div class="panel"><div><b>Snake Chase</b><small>TWO SEGMENTS · OFFSET</small></div></div>
+</div>
+</body></html>`,
+
+  "shine-sweep-border": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Shine Sweep Border</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#07070c;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:24px}
+.rim{position:relative;width:min(300px,86vw);aspect-ratio:1.55/1;border-radius:18px;padding:3px;overflow:hidden;
+  background:linear-gradient(135deg,#312b45,#4b4468 50%,#312b45)}
+/* The rim colour is static; a specular band slides across it on a diagonal, so
+   the highlight reads as light moving over metal rather than a colour cycle. */
+.rim::before{content:"";position:absolute;inset:-60%;
+  background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.9) 50%,transparent 60%);
+  animation:sweep 3.2s ease-in-out infinite}
+@keyframes sweep{0%{translate:-55% -55%}60%,100%{translate:55% 55%}}
+.panel{position:relative;z-index:1;height:100%;border-radius:15px;background:#0b0b12;
+  display:grid;place-items:center;text-align:center;padding:24px}
+.panel b{display:block;color:#f3f0fb;font-size:16px;letter-spacing:-.02em}
+.panel small{display:block;margin-top:6px;color:#7c7591;font-size:9px;letter-spacing:2px}
+@media(prefers-reduced-motion:reduce){.rim::before{animation:none;opacity:.35}}
+</style></head>
+<body data-cf-keep-dark>
+<div class="rim"><div class="panel"><div><b>Shine Sweep</b><small>SPECULAR PASS</small></div></div></div>
+</body></html>`,
+
+  "pulse-ring-border": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Pulse Ring Border</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#07070c;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:30px}
+.wrap{position:relative;width:min(290px,84vw);aspect-ratio:1.55/1}
+/* Each ring is a copy of the outline scaling outward and fading, staggered so a
+   new pulse leaves the edge before the last one dies. */
+.ring{position:absolute;inset:0;border:2px solid #34d399;border-radius:18px;opacity:0;
+  animation:pulse 2.4s ease-out infinite}
+.ring:nth-child(2){animation-delay:.8s}
+.ring:nth-child(3){animation-delay:1.6s}
+@keyframes pulse{0%{scale:1;opacity:.85}100%{scale:1.16;opacity:0}}
+.panel{position:absolute;inset:0;border:2px solid #34d399;border-radius:18px;background:#0b0f0d;
+  display:grid;place-items:center;text-align:center;padding:24px;box-shadow:0 0 30px rgba(52,211,153,.18)}
+.panel b{display:block;color:#e7fff5;font-size:16px;letter-spacing:-.02em}
+.panel small{display:block;margin-top:6px;color:#4e8b73;font-size:9px;letter-spacing:2px}
+@media(prefers-reduced-motion:reduce){.ring{animation:none;opacity:0}}
+</style></head>
+<body data-cf-keep-dark>
+<div class="wrap">
+  <span class="ring"></span><span class="ring"></span><span class="ring"></span>
+  <div class="panel"><div><b>Pulse Ring</b><small>EMITTING · 2.4S</small></div></div>
+</div>
+</body></html>`,
+
+  "scanline-border": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Scanline Border</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#07070c;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:24px}
+.rim{position:relative;width:min(300px,86vw);aspect-ratio:1.55/1;border-radius:18px;padding:3px;overflow:hidden;
+  background:#161622}
+/* A horizontal band travelling top to bottom. Because it sits in the rim layer,
+   it lights whichever part of the border it is level with. */
+.rim::before{content:"";position:absolute;left:0;right:0;height:38%;
+  background:linear-gradient(180deg,transparent,#f97316 45%,#fde68a 52%,#f97316 58%,transparent);
+  filter:blur(1px);animation:scan 2.8s cubic-bezier(.5,0,.5,1) infinite}
+@keyframes scan{0%{top:-40%}100%{top:102%}}
+.panel{position:relative;z-index:1;height:100%;border-radius:15px;background:#0c0a09;
+  display:grid;place-items:center;text-align:center;padding:24px}
+.panel b{display:block;color:#fff4e6;font-size:16px;letter-spacing:-.02em}
+.panel small{display:block;margin-top:6px;color:#8a6a4b;font-size:9px;letter-spacing:2px}
+@media(prefers-reduced-motion:reduce){.rim::before{animation:none;top:32%}}
+</style></head>
+<body data-cf-keep-dark>
+<div class="rim"><div class="panel"><div><b>Scanline</b><small>TOP TO BOTTOM SWEEP</small></div></div></div>
+</body></html>`,
+
+  "dual-counter-beam-border": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Dual Counter Beam</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#07070c;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:24px}
+.rim{position:relative;width:min(300px,86vw);aspect-ratio:1.55/1;border-radius:18px;padding:3px;overflow:hidden;background:#171723}
+/* Two arcs on the same rim turning opposite ways, so they cross twice a lap and
+   briefly stack into a brighter flare at the crossing point. */
+.rim::before,.rim::after{content:"";position:absolute;left:50%;top:50%;width:200%;aspect-ratio:1;translate:-50% -50%}
+.rim::before{background:conic-gradient(from 0deg,transparent 0 70%,#f43f5e 88%,#ffd6de 94%,transparent 98%);
+  animation:cw 3.4s linear infinite}
+.rim::after{background:conic-gradient(from 180deg,transparent 0 70%,#22d3ee 88%,#d6f7ff 94%,transparent 98%);
+  animation:ccw 3.4s linear infinite;mix-blend-mode:screen}
+@keyframes cw{to{rotate:360deg}}
+@keyframes ccw{to{rotate:-360deg}}
+.panel{position:relative;z-index:1;height:100%;border-radius:15px;background:#0b0b12;
+  display:grid;place-items:center;text-align:center;padding:24px}
+.panel b{display:block;color:#f4f6ff;font-size:16px;letter-spacing:-.02em}
+.panel small{display:block;margin-top:6px;color:#77708a;font-size:9px;letter-spacing:2px}
+@media(prefers-reduced-motion:reduce){.rim::before,.rim::after{animation:none}}
+</style></head>
+<body data-cf-keep-dark>
+<div class="rim"><div class="panel"><div><b>Counter Beam</b><small>TWO ARCS · OPPOSED</small></div></div></div>
+</body></html>`,
+
+  "aurora-rim-border": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Aurora Rim</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#07070c;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:24px}
+.rim{position:relative;width:min(300px,86vw);aspect-ratio:1.55/1;border-radius:18px;padding:3px;overflow:hidden;
+  box-shadow:0 0 44px rgba(99,102,241,.22)}
+/* Not a rotation — the gradient itself slides across an oversized background box,
+   which reads as colour flowing along the rim rather than a wheel turning. */
+.rim::before{content:"";position:absolute;inset:0;
+  background:linear-gradient(115deg,#22d3ee,#6366f1 22%,#a855f7 44%,#34d399 66%,#22d3ee 88%,#6366f1);
+  background-size:340% 100%;filter:blur(.4px) saturate(1.25);
+  animation:flow 7s linear infinite}
+@keyframes flow{to{background-position:340% 0}}
+.panel{position:relative;z-index:1;height:100%;border-radius:15px;background:#0b0b12;
+  display:grid;place-items:center;text-align:center;padding:24px}
+.panel b{display:block;color:#eef4ff;font-size:16px;letter-spacing:-.02em}
+.panel small{display:block;margin-top:6px;color:#6d7794;font-size:9px;letter-spacing:2px}
+@media(prefers-reduced-motion:reduce){.rim::before{animation:none}}
+</style></head>
+<body data-cf-keep-dark>
+<div class="rim"><div class="panel"><div><b>Aurora Rim</b><small>FLOWING · NOT SPINNING</small></div></div></div>
+</body></html>`,
+
+  "neon-flicker-border": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Neon Flicker Border</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#07070c;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:24px}
+.tube{position:relative;width:min(300px,86vw);aspect-ratio:1.55/1;border-radius:18px;
+  border:2.5px solid #ff4fd8;background:#0d0711;display:grid;place-items:center;text-align:center;padding:24px;
+  animation:flicker 4.5s linear infinite}
+/* Uneven keyframe spacing is what sells a failing tube — evenly spaced steps read
+   as a deliberate pulse instead of a fault. */
+@keyframes flicker{
+  0%,14%,16%,22%,24%,55%,57%,100%{
+    box-shadow:0 0 6px rgba(255,79,216,.9),0 0 22px rgba(255,79,216,.55),0 0 46px rgba(255,79,216,.3),inset 0 0 18px rgba(255,79,216,.22);
+    border-color:#ff4fd8}
+  15%,23%,56%{box-shadow:0 0 2px rgba(255,79,216,.25);border-color:#5d2a52}
+}
+.tube b{display:block;color:#ffe9fa;font-size:17px;letter-spacing:-.02em;text-shadow:0 0 12px rgba(255,79,216,.8)}
+.tube small{display:block;margin-top:6px;color:#9b5c8c;font-size:9px;letter-spacing:2px}
+@media(prefers-reduced-motion:reduce){.tube{animation:none;
+  box-shadow:0 0 6px rgba(255,79,216,.9),0 0 22px rgba(255,79,216,.5)}}
+</style></head>
+<body data-cf-keep-dark>
+<div class="tube"><div><b>Neon Flicker</b><small>FAILING TUBE</small></div></div>
+</body></html>`,
+
+  "liquid-metal-border-button": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Liquid Metal Border Button</title><style>
+:root{--line:#272632}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:#050507;font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.stage{display:grid;gap:18px;place-items:center;padding:34px}
+.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
+.row{display:flex;align-items:center;gap:18px}
+
+/* 3px of rim, not 2 — at card-preview scale a thinner ring disappears and the
+   button just reads as a flat black pill. */
+.metal{position:relative;border-radius:100px;padding:3px;overflow:hidden;cursor:pointer;border:0;background:transparent;
+  box-shadow:0 0 0 1px rgba(0,0,0,.35),0 20px 12px rgba(0,0,0,.08),0 9px 9px rgba(0,0,0,.12),0 2px 5px rgba(0,0,0,.15);
+  transition:box-shadow .3s cubic-bezier(.34,1.56,.64,1),transform .15s cubic-bezier(.4,0,.2,1)}
+.metal::before{content:"";position:absolute;left:50%;top:50%;width:260%;aspect-ratio:1;translate:-50% -50%;
+  background:conic-gradient(#ffffff,#8f8f8f,#ffffff,#5a5a5a,#e6e6e6,#3f3f3f,#fdfdfd,#7a7a7a,#ffffff);
+  animation:metalSpin 6s linear infinite}
+.metal:hover{box-shadow:0 0 0 1px rgba(0,0,0,.45),0 12px 6px rgba(0,0,0,.05),0 8px 5px rgba(0,0,0,.1),0 4px 4px rgba(0,0,0,.15),0 1px 2px rgba(0,0,0,.2)}
+.metal:hover::before{animation-duration:2.6s}
+.metal:active{transform:translateY(1px) scale(.98)}
+.metal:active .face{box-shadow:inset 0 2px 4px rgba(0,0,0,.45),inset 0 1px 2px rgba(0,0,0,.35)}
+@keyframes metalSpin{to{rotate:360deg}}
+
+.face{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:7px;height:42px;padding:0 24px;border-radius:100px;
+  background:linear-gradient(180deg,#202020 0%,#000000 100%);color:#8a8a8a;font-size:14px;font-weight:400;white-space:nowrap;
+  text-shadow:0 1px 2px rgba(0,0,0,.5);transition:box-shadow .15s cubic-bezier(.4,0,.2,1),color .3s}
+.metal:hover .face{color:#b5b5b5}
+.metal.icon .face{width:42px;padding:0}
+.face svg{width:16px;height:16px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.5))}
+
+.ripple{position:absolute;width:20px;height:20px;border-radius:50%;pointer-events:none;translate:-50% -50%;z-index:2;
+  background:radial-gradient(circle,rgba(255,255,255,.45) 0%,rgba(255,255,255,0) 70%);animation:rippleOut .6s ease-out forwards}
+@keyframes rippleOut{from{scale:0;opacity:.6}to{scale:4;opacity:0}}
+
+@media(prefers-reduced-motion:reduce){.metal::before{animation:none}.metal:active{transform:none}.ripple{display:none}}
+</style></head>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">CLICK ME</span>
+<div class="row">
+<button class="metal" id="a"><span class="face">Get Started</span></button>
+<button class="metal icon" id="b"><span class="face">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/></svg>
+</span></button>
+</div></div>
+<script>
+document.querySelectorAll(".metal").forEach(function(btn){
+  btn.addEventListener("click",function(e){
+    var r=btn.getBoundingClientRect();
+    var dot=document.createElement("span");
+    dot.className="ripple";
+    dot.style.left=(e.clientX-r.left)+"px";
+    dot.style.top=(e.clientY-r.top)+"px";
+    btn.appendChild(dot);
+    setTimeout(function(){dot.remove()},600);
+  });
+});
+</script>
+</body></html>`,
+
+  "glowing-shadow-border": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Glowing Shadow Border</title><style>
+/* Registering these as typed custom properties is what makes them animatable —
+   a plain --hue would jump between keyframes instead of interpolating. */
+@property --hue{syntax:"<number>";inherits:true;initial-value:0}
+@property --rotate{syntax:"<number>";inherits:true;initial-value:0}
+@property --bg-y{syntax:"<number>";inherits:true;initial-value:0}
+@property --bg-x{syntax:"<number>";inherits:true;initial-value:0}
+@property --glow-translate-y{syntax:"<number>";inherits:true;initial-value:0}
+@property --bg-size{syntax:"<number>";inherits:true;initial-value:0}
+@property --glow-opacity{syntax:"<number>";inherits:true;initial-value:0}
+@property --glow-blur{syntax:"<number>";inherits:true;initial-value:0}
+@property --glow-scale{syntax:"<number>";inherits:true;initial-value:2}
+@property --glow-radius{syntax:"<number>";inherits:true;initial-value:2}
+@property --white-shadow{syntax:"<number>";inherits:true;initial-value:0}
+
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#050507;font-family:Inter,ui-sans-serif,Arial,sans-serif;overflow:hidden}
+.stage{display:grid;gap:18px;place-items:center;padding:22px}
+.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
+
+.glow-container{
+  --card-color:hsl(260deg 100% 3%);
+  --card-radius:22px;
+  --card-width:min(320px,80vw);
+  --border-width:3px;
+  --bg-size:1;--hue:0;--hue-speed:1;--rotate:0;
+  --animation-speed:4s;--interaction-speed:.55s;
+  --glow-scale:1.5;--scale-factor:1;--glow-blur:6;--glow-opacity:1;--glow-radius:100;--glow-rotate-unit:1deg;
+  width:var(--card-width);aspect-ratio:1.5/1;color:#fff;margin:auto;
+  display:flex;align-items:center;justify-content:center;position:relative;z-index:2;
+  border-radius:var(--card-radius);cursor:pointer}
+
+.glow-content{position:absolute;background:var(--card-color);border-radius:calc(var(--card-radius) * .9);
+  display:flex;align-items:center;justify-content:center;padding:calc(var(--card-width) / 9);inset:var(--border-width)}
+
+.glow-content span{display:inline-block;padding:.25em;border-radius:4px;text-align:center;
+  font-size:clamp(18px,7vw,30px);font-weight:600;letter-spacing:-.03em;line-height:1.05}
+
+.glow-content:before{content:"";display:block;position:absolute;
+  width:calc(100% + var(--border-width));height:calc(100% + var(--border-width));
+  border-radius:calc(var(--card-radius) * .9);box-shadow:0 0 20px black;mix-blend-mode:color-burn;z-index:-1;
+  background:hsl(0deg 0% 16%) radial-gradient(30% 30% at calc(var(--bg-x) * 1%) calc(var(--bg-y) * 1%),
+    hsl(calc(var(--hue) * var(--hue-speed) * 1deg) 100% 90%) calc(0% * var(--bg-size)),
+    hsl(calc(var(--hue) * var(--hue-speed) * 1deg) 100% 80%) calc(20% * var(--bg-size)),
+    hsl(calc(var(--hue) * var(--hue-speed) * 1deg) 100% 60%) calc(40% * var(--bg-size)),
+    transparent 100%);
+  animation:hue-animation var(--animation-speed) linear infinite,rotate-bg var(--animation-speed) linear infinite;
+  transition:--bg-size var(--interaction-speed) ease}
+
+.glow{--glow-translate-y:0;display:block;position:absolute;
+  width:calc(var(--card-width) / 5);height:calc(var(--card-width) / 5);
+  animation:rotate var(--animation-speed) linear infinite;
+  transform:rotateZ(calc(var(--rotate) * var(--glow-rotate-unit)));transform-origin:center;
+  border-radius:calc(var(--glow-radius) * 10vw)}
+
+.glow:after{content:"";display:block;z-index:-2;filter:blur(calc(var(--glow-blur) * 10px));
+  width:130%;height:130%;left:-15%;top:-15%;position:relative;
+  background:hsl(calc(var(--hue) * var(--hue-speed) * 1deg) 100% 60%);
+  border-radius:calc(var(--glow-radius) * 10vw);
+  animation:hue-animation var(--animation-speed) linear infinite;
+  transform:scaleY(calc(var(--glow-scale) * var(--scale-factor) / 1.1))
+            scaleX(calc(var(--glow-scale) * var(--scale-factor) * 1.2))
+            translateY(calc(var(--glow-translate-y) * 1%));
+  opacity:var(--glow-opacity)}
+
+.glow-container:hover .glow-content{mix-blend-mode:darken;
+  box-shadow:0 0 calc(var(--white-shadow) * 1vw) calc(var(--white-shadow) * .15vw) rgb(255 255 255 / 20%);
+  animation:shadow-pulse calc(var(--animation-speed) * 2) linear infinite}
+.glow-container:hover .glow-content:before{--bg-size:15;animation-play-state:paused;transition:--bg-size var(--interaction-speed) ease}
+.glow-container:hover .glow{--glow-blur:1.5;--glow-opacity:.6;--glow-scale:2.5;--glow-radius:0;--rotate:900;--glow-rotate-unit:0;--scale-factor:1.25;animation-play-state:paused}
+.glow-container:hover .glow:after{--glow-translate-y:0;animation-play-state:paused;
+  transition:--glow-translate-y 0s ease,--glow-blur .05s ease,--glow-opacity .05s ease,--glow-scale .05s ease,--glow-radius .05s ease}
+
+@keyframes shadow-pulse{
+  0%,24%,46%,73%,96%{--white-shadow:.5}
+  12%,28%,41%,63%,75%,82%,98%{--white-shadow:2.5}
+  6%,32%,57%{--white-shadow:1.3}
+  18%,52%,88%{--white-shadow:3.5}}
+@keyframes rotate-bg{
+  0%{--bg-x:0;--bg-y:0}25%{--bg-x:100;--bg-y:0}50%{--bg-x:100;--bg-y:100}75%{--bg-x:0;--bg-y:100}100%{--bg-x:0;--bg-y:0}}
+@keyframes rotate{
+  from{--rotate:-70;--glow-translate-y:-65}
+  25%,50%,60%,75%,85%{--glow-translate-y:-65}
+  to{--rotate:290;--glow-translate-y:-65}}
+@keyframes hue-animation{0%{--hue:0}100%{--hue:360}}
+
+@media(prefers-reduced-motion:reduce){
+  .glow-content:before,.glow,.glow:after,.glow-container:hover .glow-content{animation:none}}
+</style></head>
+<body data-cf-keep-dark>
+<div class="stage"><span class="kicker">HOVER TO FOCUS</span>
+<div class="glow-container" role="button" tabindex="0">
+  <span class="glow"></span>
+  <div class="glow-content"><span>Glowing Shadow</span></div>
+</div>
+</div>
+</body></html>`,
 };

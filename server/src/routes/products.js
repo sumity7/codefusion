@@ -471,14 +471,14 @@ router.get(
         collection &&
         collection !== "all"
       ) {
+        // URLs carry the slug lowercased (/collections/free) while the stored
+        // values are title case ("Free"), so an exact match never hit.
+        const escaped = String(collection).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const name = new RegExp(`^${escaped}$`, "i");
+
         filter.$or = [
-          {
-            collection,
-          },
-          {
-            collections:
-              collection,
-          },
+          { collection: name },
+          { collections: name },
         ];
       }
 

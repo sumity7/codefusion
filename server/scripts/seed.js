@@ -118,6 +118,28 @@ const products = [
   {slug:"trust-badges-security-band",name:"Trust Badges Security Band",category:"Landing Pages",previewType:"features",badge:"FREE",productType:"FREE",price:"Free",description:"A compliance trust-signal band with hoverable security badges.",tags:["HTML","CSS"],isVerified:false},
   {slug:"final-cta-gradient-section",name:"Final CTA Gradient Section",category:"Landing Pages",previewType:"countdown",badge:"SIGNATURE",productType:"PRO",price:"$18",description:"A bold closing CTA section with a continuous shimmer sweep on the button.",tags:["HTML","CSS"],isVerified:true},
 
+  {slug:"circuit-trace-border",name:"Circuit Trace Border",category:"Borders",previewType:"card",badge:"INTERACTIVE",productType:"PRO",price:"$29",description:"PCB-style traces with coloured signal pulses travelling the perimeter past solder pads.",tags:["HTML","CSS","SVG"],isVerified:true},
+  {slug:"border-beam-comet",name:"Border Beam",category:"Borders",previewType:"card",badge:"SIGNATURE",productType:"PREMIUM",price:"$30",description:"A single comet of light racing the perimeter with a fading trail behind it.",tags:["HTML","CSS"],isVerified:true},
+  {slug:"rainbow-spin-border",name:"Rainbow Spin Border",category:"Borders",previewType:"card",badge:"SIGNATURE",productType:"PRO",price:"$26",description:"A full-spectrum conic rim rotating continuously around a dark panel.",tags:["HTML","CSS"],isVerified:true},
+  {slug:"snake-chase-border",name:"Snake Chase Border",category:"Borders",previewType:"card",badge:"INTERACTIVE",productType:"PRO",price:"$28",description:"Two dashed segments chasing each other around the outline on opposite phases.",tags:["HTML","CSS","SVG"],isVerified:true},
+  {slug:"shine-sweep-border",name:"Shine Sweep Border",category:"Borders",previewType:"card",badge:"SIGNATURE",productType:"PREMIUM",price:"$31",description:"A specular band sliding diagonally across a static metal rim, like light moving over steel.",tags:["HTML","CSS"],isVerified:true},
+  {slug:"pulse-ring-border",name:"Pulse Ring Border",category:"Borders",previewType:"card",badge:"NEW",productType:"PRO",price:"$25",description:"Staggered rings that scale outward from the outline and fade, emitting continuously.",tags:["HTML","CSS"],isVerified:false},
+  {slug:"scanline-border",name:"Scanline Border",category:"Borders",previewType:"card",badge:"INTERACTIVE",productType:"PRO",price:"$27",description:"A horizontal scan travelling top to bottom, lighting each part of the rim as it passes.",tags:["HTML","CSS"],isVerified:false},
+  {slug:"dual-counter-beam-border",name:"Dual Counter Beam",category:"Borders",previewType:"card",badge:"SIGNATURE",productType:"PREMIUM",price:"$33",description:"Two arcs turning in opposite directions, stacking into a brighter flare where they cross.",tags:["HTML","CSS"],isVerified:true},
+  {slug:"aurora-rim-border",name:"Aurora Rim",category:"Borders",previewType:"card",badge:"SIGNATURE",productType:"PREMIUM",price:"$32",description:"Colour flowing along the rim by sliding the gradient itself rather than rotating a wheel.",tags:["HTML","CSS"],isVerified:true},
+  {slug:"neon-flicker-border",name:"Neon Flicker Border",category:"Borders",previewType:"card",badge:"SIGNATURE",productType:"PRO",price:"$29",description:"A neon tube with unevenly timed dropouts, so it reads as a failing sign rather than a pulse.",tags:["HTML","CSS"],isVerified:true},
+  {slug:"liquid-metal-border-button",name:"Liquid Metal Border Button",category:"Borders",previewType:"card",badge:"SIGNATURE",productType:"PREMIUM",price:"$34",description:"A button ringed by a rotating liquid-metal border that accelerates on hover, with press depth and a click ripple.",tags:["HTML","CSS","JS"],isVerified:true},
+  {slug:"glowing-shadow-border",name:"Glowing Shadow Border",category:"Borders",previewType:"card",badge:"SIGNATURE",productType:"PREMIUM",price:"$38",description:"A card wrapped in a hue-cycling glow that orbits the border and snaps into a focused bloom on hover.",tags:["HTML","CSS"],isVerified:true},
+
+  {slug:"kinetic-cursor-grid",name:"Kinetic Cursor Grid",category:"Backgrounds",previewType:"card",badge:"SIGNATURE",productType:"PREMIUM",price:"$36",description:"A canvas dot grid that warps toward the pointer and sends a ripple outward on every click.",tags:["HTML","CSS","JS"],isVerified:true},
+  {slug:"dot-pattern-spotlight",name:"Dot Pattern Spotlight",category:"Backgrounds",previewType:"card",badge:"INTERACTIVE",productType:"PRO",price:"$22",description:"A dim dot grid with a brighter twin revealed only inside a spotlight that follows the cursor.",tags:["HTML","CSS","JS"],isVerified:true},
+  {slug:"aurora-mesh-drift",name:"Aurora Mesh Drift",category:"Backgrounds",previewType:"card",badge:"SIGNATURE",productType:"PREMIUM",price:"$30",description:"Four screen-blended colour fields drifting out of sync behind a heavy blur.",tags:["HTML","CSS"],isVerified:true},
+  {slug:"gradient-wave-field",name:"Gradient Wave Field",category:"Backgrounds",previewType:"card",badge:"FREE",productType:"FREE",price:"Free",description:"Three SVG wave bands sliding at different speeds over a light sky gradient.",tags:["HTML","CSS","SVG"],isVerified:false},
+  {slug:"starfield-parallax",name:"Starfield Parallax",category:"Backgrounds",previewType:"card",badge:"INTERACTIVE",productType:"PRO",price:"$26",description:"Three depth layers of stars, each tracking the pointer by a different amount with eased motion.",tags:["HTML","CSS","JS"],isVerified:false},
+  {slug:"grain-gradient-bg",name:"Grain Gradient",category:"Backgrounds",previewType:"card",badge:"SIGNATURE",productType:"PREMIUM",price:"$28",description:"A drifting multi-stop gradient under live SVG turbulence grain instead of a tiled noise image.",tags:["HTML","CSS","SVG"],isVerified:true},
+  {slug:"topographic-flow-lines",name:"Topographic Flow Lines",category:"Backgrounds",previewType:"card",badge:"SIGNATURE",productType:"PREMIUM",price:"$32",description:"Contour lines redrawn every frame from a drifting noise field, with amplitude following the cursor.",tags:["HTML","CSS","JS"],isVerified:true},
+  {slug:"ripple-surface-bg",name:"Ripple Surface",category:"Backgrounds",previewType:"card",badge:"INTERACTIVE",productType:"PRO",price:"$25",description:"A water surface that answers clicks and drags with expanding double-ring ripples.",tags:["HTML","CSS","JS"],isVerified:false},
+
   {slug:"morph-loading-button",name:"Morphing Loading Button",category:"Buttons",previewType:"card",badge:"NEW",productType:"PRO",price:"$18",description:"A submit button that morphs into a spinner, then a success state, without layout jump.",tags:["HTML","CSS","JS"],isVerified:false},
   {slug:"command-trigger-button",name:"Command Trigger Button",category:"Buttons",previewType:"card",badge:"INTERACTIVE",productType:"PRO",price:"$21",description:"A ⌘K-triggered command button that opens an inline action menu.",tags:["HTML","CSS","JS"],isVerified:true},
   {slug:"progress-ring-loader",name:"Progress Ring Loader",category:"Loaders & Cursors",previewType:"card",badge:"FREE",productType:"FREE",price:"Free",description:"An animated circular progress ring loader with a live percentage readout.",tags:["HTML","CSS","JS"],isVerified:false},
@@ -156,7 +178,7 @@ const products = [
 ];
 
 await connectDB();
-const categoryNames=["Cards","Pricing","Dashboards","Hero Sections","Testimonials","Navigation","Forms","Portfolio","Features","Landing Pages","Buttons","Scroll Animations","Loaders & Cursors","Boilerplates"];
+const categoryNames=["Cards","Pricing","Dashboards","Hero Sections","Testimonials","Navigation","Forms","Portfolio","Features","Landing Pages","Buttons","Scroll Animations","Loaders & Cursors","Borders","Backgrounds","Boilerplates"];
 const collectionNames=["New","Trending","Free","Premium"];
 for(const name of categoryNames){await Category.findOneAndUpdate({name},{name,slug:name.toLowerCase().replace(/[^a-z0-9]+/g,"-")},{upsert:true,new:true,setDefaultsOnInsert:true})}
 for(const name of collectionNames){await Collection.findOneAndUpdate({name},{name,slug:name.toLowerCase()},{upsert:true,new:true,setDefaultsOnInsert:true})}
@@ -168,8 +190,16 @@ for(const p of products){
       ...p,
       previewCode: complete,
       code:{html:complete,css:"",javascript:""},
+      // Every product used to land in New + Trending, which made those two pages
+      // show the whole catalogue while /collections/free and /collections/premium
+      // came back empty — nothing was ever tagged with them.
       collection:"New",
-      collections:["New","Trending"],
+      collections:[
+        "New",
+        ...(p.productType==="FREE"?["Free"]:[]),
+        ...(p.productType==="PREMIUM"?["Premium"]:[]),
+        ...((p.isVerified||p.isFeatured)?["Trending"]:[])
+      ],
       isFeatured:p.isFeatured ?? (p.slug==="magnetic-cta-button"),
       prompt: p.category==="Boilerplates"
         ? `Build "${p.name}", a complete, production-ready ${p.description.charAt(0).toLowerCase()}${p.description.slice(1)} Preserve its own distinct color system, typography scale and section composition exactly as designed — do not substitute a generic template. Implement every section shown in the preview (navigation, hero, core layout, and closing sections), keep all interaction states (hover, focus, active) explicit, respect prefers-reduced-motion, and make it fully responsive from 320px through desktop with no horizontal scrolling.`

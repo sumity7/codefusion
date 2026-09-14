@@ -20,7 +20,10 @@ main{animation:pageIn .4s ease}
 /* Directional liquid-fill buttons */
 .button{--primary:#c4b5fd;--secondary:#09080d;--secondary-invert:#171225;--glass-fill:rgba(255,255,255,.62);--glass-fill-solid:rgba(255,255,255,.95);border-radius:999px;background-image:linear-gradient(to bottom,var(--glass-fill) 0 50%,var(--primary) 50% 100%);background-size:100% 200%;background-position:0% 100%;color:var(--secondary);border:0;backdrop-filter:blur(0px);-webkit-backdrop-filter:blur(0px);transition:background-position 360ms ease-in-out,color 360ms ease-in-out,box-shadow 360ms ease-in-out,backdrop-filter 360ms ease-in-out,-webkit-backdrop-filter 360ms ease-in-out}
 .button svg{color:currentColor;stroke:currentColor}.button.primary{color:var(--secondary);background-image:linear-gradient(to bottom,var(--glass-fill) 0 50%,var(--primary) 50% 100%);box-shadow:0 10px 26px color-mix(in srgb,var(--primary) 30%,transparent)}
-.button.ghost{--primary:#f8f7fc;--secondary:#c7c3ce;--secondary-invert:#171225;--glass-fill:rgba(255,255,255,.62);--glass-fill-solid:rgba(255,255,255,.95);color:var(--secondary);background-image:linear-gradient(to bottom,var(--glass-fill) 0 50%,var(--primary) 50% 100%);box-shadow:0 10px 26px rgba(0,0,0,.18)}
+/* --secondary is the resting label colour and --primary is the resting fill.
+   Ghost fills near-white, so the label has to be dark — it was #c7c3ce, which
+   landed at 1.6:1 against the fill and read as a blank button in dark mode. */
+.button.ghost{--primary:#f8f7fc;--secondary:#2f2a3d;--secondary-invert:#171225;--glass-fill:rgba(255,255,255,.62);--glass-fill-solid:rgba(255,255,255,.95);color:var(--secondary);background-image:linear-gradient(to bottom,var(--glass-fill) 0 50%,var(--primary) 50% 100%);box-shadow:0 10px 26px rgba(0,0,0,.18)}
 .subscription-page{max-width:560px}.subscription-card{margin-top:20px;padding:32px;text-align:left}.subscription-card h2{font:700 22px "Space Grotesk";margin:0 0 8px}.subscription-price{font:700 52px "Space Grotesk";color:#c8bdff}.subscription-price small{font-size:13px;color:#77737f;font-weight:500}.subscription-card>strong{display:block;margin:6px 0 16px;color:#a89fbb;font-size:10px}.subscription-card p{display:flex;align-items:center;gap:8px;margin:9px 0;color:#c2bccd;font-size:10px}.subscription-card p svg{color:#c4b5fd;flex-shrink:0}.subscription-card .button{margin-top:18px;width:100%}
 .button.outline{--primary:#c4b5fd;--secondary:#c4b5fd;--secondary-invert:#171225;background-image:linear-gradient(to bottom,var(--glass-fill) 0 50%,transparent 50% 100%);border:1.5px solid var(--primary);background-clip:padding-box;box-shadow:none}
 @media (hover:hover){.button:hover{transform:none;background-position:0% 0%;color:var(--secondary-invert);backdrop-filter:blur(14px) saturate(160%);-webkit-backdrop-filter:blur(14px) saturate(160%);box-shadow:0 4px 14px rgba(0,0,0,.13),inset 0 1px 0 rgba(0,0,0,.18)}}
@@ -388,7 +391,7 @@ main{animation:pageIn .4s ease}
 [data-theme="light"] .button.primary:hover{background:#433bce;box-shadow:0 14px 34px rgba(79,70,229,.38)}
 [data-theme="light"] .button.outline{--primary:#4f46e5;--secondary:#4f46e5;--secondary-invert:#ffffff;background-image:none;background:#fff;border:1.5px solid #4f46e5;color:#4f46e5}
 [data-theme="light"] .button.outline:hover{background:#eef0ff}
-[data-theme="light"] .button.ghost{--primary:#c7d9ff;--secondary:#4f46e5;--secondary-invert:#0b1220;--glass-fill:rgba(255,255,255,.85);--glass-fill-solid:#ffffff;border:1.5px solid #4f46e5;box-shadow:0 6px 18px rgba(29,78,216,.14)}
+[data-theme="light"] .button.ghost{--primary:#d5e3ff;--secondary:#4f46e5;--secondary-invert:#0b1220;--glass-fill:rgba(255,255,255,.85);--glass-fill-solid:#ffffff;border:1.5px solid #4f46e5;box-shadow:0 6px 18px rgba(29,78,216,.14)}
 [data-theme="light"] .mobile-toggle{border-color:#e4e1ec;background:#fff;color:#59545f}
 [data-theme="light"] .theme-toggle{border-color:#e4e1ec;background:#fff;color:#59545f}
 [data-theme="light"] .nav-login{border-color:#e4e1ec;background:#fff;color:#4c4759}
@@ -902,7 +905,16 @@ main{animation:pageIn .4s ease}
 .p-media{transition:box-shadow var(--t-slow) var(--ease-out)}
 .p-card:hover .p-media{box-shadow:inset 0 0 0 1px rgba(196,181,253,.14)}
 [data-theme="light"] .p-card:hover .p-media{box-shadow:inset 0 0 0 1px rgba(124,92,255,.14)}
-.p-hover{transition:opacity var(--t-base) var(--ease-out),transform var(--t-base) var(--ease-out)}
+.p-hover{transition:opacity var(--t-base) var(--ease-out),transform var(--t-base) var(--ease-out),
+         background var(--t-base) var(--ease-out),color var(--t-base) var(--ease-out),border-color var(--t-base) var(--ease-out)}
+/* Nested under .p-card:hover on purpose: the rule that reveals this label is
+   .p-card:hover .p-hover{transform:none}, so a bare .p-hover:hover would lose
+   the cascade and the scale would never apply. */
+.p-card:hover .p-hover:hover{transform:scale(1.08);background:#c4b5fd;color:#100d18;border-color:#c4b5fd;
+  box-shadow:0 6px 18px rgba(196,181,253,.28)}
+.p-card:hover .p-hover:active{transform:scale(1.02);transition-duration:var(--t-press)}
+[data-theme="light"] .p-card:hover .p-hover:hover{background:#4f46e5;color:#fff;border-color:#4f46e5;
+  box-shadow:0 6px 18px rgba(79,70,229,.3)}
 
 /* ---------- Press feedback ---------- */
 .button:active,
@@ -991,6 +1003,9 @@ main{animation:pageIn .4s ease}
   /* Keeps its centring transform — only the scale is dropped. */
   .password-field-toggle:hover,
   .password-field-toggle:active{transform:translateY(-50%)}
+  /* Colour feedback stays, only the growth is removed. */
+  .p-card:hover .p-hover:hover,
+  .p-card:hover .p-hover:active{transform:none}
   .cat-list button:hover{padding-left:10px}
   .button:active,
   .p-card>a:active,

@@ -18,13 +18,16 @@ import { useTheme } from "../hooks/useTheme";
  * intentional dark UI). Forcing a canvas colour onto those would break designs
  * that are already correct.
  */
+/* :not([data-cf-keep-dark]) matters as much as the script's own opt-out — without
+   it a component that declares itself dark-by-design still gets its canvas
+   repainted here, and effects that only read against dark wash out. */
 const LIGHT_CANVAS_CSS = `
-        :root[data-theme="light"]{ --bg: #f4f3fa !important; }
-        [data-theme="light"] body{
+        :root[data-theme="light"] body:not([data-cf-keep-dark]){ --bg: #f4f3fa !important; }
+        [data-theme="light"] body:not([data-cf-keep-dark]){
           background: #f4f3fa !important;
           color: #15131c;
         }
-        [data-theme="light"] .kicker{ color: #5b5470 !important; }
+        [data-theme="light"] body:not([data-cf-keep-dark]) .kicker{ color: #5b5470 !important; }
 `;
 
 /*
@@ -70,9 +73,17 @@ const LIGHT_CANVAS_SCRIPT = `
     return (hi + 0.05) / (lo + 0.05);
   }
 
+  /* Some components are designed around a dark surface — a glow only reads
+     against one — so they opt out with data-cf-keep-dark and both passes skip
+     that whole subtree, text included. */
+  function keepsDark(el){
+    return Boolean(el.closest && el.closest("[data-cf-keep-dark]"));
+  }
+
   /* Pass 1 — lighten dark neutral surfaces. */
   function surfaces(){
     document.querySelectorAll("*").forEach(function(el){
+      if (keepsDark(el)) return;
       var c = parse(getComputedStyle(el).backgroundColor);
       if (!c || c.a < 0.4) return;
       var max = Math.max(c.r, c.g, c.b), min = Math.min(c.r, c.g, c.b);
@@ -108,7 +119,7 @@ const LIGHT_CANVAS_SCRIPT = `
      all onto the same mid-grey. */
   function text(){
     document.querySelectorAll("*").forEach(function(el){
-      if (!hasText(el)) return;
+      if (!hasText(el) || keepsDark(el)) return;
       var c = parse(getComputedStyle(el).color);
       if (!c || c.a < 0.3) return;
       var L = lum(c.r, c.g, c.b);
