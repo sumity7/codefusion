@@ -107,19 +107,21 @@ export default function Products() {
       </section>
 
       <section className="container collection-feature">
-        <Link to={`/products/${feature.slug}`} className="feature-card">
-          <div>
-            <span className="eyebrow">FEATURED RELEASE · {feature.badge}</span>
-            <h2>{feature.name}</h2>
-            <p>{feature.description}</p>
-            <span className="feature-link">
-              Explore system <ArrowUpRight size={17} />
-            </span>
-          </div>
-          <div className="feature-visual">
-            <ProductVisual product={feature} />
-          </div>
-        </Link>
+        <ScrollReveal>
+          <Link to={`/products/${feature.slug}`} className="feature-card">
+            <div>
+              <span className="eyebrow">FEATURED RELEASE · {feature.badge}</span>
+              <h2>{feature.name}</h2>
+              <p>{feature.description}</p>
+              <span className="feature-link">
+                Explore system <ArrowUpRight size={17} />
+              </span>
+            </div>
+            <div className="feature-visual">
+              <ProductVisual product={feature} />
+            </div>
+          </Link>
+        </ScrollReveal>
       </section>
 
       <section className="container">
@@ -127,31 +129,35 @@ export default function Products() {
           <CategorySidebar category={category} onSelect={handleCategorySelect} />
 
           <div ref={browseRef} style={{ scrollMarginTop: "88px" }}>
-            <div className="collection-toolbar">
-              <div>
-                <span className="eyebrow">EXPLORE THE LIBRARY</span>
-                <h2>Made for the last 10%.</h2>
+            <ScrollReveal>
+              <div className="collection-toolbar">
+                <div>
+                  <span className="eyebrow">EXPLORE THE LIBRARY</span>
+                  <h2>Made for the last 10%.</h2>
+                </div>
+                <span>
+                  <SlidersHorizontal size={14} /> {shown.length} curated products
+                </span>
               </div>
-              <span>
-                <SlidersHorizontal size={14} /> {shown.length} curated products
-              </span>
-            </div>
+            </ScrollReveal>
 
-            <div className="browse-toolbar">
-              <div className="plan-tabs">
-                {PLAN_TABS.map((tab) => (
-                  <button key={tab.key} type="button" className={plan === tab.key ? "active" : ""} onClick={() => setPlan(tab.key)}>
-                    {tab.label}
-                  </button>
-                ))}
+            <ScrollReveal delay={60}>
+              <div className="browse-toolbar">
+                <div className="plan-tabs">
+                  {PLAN_TABS.map((tab) => (
+                    <button key={tab.key} type="button" className={plan === tab.key ? "active" : ""} onClick={() => setPlan(tab.key)}>
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+                <select className="sort-select" value={sort} onChange={(event) => setSort(event.target.value)}>
+                  <option value="newest">Newest</option>
+                  <option value="popular">Most popular</option>
+                  <option value="rating">Top rated</option>
+                  <option value="price">Price</option>
+                </select>
               </div>
-              <select className="sort-select" value={sort} onChange={(event) => setSort(event.target.value)}>
-                <option value="newest">Newest</option>
-                <option value="popular">Most popular</option>
-                <option value="rating">Top rated</option>
-                <option value="price">Price</option>
-              </select>
-            </div>
+            </ScrollReveal>
 
             <div className="product-grid listing-grid premium-grid">
               {shown.map((product, index) => (

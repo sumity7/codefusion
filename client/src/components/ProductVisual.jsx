@@ -30,39 +30,106 @@ const LIGHT_CANVAS_CSS = `
 /*
  * The canvas override above only touches `body` and `--bg`. Most component demos
  * also paint their own inner cards/panels from hardcoded near-black hex values
- * (not the `--bg` variable), so those stay dark even once the page behind them
- * is light — reading as a solid black card.
+ * (not the `--bg` variable), and write their copy in light greys meant to sit on
+ * those dark surfaces. Fixing only the canvas leaves black cards, and fixing only
+ * the cards leaves near-white text on a near-white page.
  *
- * Rather than hand-patching every product's markup, this walks the rendered
- * iframe after load and flips any element whose *computed* background is a dark,
- * low-saturation neutral (near-black/near-gray) to a light one, and flips its own
- * text colour along with it if that text was light-on-dark. Saturated accent
- * colours (lavender, green, gold, brand gradients) are never neutral enough to
- * match, so intentional colour design is left untouched.
+ * So this runs two passes over the rendered iframe instead of hand-patching 140
+ * product sources:
+ *
+ *   1. Surfaces — any element whose computed background is a dark, low-saturation
+ *      neutral becomes light. Saturated accents (lavender, green, gold, brand
+ *      gradients) are never neutral enough to match, so colour design survives.
+ *
+ *   2. Text — for every element holding actual text, resolve the background it
+ *      now sits on and check WCAG contrast. Anything under 4.5:1 gets darkened by
+ *      scaling its channels down, which keeps the hue, so a lavender label stays
+ *      lavender instead of collapsing to grey. Only if scaling can't reach the
+ *      threshold does it fall back to the neutral ink colour.
  */
 const LIGHT_CANVAS_SCRIPT = `
 <script>
 (function(){
-  function run(){
+  var RGB = /rgba?\\((\\d+),\\s*(\\d+),\\s*(\\d+)(?:,\\s*([\\d.]+))?\\)/;
+  var CANVAS = [244, 243, 250];
+
+  function parse(value){
+    var m = String(value).match(RGB);
+    if (!m) return null;
+    return { r:+m[1], g:+m[2], b:+m[3], a: m[4] !== undefined ? +m[4] : 1 };
+  }
+  function lin(c){
+    c = c / 255;
+    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  }
+  function lum(r, g, b){
+    return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+  }
+  function contrast(a, b){
+    var hi = Math.max(a, b), lo = Math.min(a, b);
+    return (hi + 0.05) / (lo + 0.05);
+  }
+
+  /* Pass 1 — lighten dark neutral surfaces. */
+  function surfaces(){
     document.querySelectorAll("*").forEach(function(el){
-      var cs = getComputedStyle(el);
-      var m = cs.backgroundColor.match(/rgba?\\((\\d+),\\s*(\\d+),\\s*(\\d+)(?:,\\s*([\\d.]+))?\\)/);
-      if (!m) return;
-      var r = +m[1], g = +m[2], b = +m[3];
-      var a = m[4] !== undefined ? +m[4] : 1;
-      if (a < 0.4) return;
-      var max = Math.max(r, g, b), min = Math.min(r, g, b);
-      var lum = 0.299 * r + 0.587 * g + 0.114 * b;
-      if (max - min >= 28 || lum >= 70) return;
-      el.style.setProperty("background-color", lum < 25 ? "#f4f3fa" : "#ffffff", "important");
-      var tm = cs.color.match(/rgba?\\((\\d+),\\s*(\\d+),\\s*(\\d+)/);
-      if (tm) {
-        var tr = +tm[1], tg = +tm[2], tb = +tm[3];
-        var tlum = 0.299 * tr + 0.587 * tg + 0.114 * tb;
-        if (tlum > 150) el.style.setProperty("color", "#15131c", "important");
-      }
+      var c = parse(getComputedStyle(el).backgroundColor);
+      if (!c || c.a < 0.4) return;
+      var max = Math.max(c.r, c.g, c.b), min = Math.min(c.r, c.g, c.b);
+      var perceived = 0.299 * c.r + 0.587 * c.g + 0.114 * c.b;
+      if (max - min >= 28 || perceived >= 70) return;
+      el.style.setProperty("background-color", perceived < 25 ? "#f4f3fa" : "#ffffff", "important");
     });
   }
+
+  /* Nearest ancestor that actually paints a background. */
+  function backdropLum(el){
+    var node = el;
+    while (node && node.nodeType === 1){
+      var c = parse(getComputedStyle(node).backgroundColor);
+      if (c && c.a >= 0.5) return lum(c.r, c.g, c.b);
+      node = node.parentElement;
+    }
+    return lum(CANVAS[0], CANVAS[1], CANVAS[2]);
+  }
+
+  function hasText(el){
+    for (var i = 0; i < el.childNodes.length; i++){
+      var n = el.childNodes[i];
+      if (n.nodeType === 3 && n.nodeValue.trim()) return true;
+    }
+    return false;
+  }
+
+  /* Pass 2 — pull low-contrast text down until it is readable.
+     The brighter a colour was in the original dark design, the more prominent it
+     was meant to be, so it gets a higher contrast target. That keeps headings,
+     body copy and muted captions visually separated instead of flattening them
+     all onto the same mid-grey. */
+  function text(){
+    document.querySelectorAll("*").forEach(function(el){
+      if (!hasText(el)) return;
+      var c = parse(getComputedStyle(el).color);
+      if (!c || c.a < 0.3) return;
+      var L = lum(c.r, c.g, c.b);
+      var target = L > 0.55 ? 9 : L > 0.25 ? 6 : 4.5;
+      var bg = backdropLum(el);
+      if (contrast(L, bg) >= target) return;
+      var f = 1;
+      for (var i = 0; i < 20; i++){
+        f *= 0.82;
+        var r = Math.round(c.r * f), g = Math.round(c.g * f), b = Math.round(c.b * f);
+        if (contrast(lum(r, g, b), bg) >= target){
+          el.style.setProperty("color", "rgb(" + r + "," + g + "," + b + ")", "important");
+          return;
+        }
+      }
+      el.style.setProperty("color", "#15131c", "important");
+    });
+  }
+
+  function run(){ surfaces(); text(); }
+
   if (document.readyState === "complete") requestAnimationFrame(run);
   else window.addEventListener("load", function(){ requestAnimationFrame(run); });
 })();
