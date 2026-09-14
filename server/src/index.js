@@ -15,9 +15,26 @@ import { notFound, errorHandler } from "./middleware/error.js";
 
 const app = express();
 
+// CLIENT_URL may hold one origin or a comma-separated list (custom domain +
+// any Vercel deployment URL). Any *.vercel.app origin is allowed automatically
+// since those URLs are assigned by Vercel and aren't known ahead of time.
+const configuredOrigins = (process.env.CLIENT_URL || "http://localhost:5173")
+  .split(",")
+  .map((value) => value.trim())
+  .filter(Boolean);
+
+const vercelPreviewPattern = /^https:\/\/[a-z0-9-]+\.vercel\.app$/i;
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin(origin, callback) {
+      // no Origin header: same-origin requests, curl, server-to-server, health checks
+      if (!origin) return callback(null, true);
+      if (configuredOrigins.includes(origin) || vercelPreviewPattern.test(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error(`Origin ${origin} not allowed by CORS`));
+    },
     credentials: false,
   })
 );
@@ -55,10 +72,22 @@ app.use(errorHandler);
 
 const port = Number(process.env.PORT || 5000);
 
+// Render's free tier spins the service down after 15 minutes without an
+// incoming request. Pinging our own public health endpoint every 11 minutes
+// keeps it under that threshold. Only runs in production — a local dev
+// server has no reason to ping itself.
+function startSelfPing() {
+  const selfUrl = process.env.RENDER_EXTERNAL_URL || "https://codefusion-f2yd.onrender.com";
+  setInterval(() => {
+    fetch(`${selfUrl}/api/health`).catch(() => {});
+  }, 11 * 60 * 1000);
+}
+
 connectDB()
   .then(() => {
     app.listen(port, "0.0.0.0", () => {
       console.log(`CodeFusion API listening on port ${port}`);
+      if (process.env.NODE_ENV === "production") startSelfPing();
     });
   })
   .catch((err) => {

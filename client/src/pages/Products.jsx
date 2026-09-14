@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUpRight, Search, SlidersHorizontal, Sparkles } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { api } from "../services/api";
@@ -64,6 +64,14 @@ export default function Products() {
   const spotlight = shown[0] || fallbackProducts[0];
   const feature = shown[2] || fallbackProducts[2];
 
+  const browseRef = useRef(null);
+  function handleCategorySelect(name) {
+    setCategory(name);
+    requestAnimationFrame(() => {
+      browseRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
   return (
     <main className="listing premium-listing">
       <section className="collection-hero container">
@@ -116,9 +124,9 @@ export default function Products() {
 
       <section className="container">
         <div className="browse-shell">
-          <CategorySidebar category={category} onSelect={setCategory} />
+          <CategorySidebar category={category} onSelect={handleCategorySelect} />
 
-          <div>
+          <div ref={browseRef} style={{ scrollMarginTop: "88px" }}>
             <div className="collection-toolbar">
               <div>
                 <span className="eyebrow">EXPLORE THE LIBRARY</span>

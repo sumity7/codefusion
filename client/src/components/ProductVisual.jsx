@@ -1,4 +1,45 @@
 import { getCombinedSourceCode } from "../services/combinedSource";
+import { useTheme } from "../hooks/useTheme";
+
+/*
+ * Light-mode preview canvas.
+ *
+ * Previews render inside sandboxed iframes, so the site's theme CSS can't reach
+ * them. The component demos paint their backdrop from a `--bg` custom property
+ * (near-black) with light text on top, which reads as a harsh black slab on a
+ * light page.
+ *
+ * This overrides only the *canvas*: the backdrop variable, body text, and the
+ * small caption label. Every component's own colours (cards, buttons, borders,
+ * gradients) are left exactly as designed — a dark button stays a dark button.
+ *
+ * Boilerplates are deliberately excluded: each is a full page with its own
+ * bespoke palette (Atlas's cream, LaunchKit's off-white, Nova/DevDock's
+ * intentional dark UI). Forcing a canvas colour onto those would break designs
+ * that are already correct.
+ */
+const LIGHT_CANVAS_CSS = `
+        :root[data-theme="light"]{ --bg: #f4f3fa !important; }
+        [data-theme="light"] body{
+          background: #f4f3fa !important;
+          color: #15131c;
+        }
+        [data-theme="light"] .kicker{ color: #5b5470 !important; }
+`;
+
+function usesLightCanvas(product) {
+  return product?.category !== "Boilerplates";
+}
+
+function applyPreviewTheme(html, theme) {
+  if (theme !== "light") return html;
+  // Tag the preview document so the rules above apply inside the iframe.
+  if (/<html\b[^>]*\bdata-theme=/i.test(html)) return html;
+  if (/<html\b/i.test(html)) {
+    return html.replace(/<html\b/i, '<html data-theme="light"');
+  }
+  return html;
+}
 
 function hasSourceCode(product) {
   return Boolean(
@@ -11,7 +52,8 @@ function hasSourceCode(product) {
 
 function buildPreviewSource(
   product,
-  mode = "detail"
+  mode = "detail",
+  theme = "dark"
 ) {
   const originalSource =
     product?.previewCode ||
@@ -76,21 +118,25 @@ function buildPreviewSource(
         }
       `;
 
-  let output = originalSource;
+  const lightCanvas = theme === "light" && usesLightCanvas(product);
+
+  let output = applyPreviewTheme(originalSource, lightCanvas ? "light" : theme);
+
+  const themedCSS = lightCanvas ? previewCSS + LIGHT_CANVAS_CSS : previewCSS;
 
   if (/<\/head>/i.test(output)) {
     output = output.replace(
       /<\/head>/i,
       `
 <style id="codefusion-preview-overrides">
-${previewCSS}
+${themedCSS}
 </style>
 </head>`
     );
   } else {
     output = `
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"${lightCanvas ? ' data-theme="light"' : ""}>
 <head>
   <meta charset="UTF-8">
 
@@ -100,7 +146,7 @@ ${previewCSS}
   >
 
   <style id="codefusion-preview-overrides">
-${previewCSS}
+${themedCSS}
   </style>
 </head>
 
@@ -117,10 +163,13 @@ export function SourcePreview({
   product,
   mode = "detail",
 }) {
+  const { theme } = useTheme() || {};
+
   const source =
     buildPreviewSource(
       product,
-      mode
+      mode,
+      theme
     );
 
   return (
