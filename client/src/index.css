@@ -861,8 +861,12 @@ main{animation:pageIn .4s ease}
 .quick-view:hover,
 .theme-toggle:hover,
 .nav-icon:hover,
-.mobile-toggle:hover,
-.password-field-toggle:hover{transform:translateY(-1px) scale(1.05)}
+.mobile-toggle:hover{transform:translateY(-1px) scale(1.05)}
+
+/* This one is centred with translateY(-50%), so its feedback has to be folded
+   into that transform rather than replacing it. */
+.password-field-toggle:hover{transform:translateY(-50%) scale(1.08)}
+.password-field-toggle:active{transform:translateY(-50%) scale(.92);transition-duration:var(--t-press)}
 
 .wish.saved{box-shadow:0 0 18px rgba(196,181,253,.16)}
 
@@ -915,8 +919,7 @@ main{animation:pageIn .4s ease}
 .icon-action:active,
 .review-actions button:active,
 .editor-tabs button:active,
-.cat-sidebar-close:active,
-.password-field-toggle:active{transform:scale(.94);transition-duration:var(--t-press)}
+.cat-sidebar-close:active{transform:scale(.94);transition-duration:var(--t-press)}
 
 .cat-list button:active{transform:scale(.98);transition-duration:var(--t-press)}
 
@@ -981,11 +984,13 @@ main{animation:pageIn .4s ease}
   .theme-toggle:hover,
   .nav-icon:hover,
   .mobile-toggle:hover,
-  .password-field-toggle:hover,
   .footer-grid>div>a:hover,
   .category-line a:hover,
   .resource-layout aside a:hover,
   .auth-link:hover{transform:none}
+  /* Keeps its centring transform — only the scale is dropped. */
+  .password-field-toggle:hover,
+  .password-field-toggle:active{transform:translateY(-50%)}
   .cat-list button:hover{padding-left:10px}
   .button:active,
   .p-card>a:active,
@@ -1046,7 +1051,14 @@ main{animation:pageIn .4s ease}
 
 .collection-copy{animation:cfRise .55s cubic-bezier(.16,1,.3,1) both}
 .collection-art{animation:cfRise .55s cubic-bezier(.16,1,.3,1) .1s both}
-.cat-sidebar{animation:cfRise .5s cubic-bezier(.16,1,.3,1) .05s both}
+
+/* Desktop only. Below 1025px this element is the off-canvas drawer, which is
+   held off-screen by transform:translateX(-100%) — and animations outrank
+   normal declarations in the cascade, so an entrance ending in transform:none
+   would pin the drawer open and kill its slide transition. */
+@media (min-width:1025px){
+  .cat-sidebar{animation:cfRise .5s cubic-bezier(.16,1,.3,1) .05s both}
+}
 
 @media (prefers-reduced-motion:reduce){
   .collection-copy,
