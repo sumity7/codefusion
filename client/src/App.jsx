@@ -15,38 +15,76 @@ import Navbar from "./components/Navbar"; import Footer from "./components/Foote
  * Positions are keyed by location.key so each history entry keeps its own, and
  * the browser's native restoration is switched off so the two don't compete.
  */
+// Keyed by location.key, so each history entry remembers its own offset.
+const scrollPositions=new Map();
+
 function ScrollManager(){
   const location=useLocation();
   const navType=useNavigationType();
-  const key="cf_scroll_"+location.key;
+  const key=location.key;
 
   useEffect(()=>{
     if("scrollRestoration" in window.history) window.history.scrollRestoration="manual";
   },[]);
 
-  // Record where this entry was left, both on unmount and on a real page hide.
+  /*
+   * Tracked live rather than read when the route changes. Effect cleanup runs
+   * after the next page's DOM is committed, and a product page is much shorter
+   * than the listing — so by then the browser has already clamped scrollY down
+   * to fit the new document, and what gets saved is near zero instead of where
+   * the reader actually was.
+   */
   useEffect(()=>{
-    const save=()=>{try{sessionStorage.setItem(key,String(window.scrollY))}catch{}};
-    window.addEventListener("pagehide",save);
-    return()=>{save();window.removeEventListener("pagehide",save)};
+    let frame=0;
+    const track=()=>{
+      if(frame) return;
+      frame=requestAnimationFrame(()=>{frame=0;scrollPositions.set(key,window.scrollY)});
+    };
+    // A reload wipes the Map, and native restoration is off, so mirror the last
+    // position into sessionStorage on the way out to cover reload-then-back.
+    const persist=()=>{try{sessionStorage.setItem("cf_scroll_"+key,String(scrollPositions.get(key)||0))}catch{}};
+
+    track();
+    window.addEventListener("scroll",track,{passive:true});
+    window.addEventListener("pagehide",persist);
+    return()=>{
+      window.removeEventListener("scroll",track);
+      window.removeEventListener("pagehide",persist);
+      cancelAnimationFrame(frame);
+    };
   },[key]);
 
+  /*
+   * PUSH    — a new page, start at the top.
+   * POP     — back/forward, put the reader back where they were.
+   * REPLACE — the page rewriting its own query string (category, sort). Leave
+   *           scroll alone or it fights the page's own behaviour.
+   */
   useEffect(()=>{
     if(navType==="REPLACE") return;
 
-    if(navType!=="POP"){window.scrollTo(0,0);return}
+    if(navType!=="POP"){
+      window.scrollTo(0,0);
+      // The tracker seeded this entry with the previous page's offset before the
+      // reset landed; correct it so a later forward navigation isn't restored to
+      // a position that was never this page's.
+      scrollPositions.set(key,0);
+      return;
+    }
 
-    let target=0;
-    try{target=Number(sessionStorage.getItem(key))||0}catch{}
+    let target=scrollPositions.get(key);
+    if(target===undefined){
+      try{target=Number(sessionStorage.getItem("cf_scroll_"+key))||0}catch{target=0}
+    }
     if(!target) return;
 
-    // The listing refetches on mount, so for a moment the page is too short to
-    // scroll this far. Keep trying until the content is tall enough or we give up.
+    // The listing refetches on mount, so for a moment the page is still too
+    // short to scroll this far. Retry until it's tall enough, then stop.
     let tries=0;
     let timer;
     const restore=()=>{
       window.scrollTo(0,target);
-      if(++tries<24&&Math.abs(window.scrollY-target)>2) timer=setTimeout(restore,60);
+      if(++tries<30&&Math.abs(window.scrollY-target)>2) timer=setTimeout(restore,50);
     };
     restore();
     return()=>clearTimeout(timer);
