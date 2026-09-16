@@ -345,6 +345,15 @@ export default function ProductDetails() {
             >
               {copying === "code" ? "Copying..." : "Copy All Code"}
             </button>
+
+            <button
+              type="button"
+              className="button ghost"
+              onClick={() => copy("prompt")}
+            >
+              <FileText size={15} />
+              {copying === "prompt" ? "Copying..." : "Copy Prompt"}
+            </button>
           </div>
         </div>
       </section>

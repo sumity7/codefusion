@@ -2,17 +2,36 @@ export const productSources = {
 
   "magnetic-cta-button": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Magnetic CTA Button</title><style>
+@property --angle{syntax:"<angle>";inherits:true;initial-value:0deg}
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:22px;place-items:center;padding:60px}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;overflow:hidden}
+.stage{position:relative;display:grid;gap:22px;place-items:center;padding:70px}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.magnetic{padding:18px 34px;border:1px solid var(--line);border-radius:999px;font-size:12px;font-weight:700;color:#eee9f8;cursor:pointer;background:#111017;transition:transform .15s ease-out,background .25s}
-.magnetic:hover{background:#17131f;border-color:#544c67}
+.halo{position:absolute;top:50%;left:50%;width:220px;height:220px;margin:-110px 0 0 -110px;border-radius:50%;background:radial-gradient(circle,rgba(196,181,253,.35),transparent 70%);filter:blur(10px);opacity:0;transition:opacity .3s;pointer-events:none}
+.magnetic-wrap{position:relative}
+.magnetic-wrap::before{content:"";position:absolute;inset:-2px;border-radius:999px;background:conic-gradient(from var(--angle),#9b8aff,#4c3f80,#d7d0ff,#4c3f80,#9b8aff);opacity:0;transition:opacity .3s;animation:spin 4s linear infinite;z-index:0}
+.magnetic-wrap:hover::before{opacity:1}
+.magnetic{position:relative;z-index:1;padding:18px 34px;border:1px solid var(--line);border-radius:999px;font-size:12px;font-weight:700;color:#eee9f8;cursor:pointer;background:#111017;transition:transform .15s ease-out,background .25s,color .25s}
+.magnetic-wrap:hover .magnetic{background:#17131f;color:#fff}
+@keyframes spin{to{--angle:360deg}}
 </style></head>
-<body><div class="stage"><span class="kicker">MOVE YOUR CURSOR NEAR IT</span><button class="magnetic" id="btn">Join the waitlist</button></div>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">MOVE YOUR CURSOR NEAR IT</span>
+<div class="halo" id="halo"></div>
+<div class="magnetic-wrap" id="wrap"><button class="magnetic" id="btn">Join the waitlist</button></div>
+</div>
 <script>
-const btn=document.getElementById("btn");
-document.addEventListener("pointermove",e=>{const r=btn.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,dist=Math.hypot(dx,dy);if(dist<140){btn.style.transform=\`translate(\${dx*.25}px, \${dy*.25}px)\`}else{btn.style.transform="translate(0,0)"}});
+const wrap=document.getElementById("wrap"),btn=document.getElementById("btn"),halo=document.getElementById("halo");
+document.addEventListener("pointermove",function(e){
+  const r=btn.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,dist=Math.hypot(dx,dy);
+  if(dist<160){
+    btn.style.transform="translate("+(dx*.25)+"px, "+(dy*.25)+"px)";
+    halo.style.opacity="1";
+    halo.style.transform="translate("+(dx*.4)+"px, "+(dy*.4)+"px)";
+  }else{
+    btn.style.transform="translate(0,0)";
+    halo.style.opacity="0";
+  }
+});
 </script>
 </body></html>`,
 
@@ -22,12 +41,12 @@ document.addEventListener("pointermove",e=>{const r=btn.getBoundingClientRect(),
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
 .stack{display:grid;gap:14px;padding:40px 30px}
-.reveal-card{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease;padding:22px;border:1px solid var(--line);border-radius:14px;background:#0d0d12}
+.reveal-card{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1);padding:22px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;box-shadow:0 20px 50px -24px rgba(0,0,0,.7)}
 .reveal-card.visible{opacity:1;transform:none}
 .reveal-card h3{margin:0 0 6px;font:700 16px "Space Grotesk",sans-serif}
 .reveal-card p{margin:0;color:#847e8f;font-size:10px}
 </style></head>
-<body><div class="stack"><span class="kicker">SCROLL DOWN INSIDE THIS PREVIEW</span>
+<body data-cf-keep-dark><div class="stack"><span class="kicker">SCROLL DOWN INSIDE THIS PREVIEW</span>
 <div class="reveal-card"><h3>Step one</h3><p>Cards fade and slide in as they enter the viewport.</p></div>
 <div class="reveal-card"><h3>Step two</h3><p>Powered by IntersectionObserver, no scroll-jank.</p></div>
 <div class="reveal-card"><h3>Step three</h3><p>Drop it into any section that needs a reveal.</p></div>
@@ -35,8 +54,8 @@ document.addEventListener("pointermove",e=>{const r=btn.getBoundingClientRect(),
 </div>
 <script>
 const cards=document.querySelectorAll(".reveal-card");
-const io=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add("visible")}),{threshold:.2});
-cards.forEach(c=>io.observe(c));
+const io=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting)entry.target.classList.add("visible")})},{threshold:.2});
+cards.forEach(function(c){io.observe(c)});
 </script>
 </body></html>`,
 
@@ -45,7 +64,7 @@ cards.forEach(c=>io.observe(c));
 :root{--bg:#050507;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;overflow-x:hidden}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;padding:16px 24px 0;display:block}
-.px-wrap{height:340px;position:relative;overflow:hidden;border-radius:16px;margin:16px}
+.px-wrap{height:340px;position:relative;overflow:hidden;border-radius:16px;margin:16px;box-shadow:0 30px 70px -24px rgba(0,0,0,.7)}
 .px-layer{position:absolute;inset:0;display:grid;place-items:center;will-change:transform}
 .px-back{background:radial-gradient(circle at 50% 40%,rgba(155,138,255,.22),transparent 55%),#0a0a0f}
 .px-mid span{font:700 clamp(40px,9vw,90px) "Space Grotesk",sans-serif;color:#1c1a24}
@@ -53,7 +72,7 @@ cards.forEach(c=>io.observe(c));
 .px-front h2{margin:0 0 6px;font:700 20px "Space Grotesk",sans-serif}
 .px-front p{margin:0;color:#a49dae;font-size:10px}
 </style></head>
-<body><span class="kicker">SCROLL THE PREVIEW</span>
+<body data-cf-keep-dark><span class="kicker">SCROLL THE PREVIEW</span>
 <div class="px-wrap" id="wrap"><div class="px-layer px-back" data-speed="0.2"></div><div class="px-layer px-mid" data-speed="0.5"><span>DEPTH</span></div><div class="px-layer px-front" data-speed="0.8"><div><h2>Layered scroll motion</h2><p>Each layer moves at its own speed.</p></div></div></div>
 <div style="height:900px"></div>
 <script>
@@ -65,23 +84,24 @@ document.addEventListener("scroll",onScroll,{passive:true});onScroll();
 
   "orbit-loader": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Orbit Loader</title><style>
+@property --angle{syntax:"<angle>";inherits:true;initial-value:0deg}
 :root{--bg:#050507;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .stage{display:flex;gap:46px;align-items:center;padding:40px}
 .kicker{display:block;margin-bottom:16px;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
 .loader{position:relative;width:56px;height:56px}
-.loader.ring{border:3px solid #23222c;border-top-color:var(--lav);border-radius:50%;animation:spin .9s linear infinite}
+.loader.ring{background:conic-gradient(from var(--angle),transparent,#d7d0ff,#9b8aff);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 4px));mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 4px));border-radius:50%;animation:spin .9s linear infinite;filter:drop-shadow(0 0 8px rgba(196,181,253,.4))}
 .loader.dots{display:flex;gap:6px;align-items:center;width:auto;height:auto}
-.loader.dots i{width:10px;height:10px;border-radius:50%;background:var(--lav);animation:bounce 1s ease-in-out infinite}
+.loader.dots i{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 0 8px rgba(196,181,253,.5);animation:bounce 1s ease-in-out infinite}
 .loader.dots i:nth-child(2){animation-delay:.15s}
 .loader.dots i:nth-child(3){animation-delay:.3s}
 .loader.orbit{border:1px solid #2c2a35;border-radius:50%}
 .loader.orbit i{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--lav);top:-4px;left:50%;margin-left:-4px;box-shadow:0 0 12px var(--lav);animation:orbit 1.2s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes spin{to{--angle:360deg}}
 @keyframes bounce{0%,80%,100%{transform:translateY(0);opacity:.5}40%{transform:translateY(-9px);opacity:1}}
 @keyframes orbit{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 </style></head>
-<body><span class="kicker">THREE LOADER STYLES</span><div class="stage"><div class="loader ring"></div><div class="loader dots"><i></i><i></i><i></i></div><div class="loader orbit"><i></i></div></div>
+<body data-cf-keep-dark><span class="kicker">THREE LOADER STYLES</span><div class="stage"><div class="loader ring"></div><div class="loader dots"><i></i><i></i><i></i></div><div class="loader orbit"><i></i></div></div>
 </body></html>`,
 
   "cursor-trail-effect": `<!DOCTYPE html>
@@ -90,15 +110,15 @@ document.addEventListener("scroll",onScroll,{passive:true});onScroll();
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;cursor:none;overflow:hidden}
 .kicker{display:block;margin-bottom:16px;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
 .msg{color:#847e8f;font-size:11px}
-.dot{position:fixed;top:0;left:0;width:8px;height:8px;border-radius:50%;background:#c4b5fd;pointer-events:none;transform:translate(-50%,-50%)}
-.ring{position:fixed;top:0;left:0;width:34px;height:34px;border:1px solid #695f83;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);transition:transform .08s linear}
+.dot{position:fixed;top:0;left:0;width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 0 10px rgba(196,181,253,.7);pointer-events:none;transform:translate(-50%,-50%)}
+.ring{position:fixed;top:0;left:0;width:34px;height:34px;border:1px solid rgba(196,181,253,.4);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);transition:transform .08s linear;box-shadow:0 0 20px rgba(196,181,253,.15)}
 </style></head>
-<body><span class="kicker">MOVE YOUR CURSOR</span><p class="msg">A trailing dot follows the pointer with easing.</p>
+<body data-cf-keep-dark><span class="kicker">MOVE YOUR CURSOR</span><p class="msg">A trailing dot follows the pointer with easing.</p>
 <div class="dot" id="dot"></div><div class="ring" id="ring"></div>
 <script>
 const dot=document.getElementById("dot"),ring=document.getElementById("ring");
 let rx=0,ry=0;
-document.addEventListener("pointermove",e=>{dot.style.left=e.clientX+"px";dot.style.top=e.clientY+"px";rx=e.clientX;ry=e.clientY});
+document.addEventListener("pointermove",function(e){dot.style.left=e.clientX+"px";dot.style.top=e.clientY+"px";rx=e.clientX;ry=e.clientY});
 function loop(){const cur=ring.getBoundingClientRect();const cx=cur.left+cur.width/2,cy=cur.top+cur.height/2;const nx=cx+(rx-cx)*.18,ny=cy+(ry-cy)*.18;ring.style.left=nx+"px";ring.style.top=ny+"px";requestAnimationFrame(loop)}
 loop();
 </script>
@@ -119,7 +139,7 @@ loop();
 .stack-card:nth-child(4){background:#1b1425}
 .spacer{height:260px}
 </style></head>
-<body><span class="kicker">SCROLL TO STACK</span>
+<body data-cf-keep-dark><span class="kicker">SCROLL TO STACK</span>
 <div class="stack">
 <div class="stack-card"><h3>01 — Discover</h3><p>Cards pin in place as the next one slides over it.</p></div>
 <div class="stack-card"><h3>02 — Design</h3><p>Built with position:sticky, no scroll libraries needed.</p></div>
@@ -137,14 +157,15 @@ loop();
 .track{display:flex;gap:14px;overflow-x:auto;padding:0 24px 30px;scroll-snap-type:x mandatory}
 .track::-webkit-scrollbar{height:6px}
 .track::-webkit-scrollbar-thumb{background:#2c2a35;border-radius:3px}
-.tile{flex:0 0 220px;height:260px;border-radius:16px;scroll-snap-align:start;display:flex;align-items:end;padding:16px;border:1px solid var(--line);font:700 14px "Space Grotesk",sans-serif}
+.tile{flex:0 0 220px;height:260px;border-radius:16px;scroll-snap-align:start;display:flex;align-items:end;padding:16px;border:1px solid var(--line);font:700 14px "Space Grotesk",sans-serif;box-shadow:0 24px 50px -24px rgba(0,0,0,.7);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.tile:hover{transform:translateY(-6px)}
 .tile:nth-child(1){background:radial-gradient(circle at 30% 20%,rgba(155,138,255,.3),transparent 60%),#121018}
 .tile:nth-child(2){background:radial-gradient(circle at 70% 30%,rgba(120,170,255,.28),transparent 60%),#101219}
 .tile:nth-child(3){background:radial-gradient(circle at 50% 70%,rgba(200,150,255,.25),transparent 60%),#141018}
 .tile:nth-child(4){background:radial-gradient(circle at 40% 40%,rgba(155,220,200,.22),transparent 60%),#0f1614}
 .tile:nth-child(5){background:radial-gradient(circle at 60% 60%,rgba(255,180,150,.22),transparent 60%),#181210}
 </style></head>
-<body><span class="kicker">DRAG OR SCROLL SIDEWAYS</span>
+<body data-cf-keep-dark><span class="kicker">DRAG OR SCROLL SIDEWAYS</span>
 <div class="track">
 <div class="tile">Frame 01</div><div class="tile">Frame 02</div><div class="tile">Frame 03</div><div class="tile">Frame 04</div><div class="tile">Frame 05</div>
 </div>
@@ -155,10 +176,12 @@ loop();
 :root{--bg:#050507;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .kicker{display:block;margin-bottom:16px;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-h1{font:700 clamp(28px,5vw,48px) "Space Grotesk",sans-serif;color:#eee9f8;letter-spacing:-.03em}
-button{margin-top:20px;border:1px solid #363243;border-radius:9px;padding:10px 16px;background:#121019;color:#d8d2df;font-size:10px;cursor:pointer}
+h1{font:700 clamp(28px,5vw,48px) "Space Grotesk",sans-serif;color:#eee9f8;letter-spacing:-.03em;text-shadow:0 0 30px rgba(196,181,253,.2)}
+button{margin-top:20px;border:1px solid #363243;border-radius:9px;padding:10px 16px;background:#121019;color:#d8d2df;font-size:10px;cursor:pointer;transition:border-color .2s,transform .15s cubic-bezier(.34,1.56,.64,1)}
+button:hover{border-color:#544c67}
+button:active{transform:scale(.95)}
 </style></head>
-<body><span class="kicker">CLICK TO SCRAMBLE</span>
+<body data-cf-keep-dark><span class="kicker">CLICK TO SCRAMBLE</span>
 <div style="text-align:center"><h1 id="txt">DECODE THIS</h1><button id="run">Scramble again</button></div>
 <script>
 const el=document.getElementById("txt"),final="DECODE THIS",chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -173,12 +196,12 @@ scramble();
 :root{--bg:#050507;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .kicker{display:block;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;padding:20px 24px}
-#bar{position:sticky;top:0;height:4px;width:0%;background:linear-gradient(90deg,#9b8aff,#c4b5fd);z-index:5}
+#bar{position:sticky;top:0;height:4px;width:0%;background:linear-gradient(90deg,#9b8aff,#c4b5fd);box-shadow:0 0 10px rgba(196,181,253,.6);z-index:5}
 .content{padding:10px 24px 40px;display:grid;gap:14px}
 .content p{color:#847e8f;font-size:11px;line-height:1.8;max-width:520px;margin:0}
-.block{height:220px;border-radius:14px;border:1px solid #272632;background:#0d0d12}
+.block{height:220px;border-radius:14px;border:1px solid #272632;background:radial-gradient(circle at 30% 20%,rgba(155,138,255,.1),transparent 60%),#0d0d12;box-shadow:0 20px 50px -24px rgba(0,0,0,.7)}
 </style></head>
-<body><div id="bar"></div><span class="kicker">SCROLL DOWN</span>
+<body data-cf-keep-dark><div id="bar"></div><span class="kicker">SCROLL DOWN</span>
 <div class="content"><p>The bar at the top fills based on how far you've scrolled through this preview.</p><div class="block"></div><p>Great for long-form articles, docs and case studies.</p><div class="block"></div><div class="block"></div></div>
 <script>
 function update(){const h=document.documentElement,pct=(h.scrollTop)/(h.scrollHeight-h.clientHeight)*100;document.getElementById("bar").style.width=pct+"%"}
@@ -191,24 +214,24 @@ document.addEventListener("scroll",update,{passive:true});update();
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .kicker{display:block;margin-bottom:16px;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.carousel{width:min(560px,90%);height:280px;position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line)}
-.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 22px "Space Grotesk",sans-serif;opacity:0;transition:opacity .5s ease;color:#eee9f8}
+.carousel{width:min(560px,90%);height:280px;position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 70px -24px rgba(0,0,0,.7)}
+.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 22px "Space Grotesk",sans-serif;opacity:0;transition:opacity .6s cubic-bezier(.2,.8,.2,1);color:#eee9f8}
 .slide.active{opacity:1}
 .slide:nth-child(1){background:radial-gradient(circle at 40% 30%,rgba(155,138,255,.28),transparent 55%),#111018}
 .slide:nth-child(2){background:radial-gradient(circle at 60% 60%,rgba(120,170,255,.25),transparent 55%),#101219}
 .slide:nth-child(3){background:radial-gradient(circle at 50% 50%,rgba(220,150,255,.25),transparent 55%),#141018}
 .dots{position:absolute;bottom:14px;left:0;right:0;display:flex;justify-content:center;gap:6px}
-.dots i{width:7px;height:7px;border-radius:50%;background:#34303e}
-.dots i.active{background:var(--lav)}
+.dots i{width:7px;height:7px;border-radius:50%;background:#34303e;transition:background .3s,box-shadow .3s,transform .3s cubic-bezier(.34,1.56,.64,1)}
+.dots i.active{background:var(--lav);box-shadow:0 0 8px rgba(196,181,253,.6);transform:scale(1.2)}
 </style></head>
-<body><span class="kicker">AUTO-ADVANCING EVERY 2.5S</span>
+<body data-cf-keep-dark><span class="kicker">AUTO-ADVANCING EVERY 2.5S</span>
 <div class="carousel" id="car">
 <div class="slide active">Slide one</div><div class="slide">Slide two</div><div class="slide">Slide three</div>
 <div class="dots"><i class="active"></i><i></i><i></i></div>
 </div>
 <script>
 const slides=document.querySelectorAll(".slide"),dots=document.querySelectorAll(".dots i");let i=0;
-setInterval(()=>{slides[i].classList.remove("active");dots[i].classList.remove("active");i=(i+1)%slides.length;slides[i].classList.add("active");dots[i].classList.add("active")},2500);
+setInterval(function(){slides[i].classList.remove("active");dots[i].classList.remove("active");i=(i+1)%slides.length;slides[i].classList.add("active");dots[i].classList.add("active")},2500);
 </script>
 </body></html>`,
 
@@ -219,16 +242,17 @@ setInterval(()=>{slides[i].classList.remove("active");dots[i].classList.remove("
 .kicker{display:block;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;padding:20px 24px}
 .spacer{height:200px}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 24px 40px}
-.stats div{padding:20px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;text-align:center}
-.stats strong{display:block;font:700 34px "Space Grotesk",sans-serif;color:var(--lav)}
+.stats div{padding:20px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;text-align:center;box-shadow:0 20px 50px -24px rgba(0,0,0,.7);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.stats div:hover{transform:translateY(-4px)}
+.stats strong{display:block;font:700 34px "Space Grotesk",sans-serif;background:linear-gradient(135deg,#f7f5fb,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}
 .stats small{color:#77737f;font-size:8px}
 </style></head>
-<body><span class="kicker">SCROLL DOWN TO TRIGGER</span><div class="spacer"></div>
+<body data-cf-keep-dark><span class="kicker">SCROLL DOWN TO TRIGGER</span><div class="spacer"></div>
 <div class="stats"><div><strong data-to="240">0</strong><small>PROJECTS SHIPPED</small></div><div><strong data-to="98">0</strong><small>SATISFACTION %</small></div><div><strong data-to="12">0</strong><small>YEARS ACTIVE</small></div></div>
 <script>
 const nums=document.querySelectorAll(".stats strong");
-const io=new IntersectionObserver(entries=>entries.forEach(entry=>{if(!entry.isIntersecting)return;const el=entry.target,to=parseInt(el.dataset.to,10);let cur=0;const step=Math.max(1,Math.round(to/40));const timer=setInterval(()=>{cur=Math.min(to,cur+step);el.textContent=cur;if(cur>=to)clearInterval(timer)},25);io.unobserve(el)}),{threshold:.6});
-nums.forEach(n=>io.observe(n));
+const io=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(!entry.isIntersecting)return;const el=entry.target,to=parseInt(el.dataset.to,10);let cur=0;const step=Math.max(1,Math.round(to/40));const timer=setInterval(function(){cur=Math.min(to,cur+step);el.textContent=cur;if(cur>=to)clearInterval(timer)},25);io.unobserve(el)})},{threshold:.6});
+nums.forEach(function(n){io.observe(n)});
 </script>
 </body></html>`,
 
@@ -236,18 +260,18 @@ nums.forEach(n=>io.observe(n));
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Sticky Shrink Navbar</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
-nav{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:22px 24px;background:#0a0a0f;border-bottom:1px solid transparent;transition:padding .25s ease,background .25s ease,border-color .25s ease}
-nav.shrink{padding:12px 24px;background:#08080dee;backdrop-filter:blur(10px);border-color:var(--line)}
+nav{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:22px 24px;background:#0a0a0f;border-bottom:1px solid transparent;box-shadow:0 0 0 rgba(0,0,0,0);transition:padding .3s cubic-bezier(.2,.8,.2,1),background .3s ease,border-color .3s ease,box-shadow .3s ease}
+nav.shrink{padding:12px 24px;background:#08080dee;backdrop-filter:blur(10px);border-color:var(--line);box-shadow:0 12px 30px -18px rgba(0,0,0,.6)}
 nav b{font:700 14px "Space Grotesk",sans-serif}
 nav span{color:#77737f;font-size:9px}
 .content{padding:20px 24px 400px;color:#847e8f;font-size:11px;line-height:1.9;max-width:500px}
 </style></head>
-<body>
+<body data-cf-keep-dark>
 <nav id="nav"><b>STUDIO.</b><span>Scroll down to shrink the bar</span></nav>
 <div class="content"><p>This navbar reduces its padding and gains a background once you scroll past it — a common pattern for marketing sites.</p></div>
 <script>
 const nav=document.getElementById("nav");
-document.addEventListener("scroll",()=>{nav.classList.toggle("shrink",window.scrollY>40)},{passive:true});
+document.addEventListener("scroll",function(){nav.classList.toggle("shrink",window.scrollY>40)},{passive:true});
 </script>
 </body></html>`,
 
@@ -260,11 +284,11 @@ document.addEventListener("scroll",()=>{nav.classList.toggle("shrink",window.scr
 .timeline:before{content:"";position:absolute;left:29px;top:10px;bottom:40px;width:1px;background:var(--line)}
 .item{position:relative;opacity:0;transform:translateX(-14px);transition:opacity .5s ease,transform .5s ease;margin-bottom:26px}
 .item.visible{opacity:1;transform:none}
-.item:before{content:"";position:absolute;left:-24px;top:4px;width:9px;height:9px;border-radius:50%;background:var(--lav);box-shadow:0 0 12px var(--lav)}
+.item:before{content:"";position:absolute;left:-24px;top:4px;width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 0 12px rgba(196,181,253,.6)}
 .item h3{margin:0 0 4px;font:700 14px "Space Grotesk",sans-serif}
 .item p{margin:0;color:#847e8f;font-size:10px}
 </style></head>
-<body><span class="kicker">SCROLL TO REVEAL</span>
+<body data-cf-keep-dark><span class="kicker">SCROLL TO REVEAL</span>
 <div class="timeline">
 <div class="item"><h3>2023 — Founded</h3><p>Started as a small internal tool.</p></div>
 <div class="item"><h3>2024 — Public launch</h3><p>Opened up to the first cohort of builders.</p></div>
@@ -273,42 +297,54 @@ document.addEventListener("scroll",()=>{nav.classList.toggle("shrink",window.scr
 </div>
 <script>
 const items=document.querySelectorAll(".item");
-const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add("visible")}),{threshold:.3});
-items.forEach(i=>io.observe(i));
+const io=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add("visible")})},{threshold:.3});
+items.forEach(function(i){io.observe(i)});
 </script>
 </body></html>`,
 
   "ripple-click-button": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Ripple Click Button</title><style>
-:root{--bg:#050507;--lav:#c4b5fd}
+:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.kicker{display:block;margin-bottom:16px;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.ripple-btn{position:relative;overflow:hidden;padding:16px 32px;border:0;border-radius:12px;font-size:12px;font-weight:800;color:#fff;cursor:pointer;background:#3b3255}
-.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);transform:scale(0);animation:ripple .6s ease-out;pointer-events:none}
-@keyframes ripple{to{transform:scale(3);opacity:0}}
+.stage{display:grid;gap:18px;place-items:center;padding:40px}
+.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
+.ripple-btn{position:relative;overflow:hidden;padding:16px 34px;border:0;border-radius:14px;font-size:12px;font-weight:800;color:#0a090f;cursor:pointer;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 8px 30px -8px rgba(155,138,255,.55);transition:transform .15s cubic-bezier(.34,1.56,.64,1),box-shadow .25s}
+.ripple-btn:active{transform:scale(.94);box-shadow:0 4px 16px -6px rgba(155,138,255,.5)}
+.ripple{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.85),rgba(255,255,255,0) 70%);transform:scale(0);animation:ripple .7s ease-out;pointer-events:none;mix-blend-mode:overlay}
+@keyframes ripple{to{transform:scale(3.2);opacity:0}}
 </style></head>
-<body><span class="kicker">CLICK ANYWHERE ON THE BUTTON</span><button class="ripple-btn" id="btn">Click me</button>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">CLICK ANYWHERE ON THE BUTTON</span><button class="ripple-btn" id="btn">Click me</button></div>
 <script>
-document.getElementById("btn").addEventListener("click",function(e){const r=this.getBoundingClientRect();const d=Math.max(r.width,r.height);const span=document.createElement("span");span.className="ripple";span.style.width=span.style.height=d+"px";span.style.left=(e.clientX-r.left-d/2)+"px";span.style.top=(e.clientY-r.top-d/2)+"px";this.appendChild(span);setTimeout(()=>span.remove(),600)});
+document.getElementById("btn").addEventListener("click",function(e){
+  const r=this.getBoundingClientRect();const d=Math.max(r.width,r.height)*1.4;
+  const span=document.createElement("span");span.className="ripple";
+  span.style.width=span.style.height=d+"px";
+  span.style.left=(e.clientX-r.left-d/2)+"px";span.style.top=(e.clientY-r.top-d/2)+"px";
+  this.appendChild(span);setTimeout(function(){span.remove()},700);
+});
 </script>
 </body></html>`,
 
   "flip-card-3d": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>3D Flip Card</title><style>
-:root{--bg:#050507;--lav:#c4b5fd}
+:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.kicker{display:block;margin-bottom:16px;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.scene{width:260px;height:340px;perspective:1200px}
-.card{position:relative;width:100%;height:100%;transition:transform .6s cubic-bezier(.2,.8,.2,1);transform-style:preserve-3d;cursor:pointer}
+.kicker{display:block;margin-bottom:16px;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;text-align:center}
+.scene{position:relative;width:260px;height:340px;perspective:1200px}
+.scene::after{content:"";position:absolute;left:10%;right:10%;bottom:-24px;height:30px;border-radius:50%;background:radial-gradient(closest-side,rgba(155,138,255,.35),transparent 75%);filter:blur(6px);opacity:.5;transition:opacity .4s}
+.scene:hover::after{opacity:.9}
+.card{position:relative;width:100%;height:100%;transition:transform .7s cubic-bezier(.2,.8,.2,1);transform-style:preserve-3d;cursor:pointer}
 .scene:hover .card{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;padding:24px;display:flex;flex-direction:column;justify-content:flex-end;border:1px solid #2e2a3a}
-.front{background:radial-gradient(circle at 30% 20%,rgba(155,138,255,.25),transparent 55%),#111018}
-.back{background:#161221;transform:rotateY(180deg);justify-content:center;text-align:center}
-.face h3{margin:0 0 6px;font:700 20px "Space Grotesk",sans-serif}
-.face p{margin:0;color:#847e8f;font-size:10px}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;padding:24px;display:flex;flex-direction:column;justify-content:flex-end;border:1px solid #2e2a3a;overflow:hidden;box-shadow:0 20px 50px -20px rgba(0,0,0,.6)}
+.face::before{content:"";position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.06),transparent)}
+.front{background:radial-gradient(circle at 30% 20%,rgba(155,138,255,.3),transparent 55%),#111018}
+.back{background:radial-gradient(circle at 70% 80%,rgba(155,138,255,.25),transparent 55%),#161221;transform:rotateY(180deg);justify-content:center;text-align:center}
+.face h3{margin:0 0 6px;font:700 20px "Space Grotesk",sans-serif;color:#f7f5fb}
+.face p{margin:0;color:#a49dbc;font-size:10px}
+.badge{position:absolute;top:20px;left:20px;width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#d7d0ff,#9b8aff)}
 </style></head>
-<body><span class="kicker">HOVER THE CARD</span>
-<div class="scene"><div class="card"><div class="face front"><h3>Front side</h3><p>Hover to flip.</p></div><div class="face back"><h3>Back side</h3><p>A full 3D rotation, pure CSS.</p></div></div></div>
+<body data-cf-keep-dark><span class="kicker">HOVER THE CARD</span>
+<div class="scene"><div class="card"><div class="face front"><div class="badge"></div><h3>Front side</h3><p>Hover to flip.</p></div><div class="face back"><h3>Back side</h3><p>A full 3D rotation, pure CSS.</p></div></div></div>
 </body></html>`,
 
   "toggle-pricing-switch": `<!DOCTYPE html>
@@ -317,20 +353,21 @@ document.getElementById("btn").addEventListener("click",function(e){const r=this
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center;padding:30px}
 .kicker{display:block;margin-bottom:16px;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
 .switcher{display:flex;align-items:center;gap:10px;margin-bottom:24px;font-size:10px;color:#847e8f}
-.track{width:44px;height:24px;border-radius:999px;background:#242130;position:relative;cursor:pointer;border:1px solid #363243}
-.thumb{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:var(--lav);transition:transform .25s ease}
+.track{width:44px;height:24px;border-radius:999px;background:#242130;position:relative;cursor:pointer;border:1px solid #363243;transition:box-shadow .3s}
+.track.on{box-shadow:0 0 0 3px rgba(196,181,253,.15)}
+.thumb{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 2px 6px rgba(0,0,0,.4);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
 .track.on .thumb{transform:translateX(20px)}
 .plans{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.plan{padding:20px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;min-width:160px}
-.plan strong{display:block;font:700 30px "Space Grotesk",sans-serif;margin:8px 0}
+.plan{padding:20px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;min-width:160px;box-shadow:0 16px 40px -22px rgba(0,0,0,.7)}
+.plan strong{display:block;font:700 30px "Space Grotesk",sans-serif;margin:8px 0;background:linear-gradient(135deg,#f7f5fb,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}
 .plan small{color:#77737f;font-size:8px}
 </style></head>
-<body><span class="kicker">TOGGLE BILLING</span>
+<body data-cf-keep-dark><span class="kicker">TOGGLE BILLING</span>
 <div class="switcher">Monthly<div class="track" id="track"><div class="thumb"></div></div>Yearly (save 20%)</div>
 <div class="plans"><div class="plan"><small>STARTER</small><strong id="p1">$12</strong><small>per month</small></div><div class="plan"><small>PRO</small><strong id="p2">$29</strong><small>per month</small></div></div>
 <script>
 const track=document.getElementById("track"),p1=document.getElementById("p1"),p2=document.getElementById("p2");
-track.addEventListener("click",()=>{const on=track.classList.toggle("on");p1.textContent=on?"$115":"$12";p2.textContent=on?"$278":"$29"});
+track.addEventListener("click",function(){const on=track.classList.toggle("on");p1.textContent=on?"$115":"$12";p2.textContent=on?"$278":"$29"});
 </script>
 </body></html>`,
 
@@ -340,12 +377,12 @@ track.addEventListener("click",()=>{const on=track.classList.toggle("on");p1.tex
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;text-align:center}
 .kicker{display:block;margin-bottom:16px;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
 h1{font:700 clamp(30px,5.5vw,58px) "Space Grotesk",sans-serif;letter-spacing:-.04em}
-h1 span{color:var(--lav)}
-#cursor{display:inline-block;width:3px;background:var(--lav);margin-left:2px;animation:blink 1s step-end infinite}
+h1 span{color:var(--lav);text-shadow:0 0 24px rgba(196,181,253,.35)}
+#cursor{display:inline-block;width:3px;background:var(--lav);margin-left:2px;box-shadow:0 0 8px rgba(196,181,253,.6);animation:blink 1s step-end infinite}
 @keyframes blink{50%{opacity:0}}
 p{color:#847e8f;font-size:11px;margin-top:14px}
 </style></head>
-<body><div><span class="kicker">BUILD FOR</span><h1>We design for <span id="word">founders</span><i id="cursor">&nbsp;</i></h1><p>A rotating word hero for landing pages.</p></div>
+<body data-cf-keep-dark><div><span class="kicker">BUILD FOR</span><h1>We design for <span id="word">founders</span><i id="cursor">&nbsp;</i></h1><p>A rotating word hero for landing pages.</p></div>
 <script>
 const words=["founders","designers","engineers","teams"];const el=document.getElementById("word");let wi=0,ci=0,deleting=false;
 function tick(){const word=words[wi];el.textContent=word.slice(0,ci);if(!deleting&&ci<word.length){ci++;setTimeout(tick,80)}else if(!deleting&&ci===word.length){deleting=true;setTimeout(tick,1100)}else if(deleting&&ci>0){ci--;setTimeout(tick,40)}else{deleting=false;wi=(wi+1)%words.length;setTimeout(tick,300)}}
@@ -360,16 +397,18 @@ tick();
 .kicker{display:block;margin-bottom:16px;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
 .marquee{width:100%;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
 .track{display:flex;gap:14px;width:max-content;animation:scroll 18s linear infinite}
-.card{width:220px;padding:16px;border:1px solid var(--line);border-radius:13px;background:#0d0d12;font-size:9px;color:#a49dae}
+.track:hover{animation-play-state:paused}
+.card{width:220px;padding:16px;border:1px solid var(--line);border-radius:13px;background:#0d0d12;font-size:9px;color:#a49dae;box-shadow:0 16px 40px -22px rgba(0,0,0,.7);transition:border-color .2s}
+.card:hover{border-color:#544c67}
 .card b{display:block;margin-top:8px;color:#eee9f8;font-size:9px}
 @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 </style></head>
-<body><span class="kicker">AUTO-SCROLLING</span>
+<body data-cf-keep-dark><span class="kicker">AUTO-SCROLLING</span>
 <div class="marquee"><div class="track" id="track"></div></div>
 <script>
 const quotes=["Shipped in a day, not a sprint.","The polish is on another level.","Our best-performing landing page yet.","Support that actually replies.","Exactly what our team needed."];
 const track=document.getElementById("track");
-[...quotes,...quotes].forEach((q,i)=>{const d=document.createElement("div");d.className="card";d.innerHTML=q+"<b>— Builder "+(i%quotes.length+1)+"</b>";track.appendChild(d)});
+[...quotes,...quotes].forEach(function(q,i){const d=document.createElement("div");d.className="card";d.innerHTML=q+"<b>— Builder "+(i%quotes.length+1)+"</b>";track.appendChild(d)});
 </script>
 </body></html>`,
 
@@ -380,14 +419,16 @@ const track=document.getElementById("track");
 nav{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--line)}
 nav b{font:700 14px "Space Grotesk",sans-serif}
 .item{position:relative}
-.item>span{font-size:10px;color:#c1bccb;cursor:pointer;padding:8px 0}
-.mega{position:absolute;top:100%;left:0;width:420px;display:none;grid-template-columns:1fr 1fr;gap:10px;padding:18px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;box-shadow:0 30px 70px rgba(0,0,0,.4)}
-.item:hover .mega{display:grid}
-.mega a{display:block;color:#a49dae;font-size:9px;padding:6px 0}
+.item>span{font-size:10px;color:#c1bccb;cursor:pointer;padding:8px 0;transition:color .2s}
+.item:hover>span{color:#fff}
+.mega{position:absolute;top:100%;left:0;width:420px;opacity:0;pointer-events:none;transform:translateY(-6px);display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:18px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;box-shadow:0 30px 70px -14px rgba(0,0,0,.6),0 0 0 1px rgba(196,181,253,.06);transition:opacity .25s,transform .25s}
+.item:hover .mega{opacity:1;pointer-events:auto;transform:none}
+.mega a{display:block;color:#a49dae;font-size:9px;padding:6px 0;transition:color .2s}
+.mega a:hover{color:var(--lav)}
 .mega b{display:block;color:#eee9f8;font-size:10px;margin-bottom:4px}
 .content{padding:50px 24px;color:#77737f;font-size:10px}
 </style></head>
-<body><nav><b>STUDIO.</b><div class="item"><span>Products ▾</span><div class="mega"><div><b>Design</b><a href="#">Templates</a><a href="#">Components</a></div><div><b>Engineering</b><a href="#">API</a><a href="#">CLI</a></div></div></div><span style="font-size:10px;color:#77737f">Pricing</span></nav>
+<body data-cf-keep-dark><nav><b>STUDIO.</b><div class="item"><span>Products ▾</span><div class="mega"><div><b>Design</b><a href="#">Templates</a><a href="#">Components</a></div><div><b>Engineering</b><a href="#">API</a><a href="#">CLI</a></div></div></div><span style="font-size:10px;color:#77737f">Pricing</span></nav>
 <p class="content">Hover "Products ▾" to open the mega menu.</p>
 </body></html>`,
 
@@ -395,26 +436,33 @@ nav b{font:700 14px "Space Grotesk",sans-serif}
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Multi-Step Form</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.wrap{width:min(380px,90%)}
-.dots{display:flex;gap:6px;margin-bottom:18px}
-.dots i{flex:1;height:4px;border-radius:2px;background:#242130}
-.dots i.active{background:var(--lav)}
+.stage{display:grid;gap:16px;place-items:center;padding:40px}
+.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
+.wrap{position:relative;width:min(320px,90vw);border:1px solid var(--line);border-radius:18px;background:#0d0d12;padding:26px;box-shadow:0 20px 50px -20px rgba(0,0,0,.6)}
+.dots{display:flex;gap:6px;margin-bottom:20px}
+.dots i{flex:1;height:4px;border-radius:2px;background:#242130;overflow:hidden;position:relative}
+.dots i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#d7d0ff,#9b8aff);transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.dots i.active::after{transform:scaleX(1)}
 .step{display:none}
-.step.active{display:block}
-h3{margin:0 0 10px;font:700 18px "Space Grotesk",sans-serif}
-input{width:100%;padding:11px;margin-bottom:10px;border:1px solid var(--line);border-radius:8px;background:#0e0e14;color:#fff}
-.actions{display:flex;justify-content:space-between;margin-top:6px}
-button{border:0;border-radius:9px;padding:10px 16px;font-size:10px;font-weight:700;cursor:pointer;background:#3b3255;color:#fff}
-button.ghost{background:transparent;color:#847e8f}
+.step.active{display:block;animation:stepIn .4s cubic-bezier(.2,.8,.2,1)}
+@keyframes stepIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+h3{margin:0 0 12px;font:700 18px "Space Grotesk",sans-serif;color:#f7f5fb}
+input{width:100%;padding:12px;margin-bottom:10px;border:1px solid var(--line);border-radius:9px;background:#111017;color:#fff;outline:0;font-size:12px;transition:border-color .25s,box-shadow .25s}
+input:focus{border-color:#6d5f93;box-shadow:0 0 0 3px rgba(196,181,253,.25)}
+.actions{display:flex;justify-content:space-between;margin-top:8px}
+button{border:0;border-radius:10px;padding:11px 18px;font-size:10px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
+button:active{transform:scale(.92)}
+button.ghost{background:transparent;color:#847e8f;box-shadow:none}
 </style></head>
-<body><div class="wrap">
+<body data-cf-keep-dark><div class="stage"><span class="kicker">STEP THROUGH THE FLOW</span>
+<div class="wrap">
 <div class="dots"><i class="active"></i><i></i><i></i></div>
 <div class="step active" data-step="1"><h3>Your details</h3><input placeholder="Full name"><div class="actions"><span></span><button onclick="go(2)">Next</button></div></div>
 <div class="step" data-step="2"><h3>Company</h3><input placeholder="Company name"><div class="actions"><button class="ghost" onclick="go(1)">Back</button><button onclick="go(3)">Next</button></div></div>
 <div class="step" data-step="3"><h3>All set ✓</h3><p style="color:#847e8f;font-size:10px">Your account is ready to go.</p><div class="actions"><button class="ghost" onclick="go(2)">Back</button><span></span></div></div>
-</div>
+</div></div>
 <script>
-function go(n){document.querySelectorAll(".step").forEach(s=>s.classList.toggle("active",s.dataset.step==n));document.querySelectorAll(".dots i").forEach((d,i)=>d.classList.toggle("active",i<n))}
+function go(n){document.querySelectorAll(".step").forEach(function(s){s.classList.toggle("active",s.dataset.step==n)});document.querySelectorAll(".dots i").forEach(function(d,i){d.classList.toggle("active",i<n)})}
 </script>
 </body></html>`,
 
@@ -425,6 +473,8 @@ function go(n){document.querySelectorAll(".step").forEach(s=>s.classList.toggle(
 .kicker{display:block;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;padding:18px 20px 0}
 .masonry{columns:3 160px;column-gap:10px;padding:14px 20px 24px}
 .tile{break-inside:avoid;margin-bottom:10px;border-radius:12px;position:relative;overflow:hidden;color:#fff}
+.tile{transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
+.tile:hover{transform:translateY(-5px);box-shadow:0 20px 40px -18px rgba(155,138,255,.35)}
 .tile span{position:absolute;left:10px;bottom:10px;font:700 10px "Space Grotesk",sans-serif;opacity:0;transition:opacity .25s}
 .tile:hover span{opacity:1}
 .tile:hover:before{opacity:1}
@@ -436,7 +486,7 @@ function go(n){document.querySelectorAll(".step").forEach(s=>s.classList.toggle(
 .tile:nth-child(5){height:160px;background:radial-gradient(circle at 60% 60%,rgba(255,180,150,.25),transparent 60%),#181210}
 .tile:nth-child(6){height:130px;background:radial-gradient(circle at 50% 50%,rgba(180,190,255,.25),transparent 60%),#111319}
 </style></head>
-<body><span class="kicker">MASONRY LAYOUT</span>
+<body data-cf-keep-dark><span class="kicker">MASONRY LAYOUT</span>
 <div class="masonry">
 <div class="tile"><span>Project Alpha</span></div><div class="tile"><span>Project Beta</span></div><div class="tile"><span>Project Gamma</span></div><div class="tile"><span>Project Delta</span></div><div class="tile"><span>Project Epsilon</span></div><div class="tile"><span>Project Zeta</span></div>
 </div>
@@ -446,23 +496,27 @@ function go(n){document.querySelectorAll(".step").forEach(s=>s.classList.toggle(
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Tabbed Features</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.wrap{width:min(520px,90%)}
-.tabs{display:flex;gap:6px;margin-bottom:16px}
-.tabs button{padding:9px 13px;border:1px solid var(--line);border-radius:999px;background:#0d0d12;color:#847e8f;font-size:9px;cursor:pointer}
-.tabs button.active{color:#fff;border-color:#544c67;background:#181420}
-.panel{display:none;padding:26px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;min-height:150px}
+.stage{display:grid;gap:16px;padding:40px;width:min(520px,90%)}
+.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
+.tabs{display:flex;gap:6px}
+.tabs button{position:relative;padding:9px 15px;border:1px solid var(--line);border-radius:999px;background:#0d0d12;color:#847e8f;font-size:9px;font-weight:700;cursor:pointer;transition:color .3s,border-color .3s,transform .3s cubic-bezier(.34,1.56,.64,1)}
+.tabs button.active{color:#0a090f;border-color:transparent;background:linear-gradient(135deg,#d7d0ff,#9b8aff);transform:translateY(-2px);box-shadow:0 10px 24px -10px rgba(155,138,255,.55)}
+.panel-wrap{position:relative}
+.panel-wrap::before{content:"";position:absolute;inset:-16px;border-radius:26px;background:radial-gradient(circle,rgba(196,181,253,.22),transparent 70%);filter:blur(18px);opacity:.7;pointer-events:none}
+.panel{position:relative;display:none;padding:26px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;min-height:150px;box-shadow:0 20px 50px -20px rgba(0,0,0,.6);animation:fade .35s cubic-bezier(.2,.8,.2,1)}
 .panel.active{display:block}
-.panel h3{margin:0 0 8px;font:700 18px "Space Grotesk",sans-serif}
-.panel p{margin:0;color:#847e8f;font-size:10px;line-height:1.7}
+.panel h3{margin:0 0 8px;font:700 18px "Space Grotesk",sans-serif;background:linear-gradient(90deg,#f7f5fb,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}
+.panel p{margin:0;color:#a49dbc;font-size:10px;line-height:1.7}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 </style></head>
-<body><div class="wrap">
+<body data-cf-keep-dark><div class="stage"><span class="kicker">CLICK A TAB</span>
 <div class="tabs"><button class="active" data-tab="1">Speed</button><button data-tab="2">Security</button><button data-tab="3">Scale</button></div>
-<div class="panel active" data-panel="1"><h3>Built for speed</h3><p>Every interaction responds in under 100ms.</p></div>
+<div class="panel-wrap"><div class="panel active" data-panel="1"><h3>Built for speed</h3><p>Every interaction responds in under 100ms.</p></div>
 <div class="panel" data-panel="2"><h3>Secure by default</h3><p>Encrypted at rest and in transit, always.</p></div>
-<div class="panel" data-panel="3"><h3>Scales with you</h3><p>From one user to one million, no re-architecture.</p></div>
+<div class="panel" data-panel="3"><h3>Scales with you</h3><p>From one user to one million, no re-architecture.</p></div></div>
 </div>
 <script>
-document.querySelectorAll(".tabs button").forEach(btn=>btn.addEventListener("click",()=>{document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));btn.classList.add("active");document.querySelector('[data-panel="'+btn.dataset.tab+'"]').classList.add("active")}));
+document.querySelectorAll(".tabs button").forEach(btn=>btn.addEventListener("click",function(){document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));btn.classList.add("active");document.querySelector('[data-panel="'+btn.dataset.tab+'"]').classList.add("active")}));
 </script>
 </body></html>`,
 
@@ -473,16 +527,17 @@ document.querySelectorAll(".tabs button").forEach(btn=>btn.addEventListener("cli
 .kicker{display:block;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;padding:20px 24px}
 .content{padding:0 24px 100px;color:#847e8f;font-size:11px;line-height:1.9;max-width:500px}
 .content h1{color:#f7f5fb;font:700 34px "Space Grotesk",sans-serif;letter-spacing:-.03em}
-#banner{position:fixed;left:16px;right:16px;bottom:-80px;display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border:1px solid var(--line);border-radius:14px;background:#0d0d12ee;backdrop-filter:blur(10px);box-shadow:0 25px 60px rgba(0,0,0,.4);transition:bottom .35s ease}
+#banner{position:fixed;left:16px;right:16px;bottom:-80px;display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border:1px solid var(--line);border-radius:14px;background:#0d0d12ee;backdrop-filter:blur(10px);box-shadow:0 25px 60px -10px rgba(0,0,0,.6),0 0 0 1px rgba(196,181,253,.08);transition:bottom .4s cubic-bezier(.2,.8,.2,1)}
 #banner.show{bottom:16px}
 #banner b{font:700 12px "Space Grotesk",sans-serif}
-#banner button{border:0;border-radius:9px;padding:9px 14px;background:#3b3255;color:#fff;font-size:9px;font-weight:700;cursor:pointer}
+#banner button{border:0;border-radius:9px;padding:9px 16px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;font-size:9px;font-weight:800;cursor:pointer;box-shadow:0 8px 20px -8px rgba(155,138,255,.6);transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
+#banner button:active{transform:scale(.94)}
 </style></head>
-<body><span class="kicker">SCROLL DOWN</span>
+<body data-cf-keep-dark><span class="kicker">SCROLL DOWN</span>
 <div class="content"><h1>Something worth<br>scrolling for.</h1><p>Keep reading — a call-to-action banner slides up from the bottom once you've scrolled past the fold.</p></div>
 <div id="banner"><b>Ready to start your free trial?</b><button>Get started</button></div>
 <script>
-document.addEventListener("scroll",()=>{document.getElementById("banner").classList.toggle("show",window.scrollY>150)},{passive:true});
+document.addEventListener("scroll",function(){document.getElementById("banner").classList.toggle("show",window.scrollY>150)},{passive:true});
 </script>
 </body></html>`,
 
@@ -490,50 +545,63 @@ document.addEventListener("scroll",()=>{document.getElementById("banner").classL
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Hover Tilt Card</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;perspective:1000px}
-.tilt{width:260px;padding:26px;border:1px solid var(--line);border-radius:18px;background:radial-gradient(circle at 30% 15%,rgba(155,138,255,.22),transparent 60%),#0e0d14;box-shadow:0 24px 60px rgba(0,0,0,.45);transition:transform .18s ease-out,box-shadow .3s}
-.tilt:hover{box-shadow:0 34px 80px rgba(0,0,0,.55),0 0 50px rgba(155,138,255,.12)}
-.tilt span{font-size:9px;letter-spacing:2px;color:#9d94b0;font-weight:700}
-.tilt h3{margin:12px 0 6px;font:700 20px "Space Grotesk",sans-serif}
-.tilt p{margin:0;color:#847e8f;font-size:10px;line-height:1.7}
+.tilt{position:relative;width:260px;padding:26px;border:1px solid var(--line);border-radius:18px;background:radial-gradient(circle at 30% 15%,rgba(155,138,255,.22),transparent 60%),#0e0d14;box-shadow:0 24px 60px rgba(0,0,0,.45);transition:transform .15s ease-out,box-shadow .3s;overflow:hidden}
+.tilt::before{content:"";position:absolute;width:220px;height:220px;left:var(--gx,50%);top:var(--gy,50%);transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,255,255,.16),transparent 70%);opacity:0;transition:opacity .3s;pointer-events:none}
+.tilt:hover::before{opacity:1}
+.tilt:hover{box-shadow:0 34px 80px rgba(0,0,0,.55),0 0 60px rgba(155,138,255,.18)}
+.tilt span{position:relative;font-size:9px;letter-spacing:2px;color:#9d94b0;font-weight:700}
+.tilt h3{position:relative;margin:12px 0 6px;font:700 20px "Space Grotesk",sans-serif}
+.tilt p{position:relative;margin:0;color:#847e8f;font-size:10px;line-height:1.7}
 </style></head>
-<body><article class="tilt" id="card"><span>INTERACTIVE</span><h3>Tilt on hover</h3><p>The card tracks your pointer and tilts in 3D with a soft glare.</p></article>
+<body data-cf-keep-dark><article class="tilt" id="card"><span>INTERACTIVE</span><h3>Tilt on hover</h3><p>The card tracks your pointer and tilts in 3D with a soft glare.</p></article>
 <script>
 const card=document.getElementById("card");
-card.addEventListener("pointermove",e=>{const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;card.style.transform=\`rotateY(\${x*14}deg) rotateX(\${y*-14}deg) translateY(-4px)\`});
-card.addEventListener("pointerleave",()=>card.style.transform="");
+card.addEventListener("pointermove",function(e){
+  const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+  card.style.transform="rotateY("+(x*14)+"deg) rotateX("+(y*-14)+"deg) translateY(-4px)";
+  card.style.setProperty("--gx",(e.clientX-r.left)+"px");
+  card.style.setProperty("--gy",(e.clientY-r.top)+"px");
+});
+card.addEventListener("pointerleave",function(){card.style.transform=""});
 </script>
 </body></html>`,
 
   "glass-stat-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Glass Stat Card</title><style>
 :root{--bg:#050507;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:radial-gradient(circle at 30% 20%,rgba(155,138,255,.2),transparent 45%),radial-gradient(circle at 75% 70%,rgba(90,160,255,.16),transparent 45%),var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:radial-gradient(circle at 30% 20%,rgba(155,138,255,.25),transparent 45%),radial-gradient(circle at 75% 70%,rgba(90,160,255,.2),transparent 45%),var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .glass{display:flex;gap:12px}
-.stat{width:120px;padding:18px;border:1px solid rgba(255,255,255,.14);border-radius:16px;background:rgba(255,255,255,.06);backdrop-filter:blur(14px);transition:transform .3s cubic-bezier(.2,.8,.2,1),background .3s}
-.stat:hover{transform:translateY(-7px);background:rgba(255,255,255,.11)}
-.stat small{display:block;font-size:7px;letter-spacing:1.5px;color:#c3bdd0}
-.stat strong{display:block;margin-top:8px;font:700 26px "Space Grotesk",sans-serif}
-.stat em{font-style:normal;font-size:8px;color:#a9e6b4}
+.stat{position:relative;width:120px;padding:18px;border:1px solid rgba(255,255,255,.14);border-radius:16px;background:rgba(255,255,255,.06);backdrop-filter:blur(14px);overflow:hidden;transition:transform .3s cubic-bezier(.2,.8,.2,1),background .3s,box-shadow .3s}
+.stat::before{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(115deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);transition:left .6s ease}
+.stat:hover::before{left:130%}
+.stat:hover{transform:translateY(-7px);background:rgba(255,255,255,.11);box-shadow:0 20px 40px -18px rgba(155,138,255,.4)}
+.stat small{position:relative;display:block;font-size:7px;letter-spacing:1.5px;color:#c3bdd0}
+.stat strong{position:relative;display:block;margin-top:8px;font:700 26px "Space Grotesk",sans-serif}
+.stat em{position:relative;font-style:normal;font-size:8px;color:#a9e6b4}
 </style></head>
-<body><div class="glass"><div class="stat"><small>REVENUE</small><strong>$48K</strong><em>+12.4%</em></div><div class="stat"><small>USERS</small><strong>3.2K</strong><em>+8.1%</em></div><div class="stat"><small>UPTIME</small><strong>99.9%</strong><em>stable</em></div></div>
+<body data-cf-keep-dark><div class="glass"><div class="stat"><small>REVENUE</small><strong>$48K</strong><em>+12.4%</em></div><div class="stat"><small>USERS</small><strong>3.2K</strong><em>+8.1%</em></div><div class="stat"><small>UPTIME</small><strong>99.9%</strong><em>stable</em></div></div>
 </body></html>`,
 
   "live-chart-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Live Chart Card</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:min(420px,90vw);padding:22px;border:1px solid var(--line);border-radius:16px;background:#0d0d12}
-.card header{display:flex;justify-content:space-between;align-items:baseline}
+.card{position:relative;width:min(420px,90vw);padding:22px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;overflow:hidden;box-shadow:0 20px 50px -20px rgba(0,0,0,.6)}
+.card::before{content:"";position:absolute;top:-50%;right:-20%;width:220px;height:220px;background:radial-gradient(circle,rgba(155,138,255,.18),transparent 70%)}
+.card header{position:relative;display:flex;justify-content:space-between;align-items:baseline}
 .card small{font-size:8px;letter-spacing:1.5px;color:#77737f}
 .card strong{font:700 28px "Space Grotesk",sans-serif}
-.bars{display:flex;align-items:end;gap:5px;height:120px;margin-top:18px}
-.bars i{flex:1;border-radius:4px 4px 0 0;background:linear-gradient(#c4b5fd,#5f5878);transition:height .6s cubic-bezier(.2,.8,.2,1)}
+#tick{display:flex;align-items:center;gap:5px}
+#tick::before{content:"";width:6px;height:6px;border-radius:50%;background:#5fd4a1;box-shadow:0 0 8px #5fd4a1;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.bars{position:relative;display:flex;align-items:end;gap:5px;height:120px;margin-top:18px}
+.bars i{flex:1;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#e7e2ff,#9b8aff 60%,#6d5cc4);box-shadow:0 -6px 14px -8px rgba(155,138,255,.6);transition:height .6s cubic-bezier(.2,.8,.2,1)}
 </style></head>
-<body><div class="card"><header><div><small>WEEKLY REVENUE</small><strong id="val">$12.4K</strong></div><small id="tick">live</small></header><div class="bars" id="bars"></div></div>
+<body data-cf-keep-dark><div class="card"><header><div><small>WEEKLY REVENUE</small><strong id="val">$12.4K</strong></div><small id="tick">live</small></header><div class="bars" id="bars"></div></div>
 <script>
 const bars=document.getElementById("bars");
 for(let i=0;i<12;i++){const b=document.createElement("i");b.style.height=(20+Math.random()*70)+"%";bars.appendChild(b)}
-setInterval(()=>{[...bars.children].forEach(b=>b.style.height=(20+Math.random()*70)+"%");document.getElementById("val").textContent="$"+(9+Math.random()*6).toFixed(1)+"K"},1600);
+setInterval(function(){[...bars.children].forEach(function(b){b.style.height=(20+Math.random()*70)+"%"});document.getElementById("val").textContent="$"+(9+Math.random()*6).toFixed(1)+"K"},1600);
 </script>
 </body></html>`,
 
@@ -541,20 +609,23 @@ setInterval(()=>{[...bars.children].forEach(b=>b.style.height=(20+Math.random()*
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Activity Feed Panel</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.panel{width:min(360px,90vw);padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12}
+.panel{width:min(360px,90vw);padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;box-shadow:0 20px 50px -20px rgba(0,0,0,.6)}
 .panel h3{margin:0 0 14px;font:700 14px "Space Grotesk",sans-serif}
-.row{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #191821;animation:slideIn .5s ease both}
+.row{display:flex;gap:10px;align-items:center;padding:10px 6px;margin:0 -6px;border-radius:10px;border-bottom:1px solid #191821;animation:slideIn .5s cubic-bezier(.2,.8,.2,1) both;transition:background .2s}
+.row:hover{background:#141119}
 .row:last-child{border:0}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--lav);box-shadow:0 0 10px var(--lav);flex:0 0 auto}
+.dot{position:relative;width:8px;height:8px;border-radius:50%;background:var(--lav);box-shadow:0 0 10px var(--lav);flex:0 0 auto}
+.dot::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(196,181,253,.4);animation:ring 2s ease-out infinite}
 .row p{margin:0;font-size:9px;color:#b4aec0}
 .row span{margin-left:auto;font-size:8px;color:#66626f}
 @keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+@keyframes ring{0%{transform:scale(.6);opacity:.8}100%{transform:scale(1.8);opacity:0}}
 </style></head>
-<body><div class="panel"><h3>Recent activity</h3><div id="feed"></div></div>
+<body data-cf-keep-dark><div class="panel"><h3>Recent activity</h3><div id="feed"></div></div>
 <script>
 const items=[["Payment received","2m"],["New workspace created","14m"],["Report exported","1h"],["Team member invited","3h"],["Plan upgraded","1d"]];
 const feed=document.getElementById("feed");
-items.forEach((it,i)=>{const d=document.createElement("div");d.className="row";d.style.animationDelay=(i*.09)+"s";d.innerHTML='<span class="dot"></span><p>'+it[0]+'</p><span>'+it[1]+'</span>';feed.appendChild(d)});
+items.forEach(function(it,i){const d=document.createElement("div");d.className="row";d.style.animationDelay=(i*.09)+"s";d.innerHTML='<span class="dot"></span><p>'+it[0]+'</p><span>'+it[1]+'</span>';feed.appendChild(d)});
 </script>
 </body></html>`,
 
@@ -563,15 +634,17 @@ items.forEach((it,i)=>{const d=document.createElement("div");d.className="row";d
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:24px}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:520px}
-.f{padding:18px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s}
-.f:hover{transform:translateY(-6px);border-color:#544c67}
-.ico{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#181425;color:var(--lav);font-size:15px;transition:transform .3s}
-.f:hover .ico{transform:rotate(-8deg) scale(1.08)}
-.f h4{margin:12px 0 4px;font:700 12px "Space Grotesk",sans-serif}
-.f p{margin:0;font-size:8px;color:#847e8f;line-height:1.6}
+.f{position:relative;padding:18px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;overflow:hidden;box-shadow:0 16px 40px -22px rgba(0,0,0,.7);transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .3s}
+.f::before{content:"";position:absolute;inset:-40% -40% auto auto;width:120px;height:120px;background:radial-gradient(circle,rgba(196,181,253,.28),transparent 70%);opacity:0;transition:opacity .3s}
+.f:hover{transform:translateY(-6px);border-color:#544c67;box-shadow:0 24px 50px -20px rgba(155,138,255,.25)}
+.f:hover::before{opacity:1}
+.ico{position:relative;width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:linear-gradient(135deg,#221d33,#181425);color:var(--lav);font-size:15px;box-shadow:inset 0 0 0 1px rgba(196,181,253,.15);transition:transform .3s cubic-bezier(.34,1.56,.64,1),background .3s,color .3s}
+.f:hover .ico{transform:rotate(-8deg) scale(1.1);background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f}
+.f h4{position:relative;margin:12px 0 4px;font:700 12px "Space Grotesk",sans-serif}
+.f p{position:relative;margin:0;font-size:8px;color:#847e8f;line-height:1.6}
 @media(max-width:520px){.grid{grid-template-columns:1fr 1fr}}
 </style></head>
-<body><div class="grid">
+<body data-cf-keep-dark><div class="grid">
 <div class="f"><div class="ico">⚡</div><h4>Fast</h4><p>Instant response on every action.</p></div>
 <div class="f"><div class="ico">🔒</div><h4>Secure</h4><p>Encrypted end to end by default.</p></div>
 <div class="f"><div class="ico">◇</div><h4>Composable</h4><p>Drop into any existing stack.</p></div>
@@ -586,56 +659,68 @@ items.forEach((it,i)=>{const d=document.createElement("div");d.className="row";d
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:24px}
 .acc{width:min(420px,92vw)}
-.item{border:1px solid var(--line);border-radius:12px;margin-bottom:8px;overflow:hidden;background:#0d0d12}
+.item{border:1px solid var(--line);border-radius:12px;margin-bottom:8px;overflow:hidden;background:#0d0d12;transition:border-color .3s,box-shadow .3s}
+.item.open{border-color:#544c67;box-shadow:0 16px 40px -20px rgba(155,138,255,.35)}
 .head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;cursor:pointer;font:700 12px "Space Grotesk",sans-serif}
-.head i{font-style:normal;color:var(--lav);transition:transform .3s}
-.item.open .head i{transform:rotate(45deg)}
-.body{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.2,.8,.2,1)}
+.head i{font-style:normal;width:20px;height:20px;border-radius:50%;background:#181425;color:var(--lav);display:grid;place-items:center;font-size:11px;transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .3s,color .3s}
+.item.open .head i{transform:rotate(45deg);background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f}
+.body{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.2,.8,.2,1)}
 .item.open .body{max-height:120px}
 .body p{margin:0;padding:0 16px 14px;font-size:9px;color:#847e8f;line-height:1.7}
 </style></head>
-<body><div class="acc" id="acc">
+<body data-cf-keep-dark><div class="acc" id="acc">
 <div class="item open"><div class="head">Built for speed <i>+</i></div><div class="body"><p>Every interaction resolves in under 100ms, even on mid-range devices.</p></div></div>
 <div class="item"><div class="head">Secure by default <i>+</i></div><div class="body"><p>Encrypted at rest and in transit, with audited access controls.</p></div></div>
 <div class="item"><div class="head">Scales with you <i>+</i></div><div class="body"><p>From a single workspace to enterprise fleets, no re-architecture.</p></div></div>
 </div>
 <script>
-document.querySelectorAll(".head").forEach(h=>h.addEventListener("click",()=>h.parentElement.classList.toggle("open")));
+document.querySelectorAll(".head").forEach(function(h){h.addEventListener("click",function(){h.parentElement.classList.toggle("open")})});
 </script>
 </body></html>`,
 
   "floating-label-form": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Floating Label Form</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:24px}
-form{width:min(340px,92vw);display:grid;gap:16px}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.stage{display:grid;gap:16px;place-items:center;padding:40px}
+.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
+form{width:min(300px,90vw);display:grid;gap:16px;border:1px solid var(--line);border-radius:18px;background:#0d0d12;padding:26px;box-shadow:0 20px 50px -20px rgba(0,0,0,.6)}
 .field{position:relative}
-.field input{width:100%;padding:16px 12px 8px;border:1px solid var(--line);border-radius:10px;background:#0e0e14;color:#fff;outline:0;font-size:12px;transition:border-color .25s,box-shadow .25s}
-.field input:focus{border-color:#6d5f93;box-shadow:0 0 0 3px rgba(155,138,255,.12)}
-.field label{position:absolute;left:12px;top:14px;font-size:11px;color:#77737f;pointer-events:none;transition:transform .2s ease,font-size .2s ease,color .2s}
+.field input{width:100%;padding:16px 12px 8px;border:1px solid var(--line);border-radius:10px;background:#111017;color:#fff;outline:0;font-size:12px;transition:border-color .25s,box-shadow .25s}
+.field input:focus{border-color:#6d5f93;box-shadow:0 0 0 3px rgba(196,181,253,.25)}
+.field label{position:absolute;left:12px;top:14px;font-size:11px;color:#77737f;pointer-events:none;transition:transform .2s cubic-bezier(.2,.8,.2,1),font-size .2s ease,color .2s}
 .field input:focus+label,.field input:not(:placeholder-shown)+label{transform:translateY(-9px);font-size:8px;color:var(--lav)}
-button{border:0;border-radius:10px;padding:13px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;font-weight:800;font-size:11px;cursor:pointer}
+.btn-wrap{position:relative}
+.btn-wrap::after{content:"";position:absolute;inset:-10px;border-radius:18px;background:radial-gradient(circle,rgba(196,181,253,.35),transparent 70%);filter:blur(12px);opacity:0;transition:opacity .3s}
+.btn-wrap:hover::after{opacity:1}
+button{position:relative;width:100%;border:0;border-radius:10px;padding:13px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;font-weight:800;font-size:11px;cursor:pointer;transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
+button:active{transform:scale(.96)}
 </style></head>
-<body><form id="f"><div class="field"><input id="n" placeholder=" "><label for="n">Full name</label></div><div class="field"><input id="e" type="email" placeholder=" "><label for="e">Email address</label></div><button>Create account</button></form>
-<script>document.getElementById("f").addEventListener("submit",e=>{e.preventDefault();e.target.innerHTML='<p style="margin:0;color:#a9e6b4;font-size:11px">Account created ✓</p>'});</script>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">TYPE TO SEE LABELS FLOAT</span>
+<form id="f"><div class="field"><input id="n" placeholder=" "><label for="n">Full name</label></div><div class="field"><input id="e" type="email" placeholder=" "><label for="e">Email address</label></div><div class="btn-wrap"><button>Create account</button></div></form></div>
+<script>document.getElementById("f").addEventListener("submit",function(e){e.preventDefault();e.target.innerHTML='<p style="margin:0;color:#a9e6b4;font-size:11px">Account created ✓</p>'});</script>
 </body></html>`,
 
   "inline-validation-form": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Inline Validation Form</title><style>
-:root{--bg:#050507;--line:#272632;--ok:#9fd6ad;--bad:#efb8c2}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:24px}
-form{width:min(340px,92vw);display:grid;gap:14px}
-label{display:grid;gap:6px;font-size:9px;color:#85818d}
-input{padding:12px;border:1px solid var(--line);border-radius:9px;background:#0e0e14;color:#fff;outline:0;transition:border-color .25s}
-input.ok{border-color:#3d6b48}
-input.bad{border-color:#6b3d47}
-.msg{font-size:8px;min-height:11px;transition:opacity .2s}
+:root{--bg:#050507;--line:#272632;--lav:#c4b5fd;--ok:#9fd6ad;--bad:#efb8c2}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.stage{display:grid;gap:16px;place-items:center;padding:40px}
+.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
+form{width:min(300px,90vw);display:grid;gap:14px;border:1px solid var(--line);border-radius:18px;background:#0d0d12;padding:26px;box-shadow:0 20px 50px -20px rgba(0,0,0,.6)}
+label{display:grid;gap:8px;font-size:9px;color:#85818d;letter-spacing:.5px}
+input{padding:12px;border:1px solid var(--line);border-radius:9px;background:#111017;color:#fff;outline:0;font-size:12px;transition:border-color .25s,box-shadow .25s}
+input:focus{border-color:#6d5f93;box-shadow:0 0 0 3px rgba(196,181,253,.25)}
+input.ok{border-color:#3d6b48;box-shadow:0 0 0 3px rgba(159,214,173,.18)}
+input.bad{border-color:#6b3d47;box-shadow:0 0 0 3px rgba(239,184,194,.18)}
+.msg{font-size:9px;min-height:12px;transition:opacity .2s,color .2s;color:#77737f}
 .msg.ok{color:var(--ok)}.msg.bad{color:var(--bad)}
 </style></head>
-<body><form><label>Email<input id="e" type="email" placeholder="you@company.com"><span class="msg" id="m">Type to validate live</span></label></form>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">TYPE TO SEE VALIDATION</span>
+<form><label>Email<input id="e" type="email" placeholder="you@company.com"><span class="msg" id="m">Type to validate live</span></label></form></div>
 <script>
 const e=document.getElementById("e"),m=document.getElementById("m");
-e.addEventListener("input",()=>{const v=e.value;const good=/^[^@\\s]+@[^@\\s]+\\.[a-z]{2,}$/i.test(v);e.className=v?(good?"ok":"bad"):"";m.className="msg "+(v?(good?"ok":"bad"):"");m.textContent=!v?"Type to validate live":good?"Looks good ✓":"That doesn't look like an email yet"});
+e.addEventListener("input",function(){const v=e.value;const good=/^[^@\\s]+@[^@\\s]+\\.[a-z]{2,}$/i.test(v);e.className=v?(good?"ok":"bad"):"";m.className="msg "+(v?(good?"ok":"bad"):"");m.textContent=!v?"Type to validate live":good?"Looks good ✓":"That doesn't look like an email yet"});
 </script>
 </body></html>`,
 
@@ -647,13 +732,14 @@ e.addEventListener("input",()=>{const v=e.value;const good=/^[^@\\s]+@[^@\\s]+\\
 .copy small{font-size:9px;letter-spacing:2px;color:#9d94b0;font-weight:700}
 .copy h1{margin:10px 0;font:700 clamp(24px,4.4vw,38px) "Space Grotesk",sans-serif;letter-spacing:-.04em;line-height:1.05}
 .copy p{margin:0 0 16px;color:#847e8f;font-size:10px;line-height:1.7}
-.copy button{border:0;border-radius:10px;padding:11px 18px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;font-weight:800;font-size:10px;cursor:pointer}
-.art{aspect-ratio:1;border-radius:20px;border:1px solid var(--line);background:radial-gradient(circle at 40% 30%,rgba(155,138,255,.34),transparent 60%),#0e0d14;display:grid;place-items:center;overflow:hidden}
-.art i{width:60%;aspect-ratio:1;border-radius:50%;border:1px solid rgba(196,181,253,.35);animation:pulse 3.4s ease-in-out infinite}
+.copy button{border:0;border-radius:10px;padding:11px 18px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;font-weight:800;font-size:10px;cursor:pointer;box-shadow:0 10px 24px -10px rgba(155,138,255,.6);transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
+.copy button:active{transform:scale(.96)}
+.art{aspect-ratio:1;border-radius:20px;border:1px solid var(--line);background:radial-gradient(circle at 40% 30%,rgba(155,138,255,.34),transparent 60%),#0e0d14;display:grid;place-items:center;overflow:hidden;box-shadow:0 30px 70px -24px rgba(0,0,0,.7)}
+.art i{width:60%;aspect-ratio:1;border-radius:50%;border:1px solid rgba(196,181,253,.35);box-shadow:0 0 30px -6px rgba(196,181,253,.3);animation:pulse 3.4s ease-in-out infinite}
 @keyframes pulse{50%{transform:scale(.86);border-color:rgba(196,181,253,.7)}}
 @media(max-width:560px){.split{grid-template-columns:1fr}}
 </style></head>
-<body><div class="split"><div class="copy"><small>NEW RELEASE</small><h1>Design once. Ship everywhere.</h1><p>A split hero that keeps the message and the visual in balance.</p><button>See the system</button></div><div class="art"><i></i></div></div>
+<body data-cf-keep-dark><div class="split"><div class="copy"><small>NEW RELEASE</small><h1>Design once. Ship everywhere.</h1><p>A split hero that keeps the message and the visual in balance.</p><button>See the system</button></div><div class="art"><i></i></div></div>
 </body></html>`,
 
   "faq-accordion-section": `<!DOCTYPE html>
@@ -662,15 +748,16 @@ e.addEventListener("input",()=>{const v=e.value;const good=/^[^@\\s]+@[^@\\s]+\\
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:26px}
 .faq{width:min(460px,92vw)}
 .faq h2{margin:0 0 16px;font:700 22px "Space Grotesk",sans-serif;letter-spacing:-.03em}
-details{border-bottom:1px solid var(--line);padding:12px 0}
+details{border-bottom:1px solid var(--line);padding:12px 4px;border-radius:8px;transition:background .25s}
+details[open]{background:#0e0d14}
 summary{cursor:pointer;list-style:none;font:700 11px "Space Grotesk",sans-serif;display:flex;justify-content:space-between;align-items:center}
 summary::-webkit-details-marker{display:none}
-summary:after{content:"+";color:var(--lav);transition:transform .3s}
-details[open] summary:after{transform:rotate(45deg)}
+summary:after{content:"+";width:20px;height:20px;border-radius:50%;background:#181425;color:var(--lav);display:grid;place-items:center;font-style:normal;transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .3s,color .3s}
+details[open] summary:after{transform:rotate(45deg);background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f}
 details p{margin:10px 0 2px;font-size:9px;color:#847e8f;line-height:1.75;animation:fade .35s ease both}
 @keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 </style></head>
-<body><div class="faq"><h2>Frequently asked</h2>
+<body data-cf-keep-dark><div class="faq"><h2>Frequently asked</h2>
 <details open><summary>Can I use this commercially?</summary><p>Yes — every component ships with a commercial-use license included.</p></details>
 <details><summary>Do I need a framework?</summary><p>No. Everything is plain HTML, CSS and vanilla JS you can paste anywhere.</p></details>
 <details><summary>How do updates work?</summary><p>New components are added weekly and are included with an active plan.</p></details>
@@ -679,21 +766,22 @@ details p{margin:10px 0 2px;font-size:9px;color:#847e8f;line-height:1.75;animati
 
   "logo-cloud-marquee": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Logo Cloud Marquee</title><style>
-:root{--bg:#050507;--line:#272632}
+:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;overflow:hidden}
 .wrap{width:100%;text-align:center}
 .wrap small{font-size:9px;letter-spacing:2px;color:#77737f;font-weight:700}
 .marquee{margin-top:18px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
 .track{display:flex;gap:34px;width:max-content;animation:slide 16s linear infinite}
-.track b{font:700 18px "Space Grotesk",sans-serif;color:#4d4956;letter-spacing:-.03em;transition:color .3s}
-.track b:hover{color:#c4b5fd}
+.track:hover{animation-play-state:paused}
+.track b{font:700 18px "Space Grotesk",sans-serif;color:#4d4956;letter-spacing:-.03em;transition:color .3s,text-shadow .3s}
+.track b:hover{color:var(--lav);text-shadow:0 0 16px rgba(196,181,253,.5)}
 @keyframes slide{to{transform:translateX(-50%)}}
 </style></head>
-<body><div class="wrap"><small>TRUSTED BY TEAMS AT</small><div class="marquee"><div class="track" id="t"></div></div></div>
+<body data-cf-keep-dark><div class="wrap"><small>TRUSTED BY TEAMS AT</small><div class="marquee"><div class="track" id="t"></div></div></div>
 <script>
 const names=["NORTHSTAR","ATELIER","VANTA","ORBIT","HALO","ECHO"];
 const t=document.getElementById("t");
-[...names,...names].forEach(n=>{const b=document.createElement("b");b.textContent=n;t.appendChild(b)});
+[...names,...names].forEach(function(n){const b=document.createElement("b");b.textContent=n;t.appendChild(b)});
 </script>
 </body></html>`,
 
@@ -701,19 +789,21 @@ const t=document.getElementById("t");
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Collapsible Sidebar Nav</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:flex;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
-aside{width:170px;padding:18px 12px;border-right:1px solid var(--line);background:#0b0b10;transition:width .3s cubic-bezier(.2,.8,.2,1);overflow:hidden}
+aside{width:170px;padding:18px 12px;border-right:1px solid var(--line);background:#0b0b10;transition:width .35s cubic-bezier(.2,.8,.2,1);overflow:hidden}
 aside.collapsed{width:58px}
 aside b{display:block;font:700 13px "Space Grotesk",sans-serif;margin-bottom:16px;white-space:nowrap}
 aside a{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:8px;color:#847e8f;text-decoration:none;font-size:10px;white-space:nowrap;transition:background .25s,color .25s}
-aside a:hover,aside a.active{background:#171420;color:#e6e1f2}
+aside a:hover{background:#171420;color:#e6e1f2}
+aside a.active{background:linear-gradient(135deg,#221d33,#181425);color:#e6e1f2;box-shadow:inset 0 0 0 1px rgba(196,181,253,.15)}
 aside i{font-style:normal;color:var(--lav);flex:0 0 16px;text-align:center}
 aside.collapsed span{opacity:0}
 aside span{transition:opacity .2s}
 main{flex:1;padding:22px}
-main button{border:1px solid var(--line);border-radius:9px;background:#0d0d12;color:#c1bccb;padding:9px 13px;font-size:10px;cursor:pointer}
+main button{border:1px solid var(--line);border-radius:9px;background:#0d0d12;color:#c1bccb;padding:9px 13px;font-size:10px;cursor:pointer;box-shadow:0 12px 30px -18px rgba(0,0,0,.6);transition:border-color .2s,color .2s}
+main button:hover{border-color:#544c67;color:#eee9f8}
 </style></head>
-<body><aside id="side"><b>CF</b><a class="active"><i>◧</i><span>Overview</span></a><a><i>◈</i><span>Projects</span></a><a><i>◎</i><span>Team</span></a><a><i>⚙</i><span>Settings</span></a></aside><main><button id="t">Toggle sidebar</button></main>
-<script>document.getElementById("t").addEventListener("click",()=>document.getElementById("side").classList.toggle("collapsed"));</script>
+<body data-cf-keep-dark><aside id="side"><b>CF</b><a class="active"><i>◧</i><span>Overview</span></a><a><i>◈</i><span>Projects</span></a><a><i>◎</i><span>Team</span></a><a><i>⚙</i><span>Settings</span></a></aside><main><button id="t">Toggle sidebar</button></main>
+<script>document.getElementById("t").addEventListener("click",function(){document.getElementById("side").classList.toggle("collapsed")});</script>
 </body></html>`,
 
   "hover-zoom-gallery": `<!DOCTYPE html>
@@ -736,7 +826,7 @@ main button{border:1px solid var(--line);border-radius:9px;background:#0d0d12;co
 .c6 i{background:radial-gradient(circle at 45% 35%,rgba(180,190,255,.34),transparent 60%),#111319}
 @media(max-width:520px){.gal{grid-template-columns:1fr 1fr}}
 </style></head>
-<body><div class="gal">
+<body data-cf-keep-dark><div class="gal">
 <div class="cell c1"><i></i><b>Alpha</b></div><div class="cell c2"><i></i><b>Beta</b></div><div class="cell c3"><i></i><b>Gamma</b></div>
 <div class="cell c4"><i></i><b>Delta</b></div><div class="cell c5"><i></i><b>Epsilon</b></div><div class="cell c6"><i></i><b>Zeta</b></div>
 </div>
@@ -755,7 +845,7 @@ main button{border:1px solid var(--line);border-radius:9px;background:#0d0d12;co
 .row:before{content:"";position:absolute;left:0;bottom:-1px;height:1px;width:100%;background:var(--lav);transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
 .row:hover:before{transform:scaleX(1)}
 </style></head>
-<body><div class="list">
+<body data-cf-keep-dark><div class="list">
 <div class="row"><h3>Northstar</h3><small>2026 · BRAND</small></div>
 <div class="row"><h3>Atelier</h3><small>2025 · WEB</small></div>
 <div class="row"><h3>Halo</h3><small>2025 · PRODUCT</small></div>
@@ -778,7 +868,7 @@ main button{border:1px solid var(--line);border-radius:9px;background:#0d0d12;co
 .plan button{width:100%;border:0;border-radius:11px;padding:13px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;font-weight:800;font-size:11px;cursor:pointer;transition:filter .25s}
 .plan button:hover{filter:brightness(1.06)}
 </style></head>
-<body><div class="plan"><small>CODEFUSION PRO</small><strong>₹499<em>/mo</em></strong><ul><li>Every component unlocked</li><li>Copy code and prompts</li><li>New drops every week</li><li>Cancel anytime</li></ul><button>Get Pro</button></div>
+<body data-cf-keep-dark><div class="plan"><small>CODEFUSION PRO</small><strong>₹499<em>/mo</em></strong><ul><li>Every component unlocked</li><li>Copy code and prompts</li><li>New drops every week</li><li>Cancel anytime</li></ul><button>Get Pro</button></div>
 </body></html>`,
 
   "avatar-stack-proof": `<!DOCTYPE html>
@@ -798,7 +888,7 @@ main button{border:1px solid var(--line);border-radius:9px;background:#0d0d12;co
 p{margin:14px 0 0;font-size:10px;color:#847e8f}
 p b{color:#e6e1f2}
 </style></head>
-<body><div><div class="stack"><div class="a">SC</div><div class="b">JM</div><div class="c">AR</div><div class="d">TK</div><div class="e">+9k</div></div><p>Trusted by <b>9,000+</b> builders shipping this week</p></div>
+<body data-cf-keep-dark><div><div class="stack"><div class="a">SC</div><div class="b">JM</div><div class="c">AR</div><div class="d">TK</div><div class="e">+9k</div></div><p>Trusted by <b>9,000+</b> builders shipping this week</p></div>
 </body></html>`,
 
   /* ===================== BOILERPLATES ===================== */
@@ -1099,21 +1189,27 @@ document.getElementById("go").addEventListener("click",e=>{e.target.textContent=
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .stage{display:grid;gap:22px;place-items:center;padding:40px}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.morph-btn{position:relative;width:180px;height:48px;border:0;border-radius:24px;font-size:13px;font-weight:800;color:#0a090f;cursor:pointer;background:linear-gradient(135deg,#d7d0ff,#9b8aff);transition:width .35s ease,border-radius .35s ease,background .35s}
-.morph-btn.loading{width:48px;border-radius:50%;background:#17131f}
-.morph-btn.done{width:180px;border-radius:24px;background:#5fd4a1}
-.spinner{display:none;width:18px;height:18px;border:2px solid #3a3546;border-top-color:#c4b5fd;border-radius:50%;animation:spin .7s linear infinite}
+.morph-btn{position:relative;width:190px;height:50px;border:0;border-radius:25px;font-size:13px;font-weight:800;color:#0a090f;cursor:pointer;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 10px 30px -10px rgba(155,138,255,.6);transition:width .35s cubic-bezier(.2,.8,.2,1),border-radius .35s,background .35s,box-shadow .35s}
+.morph-btn.loading{width:50px;border-radius:50%;background:#17131f;box-shadow:0 0 0 6px rgba(196,181,253,.15)}
+.morph-btn.done{width:190px;border-radius:25px;background:linear-gradient(135deg,#7fe0ac,#41b878);box-shadow:0 10px 30px -10px rgba(65,184,120,.6)}
+.morph-btn .row{position:relative;z-index:1;display:flex;align-items:center;gap:8px;justify-content:center;height:100%}
+.spinner{display:none;width:16px;height:16px;border:2px solid #3a3546;border-top-color:#c4b5fd;border-radius:50%;animation:spin .7s linear infinite}
+.check{display:none;width:16px;height:16px}
+.check path{stroke:#0a090f;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:20;stroke-dashoffset:20;animation:draw .4s ease forwards}
 .morph-btn.loading .label{display:none}.morph-btn.loading .spinner{display:block}
+.morph-btn.done .check{display:block}
 @keyframes spin{to{transform:rotate(360deg)}}
+@keyframes draw{to{stroke-dashoffset:0}}
 </style></head>
-<body><div class="stage"><span class="kicker">CLICK TO SUBMIT</span><button class="morph-btn" id="btn"><span class="label">Create account</span><span class="spinner"></span></button></div>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">CLICK TO SUBMIT</span>
+<button class="morph-btn" id="btn"><span class="row"><span class="spinner"></span><svg class="check" viewBox="0 0 24 24"><path d="M4 12l6 6L20 6"/></svg><span class="label">Create account</span></span></button></div>
 <script>
 const btn=document.getElementById("btn"),label=btn.querySelector(".label");
-btn.addEventListener("click",()=>{
+btn.addEventListener("click",function(){
   if(btn.classList.contains("loading")||btn.classList.contains("done"))return;
   btn.classList.add("loading");
-  setTimeout(()=>{btn.classList.remove("loading");btn.classList.add("done");label.textContent="Account created ✓";},1400);
-  setTimeout(()=>{btn.classList.remove("done");label.textContent="Create account";},3200);
+  setTimeout(function(){btn.classList.remove("loading");btn.classList.add("done");label.textContent="Account created ✓"},1400);
+  setTimeout(function(){btn.classList.remove("done");label.textContent="Create account"},3200);
 });
 </script>
 </body></html>`,
@@ -1124,21 +1220,33 @@ btn.addEventListener("click",()=>{
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .stage{display:grid;gap:22px;place-items:center;padding:40px;position:relative}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.cmd-btn{display:flex;align-items:center;gap:10px;padding:12px 16px;border:1px solid var(--line);border-radius:10px;background:#111017;color:#c9c4d6;font-size:12px;cursor:pointer}
-.cmd-btn kbd{padding:2px 6px;border:1px solid #3a3546;border-radius:5px;background:#1a1723;font-size:10px;color:#9d94b0}
-.cmd-menu{position:absolute;top:78px;width:260px;border:1px solid var(--line);border-radius:12px;background:#0d0d12;box-shadow:0 20px 60px rgba(0,0,0,.5);opacity:0;pointer-events:none;transform:translateY(-8px);transition:opacity .2s,transform .2s;overflow:hidden}
+.cmd-btn{display:flex;align-items:center;gap:10px;padding:13px 18px;border:1px solid var(--line);border-radius:12px;background:#0d0d12;color:#c9c4d6;font-size:12px;cursor:pointer;box-shadow:0 8px 24px -14px rgba(0,0,0,.7);transition:border-color .25s,box-shadow .25s}
+.cmd-btn:hover{border-color:#544c67;box-shadow:0 10px 30px -12px rgba(155,138,255,.35)}
+.cmd-btn kbd{padding:2px 6px;border:1px solid #3a3546;border-radius:5px;background:#1a1723;font-size:10px;color:#9d94b0;transition:color .25s,border-color .25s}
+.cmd-btn:hover kbd{color:var(--lav);border-color:#5a4f78}
+.cmd-menu{position:absolute;top:78px;width:270px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;box-shadow:0 20px 60px rgba(0,0,0,.55);opacity:0;pointer-events:none;transform:translateY(-8px) scale(.98);transition:opacity .2s,transform .2s;overflow:hidden}
 .cmd-menu.open{opacity:1;pointer-events:auto;transform:none}
-.cmd-menu div{padding:11px 14px;font-size:12px;color:#eee9f8;border-bottom:1px solid var(--line);cursor:pointer}
-.cmd-menu div:last-child{border-bottom:0}.cmd-menu div:hover{background:#17131f;color:var(--lav)}
+.cmd-item{display:flex;align-items:center;gap:10px;padding:11px 14px;font-size:12px;color:#eee9f8;border-bottom:1px solid var(--line);cursor:pointer;opacity:0;transform:translateY(4px)}
+.cmd-menu.open .cmd-item{animation:fadeIn .3s ease forwards}
+.cmd-item:nth-child(1){animation-delay:.03s}.cmd-item:nth-child(2){animation-delay:.08s}.cmd-item:nth-child(3){animation-delay:.13s}.cmd-item:nth-child(4){animation-delay:.18s}
+.cmd-item:last-child{border-bottom:0}.cmd-item:hover{background:#17131f;color:var(--lav)}
+.cmd-item i{opacity:.6;font-style:normal}
+@keyframes fadeIn{to{opacity:1;transform:none}}
 </style></head>
-<body><div class="stage"><span class="kicker">CLICK OR PRESS ⌘K</span><button class="cmd-btn" id="btn">Search actions… <kbd>⌘K</kbd></button>
-<div class="cmd-menu" id="menu"><div>New project</div><div>Invite teammate</div><div>Open settings</div><div>View documentation</div></div></div>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">CLICK OR PRESS ⌘K</span>
+<button class="cmd-btn" id="btn">Search actions… <kbd>⌘K</kbd></button>
+<div class="cmd-menu" id="menu">
+<div class="cmd-item"><i>+</i>New project</div>
+<div class="cmd-item"><i>@</i>Invite teammate</div>
+<div class="cmd-item"><i>#</i>Open settings</div>
+<div class="cmd-item"><i>*</i>View documentation</div>
+</div></div>
 <script>
 const btn=document.getElementById("btn"),menu=document.getElementById("menu");
 function toggle(){menu.classList.toggle("open")}
 btn.addEventListener("click",toggle);
-document.addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();toggle()}});
-document.addEventListener("click",e=>{if(!menu.contains(e.target)&&e.target!==btn)menu.classList.remove("open")});
+document.addEventListener("keydown",function(e){if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();toggle()}});
+document.addEventListener("click",function(e){if(!menu.contains(e.target)&&e.target!==btn)menu.classList.remove("open")});
 </script>
 </body></html>`,
 
@@ -1154,15 +1262,16 @@ circle{fill:none;stroke-width:8}
 .track{stroke:#1c1a24}
 .bar{stroke:url(#g);stroke-linecap:round;transition:stroke-dashoffset .3s linear}
 .pct{position:absolute;font-size:20px;font-weight:800;color:#f7f5fb}
+.bar{filter:drop-shadow(0 0 6px rgba(196,181,253,.6))}
 </style></head>
-<body><div class="stage"><span class="kicker">LOADING…</span>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">LOADING…</span>
 <div class="ring-wrap">
 <svg width="120" height="120"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#d7d0ff"/><stop offset="100%" stop-color="#9b8aff"/></linearGradient></defs>
 <circle class="track" cx="60" cy="60" r="52"/><circle class="bar" id="bar" cx="60" cy="60" r="52" stroke-dasharray="327" stroke-dashoffset="327"/></svg>
 <span class="pct" id="pct">0%</span></div></div>
 <script>
 const bar=document.getElementById("bar"),pct=document.getElementById("pct"),C=327;let v=0;
-const t=setInterval(()=>{v=Math.min(100,v+Math.random()*9);bar.style.strokeDashoffset=C-(C*v/100);pct.textContent=Math.round(v)+"%";if(v>=100)clearInterval(t)},220);
+const t=setInterval(function(){v=Math.min(100,v+Math.random()*9);bar.style.strokeDashoffset=C-(C*v/100);pct.textContent=Math.round(v)+"%";if(v>=100)clearInterval(t)},220);
 </script>
 </body></html>`,
 
@@ -1172,17 +1281,18 @@ const t=setInterval(()=>{v=Math.min(100,v+Math.random()*9);bar.style.strokeDasho
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;display:block;text-align:center;margin-bottom:16px}
 .grid{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:30px;max-width:480px}
-.grid::before{content:"";position:absolute;inset:0;border-radius:18px;pointer-events:none;background:radial-gradient(220px circle at var(--x,50%) var(--y,50%),rgba(196,181,253,.16),transparent 70%)}
-.tile{position:relative;padding:22px 16px;border:1px solid var(--line);border-radius:12px;background:#0d0d12;color:#c9c4d6;font-size:11px;text-align:center}
+.grid::before{content:"";position:absolute;inset:0;border-radius:18px;pointer-events:none;background:radial-gradient(220px circle at var(--x,50%) var(--y,50%),rgba(196,181,253,.2),transparent 70%)}
+.tile{position:relative;padding:22px 16px;border:1px solid var(--line);border-radius:12px;background:#0d0d12;color:#c9c4d6;font-size:11px;text-align:center;box-shadow:0 16px 40px -24px rgba(0,0,0,.7);transition:border-color .3s}
+.grid:hover .tile{border-color:#2c2837}
 </style></head>
-<body><div><span class="kicker">MOVE YOUR CURSOR OVER THE GRID</span>
+<body data-cf-keep-dark><div><span class="kicker">MOVE YOUR CURSOR OVER THE GRID</span>
 <div class="grid" id="grid">
 <div class="tile">Speed</div><div class="tile">Security</div><div class="tile">Scale</div>
 <div class="tile">Uptime</div><div class="tile">Support</div><div class="tile">Insights</div>
 </div></div>
 <script>
 const grid=document.getElementById("grid");
-grid.addEventListener("pointermove",e=>{const r=grid.getBoundingClientRect();grid.style.setProperty("--x",(e.clientX-r.left)+"px");grid.style.setProperty("--y",(e.clientY-r.top)+"px")});
+grid.addEventListener("pointermove",function(e){const r=grid.getBoundingClientRect();grid.style.setProperty("--x",(e.clientX-r.left)+"px");grid.style.setProperty("--y",(e.clientY-r.top)+"px")});
 </script>
 </body></html>`,
 
@@ -1192,20 +1302,21 @@ grid.addEventListener("pointermove",e=>{const r=grid.getBoundingClientRect();gri
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .stage{display:grid;gap:16px;padding:40px;width:min(360px,86vw)}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.exp-card{border:1px solid var(--line);border-radius:16px;background:#0d0d12;overflow:hidden;cursor:pointer}
+.exp-card{position:relative;border:1px solid var(--line);border-radius:16px;background:#0d0d12;overflow:hidden;cursor:pointer;transition:border-color .3s,box-shadow .3s}
+.exp-card.open{border-color:#544c67;box-shadow:0 20px 50px -20px rgba(155,138,255,.35)}
 .exp-head{display:flex;justify-content:space-between;align-items:center;padding:18px 20px}
 .exp-head b{color:#f7f5fb;font-size:13px}
-.exp-head span{color:#817d8a;font-size:11px}
-.chev{transition:transform .3s}
-.exp-card.open .chev{transform:rotate(180deg)}
-.exp-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.chev{width:22px;height:22px;border-radius:50%;background:#17131f;display:grid;place-items:center;color:var(--lav);transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .3s}
+.exp-card.open .chev{transform:rotate(180deg);background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f}
+.exp-body{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.2,.8,.2,1)}
 .exp-card.open .exp-body{max-height:140px}
-.exp-body p{margin:0;padding:0 20px 20px;color:#a49dbc;font-size:12px;line-height:1.6}
+.exp-body p{margin:0;padding:0 20px 20px;color:#a49dbc;font-size:12px;line-height:1.6;opacity:0;transform:translateY(6px);transition:opacity .3s .1s,transform .3s .1s}
+.exp-card.open .exp-body p{opacity:1;transform:none}
 </style></head>
-<body><div class="stage"><span class="kicker">CLICK TO EXPAND</span>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">CLICK TO EXPAND</span>
 <div class="exp-card" id="card"><div class="exp-head"><b>What's included in Pro?</b><span class="chev">⌄</span></div>
 <div class="exp-body"><p>Unlimited projects, priority support, advanced analytics and early access to every new component we ship.</p></div></div></div>
-<script>document.getElementById("card").addEventListener("click",e=>e.currentTarget.classList.toggle("open"));</script>
+<script>document.getElementById("card").addEventListener("click",function(e){e.currentTarget.classList.toggle("open")});</script>
 </body></html>`,
 
   "before-after-compare-card": `<!DOCTYPE html>
@@ -1214,22 +1325,22 @@ grid.addEventListener("pointermove",e=>{const r=grid.getBoundingClientRect();gri
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .stage{display:grid;gap:16px;place-items:center;padding:40px}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.compare{position:relative;width:320px;height:200px;border:1px solid var(--line);border-radius:14px;overflow:hidden;user-select:none}
+.compare{position:relative;width:320px;height:200px;border:1px solid var(--line);border-radius:14px;overflow:hidden;user-select:none;box-shadow:0 20px 50px -20px rgba(0,0,0,.6)}
 .pane{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-weight:800}
 .before{background:linear-gradient(135deg,#1a1723,#0d0d12);color:#817d8a}
 .after{background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f}
 .after-wrap{position:absolute;inset:0;width:50%;overflow:hidden}
-.handle{position:absolute;top:0;bottom:0;left:50%;width:2px;background:#f7f5fb;cursor:ew-resize}
-.handle::after{content:"↔";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:50%;background:#f7f5fb;color:#0a090f;display:grid;place-items:center;font-size:13px}
+.handle{position:absolute;top:0;bottom:0;left:50%;width:2px;background:linear-gradient(180deg,transparent,#f7f5fb,transparent);cursor:ew-resize}
+.handle::after{content:"↔";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;background:#f7f5fb;color:#0a090f;display:grid;place-items:center;font-size:13px;box-shadow:0 0 0 6px rgba(196,181,253,.18),0 8px 20px -6px rgba(0,0,0,.5)}
 </style></head>
-<body><div class="stage"><span class="kicker">DRAG THE HANDLE</span>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">DRAG THE HANDLE</span>
 <div class="compare" id="compare"><div class="pane before">BEFORE</div><div class="after-wrap" id="afterWrap"><div class="pane after" style="width:320px">AFTER</div></div><div class="handle" id="handle"></div></div></div>
 <script>
 const compare=document.getElementById("compare"),afterWrap=document.getElementById("afterWrap"),handle=document.getElementById("handle");
 let dragging=false;
-handle.addEventListener("pointerdown",()=>dragging=true);
-window.addEventListener("pointerup",()=>dragging=false);
-window.addEventListener("pointermove",e=>{
+handle.addEventListener("pointerdown",function(){dragging=true});
+window.addEventListener("pointerup",function(){dragging=false});
+window.addEventListener("pointermove",function(e){
   if(!dragging)return;
   const r=compare.getBoundingClientRect();
   let pct=Math.max(0,Math.min(100,((e.clientX-r.left)/r.width)*100));
@@ -1244,21 +1355,24 @@ window.addEventListener("pointermove",e=>{
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .stage{display:grid;gap:18px;padding:40px;width:min(340px,86vw)}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.calc{border:1px solid var(--line);border-radius:16px;background:#0d0d12;padding:24px}
-.calc b{color:#817d8a;font-size:11px;display:block;margin-bottom:6px}
-.calc .price{font-size:34px;font-weight:800;color:#f7f5fb}
+.calc{position:relative;border:1px solid var(--line);border-radius:16px;background:#0d0d12;padding:24px;overflow:hidden;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
+.calc::before{content:"";position:absolute;top:-50%;right:-20%;width:200px;height:200px;background:radial-gradient(circle,rgba(155,138,255,.16),transparent 70%)}
+.calc b{position:relative;color:#817d8a;font-size:11px;display:block;margin-bottom:6px}
+.calc .price{position:relative;font-size:34px;font-weight:800;color:#f7f5fb}
 .calc .price span{font-size:13px;color:#817d8a;font-weight:600}
-input[type=range]{width:100%;margin:18px 0 8px;accent-color:#c4b5fd}
-.rowlabel{display:flex;justify-content:space-between;color:#a49dbc;font-size:11px}
+input[type=range]{width:100%;margin:18px 0 8px;accent-color:#c4b5fd;position:relative}
+.rowlabel{position:relative;display:flex;justify-content:space-between;color:#a49dbc;font-size:11px}
+#cost{background:linear-gradient(135deg,#f7f5fb,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}
+#cost span{color:#817d8a;background:none;-webkit-text-fill-color:#817d8a}
 </style></head>
-<body><div class="stage"><span class="kicker">DRAG TO ESTIMATE YOUR PLAN</span>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">DRAG TO ESTIMATE YOUR PLAN</span>
 <div class="calc"><b>Monthly active users</b><div class="price"><span id="users">2,500</span></div>
 <input type="range" id="slider" min="500" max="50000" step="500" value="2500">
 <div class="rowlabel"><span>500</span><span>50,000+</span></div>
 <div class="price" style="margin-top:18px" id="cost">$29<span>/mo</span></div></div></div>
 <script>
 const slider=document.getElementById("slider"),users=document.getElementById("users"),cost=document.getElementById("cost");
-slider.addEventListener("input",()=>{
+slider.addEventListener("input",function(){
   const v=Number(slider.value);
   users.textContent=v.toLocaleString();
   const price=v<=2500?29:v<=10000?79:v<=25000?199:399;
@@ -1274,12 +1388,13 @@ slider.addEventListener("input",()=>{
 .stage{display:grid;gap:16px;padding:40px}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
 .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.tier{border:1px solid var(--line);border-radius:14px;background:#0d0d12;padding:18px 16px;text-align:center;transition:border-color .25s,transform .25s}
+.tier{border:1px solid var(--line);border-radius:14px;background:#0d0d12;padding:18px 16px;text-align:center;box-shadow:0 16px 40px -22px rgba(0,0,0,.7);transition:border-color .3s,transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
 .tier b{display:block;color:#817d8a;font-size:10px;letter-spacing:1px}
 .tier strong{display:block;font-size:22px;color:#f7f5fb;margin:10px 0}
-.tier:hover{border-color:#c4b5fd;transform:translateY(-4px)}
+.tier:hover{border-color:#544c67;transform:translateY(-6px);box-shadow:0 24px 50px -18px rgba(155,138,255,.3)}
+.tier:hover strong{background:linear-gradient(135deg,#f7f5fb,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}
 </style></head>
-<body><div class="stage"><span class="kicker">HOVER A PLAN</span>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">HOVER A PLAN</span>
 <div class="tiers"><div class="tier"><b>STARTER</b><strong>$9</strong><span style="color:#817d8a;font-size:10px">For solo builders</span></div>
 <div class="tier"><b>GROWTH</b><strong>$29</strong><span style="color:#817d8a;font-size:10px">For small teams</span></div>
 <div class="tier"><b>SCALE</b><strong>$79</strong><span style="color:#817d8a;font-size:10px">For fast movers</span></div></div></div>
@@ -1291,16 +1406,21 @@ slider.addEventListener("input",()=>{
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;display:block;text-align:center;margin-bottom:14px}
 .board{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:20px;width:min(560px,90vw)}
-.col{border:1px solid var(--line);border-radius:12px;background:#0d0d12;padding:12px}
-.col h4{margin:0 0 10px;font-size:10px;letter-spacing:1px;color:#817d8a}
-.task{padding:10px;border-radius:8px;background:#141119;border:1px solid var(--line);font-size:11px;color:#eee9f8;margin-bottom:8px;cursor:grab}
+.col{border:1px solid var(--line);border-radius:12px;background:#0d0d12;padding:12px;box-shadow:0 20px 50px -24px rgba(0,0,0,.6)}
+.col h4{margin:0 0 10px;font-size:10px;letter-spacing:1px;color:#817d8a;display:flex;align-items:center;gap:6px}
+.col h4::before{content:"";width:6px;height:6px;border-radius:50%;background:#4a4657}
+.col.progress h4::before{background:#e8b563;box-shadow:0 0 8px #e8b563}
+.col.done h4::before{background:#5fd4a1;box-shadow:0 0 8px #5fd4a1}
+.task{padding:10px;border-radius:8px;background:#141119;border:1px solid var(--line);font-size:11px;color:#eee9f8;margin-bottom:8px;cursor:grab;transition:transform .2s cubic-bezier(.2,.8,.2,1),border-color .2s,box-shadow .2s}
+.task:hover{transform:translateY(-3px);border-color:#544c67;box-shadow:0 10px 24px -14px rgba(155,138,255,.4)}
 .task:last-child{margin-bottom:0}
 .task small{display:block;color:#817d8a;margin-top:4px;font-size:9px}
+.col.done .task{background:linear-gradient(135deg,#132318,#0f1a12)}
 </style></head>
-<body><div><span class="kicker">TASKS AT A GLANCE</span>
+<body data-cf-keep-dark><div><span class="kicker">TASKS AT A GLANCE</span>
 <div class="board"><div class="col"><h4>TO DO</h4><div class="task">Design onboarding flow<small>UX</small></div><div class="task">Write API docs<small>Docs</small></div></div>
-<div class="col"><h4>IN PROGRESS</h4><div class="task">Build checkout widget<small>Frontend</small></div></div>
-<div class="col"><h4>DONE</h4><div class="task">Fix login redirect<small>Bug</small></div><div class="task">Ship dark mode<small>Feature</small></div></div></div></div>
+<div class="col progress"><h4>IN PROGRESS</h4><div class="task">Build checkout widget<small>Frontend</small></div></div>
+<div class="col done"><h4>DONE</h4><div class="task">Fix login redirect<small>Bug</small></div><div class="task">Ship dark mode<small>Feature</small></div></div></div></div>
 </body></html>`,
 
   "notification-center-panel": `<!DOCTYPE html>
@@ -1309,23 +1429,26 @@ slider.addEventListener("input",()=>{
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .stage{display:grid;gap:16px;padding:40px}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.panel{width:280px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;overflow:hidden}
-.panel h4{margin:0;padding:14px 16px;font-size:11px;color:#817d8a;border-bottom:1px solid var(--line)}
-.notif{display:flex;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);cursor:pointer}
+.panel{position:relative;width:280px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;overflow:hidden;box-shadow:0 20px 50px -20px rgba(0,0,0,.6)}
+.panel h4{margin:0;padding:14px 16px;font-size:11px;color:#817d8a;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}
+.panel h4 b{color:var(--lav);font-weight:800}
+.notif{display:flex;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .2s}
+.notif:hover{background:#141119}
 .notif:last-child{border-bottom:0}
 .notif.unread{background:#141020}
-.notif i{width:8px;height:8px;border-radius:50%;background:#c4b5fd;margin-top:5px;flex:none;font-style:normal}
-.notif.read i{background:transparent}
+.notif i{position:relative;width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 0 8px rgba(196,181,253,.6);margin-top:5px;flex:none;font-style:normal;transition:background .3s,box-shadow .3s}
+.notif.read i{background:transparent;box-shadow:none}
 .notif div b{display:block;font-size:11px;color:#eee9f8}
 .notif div span{font-size:10px;color:#817d8a}
 </style></head>
-<body><div class="stage"><span class="kicker">CLICK A NOTIFICATION TO MARK READ</span>
-<div class="panel"><h4>NOTIFICATIONS</h4>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">CLICK A NOTIFICATION TO MARK READ</span>
+<div class="panel"><h4>NOTIFICATIONS <b id="count">2</b></h4>
 <div class="notif unread"><i></i><div><b>New comment on your PR</b><span>2 min ago</span></div></div>
 <div class="notif unread"><i></i><div><b>Deploy succeeded</b><span>1 hour ago</span></div></div>
 <div class="notif read"><i></i><div><b>Weekly summary ready</b><span>Yesterday</span></div></div></div></div>
 <script>
-document.querySelectorAll(".notif").forEach(n=>n.addEventListener("click",()=>{n.classList.remove("unread");n.classList.add("read")}));
+const count=document.getElementById("count");
+document.querySelectorAll(".notif").forEach(function(n){n.addEventListener("click",function(){if(n.classList.contains("unread")){n.classList.remove("unread");n.classList.add("read");count.textContent=Math.max(0,Number(count.textContent)-1)}})});
 </script>
 </body></html>`,
 
@@ -1339,9 +1462,10 @@ document.querySelectorAll(".notif").forEach(n=>n.addEventListener("click",()=>{n
 .kicker{color:#c4b5fd;font-size:10px;letter-spacing:2px;font-weight:700}
 h1{color:#f7f5fb;font-size:32px;margin:14px 0;line-height:1.15}
 p{color:#a49dbc;font-size:13px;margin:0 0 20px}
-button{padding:13px 26px;border:0;border-radius:12px;background:#f7f5fb;color:#0a090f;font-weight:800;font-size:12px;cursor:pointer}
+button{padding:13px 26px;border:0;border-radius:12px;background:#f7f5fb;color:#0a090f;font-weight:800;font-size:12px;cursor:pointer;box-shadow:0 16px 34px -10px rgba(0,0,0,.5);transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
+button:active{transform:scale(.96)}
 </style></head>
-<body><div class="aurora"></div><div class="hero"><span class="kicker">INTRODUCING V2</span><h1>Design systems that move with you.</h1><p>An adaptive component library built for teams shipping fast, polished products.</p><button>Start building →</button></div>
+<body data-cf-keep-dark><div class="aurora"></div><div class="hero"><span class="kicker">INTRODUCING V2</span><h1>Design systems that move with you.</h1><p>An adaptive component library built for teams shipping fast, polished products.</p><button>Start building →</button></div>
 </body></html>`,
 
   "particle-field-hero": `<!DOCTYPE html>
@@ -1353,7 +1477,7 @@ canvas{position:absolute;inset:0}
 .kicker{color:#9d94b0;font-size:10px;letter-spacing:2px;font-weight:700}
 h1{color:#f7f5fb;font-size:30px;margin:14px 0;max-width:420px}
 </style></head>
-<body><canvas id="c"></canvas><div class="hero"><div><span class="kicker">MOVE YOUR CURSOR</span><h1>Interfaces with a pulse.</h1></div></div>
+<body data-cf-keep-dark><canvas id="c"></canvas><div class="hero"><div><span class="kicker">MOVE YOUR CURSOR</span><h1>Interfaces with a pulse.</h1></div></div>
 <script>
 const c=document.getElementById("c"),ctx=c.getContext("2d");let w,h,mx=-999,my=-999;
 function resize(){w=c.width=innerWidth;h=c.height=innerHeight}resize();addEventListener("resize",resize);
@@ -1380,14 +1504,15 @@ tick();
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .stage{display:grid;gap:16px;place-items:center;padding:40px;width:min(360px,86vw)}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.card{border:1px solid var(--line);border-radius:16px;background:#0d0d12;padding:24px;text-align:center;min-height:120px}
+.card{border:1px solid var(--line);border-radius:16px;background:#0d0d12;padding:24px;text-align:center;min-height:120px;box-shadow:0 20px 50px -22px rgba(0,0,0,.6);animation:fade .3s cubic-bezier(.2,.8,.2,1)}
 .card p{color:#eee9f8;font-size:13px;line-height:1.6;margin:0 0 12px}
-.card b{color:#c4b5fd;font-size:11px}
+.card b{color:var(--lav);font-size:11px}
 .dots{display:flex;gap:6px}
-.dots span{width:7px;height:7px;border-radius:50%;background:#3a3546;cursor:pointer}
-.dots span.active{background:#c4b5fd}
+.dots span{width:7px;height:7px;border-radius:50%;background:#3a3546;cursor:pointer;transition:background .3s,transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s}
+.dots span.active{background:linear-gradient(135deg,#d7d0ff,#9b8aff);transform:scale(1.3);box-shadow:0 0 8px rgba(196,181,253,.5)}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 </style></head>
-<body><div class="stage"><span class="kicker">TAP A DOT</span>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">TAP A DOT</span>
 <div class="card" id="card"><p>"CodeFusion cut our build time in half — every component just works."</p><b>Maya Torres · Frontend Lead</b></div>
 <div class="dots" id="dots"><span class="active"></span><span></span><span></span></div></div>
 <script>
@@ -1395,26 +1520,28 @@ const quotes=[{q:"CodeFusion cut our build time in half — every component just
 {q:"The polish here rivals a custom design agency, at a fraction of the cost.",a:"Dev Patel · Founder"},
 {q:"We shipped our MVP in a weekend using nothing but this library.",a:"Ines Laurent · Product Designer"}];
 const card=document.getElementById("card"),dots=[...document.querySelectorAll("#dots span")];
-dots.forEach((d,i)=>d.addEventListener("click",()=>{
-  dots.forEach(x=>x.classList.remove("active"));d.classList.add("active");
-  card.innerHTML=\`<p>"\${quotes[i].q}"</p><b>\${quotes[i].a}</b>\`;
-}));
+dots.forEach(function(d,i){d.addEventListener("click",function(){
+  dots.forEach(function(x){x.classList.remove("active")});d.classList.add("active");
+  card.style.animation="none";void card.offsetWidth;card.style.animation="";
+  card.innerHTML='<p>"'+quotes[i].q+'"</p><b>'+quotes[i].a+"</b>";
+})});
 </script>
 </body></html>`,
 
   "pull-quote-testimonial": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Pull Quote Testimonial</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.wrap{max-width:420px;padding:40px;text-align:center}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;position:relative;overflow:hidden}
+body::before{content:"";position:absolute;inset:-20%;background:radial-gradient(circle at 50% 30%,rgba(155,138,255,.1),transparent 60%);pointer-events:none}
+.wrap{position:relative;max-width:420px;padding:40px;text-align:center}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.mark{font-size:40px;color:#3a3546;font-family:Georgia,serif;line-height:1}
+.mark{font-size:40px;background:linear-gradient(135deg,#9b8aff,#3a3546);-webkit-background-clip:text;background-clip:text;color:transparent;font-family:Georgia,serif;line-height:1}
 blockquote{margin:10px 0 20px;font-size:19px;color:#f7f5fb;line-height:1.4;font-weight:600}
 .who{color:#a49dbc;font-size:12px}
 .logos{display:flex;gap:18px;justify-content:center;margin-top:22px;opacity:.6}
 .logos span{color:#817d8a;font-size:11px;font-weight:800;letter-spacing:1px}
 </style></head>
-<body><div class="wrap"><span class="kicker">TRUSTED BY BUILDERS</span><div class="mark">"</div>
+<body data-cf-keep-dark><div class="wrap"><span class="kicker">TRUSTED BY BUILDERS</span><div class="mark">"</div>
 <blockquote>It feels like our whole product got a design upgrade overnight.</blockquote>
 <div class="who">Renée Fischer — Head of Design, Northstar</div>
 <div class="logos"><span>NORTHSTAR</span><span>ORBIT</span><span>FLUENT</span></div></div>
@@ -1426,22 +1553,24 @@ blockquote{margin:10px 0 20px;font-size:19px;color:#f7f5fb;line-height:1.4;font-
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 header{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;border-bottom:1px solid var(--line)}
 header b{color:#f7f5fb;font-size:13px}
-.search{display:flex;align-items:center;gap:8px;padding:9px 14px;border:1px solid var(--line);border-radius:9px;background:#111017;color:#817d8a;font-size:11px;cursor:pointer}
-.overlay{position:fixed;inset:0;background:rgba(5,5,7,.7);display:none;place-items:start center;padding-top:100px}
+.search{display:flex;align-items:center;gap:8px;padding:9px 14px;border:1px solid var(--line);border-radius:9px;background:#111017;color:#817d8a;font-size:11px;cursor:pointer;transition:border-color .2s}
+.search:hover{border-color:#544c67}
+.overlay{position:fixed;inset:0;background:rgba(5,5,7,.7);backdrop-filter:blur(2px);display:none;place-items:start center;padding-top:100px}
 .overlay.open{display:grid}
-.palette{width:min(420px,88vw);border:1px solid var(--line);border-radius:14px;background:#0d0d12;overflow:hidden}
+.palette{width:min(420px,88vw);border:1px solid var(--line);border-radius:14px;background:#0d0d12;overflow:hidden;box-shadow:0 40px 90px -20px rgba(0,0,0,.7),0 0 0 1px rgba(196,181,253,.1);animation:pop .2s cubic-bezier(.2,.8,.2,1)}
+@keyframes pop{from{opacity:0;transform:translateY(-8px) scale(.98)}to{opacity:1;transform:none}}
 .palette input{width:100%;padding:14px 16px;border:0;border-bottom:1px solid var(--line);background:transparent;color:#f7f5fb;font-size:13px;outline:0}
-.palette div{padding:11px 16px;font-size:12px;color:#c9c4d6;cursor:pointer}
+.palette div{padding:11px 16px;font-size:12px;color:#c9c4d6;cursor:pointer;transition:background .15s,color .15s}
 .palette div:hover{background:#17131f;color:var(--lav)}
 </style></head>
-<body><header><b>CodeFusion</b><div class="search" id="open">Search… ⌘K</div></header>
+<body data-cf-keep-dark><header><b>CodeFusion</b><div class="search" id="open">Search… ⌘K</div></header>
 <div class="overlay" id="overlay"><div class="palette"><input placeholder="Type a command…" autofocus>
 <div>Go to Dashboard</div><div>Create new component</div><div>Toggle theme</div><div>View documentation</div></div></div>
 <script>
 const open=document.getElementById("open"),overlay=document.getElementById("overlay");
-open.addEventListener("click",()=>overlay.classList.add("open"));
-overlay.addEventListener("click",e=>{if(e.target===overlay)overlay.classList.remove("open")});
-document.addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();overlay.classList.add("open")}if(e.key==="Escape")overlay.classList.remove("open")});
+open.addEventListener("click",function(){overlay.classList.add("open")});
+overlay.addEventListener("click",function(e){if(e.target===overlay)overlay.classList.remove("open")});
+document.addEventListener("keydown",function(e){if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();overlay.classList.add("open")}if(e.key==="Escape")overlay.classList.remove("open")});
 </script>
 </body></html>`,
 
@@ -1452,16 +1581,16 @@ document.addEventListener("keydown",e=>{if((e.metaKey||e.ctrlKey)&&e.key.toLower
 .stage{display:grid;gap:20px;padding:40px}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
 .tabs{position:relative;display:flex;gap:26px;border-bottom:1px solid var(--line);padding-bottom:0}
-.tabs button{background:none;border:0;color:#817d8a;font-size:12px;font-weight:700;padding:10px 2px;cursor:pointer}
+.tabs button{background:none;border:0;color:#817d8a;font-size:12px;font-weight:700;padding:10px 2px;cursor:pointer;transition:color .25s}
 .tabs button.active{color:#f7f5fb}
-.underline{position:absolute;bottom:-1px;height:2px;background:#c4b5fd;transition:left .3s ease,width .3s ease}
+.underline{position:absolute;bottom:-1px;height:2px;background:linear-gradient(90deg,#9b8aff,#d7d0ff);box-shadow:0 0 8px rgba(196,181,253,.6);transition:left .3s cubic-bezier(.2,.8,.2,1),width .3s cubic-bezier(.2,.8,.2,1)}
 </style></head>
-<body><div class="stage"><span class="kicker">CLICK A TAB</span>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">CLICK A TAB</span>
 <div class="tabs" id="tabs"><button class="active">Overview</button><button>Analytics</button><button>Settings</button><button>Billing</button><div class="underline" id="u"></div></div></div>
 <script>
 const tabs=document.getElementById("tabs"),buttons=[...tabs.querySelectorAll("button")],u=document.getElementById("u");
 function place(btn){u.style.width=btn.offsetWidth+"px";u.style.left=btn.offsetLeft+"px"}
-buttons.forEach(b=>b.addEventListener("click",()=>{buttons.forEach(x=>x.classList.remove("active"));b.classList.add("active");place(b)}));
+buttons.forEach(function(b){b.addEventListener("click",function(){buttons.forEach(function(x){x.classList.remove("active")});b.classList.add("active");place(b)})});
 place(buttons[0]);
 </script>
 </body></html>`,
@@ -1472,21 +1601,24 @@ place(buttons[0]);
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .stage{display:grid;gap:14px;padding:40px;width:min(340px,86vw)}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.drop{border:2px dashed var(--line);border-radius:14px;padding:34px 18px;text-align:center;color:#817d8a;font-size:12px;transition:border-color .2s,background .2s}
-.drop.over{border-color:#c4b5fd;background:#141020;color:#c9c4d6}
-.drop b{display:block;color:#eee9f8;font-size:13px;margin-bottom:6px}
+.drop{position:relative;border:2px dashed var(--line);border-radius:14px;padding:34px 18px;text-align:center;color:#817d8a;font-size:12px;overflow:hidden;transition:border-color .25s,background .25s,box-shadow .25s}
+.drop::before{content:"";position:absolute;inset:-40%;background:radial-gradient(circle,rgba(196,181,253,.25),transparent 70%);opacity:0;transition:opacity .3s}
+.drop.over{border-color:var(--lav);background:#141020;color:#c9c4d6;box-shadow:0 0 0 4px rgba(196,181,253,.12)}
+.drop.over::before{opacity:1}
+.drop b{position:relative;display:block;color:#eee9f8;font-size:13px;margin-bottom:6px}
+.drop>*{position:relative}
 .bar{height:6px;border-radius:4px;background:#1c1a24;margin-top:14px;overflow:hidden;display:none}
 .bar.show{display:block}
-.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#9b8aff,#c4b5fd);transition:width .25s;font-style:normal}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#9b8aff,#c4b5fd);box-shadow:0 0 8px rgba(196,181,253,.6);transition:width .25s;font-style:normal}
 </style></head>
-<body><div class="stage"><span class="kicker">DROP A FILE OR CLICK TO SIMULATE</span>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">DROP A FILE OR CLICK TO SIMULATE</span>
 <div class="drop" id="drop"><b>Drag & drop your file here</b>or click to browse<div class="bar" id="bar"><i id="fill"></i></div></div></div>
 <script>
 const drop=document.getElementById("drop"),bar=document.getElementById("bar"),fill=document.getElementById("fill");
-function simulate(){bar.classList.add("show");fill.style.width="0%";let p=0;const t=setInterval(()=>{p+=Math.random()*20;fill.style.width=Math.min(100,p)+"%";if(p>=100)clearInterval(t)},180)}
+function simulate(){bar.classList.add("show");fill.style.width="0%";let p=0;const t=setInterval(function(){p+=Math.random()*20;fill.style.width=Math.min(100,p)+"%";if(p>=100)clearInterval(t)},180)}
 drop.addEventListener("click",simulate);
-["dragover","dragenter"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("over")}));
-["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("over");if(ev==="drop")simulate()}));
+["dragover","dragenter"].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.classList.add("over")})});
+["dragleave","drop"].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.classList.remove("over");if(ev==="drop")simulate()})});
 </script>
 </body></html>`,
 
@@ -1497,22 +1629,23 @@ drop.addEventListener("click",simulate);
 .stage{display:grid;gap:16px;place-items:center;padding:40px}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
 .otp{display:flex;gap:9px}
-.otp input{width:42px;height:52px;text-align:center;font-size:19px;font-weight:800;color:#f7f5fb;background:#111017;border:1px solid var(--line);border-radius:10px;outline:0}
-.otp input:focus{border-color:#c4b5fd}
-.status{font-size:11px;color:#5fd4a1;height:14px}
+.otp input{width:42px;height:52px;text-align:center;font-size:19px;font-weight:800;color:#f7f5fb;background:#111017;border:1px solid var(--line);border-radius:10px;outline:0;box-shadow:0 10px 24px -16px rgba(0,0,0,.6);transition:border-color .2s,box-shadow .2s,transform .2s cubic-bezier(.34,1.56,.64,1)}
+.otp input:focus{border-color:var(--lav);box-shadow:0 0 0 3px rgba(196,181,253,.25);transform:translateY(-2px)}
+.otp.done input{border-color:#3f6e52;color:#bdf0d1}
+.status{font-size:11px;color:#5fd4a1;height:14px;text-shadow:0 0 8px rgba(95,212,161,.4)}
 </style></head>
-<body><div class="stage"><span class="kicker">ENTER THE 6-DIGIT CODE</span>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">ENTER THE 6-DIGIT CODE</span>
 <div class="otp" id="otp"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"></div>
 <div class="status" id="status"></div></div>
 <script>
-const inputs=[...document.querySelectorAll("#otp input")],status=document.getElementById("status");
-inputs.forEach((inp,i)=>{
-  inp.addEventListener("input",()=>{
+const otp=document.getElementById("otp"),inputs=[...document.querySelectorAll("#otp input")],status=document.getElementById("status");
+inputs.forEach(function(inp,i){
+  inp.addEventListener("input",function(){
     inp.value=inp.value.replace(/[^0-9]/g,"");
     if(inp.value&&inputs[i+1])inputs[i+1].focus();
-    if(inputs.every(x=>x.value))status.textContent="Code verified ✓";
+    if(inputs.every(function(x){return x.value})){status.textContent="Code verified ✓";otp.classList.add("done")}
   });
-  inp.addEventListener("keydown",e=>{if(e.key==="Backspace"&&!inp.value&&inputs[i-1])inputs[i-1].focus()});
+  inp.addEventListener("keydown",function(e){if(e.key==="Backspace"&&!inp.value&&inputs[i-1])inputs[i-1].focus()});
 });
 </script>
 </body></html>`,
@@ -1524,13 +1657,13 @@ inputs.forEach((inp,i)=>{
 .stage{display:grid;gap:16px;padding:30px;width:min(420px,90vw)}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
 .chips{display:flex;gap:8px;flex-wrap:wrap}
-.chips span{padding:7px 13px;border:1px solid var(--line);border-radius:999px;font-size:11px;color:#a49dbc;cursor:pointer}
-.chips span.active{background:#c4b5fd;color:#0a090f;border-color:#c4b5fd}
+.chips span{padding:7px 13px;border:1px solid var(--line);border-radius:999px;font-size:11px;color:#a49dbc;cursor:pointer;transition:background .25s,color .25s,border-color .25s}
+.chips span.active{background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;border-color:transparent;box-shadow:0 8px 20px -10px rgba(155,138,255,.6)}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.grid div{padding:22px 14px;border:1px solid var(--line);border-radius:12px;background:#0d0d12;color:#c9c4d6;font-size:11px;text-align:center;transition:opacity .2s,transform .2s}
+.grid div{padding:22px 14px;border:1px solid var(--line);border-radius:12px;background:#0d0d12;color:#c9c4d6;font-size:11px;text-align:center;box-shadow:0 14px 34px -22px rgba(0,0,0,.7);transition:opacity .3s cubic-bezier(.2,.8,.2,1),transform .3s cubic-bezier(.2,.8,.2,1)}
 .grid div.hide{opacity:0;transform:scale(.9);position:absolute;pointer-events:none}
 </style></head>
-<body><div class="stage"><span class="kicker">FILTER BY CATEGORY</span>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">FILTER BY CATEGORY</span>
 <div class="chips" id="chips"><span class="active" data-f="all">All</span><span data-f="web">Web</span><span data-f="brand">Brand</span><span data-f="app">App</span></div>
 <div class="grid" id="grid">
 <div data-c="web">Nova Website</div><div data-c="brand">Atlas Rebrand</div><div data-c="app">Finora App</div>
@@ -1538,11 +1671,11 @@ inputs.forEach((inp,i)=>{
 </div></div>
 <script>
 const chips=[...document.querySelectorAll("#chips span")],items=[...document.querySelectorAll("#grid div")];
-chips.forEach(c=>c.addEventListener("click",()=>{
-  chips.forEach(x=>x.classList.remove("active"));c.classList.add("active");
+chips.forEach(function(c){c.addEventListener("click",function(){
+  chips.forEach(function(x){x.classList.remove("active")});c.classList.add("active");
   const f=c.dataset.f;
-  items.forEach(i=>i.classList.toggle("hide",f!=="all"&&i.dataset.c!==f));
-}));
+  items.forEach(function(i){i.classList.toggle("hide",f!=="all"&&i.dataset.c!==f)});
+})});
 </script>
 </body></html>`,
 
@@ -1554,15 +1687,16 @@ chips.forEach(c=>c.addEventListener("click",()=>{
 .strip{display:flex;gap:12px;overflow-x:auto;padding:20px;width:min(480px,92vw);cursor:grab;scrollbar-width:none}
 .strip::-webkit-scrollbar{display:none}
 .strip.grabbing{cursor:grabbing}
-.strip div{flex:none;width:150px;height:100px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(135deg,#141119,#1c1a24);display:grid;place-items:center;color:#c9c4d6;font-size:11px;user-select:none}
+.strip div{flex:none;width:150px;height:100px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(135deg,#191527,#1c1a24);display:grid;place-items:center;color:#c9c4d6;font-size:11px;user-select:none;box-shadow:0 16px 40px -20px rgba(0,0,0,.7);transition:border-color .2s,box-shadow .2s}
+.strip div:hover{border-color:#544c67;box-shadow:0 20px 44px -16px rgba(155,138,255,.3)}
 </style></head>
-<body><div><span class="kicker">DRAG TO SCROLL</span>
+<body data-cf-keep-dark><div><span class="kicker">DRAG TO SCROLL</span>
 <div class="strip" id="strip"><div>Nova SaaS</div><div>Atlas Agency</div><div>CommerceX</div><div>Finora</div><div>Medora</div><div>Travelora</div></div></div>
 <script>
 const strip=document.getElementById("strip");let down=false,startX,scrollLeft;
-strip.addEventListener("pointerdown",e=>{down=true;strip.classList.add("grabbing");startX=e.pageX;scrollLeft=strip.scrollLeft});
-window.addEventListener("pointerup",()=>{down=false;strip.classList.remove("grabbing")});
-strip.addEventListener("pointermove",e=>{if(!down)return;strip.scrollLeft=scrollLeft-(e.pageX-startX)});
+strip.addEventListener("pointerdown",function(e){down=true;strip.classList.add("grabbing");startX=e.pageX;scrollLeft=strip.scrollLeft});
+window.addEventListener("pointerup",function(){down=false;strip.classList.remove("grabbing")});
+strip.addEventListener("pointermove",function(e){if(!down)return;strip.scrollLeft=scrollLeft-(e.pageX-startX)});
 </script>
 </body></html>`,
 
@@ -1572,20 +1706,22 @@ strip.addEventListener("pointermove",e=>{if(!down)return;strip.scrollLeft=scroll
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .stage{display:grid;gap:16px;place-items:center;padding:40px;width:min(340px,86vw)}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.switch{display:flex;border:1px solid var(--line);border-radius:999px;padding:3px;width:fit-content}
-.switch button{border:0;background:none;padding:7px 16px;border-radius:999px;font-size:11px;font-weight:700;color:#817d8a;cursor:pointer}
-.switch button.active{background:#c4b5fd;color:#0a090f}
-.panel{border:1px solid var(--line);border-radius:14px;background:#0d0d12;padding:20px;width:100%;color:#eee9f8;font-size:12px;line-height:1.6}
+.switch{position:relative;display:flex;border:1px solid var(--line);border-radius:999px;padding:3px;width:fit-content;background:#0d0d12}
+.pill{position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);border-radius:999px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.switch.on .pill{transform:translateX(100%)}
+.switch button{position:relative;z-index:1;border:0;background:none;padding:7px 16px;border-radius:999px;font-size:11px;font-weight:700;color:#817d8a;cursor:pointer;transition:color .3s}
+.switch button.active{color:#0a090f}
+.panel{border:1px solid var(--line);border-radius:14px;background:#0d0d12;padding:20px;width:100%;color:#eee9f8;font-size:12px;line-height:1.6;box-shadow:0 20px 50px -22px rgba(0,0,0,.6);transition:box-shadow .3s,opacity .15s}
 .panel b{display:block;color:#f7f5fb;margin-bottom:6px;font-size:13px}
 </style></head>
-<body><div class="stage"><span class="kicker">TOGGLE TO COMPARE</span>
-<div class="switch" id="switch"><button class="active" data-v="before">Without CodeFusion</button><button data-v="after">With CodeFusion</button></div>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">TOGGLE TO COMPARE</span>
+<div class="switch" id="switch"><div class="pill"></div><button class="active" data-v="before">Without CodeFusion</button><button data-v="after">With CodeFusion</button></div>
 <div class="panel" id="panel"><b>Manual, from-scratch builds</b>Weeks spent wiring up components, chasing pixel-perfect states and re-solving problems already solved elsewhere.</div></div>
 <script>
-const buttons=[...document.querySelectorAll("#switch button")],panel=document.getElementById("panel");
+const switchEl=document.getElementById("switch"),buttons=[...switchEl.querySelectorAll("button")],panel=document.getElementById("panel");
 const content={before:"<b>Manual, from-scratch builds</b>Weeks spent wiring up components, chasing pixel-perfect states and re-solving problems already solved elsewhere.",
 after:"<b>Production-ready in hours</b>Copy a fully polished, interactive component and ship — every state, every breakpoint, already handled."};
-buttons.forEach(b=>b.addEventListener("click",()=>{buttons.forEach(x=>x.classList.remove("active"));b.classList.add("active");panel.innerHTML=content[b.dataset.v]}));
+buttons.forEach(function(b){b.addEventListener("click",function(){buttons.forEach(function(x){x.classList.remove("active")});b.classList.add("active");switchEl.classList.toggle("on",b.dataset.v==="after");panel.style.opacity="0";setTimeout(function(){panel.innerHTML=content[b.dataset.v];panel.style.opacity="1"},150)})});
 </script>
 </body></html>`,
 
@@ -1595,14 +1731,15 @@ buttons.forEach(b=>b.addEventListener("click",()=>{buttons.forEach(x=>x.classLis
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;display:flex}
 .nav{position:sticky;top:0;align-self:flex-start;padding:40px 18px;display:grid;gap:12px;min-width:130px}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;margin-bottom:6px}
-.nav a{color:#817d8a;font-size:11px;text-decoration:none;padding-left:10px;border-left:2px solid var(--line)}
-.nav a.active{color:#f7f5fb;border-left-color:#c4b5fd}
+.nav a{position:relative;color:#817d8a;font-size:11px;text-decoration:none;padding-left:12px;border-left:2px solid var(--line);transition:color .3s,border-color .3s}
+.nav a.active{color:#f7f5fb;border-left-color:var(--lav)}
+.nav a.active::before{content:"";position:absolute;left:-2px;top:0;bottom:0;width:2px;background:var(--lav);box-shadow:0 0 8px var(--lav)}
 .content{padding:40px 24px;display:grid;gap:200px;flex:1}
 section{scroll-margin-top:20px}
 section h3{color:#f7f5fb;font-size:16px;margin:0 0 8px}
 section p{color:#a49dbc;font-size:12px;max-width:260px;line-height:1.6}
 </style></head>
-<body><nav class="nav"><span class="kicker">FEATURES</span><a href="#speed" class="active">Speed</a><a href="#security">Security</a><a href="#scale">Scale</a></nav>
+<body data-cf-keep-dark><nav class="nav"><span class="kicker">FEATURES</span><a href="#speed" class="active">Speed</a><a href="#security">Security</a><a href="#scale">Scale</a></nav>
 <div class="content">
 <section id="speed"><h3>Built for speed</h3><p>Every component ships pre-optimized, no extra tuning required.</p></section>
 <section id="security"><h3>Security first</h3><p>Sanitized, dependency-light source you can audit in minutes.</p></section>
@@ -1610,10 +1747,10 @@ section p{color:#a49dbc;font-size:12px;max-width:260px;line-height:1.6}
 </div>
 <script>
 const links=[...document.querySelectorAll(".nav a")],sections=[...document.querySelectorAll("section")];
-const io=new IntersectionObserver(entries=>{
-  entries.forEach(en=>{if(en.isIntersecting){links.forEach(l=>l.classList.remove("active"));document.querySelector(\`a[href="#\${en.target.id}"]\`).classList.add("active")}});
+const io=new IntersectionObserver(function(entries){
+  entries.forEach(function(en){if(en.isIntersecting){links.forEach(function(l){l.classList.remove("active")});const match=links.find(function(l){return l.getAttribute("href")==="#"+en.target.id});if(match)match.classList.add("active")}});
 },{rootMargin:"-40% 0px -50% 0px"});
-sections.forEach(s=>io.observe(s));
+sections.forEach(function(s){io.observe(s)});
 </script>
 </body></html>`,
 
@@ -1621,20 +1758,24 @@ sections.forEach(s=>io.observe(s));
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Waitlist Capture Section</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.wrap{max-width:380px;padding:40px;text-align:center}
-.kicker{color:#c4b5fd;font-size:10px;letter-spacing:2px;font-weight:700}
-h2{color:#f7f5fb;font-size:24px;margin:12px 0 6px}
-p{color:#a49dbc;font-size:12px;margin:0 0 20px}
-form{display:flex;gap:8px}
-input{flex:1;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:#111017;color:#f7f5fb;font-size:12px;outline:0}
-button{padding:12px 18px;border:0;border-radius:10px;background:#f7f5fb;color:#0a090f;font-weight:800;font-size:12px;cursor:pointer;white-space:nowrap}
-.success{display:none;color:#5fd4a1;font-size:12px;margin-top:12px}
+.wrap{position:relative;max-width:380px;padding:40px;text-align:center}
+.wrap::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(155,138,255,.14),transparent 60%);pointer-events:none}
+.kicker{position:relative;color:#c4b5fd;font-size:10px;letter-spacing:2px;font-weight:700}
+h2{position:relative;color:#f7f5fb;font-size:24px;margin:12px 0 6px}
+p{position:relative;color:#a49dbc;font-size:12px;margin:0 0 20px}
+form{position:relative;display:flex;gap:8px}
+input{flex:1;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:#111017;color:#f7f5fb;font-size:12px;outline:0;transition:border-color .25s,box-shadow .25s}
+input:focus{border-color:#6d5f93;box-shadow:0 0 0 3px rgba(196,181,253,.2)}
+button{padding:12px 18px;border:0;border-radius:10px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;font-weight:800;font-size:12px;cursor:pointer;white-space:nowrap;box-shadow:0 10px 24px -10px rgba(155,138,255,.6);transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
+button:active{transform:scale(.95)}
+.success{position:relative;display:none;color:#5fd4a1;font-size:12px;margin-top:12px;animation:fade .3s ease}
+@keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 </style></head>
-<body><div class="wrap"><span class="kicker">JOIN 4,200+ ON THE WAITLIST</span><h2>Be first to try v3.</h2><p>Early access, launch pricing and priority onboarding.</p>
+<body data-cf-keep-dark><div class="wrap"><span class="kicker">JOIN 4,200+ ON THE WAITLIST</span><h2>Be first to try v3.</h2><p>Early access, launch pricing and priority onboarding.</p>
 <form id="form"><input type="email" placeholder="you@company.com" required><button>Notify me</button></form>
 <div class="success" id="success">You're on the list ✓ — check your inbox soon.</div></div>
 <script>
-document.getElementById("form").addEventListener("submit",e=>{e.preventDefault();e.target.style.display="none";document.getElementById("success").style.display="block"});
+document.getElementById("form").addEventListener("submit",function(e){e.preventDefault();e.target.style.display="none";document.getElementById("success").style.display="block"});
 </script>
 </body></html>`,
 
@@ -1642,21 +1783,23 @@ document.getElementById("form").addEventListener("submit",e=>{e.preventDefault()
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Animated Stats Band</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.band{display:flex;gap:0;border:1px solid var(--line);border-radius:16px;overflow:hidden}
-.stat{padding:26px 32px;text-align:center;border-right:1px solid var(--line)}
+.band{position:relative;display:flex;gap:0;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
+.band::before{content:"";position:absolute;top:-60%;left:35%;width:200px;height:200px;background:radial-gradient(circle,rgba(155,138,255,.16),transparent 70%)}
+.stat{position:relative;padding:26px 32px;text-align:center;border-right:1px solid var(--line);transition:background .25s}
+.stat:hover{background:#0f0d16}
 .stat:last-child{border-right:0}
-.stat b{display:block;font-size:26px;color:#f7f5fb}
+.stat b{display:block;font-size:26px;background:linear-gradient(135deg,#f7f5fb,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}
 .stat span{font-size:10px;color:#817d8a;letter-spacing:.5px}
 </style></head>
-<body><div class="band" id="band">
+<body data-cf-keep-dark><div class="band" id="band">
 <div class="stat"><b data-t="12400">0</b><span>ACTIVE TEAMS</span></div>
 <div class="stat"><b data-t="98">0</b><span>UPTIME %</span></div>
 <div class="stat"><b data-t="340">0</b><span>COMPONENTS SHIPPED</span></div>
 </div>
 <script>
-document.querySelectorAll("#band b").forEach(el=>{
+document.querySelectorAll("#band b").forEach(function(el){
   const target=Number(el.dataset.t);let v=0;
-  const t=setInterval(()=>{v+=Math.ceil(target/40);if(v>=target){v=target;clearInterval(t)}el.textContent=v.toLocaleString();},30);
+  const t=setInterval(function(){v+=Math.ceil(target/40);if(v>=target){v=target;clearInterval(t)}el.textContent=v.toLocaleString();},30);
 });
 </script>
 </body></html>`,
@@ -1667,15 +1810,21 @@ document.querySelectorAll("#band b").forEach(el=>{
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .stage{display:grid;gap:22px;place-items:center;padding:40px}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.elastic-btn{padding:16px 32px;border:0;border-radius:14px;font-size:13px;font-weight:800;color:#0a090f;cursor:pointer;background:linear-gradient(135deg,#d7d0ff,#9b8aff);transition:transform .12s cubic-bezier(.34,1.56,.64,1)}
+.elastic-wrap{position:relative}
+.elastic-wrap::after{content:"";position:absolute;inset:-14px;border-radius:26px;background:radial-gradient(circle,rgba(196,181,253,.35),transparent 70%);filter:blur(14px);opacity:0;transition:opacity .3s}
+.elastic-wrap:hover::after{opacity:1}
+.elastic-btn{position:relative;overflow:hidden;padding:16px 32px;border:0;border-radius:14px;font-size:13px;font-weight:800;color:#0a090f;cursor:pointer;background:linear-gradient(135deg,#d7d0ff,#9b8aff);transition:transform .12s cubic-bezier(.34,1.56,.64,1)}
+.elastic-btn::before{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(115deg,transparent,rgba(255,255,255,.6),transparent);transform:skewX(-20deg);transition:left .5s ease}
+.elastic-wrap:hover .elastic-btn::before{left:130%}
 .elastic-btn:active{transform:scale(.88)}
 .elastic-btn.pop{animation:pop .45s cubic-bezier(.34,1.56,.64,1)}
 @keyframes pop{0%{transform:scale(.88)}60%{transform:scale(1.08)}100%{transform:scale(1)}}
 </style></head>
-<body><div class="stage"><span class="kicker">PRESS AND RELEASE</span><button class="elastic-btn" id="btn">Add to cart</button></div>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">PRESS AND RELEASE</span>
+<div class="elastic-wrap"><button class="elastic-btn" id="btn">Add to cart</button></div></div>
 <script>
 const btn=document.getElementById("btn");
-btn.addEventListener("pointerup",()=>{btn.classList.remove("pop");void btn.offsetWidth;btn.classList.add("pop")});
+btn.addEventListener("pointerup",function(){btn.classList.remove("pop");void btn.offsetWidth;btn.classList.add("pop")});
 </script>
 </body></html>`,
 
@@ -1685,37 +1834,49 @@ btn.addEventListener("pointerup",()=>{btn.classList.remove("pop");void btn.offse
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .stage{display:grid;gap:22px;place-items:center;padding:40px}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.split-btn{position:relative;width:190px;height:50px;border:1px solid var(--line);border-radius:12px;overflow:hidden;cursor:pointer;background:#111017}
-.split-half{position:absolute;top:0;bottom:0;width:50%;display:grid;place-items:center;font-size:12px;font-weight:800;color:#eee9f8;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
-.split-left{left:0;background:#17131f;transform-origin:left}
-.split-right{right:0;background:#1b1725;transform-origin:right}
-.split-btn:hover .split-left{transform:skewX(-8deg) translateX(-6px)}
-.split-btn:hover .split-right{transform:skewX(-8deg) translateX(6px)}
-.split-icon{position:absolute;inset:0;display:grid;place-items:center;color:var(--lav);font-size:16px;opacity:0;transition:opacity .3s}
-.split-btn:hover .split-icon{opacity:1}
+.split-btn{position:relative;width:200px;height:54px;border:1px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;background:#0d0d12;box-shadow:0 10px 30px -12px rgba(0,0,0,.6);transition:box-shadow .3s}
+.split-btn:hover{box-shadow:0 14px 40px -10px rgba(155,138,255,.35)}
+.split-half{position:absolute;top:0;bottom:0;width:50%;display:grid;place-items:center;font-size:12px;font-weight:800;color:#eee9f8;transition:transform .35s cubic-bezier(.2,.8,.2,1),background .35s}
+.split-left{left:0;background:linear-gradient(135deg,#1c1726,#141019);transform-origin:left}
+.split-right{right:0;background:linear-gradient(135deg,#191424,#1f1a2c);transform-origin:right}
+.split-btn:hover .split-left{transform:skewX(-10deg) translateX(-10px);background:linear-gradient(135deg,#221b30,#171220)}
+.split-btn:hover .split-right{transform:skewX(-10deg) translateX(10px);background:linear-gradient(135deg,#241d33,#1b1626)}
+.split-icon{position:absolute;inset:0;display:grid;place-items:center;color:var(--lav);font-size:18px;opacity:0;transform:translateY(6px) scale(.7);transition:opacity .3s,transform .35s cubic-bezier(.34,1.56,.64,1)}
+.split-btn:hover .split-icon{opacity:1;transform:translateY(0) scale(1)}
 </style></head>
-<body><div class="stage"><span class="kicker">HOVER TO PEEL</span>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">HOVER TO PEEL</span>
 <div class="split-btn"><div class="split-half split-left">Down</div><div class="split-half split-right">load</div><div class="split-icon">↓</div></div></div>
 </body></html>`,
 
   "long-press-confirm-button": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Long Press Confirm Button</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
+:root{--bg:#050507;--line:#272632}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .stage{display:grid;gap:22px;place-items:center;padding:40px}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.hold-btn{position:relative;width:180px;height:48px;border:1px solid #5e3540;border-radius:12px;overflow:hidden;background:#180f12;color:#efb8c2;font-size:12px;font-weight:800;cursor:pointer}
-.hold-fill{position:absolute;left:0;top:0;bottom:0;width:0;background:#7a2f3d}
-.hold-label{position:relative;z-index:2;display:grid;place-items:center;height:100%}
+.hold-wrap{position:relative}
+.hold-wrap::before{content:"";position:absolute;inset:-12px;border-radius:22px;background:radial-gradient(circle,rgba(214,68,92,.35),transparent 70%);filter:blur(12px);opacity:0;transition:opacity .3s}
+.hold-wrap.active::before{opacity:1;animation:pulse 1s ease-in-out infinite}
+.hold-btn{position:relative;width:190px;height:50px;border:1px solid #5e3540;border-radius:14px;overflow:hidden;background:#180f12;color:#efb8c2;font-size:12px;font-weight:800;cursor:pointer;box-shadow:0 8px 24px -10px rgba(0,0,0,.6)}
+.hold-fill{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,#7a2f3d,#c04b60)}
+.hold-label{position:relative;z-index:2;display:grid;place-items:center;height:100%;gap:2px}
+.hold-btn.done{border-color:#3f6e52;color:#bdf0d1}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:.9}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+.hold-btn.done{animation:shake .4s ease}
 </style></head>
-<body><div class="stage"><span class="kicker">PRESS AND HOLD TO DELETE</span>
-<button class="hold-btn" id="btn"><div class="hold-fill" id="fill"></div><span class="hold-label" id="label">Hold to delete</span></button></div>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">PRESS AND HOLD TO DELETE</span>
+<div class="hold-wrap" id="wrap"><button class="hold-btn" id="btn"><div class="hold-fill" id="fill"></div><span class="hold-label" id="label">Hold to delete</span></button></div></div>
 <script>
-const btn=document.getElementById("btn"),fill=document.getElementById("fill"),label=document.getElementById("label");
+const wrap=document.getElementById("wrap"),btn=document.getElementById("btn"),fill=document.getElementById("fill"),label=document.getElementById("label");
 let raf,start;
-function step(ts){if(!start)start=ts;const p=Math.min(1,(ts-start)/900);fill.style.width=(p*100)+"%";if(p>=1){label.textContent="Deleted ✓";cancelAnimationFrame(raf);return}raf=requestAnimationFrame(step)}
-function begin(){start=null;raf=requestAnimationFrame(step)}
-function cancel(){cancelAnimationFrame(raf);fill.style.width="0%";if(label.textContent!=="Deleted ✓")label.textContent="Hold to delete"}
+function step(ts){
+  if(!start)start=ts;const p=Math.min(1,(ts-start)/900);fill.style.width=(p*100)+"%";
+  if(p>=1){label.textContent="Deleted ✓";btn.classList.add("done");wrap.classList.remove("active");cancelAnimationFrame(raf);return}
+  raf=requestAnimationFrame(step);
+}
+function begin(){if(btn.classList.contains("done"))return;start=null;wrap.classList.add("active");raf=requestAnimationFrame(step)}
+function cancel(){cancelAnimationFrame(raf);wrap.classList.remove("active");fill.style.width="0%";if(!btn.classList.contains("done"))label.textContent="Hold to delete"}
 btn.addEventListener("pointerdown",begin);
 btn.addEventListener("pointerup",cancel);
 btn.addEventListener("pointerleave",cancel);
@@ -1728,16 +1889,18 @@ btn.addEventListener("pointerleave",cancel);
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .stage{display:grid;gap:22px;place-items:center;padding:40px}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.glow-cursor-btn{position:relative;padding:16px 34px;border:1px solid var(--line);border-radius:12px;font-size:12px;font-weight:800;color:#eee9f8;cursor:pointer;background:#111017;overflow:hidden}
-.glow-cursor-btn::before{content:"";position:absolute;width:120px;height:120px;left:var(--x,50%);top:var(--y,50%);transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(196,181,253,.35),transparent 70%);opacity:0;transition:opacity .25s}
-.glow-cursor-btn:hover::before{opacity:1}
-.glow-cursor-btn span{position:relative;z-index:1}
+.glow-cursor-btn{position:relative;padding:17px 36px;border:1px solid var(--line);border-radius:14px;font-size:12px;font-weight:800;color:#eee9f8;cursor:pointer;background:#0d0d12;overflow:hidden;box-shadow:0 8px 24px -12px rgba(0,0,0,.7)}
+.glow-cursor-btn::before{content:"";position:absolute;width:180px;height:180px;left:var(--x,50%);top:var(--y,50%);transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(196,181,253,.35),transparent 70%);opacity:0;transition:opacity .3s}
+.glow-cursor-btn::after{content:"";position:absolute;width:60px;height:60px;left:var(--x,50%);top:var(--y,50%);transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,255,255,.5),transparent 70%);opacity:0;transition:opacity .2s;mix-blend-mode:overlay}
+.glow-cursor-btn:hover::before,.glow-cursor-btn:hover::after{opacity:1}
+.glow-cursor-btn span{position:relative;z-index:1;background:linear-gradient(90deg,#eee9f8,#c4b5fd,#eee9f8);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;transition:background-position .6s}
+.glow-cursor-btn:hover span{background-position:100% 0}
 </style></head>
-<body><div class="stage"><span class="kicker">MOVE OVER THE BUTTON</span>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">MOVE OVER THE BUTTON</span>
 <button class="glow-cursor-btn" id="btn"><span>Explore plans</span></button></div>
 <script>
 const btn=document.getElementById("btn");
-btn.addEventListener("pointermove",e=>{const r=btn.getBoundingClientRect();btn.style.setProperty("--x",(e.clientX-r.left)+"px");btn.style.setProperty("--y",(e.clientY-r.top)+"px")});
+btn.addEventListener("pointermove",function(e){const r=btn.getBoundingClientRect();btn.style.setProperty("--x",(e.clientX-r.left)+"px");btn.style.setProperty("--y",(e.clientY-r.top)+"px")});
 </script>
 </body></html>`,
 
@@ -1747,36 +1910,44 @@ btn.addEventListener("pointermove",e=>{const r=btn.getBoundingClientRect();btn.s
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .stage{display:grid;gap:22px;place-items:center;padding:40px}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.morph-icon-btn{width:52px;height:52px;border:1px solid var(--line);border-radius:50%;background:#111017;cursor:pointer;display:grid;place-items:center;color:var(--lav)}
+.morph-wrap{position:relative}
+.morph-wrap::before{content:"";position:absolute;inset:-10px;border-radius:50%;background:radial-gradient(circle,rgba(196,181,253,.4),transparent 70%);filter:blur(10px);opacity:0;transition:opacity .3s}
+.morph-wrap:hover::before{opacity:1}
+.morph-icon-btn{position:relative;width:56px;height:56px;border:1px solid var(--line);border-radius:50%;background:#111017;cursor:pointer;display:grid;place-items:center;color:var(--lav);transition:background .3s,transform .3s cubic-bezier(.34,1.56,.64,1)}
+.morph-icon-btn:active{transform:scale(.9)}
+.morph-icon-btn.on{background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f}
 .morph-icon-btn svg{width:20px;height:20px}
-.bar{transform-origin:center;transition:transform .3s ease,opacity .2s}
+.bar{transform-origin:center;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .2s}
 .morph-icon-btn.on .bar1{transform:rotate(45deg) translateY(0)}
 .morph-icon-btn.on .bar2{opacity:0}
 .morph-icon-btn.on .bar3{transform:rotate(-45deg) translateY(0)}
 </style></head>
-<body><div class="stage"><span class="kicker">CLICK TO MORPH MENU → CLOSE</span>
-<button class="morph-icon-btn" id="btn">
+<body data-cf-keep-dark><div class="stage"><span class="kicker">CLICK TO MORPH MENU → CLOSE</span>
+<div class="morph-wrap"><button class="morph-icon-btn" id="btn">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
 <line class="bar bar1" x1="4" y1="7" x2="20" y2="7"/>
 <line class="bar bar2" x1="4" y1="12" x2="20" y2="12"/>
 <line class="bar bar3" x1="4" y1="17" x2="20" y2="17"/>
 </svg>
-</button></div>
-<script>document.getElementById("btn").addEventListener("click",e=>e.currentTarget.classList.toggle("on"));</script>
+</button></div></div>
+<script>document.getElementById("btn").addEventListener("click",function(e){e.currentTarget.classList.toggle("on")});</script>
 </body></html>`,
 
   "stacked-3d-button": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Stacked 3D Button</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:22px;place-items:center;padding:50px}
+.stage{display:grid;gap:22px;place-items:center;padding:60px}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.key-btn{position:relative;padding:0;border:0;background:none;cursor:pointer}
-.key-face{display:block;padding:15px 30px;border-radius:12px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;font-size:12px;font-weight:800;transform:translateY(-6px);transition:transform .12s}
-.key-side{position:absolute;left:0;right:0;bottom:0;height:6px;border-radius:0 0 12px 12px;background:#6c5cc4}
-.key-btn:active .key-face{transform:translateY(0)}
+.key-btn{position:relative;padding:0;border:0;background:none;cursor:pointer;filter:drop-shadow(0 14px 24px rgba(0,0,0,.5))}
+.key-face{position:relative;display:block;padding:16px 32px;border-radius:14px;background:linear-gradient(160deg,#e7e2ff,#9b8aff 60%,#7a67d9);color:#0a090f;font-size:12px;font-weight:800;transform:translateY(-7px);transition:transform .12s;overflow:hidden}
+.key-face::before{content:"";position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0));border-radius:14px 14px 40% 40%/14px 14px 100% 100%}
+.key-side{position:absolute;left:2px;right:2px;bottom:0;height:7px;border-radius:0 0 12px 12px;background:linear-gradient(180deg,#6c5cc4,#4c3f8f)}
+.key-btn:active .key-face{transform:translateY(-1px)}
+.key-btn:hover .key-face{transform:translateY(-8px)}
+.key-btn:hover:active .key-face{transform:translateY(-1px)}
 </style></head>
-<body><div class="stage"><span class="kicker">PRESS THE KEY</span>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">PRESS THE KEY</span>
 <button class="key-btn"><span class="key-face">Confirm order</span><span class="key-side"></span></button></div>
 </body></html>`,
 
@@ -1786,18 +1957,19 @@ btn.addEventListener("pointermove",e=>{const r=btn.getBoundingClientRect();btn.s
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center;cursor:none}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;display:block;text-align:center;margin-bottom:16px}
 .targets{display:flex;gap:14px}
-.targets button{padding:16px 22px;border:1px solid var(--line);border-radius:12px;background:#111017;color:#eee9f8;font-size:12px;cursor:none}
-.dot{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--lav);pointer-events:none;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s;z-index:9}
+.targets button{padding:16px 22px;border:1px solid var(--line);border-radius:12px;background:#111017;color:#eee9f8;font-size:12px;cursor:none;box-shadow:0 16px 40px -22px rgba(0,0,0,.7);transition:border-color .2s}
+.dot{position:fixed;width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 0 12px rgba(196,181,253,.6);pointer-events:none;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s,border-radius .2s,box-shadow .2s;z-index:9}
+.dot.snap{box-shadow:0 0 0 6px rgba(196,181,253,.12)}
 </style></head>
-<body><div><span class="kicker">MOVE OVER A BUTTON — THE DOT SNAPS</span>
+<body data-cf-keep-dark><div><span class="kicker">MOVE OVER A BUTTON — THE DOT SNAPS</span>
 <div class="targets" id="targets"><button>Pricing</button><button>Docs</button><button>Sign in</button></div></div>
 <div class="dot" id="dot"></div>
 <script>
 const dot=document.getElementById("dot");let tx=0,ty=0,x=0,y=0,snap=false,sx=0,sy=0;
-document.addEventListener("pointermove",e=>{tx=e.clientX;ty=e.clientY});
-document.querySelectorAll(".targets button").forEach(b=>{
-  b.addEventListener("pointerenter",()=>{const r=b.getBoundingClientRect();sx=r.left+r.width/2;sy=r.top+r.height/2;snap=true;dot.style.width="60px";dot.style.height="34px";dot.style.background="rgba(196,181,253,.25)"});
-  b.addEventListener("pointerleave",()=>{snap=false;dot.style.width="10px";dot.style.height="10px";dot.style.background="#c4b5fd"});
+document.addEventListener("pointermove",function(e){tx=e.clientX;ty=e.clientY});
+document.querySelectorAll(".targets button").forEach(function(b){
+  b.addEventListener("pointerenter",function(){const r=b.getBoundingClientRect();sx=r.left+r.width/2;sy=r.top+r.height/2;snap=true;dot.style.width="64px";dot.style.height="36px";dot.style.borderRadius="10px";dot.style.background="rgba(196,181,253,.2)";dot.classList.add("snap")});
+  b.addEventListener("pointerleave",function(){snap=false;dot.style.width="10px";dot.style.height="10px";dot.style.borderRadius="50%";dot.style.background="linear-gradient(135deg,#d7d0ff,#9b8aff)";dot.classList.remove("snap")});
 });
 function tick(){x+=((snap?sx:tx)-x)*.25;y+=((snap?sy:ty)-y)*.25;dot.style.left=x+"px";dot.style.top=y+"px";requestAnimationFrame(tick)}
 tick();
@@ -1808,13 +1980,13 @@ tick();
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Typing Dots Loader</title><style>
 :root{--bg:#050507;--line:#272632}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.bubble{display:flex;gap:5px;padding:14px 18px;border:1px solid var(--line);border-radius:16px 16px 16px 4px;background:#111017}
-.bubble i{width:7px;height:7px;border-radius:50%;background:#9d94b0;animation:bounce 1.1s infinite ease-in-out}
+.bubble{display:flex;gap:5px;padding:14px 18px;border:1px solid var(--line);border-radius:16px 16px 16px 4px;background:#111017;box-shadow:0 16px 40px -22px rgba(0,0,0,.7)}
+.bubble i{width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#d7d0ff,#9b8aff);animation:bounce 1.1s infinite ease-in-out}
 .bubble i:nth-child(2){animation-delay:.15s}
 .bubble i:nth-child(3){animation-delay:.3s}
 @keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-6px);opacity:1}}
 </style></head>
-<body><div class="bubble"><i></i><i></i><i></i></div>
+<body data-cf-keep-dark><div class="bubble"><i></i><i></i><i></i></div>
 </body></html>`,
 
   "gradient-bar-loader": `<!DOCTYPE html>
@@ -1823,28 +1995,28 @@ tick();
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .stage{display:grid;gap:14px;place-items:center;width:260px}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.bar-track{width:100%;height:5px;border-radius:4px;background:#1c1a24;overflow:hidden}
-.bar-sweep{width:40%;height:100%;border-radius:4px;background:linear-gradient(90deg,transparent,#c4b5fd,#9b8aff,transparent);animation:sweep 1.4s infinite ease-in-out}
+.bar-track{width:100%;height:5px;border-radius:4px;background:#1c1a24;overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,.5)}
+.bar-sweep{width:40%;height:100%;border-radius:4px;background:linear-gradient(90deg,transparent,#c4b5fd,#9b8aff,transparent);box-shadow:0 0 12px rgba(196,181,253,.5);animation:sweep 1.4s infinite ease-in-out}
 @keyframes sweep{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
 </style></head>
-<body><div class="stage"><span class="kicker">FETCHING RESULTS…</span><div class="bar-track"><div class="bar-sweep"></div></div></div>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">FETCHING RESULTS…</span><div class="bar-track"><div class="bar-sweep"></div></div></div>
 </body></html>`,
 
   "crosshair-cursor": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Crosshair Cursor</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:ui-monospace,Menlo,monospace;cursor:none;overflow:hidden}
-.h-line,.v-line{position:fixed;background:rgba(196,181,253,.35);pointer-events:none;z-index:9}
+.h-line,.v-line{position:fixed;background:linear-gradient(90deg,transparent,rgba(196,181,253,.45),transparent);pointer-events:none;z-index:9}
 .h-line{left:0;right:0;height:1px}
-.v-line{top:0;bottom:0;width:1px}
-.coords{position:fixed;padding:4px 7px;border:1px solid var(--line);border-radius:6px;background:#111017;color:#c4b5fd;font-size:10px;pointer-events:none;z-index:10;transform:translate(12px,12px)}
+.v-line{top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,rgba(196,181,253,.45),transparent)}
+.coords{position:fixed;padding:4px 7px;border:1px solid var(--line);border-radius:6px;background:#111017;color:var(--lav);font-size:10px;pointer-events:none;z-index:10;transform:translate(12px,12px);box-shadow:0 8px 20px -10px rgba(0,0,0,.6),0 0 12px -4px rgba(196,181,253,.4)}
 .kicker{position:absolute;top:20px;left:20px;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
 </style></head>
-<body><span class="kicker">MOVE AROUND THE CANVAS</span>
+<body data-cf-keep-dark><span class="kicker">MOVE AROUND THE CANVAS</span>
 <div class="h-line" id="h"></div><div class="v-line" id="v"></div><div class="coords" id="c">0, 0</div>
 <script>
 const h=document.getElementById("h"),v=document.getElementById("v"),c=document.getElementById("c");
-document.addEventListener("pointermove",e=>{h.style.top=e.clientY+"px";v.style.left=e.clientX+"px";c.style.left=e.clientX+"px";c.style.top=e.clientY+"px";c.textContent=Math.round(e.clientX)+", "+Math.round(e.clientY)});
+document.addEventListener("pointermove",function(e){h.style.top=e.clientY+"px";v.style.left=e.clientX+"px";c.style.left=e.clientX+"px";c.style.top=e.clientY+"px";c.textContent=Math.round(e.clientX)+", "+Math.round(e.clientY)});
 </script>
 </body></html>`,
 
@@ -1852,31 +2024,32 @@ document.addEventListener("pointermove",e=>{h.style.top=e.clientY+"px";v.style.l
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Content Placeholder Loader</title><style>
 :root{--bg:#050507;--line:#272632}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:280px;padding:18px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;display:flex;gap:12px}
-.shimmer{background:linear-gradient(90deg,#151319 25%,#201c2b 50%,#151319 75%);background-size:200% 100%;animation:shimmer 1.4s infinite linear;border-radius:6px}
+.card{width:280px;padding:18px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;display:flex;gap:12px;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
+.shimmer{background:linear-gradient(90deg,#151319 25%,#241f34 50%,#151319 75%);background-size:200% 100%;animation:shimmer 1.4s infinite linear;border-radius:6px}
 .avatar{width:38px;height:38px;border-radius:50%;flex:none}
 .lines{flex:1;display:grid;gap:8px;align-content:center}
 .line{height:8px}
 .line.short{width:60%}
 @keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
 </style></head>
-<body><div class="card"><div class="shimmer avatar"></div><div class="lines"><div class="shimmer line"></div><div class="shimmer line short"></div></div></div>
+<body data-cf-keep-dark><div class="card"><div class="shimmer avatar"></div><div class="lines"><div class="shimmer line"></div><div class="shimmer line short"></div></div></div>
 </body></html>`,
 
   "loading-percentage-counter": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Loading Percentage Counter</title><style>
 :root{--bg:#050507}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:"Space Grotesk",Inter,sans-serif}
-.wrap{text-align:center}
-.pct{font-size:64px;font-weight:800;color:#f7f5fb;letter-spacing:-.03em}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:"Space Grotesk",Inter,sans-serif;position:relative;overflow:hidden}
+body::before{content:"";position:absolute;inset:-20%;background:radial-gradient(circle at 50% 50%,rgba(155,138,255,.14),transparent 60%);pointer-events:none}
+.wrap{position:relative;text-align:center}
+.pct{font-size:64px;font-weight:800;background:linear-gradient(135deg,#f7f5fb,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-.03em}
 .kicker{display:block;color:#817d8a;font-size:10px;letter-spacing:2px;margin-top:6px}
-.line-track{width:220px;height:2px;margin:22px auto 0;background:#1c1a24}
-.line-fill{height:100%;width:0;background:#c4b5fd}
+.line-track{width:220px;height:2px;margin:22px auto 0;background:#1c1a24;overflow:hidden;border-radius:2px}
+.line-fill{height:100%;width:0;background:linear-gradient(90deg,#9b8aff,#d7d0ff);box-shadow:0 0 10px rgba(196,181,253,.6)}
 </style></head>
-<body><div class="wrap"><div class="pct" id="pct">0%</div><span class="kicker">LOADING EXPERIENCE</span><div class="line-track"><div class="line-fill" id="fill"></div></div></div>
+<body data-cf-keep-dark><div class="wrap"><div class="pct" id="pct">0%</div><span class="kicker">LOADING EXPERIENCE</span><div class="line-track"><div class="line-fill" id="fill"></div></div></div>
 <script>
 let v=0;const pct=document.getElementById("pct"),fill=document.getElementById("fill");
-const t=setInterval(()=>{v=Math.min(100,v+Math.random()*7);pct.textContent=Math.round(v)+"%";fill.style.width=v+"%";if(v>=100)clearInterval(t)},130);
+const t=setInterval(function(){v=Math.min(100,v+Math.random()*7);pct.textContent=Math.round(v)+"%";fill.style.width=v+"%";if(v>=100)clearInterval(t)},130);
 </script>
 </body></html>`,
 
@@ -1886,9 +2059,10 @@ const t=setInterval(()=>{v=Math.min(100,v+Math.random()*7);pct.textContent=Math.
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .deck{position:relative;width:220px;height:150px}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;display:block;text-align:center;margin-bottom:16px}
-.card{position:absolute;inset:0;border:1px solid var(--line);border-radius:16px;background:linear-gradient(135deg,#161420,#0d0d12);display:grid;place-items:center;color:#eee9f8;font-size:12px;font-weight:700;cursor:grab;transition:transform .3s ease,opacity .3s ease}
+.card{position:absolute;inset:0;border:1px solid var(--line);border-radius:16px;background:linear-gradient(135deg,#1c1930,#0d0d12);display:grid;place-items:center;color:#eee9f8;font-size:12px;font-weight:700;cursor:grab;box-shadow:0 20px 40px -16px rgba(0,0,0,.6);transition:transform .3s ease,opacity .3s ease}
+.card:last-child{background:linear-gradient(135deg,#221f38,#141019);box-shadow:0 24px 50px -14px rgba(155,138,255,.3)}
 </style></head>
-<body><div><span class="kicker">DRAG THE TOP CARD AWAY</span><div class="deck" id="deck">
+<body data-cf-keep-dark><div><span class="kicker">DRAG THE TOP CARD AWAY</span><div class="deck" id="deck">
 <div class="card" style="transform:translateY(10px) scale(.95)">Card 3</div>
 <div class="card" style="transform:translateY(5px) scale(.98)">Card 2</div>
 <div class="card" id="top">Card 1 — drag me</div>
@@ -1898,11 +2072,11 @@ const deck=document.getElementById("deck");
 function attach(){
   const top=deck.querySelector(".card:last-child");
   let down=false,sx=0,dx=0;
-  top.addEventListener("pointerdown",e=>{down=true;sx=e.clientX;top.style.transition="none"});
-  window.addEventListener("pointermove",e=>{if(!down)return;dx=e.clientX-sx;top.style.transform=\`translateX(\${dx}px) rotate(\${dx/12}deg)\`});
-  window.addEventListener("pointerup",()=>{
+  top.addEventListener("pointerdown",function(e){down=true;sx=e.clientX;top.style.transition="none"});
+  window.addEventListener("pointermove",function(e){if(!down)return;dx=e.clientX-sx;top.style.transform="translateX("+dx+"px) rotate("+(dx/12)+"deg)"});
+  window.addEventListener("pointerup",function(){
     if(!down)return;down=false;top.style.transition="transform .3s ease, opacity .3s ease";
-    if(Math.abs(dx)>90){top.style.transform=\`translateX(\${dx*4}px) rotate(\${dx/6}deg)\`;top.style.opacity="0";setTimeout(()=>{top.remove();if(deck.children.length)attach()},280)}
+    if(Math.abs(dx)>90){top.style.transform="translateX("+(dx*4)+"px) rotate("+(dx/6)+"deg)";top.style.opacity="0";setTimeout(function(){top.remove();if(deck.children.length)attach()},280)}
     else{top.style.transform="translateX(0) rotate(0)"}
   });
 }
@@ -1914,33 +2088,41 @@ attach();
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Notification Toast Card</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.toast{position:relative;width:290px;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:#111017;overflow:hidden}
+.toast{position:relative;width:300px;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:#111017;overflow:hidden;box-shadow:0 20px 50px -20px rgba(0,0,0,.6);display:flex;gap:12px;align-items:flex-start;animation:slideIn .4s cubic-bezier(.2,.8,.2,1)}
+.toast-icon{width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);display:grid;place-items:center;color:#0a090f;font-weight:800;font-size:13px;flex:none}
+.toast-body{flex:1;min-width:0}
 .toast-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .toast-row b{color:#f7f5fb;font-size:12px}
-.toast-row button{border:0;background:none;color:#817d8a;font-size:11px;cursor:pointer}
-.toast p{margin:6px 0 10px;color:#a49dbc;font-size:11px}
-.toast-bar{position:absolute;left:0;bottom:0;height:3px;background:#c4b5fd;width:100%;animation:drain 4s linear forwards}
+.toast-row button{border:0;background:none;color:var(--lav);font-size:11px;font-weight:700;cursor:pointer}
+.toast p{margin:4px 0 10px;color:#a49dbc;font-size:11px}
+.toast-bar-track{height:3px;border-radius:3px;background:#1e1c27;overflow:hidden}
+.toast-bar{height:100%;background:linear-gradient(90deg,#d7d0ff,#9b8aff);width:100%;animation:drain 4s linear forwards}
 @keyframes drain{to{width:0%}}
+@keyframes slideIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
 </style></head>
-<body><div class="toast"><div class="toast-row"><b>File deleted</b><button id="undo">Undo</button></div><p>project-plan.pdf was moved to trash.</p><div class="toast-bar" id="bar"></div></div>
-<script>document.getElementById("undo").addEventListener("click",()=>{const bar=document.getElementById("bar");bar.style.animation="none";bar.style.width="100%"});</script>
+<body data-cf-keep-dark><div class="toast"><div class="toast-icon">✕</div><div class="toast-body"><div class="toast-row"><b>File deleted</b><button id="undo">Undo</button></div><p>project-plan.pdf was moved to trash.</p><div class="toast-bar-track"><div class="toast-bar" id="bar"></div></div></div></div>
+<script>document.getElementById("undo").addEventListener("click",function(){const bar=document.getElementById("bar");bar.style.animation="none";bar.style.width="100%"});</script>
 </body></html>`,
 
   "pinned-metric-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Pinned Metric Card</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:230px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12}
-.card b{display:block;color:#817d8a;font-size:10px;letter-spacing:1px}
-.card strong{display:block;font-size:30px;color:#f7f5fb;margin:8px 0}
-svg{display:block}
-polyline{fill:none;stroke:#c4b5fd;stroke-width:2}
+.card{position:relative;width:230px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;overflow:hidden;box-shadow:0 20px 50px -20px rgba(0,0,0,.6)}
+.card::before{content:"";position:absolute;top:-40%;right:-30%;width:200px;height:200px;background:radial-gradient(circle,rgba(155,138,255,.18),transparent 70%)}
+.card b{position:relative;display:block;color:#817d8a;font-size:10px;letter-spacing:1px}
+.card strong{position:relative;display:block;font-size:30px;color:#f7f5fb;margin:8px 0}
+svg{position:relative;display:block}
+polyline{fill:none;stroke:#c4b5fd;stroke-width:2;stroke-dasharray:220;stroke-dashoffset:220;animation:draw 1.4s ease .2s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
 </style></head>
-<body><div class="card"><b>WEEKLY ACTIVE USERS</b><strong id="num">0</strong>
-<svg width="190" height="40" viewBox="0 0 190 40"><polyline points="0,30 25,24 50,28 75,14 100,18 125,8 150,12 175,3"/></svg></div>
+<body data-cf-keep-dark><div class="card"><b>WEEKLY ACTIVE USERS</b><strong id="num">0</strong>
+<svg width="190" height="40" viewBox="0 0 190 40"><defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c4b5fd" stop-opacity=".35"/><stop offset="100%" stop-color="#c4b5fd" stop-opacity="0"/></linearGradient></defs>
+<polygon points="0,30 25,24 50,28 75,14 100,18 125,8 150,12 175,3 175,40 0,40" fill="url(#area)"/>
+<polyline points="0,30 25,24 50,28 75,14 100,18 125,8 150,12 175,3"/></svg></div>
 <script>
 let v=0;const num=document.getElementById("num");
-const t=setInterval(()=>{v+=310;num.textContent=v.toLocaleString();if(v>=18400){v=18400;num.textContent=v.toLocaleString();clearInterval(t)}},25);
+const t=setInterval(function(){v+=310;num.textContent=v.toLocaleString();if(v>=18400){v=18400;num.textContent=v.toLocaleString();clearInterval(t)}},25);
 </script>
 </body></html>`,
 
@@ -1949,39 +2131,44 @@ const t=setInterval(()=>{v+=310;num.textContent=v.toLocaleString();if(v>=18400){
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:"Space Grotesk",Inter,sans-serif;perspective:900px}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;display:block;text-align:center;margin-bottom:16px}
-.card3d{position:relative;width:280px;height:175px;cursor:pointer;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.card3d{position:relative;width:280px;height:175px;cursor:pointer;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 20px 40px rgba(0,0,0,.5))}
 .card3d.flip{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;border-radius:16px;backface-visibility:hidden;padding:20px;color:#fff}
-.front{background:linear-gradient(135deg,#3c3560,#171325);display:flex;flex-direction:column;justify-content:space-between}
+.face{position:absolute;inset:0;border-radius:16px;backface-visibility:hidden;padding:20px;color:#fff;overflow:hidden}
+.face::before{content:"";position:absolute;top:-60%;left:-20%;width:140%;height:140%;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.16) 50%,transparent 60%);transform:rotate(8deg)}
+.front{background:linear-gradient(135deg,#4a3f80,#171325);display:flex;flex-direction:column;justify-content:space-between}
+.chip{width:34px;height:24px;border-radius:5px;background:linear-gradient(135deg,#e7d9a8,#b89a4f)}
 .front b{font-size:15px;letter-spacing:2px}
 .front span{font-size:9px;color:#a49dbc}
-.back{background:linear-gradient(135deg,#171325,#3c3560);transform:rotateY(180deg)}
+.back{background:linear-gradient(135deg,#171325,#4a3f80);transform:rotateY(180deg)}
 .stripe{height:34px;background:#0a090f;margin-top:16px}
 .cvv{margin:16px;padding:8px 10px;background:#fff;color:#111;font-size:11px;border-radius:4px;text-align:right}
 </style></head>
-<body><div><span class="kicker">CLICK THE CARD TO FLIP</span>
-<div class="card3d" id="card"><div class="face front"><b>•••• •••• •••• 4821</b><span>VALID THRU 09/28</span></div><div class="face back"><div class="stripe"></div><div class="cvv">CVV 042</div></div></div></div>
-<script>document.getElementById("card").addEventListener("click",e=>e.currentTarget.classList.toggle("flip"));</script>
+<body data-cf-keep-dark><div><span class="kicker">CLICK THE CARD TO FLIP</span>
+<div class="card3d" id="card"><div class="face front"><div class="chip"></div><div><b>•••• •••• •••• 4821</b><br><span>VALID THRU 09/28</span></div></div><div class="face back"><div class="stripe"></div><div class="cvv">CVV 042</div></div></div></div>
+<script>document.getElementById("card").addEventListener("click",function(e){e.currentTarget.classList.toggle("flip")});</script>
 </body></html>`,
 
   "timeline-milestone-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Timeline Milestone Card</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:260px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12}
+.card{width:260px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;box-shadow:0 20px 50px -20px rgba(0,0,0,.6)}
 .card b{display:block;color:#f7f5fb;font-size:13px;margin-bottom:14px}
 .step{display:flex;gap:10px;align-items:flex-start;position:relative;padding-bottom:16px}
 .step:last-child{padding-bottom:0}
 .step::before{content:"";position:absolute;left:8px;top:20px;bottom:-4px;width:1px;background:var(--line)}
+.step.done::before{background:linear-gradient(180deg,#5fd4a1,var(--line))}
 .step:last-child::before{display:none}
-.dot{width:17px;height:17px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;flex:none;font-size:9px;color:#050507;background:#1c1a24}
-.step.done .dot{background:#5fd4a1;color:#0a090f}
+.dot{width:17px;height:17px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;flex:none;font-size:9px;color:#050507;background:#1c1a24;transition:background .3s}
+.step.done .dot{background:linear-gradient(135deg,#7fe0ac,#41b878);color:#0a090f}
+.step.active .dot{background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;box-shadow:0 0 0 5px rgba(196,181,253,.2);animation:pulse 1.6s ease-in-out infinite}
 .step span{font-size:11px;color:#c9c4d6;padding-top:1px}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 5px rgba(196,181,253,.2)}50%{box-shadow:0 0 0 9px rgba(196,181,253,.08)}}
 </style></head>
-<body><div class="card"><b>Onboarding progress</b>
+<body data-cf-keep-dark><div class="card"><b>Onboarding progress</b>
 <div class="step done"><div class="dot">✓</div><span>Account created</span></div>
 <div class="step done"><div class="dot">✓</div><span>Workspace connected</span></div>
-<div class="step"><div class="dot">3</div><span>Invite your team</span></div>
+<div class="step active"><div class="dot">3</div><span>Invite your team</span></div>
 </div>
 </body></html>`,
 
@@ -1991,20 +2178,21 @@ const t=setInterval(()=>{v+=310;num.textContent=v.toLocaleString();if(v>=18400){
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .stage{width:280px}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;display:block;margin-bottom:14px}
-.ladder{border:1px solid var(--line);border-radius:16px;background:#0d0d12;padding:22px;text-align:center}
-.ladder strong{display:block;font-size:32px;color:#f7f5fb}
-.ladder b{display:block;color:#817d8a;font-size:11px;margin-top:4px}
-input[type=range]{width:100%;margin-top:18px;accent-color:#c4b5fd}
-.steps{display:flex;justify-content:space-between;color:#5f5c68;font-size:9px;margin-top:6px}
+.ladder{position:relative;border:1px solid var(--line);border-radius:16px;background:#0d0d12;padding:22px;text-align:center;overflow:hidden;box-shadow:0 20px 50px -22px rgba(0,0,0,.6);transition:box-shadow .3s}
+.ladder::before{content:"";position:absolute;top:-40%;left:50%;transform:translateX(-50%);width:200px;height:200px;background:radial-gradient(circle,rgba(155,138,255,.16),transparent 70%)}
+.ladder strong{position:relative;display:block;font-size:32px;background:linear-gradient(135deg,#f7f5fb,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent;transition:transform .2s}
+.ladder b{position:relative;display:block;color:#817d8a;font-size:11px;margin-top:4px}
+input[type=range]{width:100%;margin-top:18px;accent-color:#c4b5fd;position:relative}
+.steps{position:relative;display:flex;justify-content:space-between;color:#5f5c68;font-size:9px;margin-top:6px}
 </style></head>
-<body><div class="stage"><span class="kicker">DRAG BETWEEN TIERS</span>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">DRAG BETWEEN TIERS</span>
 <div class="ladder"><strong id="price">$19</strong><b id="tier">STARTER</b>
 <input type="range" id="slider" min="0" max="2" step="1" value="0">
 <div class="steps"><span>Starter</span><span>Growth</span><span>Scale</span></div></div></div>
 <script>
 const tiers=[{p:"$19",t:"STARTER"},{p:"$49",t:"GROWTH"},{p:"$99",t:"SCALE"}];
 const slider=document.getElementById("slider"),price=document.getElementById("price"),tier=document.getElementById("tier");
-slider.addEventListener("input",()=>{const x=tiers[Number(slider.value)];price.textContent=x.p;tier.textContent=x.t});
+slider.addEventListener("input",function(){const x=tiers[Number(slider.value)];price.textContent=x.p;tier.textContent=x.t;price.style.transform="scale(1.1)";setTimeout(function(){price.style.transform="scale(1)"},150)});
 </script>
 </body></html>`,
 
@@ -2012,15 +2200,16 @@ slider.addEventListener("input",()=>{const x=tiers[Number(slider.value)];price.t
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Feature Checklist Pricing Card</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:250px;padding:22px;border:1px solid var(--line);border-radius:16px;background:#0d0d12}
+.card{width:250px;padding:22px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
 .card b{display:block;font-size:11px;color:#817d8a}
 .card strong{display:block;font-size:28px;color:#f7f5fb;margin:6px 0 14px}
-.feat{display:flex;align-items:center;gap:8px;padding:7px 0;color:#c9c4d6;font-size:11px;position:relative}
-.feat i{width:15px;height:15px;border-radius:50%;background:#1c1a24;display:grid;place-items:center;font-size:8px;color:#5fd4a1;flex:none;font-style:normal}
-.tip{display:none;position:absolute;left:24px;top:26px;padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:#17131f;color:#a49dbc;font-size:9px;z-index:2;width:170px}
+.feat{display:flex;align-items:center;gap:8px;padding:7px 0;color:#c9c4d6;font-size:11px;position:relative;transition:color .2s}
+.feat:hover{color:#eee9f8}
+.feat i{width:15px;height:15px;border-radius:50%;background:linear-gradient(135deg,#173523,#0f1a12);border:1px solid #2b5a3c;display:grid;place-items:center;font-size:8px;color:#5fd4a1;flex:none;font-style:normal}
+.tip{display:none;position:absolute;left:24px;top:26px;padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:#17131f;color:#a49dbc;font-size:9px;z-index:2;width:170px;box-shadow:0 12px 30px -14px rgba(0,0,0,.6)}
 .feat:hover .tip{display:block}
 </style></head>
-<body><div class="card"><b>PRO PLAN</b><strong>$29/mo</strong>
+<body data-cf-keep-dark><div class="card"><b>PRO PLAN</b><strong>$29/mo</strong>
 <div class="feat"><i>✓</i>Unlimited projects<div class="tip">No cap on active or archived projects.</div></div>
 <div class="feat"><i>✓</i>Priority support<div class="tip">Average first response under 2 hours.</div></div>
 <div class="feat"><i>✓</i>Advanced analytics<div class="tip">Cohort, funnel and retention reports included.</div></div>
@@ -2031,39 +2220,42 @@ slider.addEventListener("input",()=>{const x=tiers[Number(slider.value)];price.t
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Team Seats Pricing Calculator</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:250px;padding:22px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;text-align:center}
+.card{width:250px;padding:22px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;text-align:center;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
 .card b{display:block;color:#817d8a;font-size:11px;margin-bottom:10px}
 .stepper{display:flex;align-items:center;justify-content:center;gap:14px}
-.stepper button{width:32px;height:32px;border:1px solid var(--line);border-radius:8px;background:#111017;color:#eee9f8;font-size:16px;cursor:pointer}
+.stepper button{width:32px;height:32px;border:1px solid var(--line);border-radius:8px;background:#111017;color:#eee9f8;font-size:16px;cursor:pointer;transition:transform .15s cubic-bezier(.34,1.56,.64,1),border-color .2s}
+.stepper button:hover{border-color:#544c67}
+.stepper button:active{transform:scale(.9)}
 .stepper strong{font-size:20px;color:#f7f5fb;min-width:30px}
-.total{margin-top:16px;font-size:26px;font-weight:800;color:#c4b5fd}
+.total{margin-top:16px;font-size:26px;font-weight:800;background:linear-gradient(135deg,#f7f5fb,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent;transition:transform .15s}
 .per{color:#5f5c68;font-size:10px}
 </style></head>
-<body><div class="card"><b>TEAM SEATS</b>
+<body data-cf-keep-dark><div class="card"><b>TEAM SEATS</b>
 <div class="stepper"><button id="dec">−</button><strong id="seats">5</strong><button id="inc">+</button></div>
 <div class="total" id="total">$60</div><div class="per">$12 / seat / month</div></div>
 <script>
 let n=5;const seats=document.getElementById("seats"),total=document.getElementById("total");
-function render(){seats.textContent=n;total.textContent="$"+(n*12)}
-document.getElementById("inc").addEventListener("click",()=>{n=Math.min(50,n+1);render()});
-document.getElementById("dec").addEventListener("click",()=>{n=Math.max(1,n-1);render()});
+function render(){seats.textContent=n;total.textContent="$"+(n*12);total.style.transform="scale(1.08)";setTimeout(function(){total.style.transform="scale(1)"},120)}
+document.getElementById("inc").addEventListener("click",function(){n=Math.min(50,n+1);render()});
+document.getElementById("dec").addEventListener("click",function(){n=Math.max(1,n-1);render()});
 </script>
 </body></html>`,
 
   "limited-time-pricing-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Limited Time Pricing Card</title><style>
-:root{--bg:#050507;--line:#272632}
+:root{--bg:#050507}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:250px;padding:22px;border:1px solid #4c3f2a;border-radius:16px;background:#181307}
-.badge{display:inline-block;padding:4px 9px;border-radius:999px;background:#3a2c10;color:#f0c674;font-size:9px;font-weight:700}
-.card strong{display:block;font-size:30px;color:#fff;margin:10px 0 4px}
+.card{position:relative;width:250px;padding:22px;border:1px solid #4c3f2a;border-radius:16px;background:#181307;overflow:hidden;box-shadow:0 20px 50px -20px rgba(240,198,116,.2)}
+.card::before{content:"";position:absolute;top:-50%;right:-20%;width:180px;height:180px;background:radial-gradient(circle,rgba(240,198,116,.16),transparent 70%)}
+.badge{position:relative;display:inline-block;padding:4px 9px;border-radius:999px;background:linear-gradient(135deg,#4a3812,#3a2c10);color:#f0c674;font-size:9px;font-weight:700;box-shadow:0 0 12px rgba(240,198,116,.2)}
+.card strong{position:relative;display:block;font-size:30px;color:#fff;margin:10px 0 4px}
 .card s{color:#7a7466;font-size:12px}
-.urgency-track{height:4px;border-radius:3px;background:#2a2313;margin-top:16px;overflow:hidden}
-.urgency-fill{height:100%;width:70%;background:#f0c674;animation:shrink 25s linear forwards}
+.urgency-track{position:relative;height:4px;border-radius:3px;background:#2a2313;margin-top:16px;overflow:hidden}
+.urgency-fill{height:100%;width:70%;background:linear-gradient(90deg,#f0c674,#f7db9c);box-shadow:0 0 10px rgba(240,198,116,.6);animation:shrink 25s linear forwards}
 @keyframes shrink{to{width:0%}}
-.card small{display:block;margin-top:8px;color:#9c9482;font-size:9px}
+.card small{position:relative;display:block;margin-top:8px;color:#9c9482;font-size:9px}
 </style></head>
-<body><div class="card"><span class="badge">LAUNCH WEEK OFFER</span><strong>$39<s style="margin-left:8px">$79</s></strong>
+<body data-cf-keep-dark><div class="card"><span class="badge">LAUNCH WEEK OFFER</span><strong>$39<s style="margin-left:8px">$79</s></strong>
 <div class="urgency-track"><div class="urgency-fill"></div></div><small>Offer window closing</small></div>
 </body></html>`,
 
@@ -2071,39 +2263,42 @@ document.getElementById("dec").addEventListener("click",()=>{n=Math.max(1,n-1);r
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Enterprise Contact Pricing Card</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:270px;padding:22px;border:1px solid var(--line);border-radius:16px;background:#0d0d12}
+.card{width:270px;padding:22px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
 .card b{display:block;color:#817d8a;font-size:11px}
 .card strong{display:block;font-size:22px;color:#f7f5fb;margin:8px 0 14px}
-.card button{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#111017;color:#eee9f8;font-size:11px;cursor:pointer}
-.quote-form{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.card button{width:100%;padding:11px;border:0;border-radius:10px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;font-weight:800;font-size:11px;cursor:pointer;box-shadow:0 10px 24px -10px rgba(155,138,255,.6);transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
+.card button:active{transform:scale(.97)}
+.quote-form{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.2,.8,.2,1)}
 .quote-form.open{max-height:120px;margin-top:12px}
-.quote-form input{width:100%;padding:9px;margin-top:8px;border:1px solid var(--line);border-radius:8px;background:#111017;color:#fff;font-size:11px;outline:0}
+.quote-form input{width:100%;padding:9px;margin-top:8px;border:1px solid var(--line);border-radius:8px;background:#111017;color:#fff;font-size:11px;outline:0;transition:border-color .25s,box-shadow .25s}
+.quote-form input:focus{border-color:#6d5f93;box-shadow:0 0 0 3px rgba(196,181,253,.2)}
 </style></head>
-<body><div class="card"><b>ENTERPRISE</b><strong>Custom pricing</strong>
+<body data-cf-keep-dark><div class="card"><b>ENTERPRISE</b><strong>Custom pricing</strong>
 <button id="toggle">Request a quote</button>
 <div class="quote-form" id="form"><input placeholder="Work email"><input placeholder="Team size"></div></div>
-<script>document.getElementById("toggle").addEventListener("click",()=>document.getElementById("form").classList.toggle("open"));</script>
+<script>document.getElementById("toggle").addEventListener("click",function(){document.getElementById("form").classList.toggle("open")});</script>
 </body></html>`,
 
   "addon-bundle-pricing-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Add-on Bundle Pricing Card</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:260px;padding:22px;border:1px solid var(--line);border-radius:16px;background:#0d0d12}
+.card{width:260px;padding:22px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
 .card b{display:block;color:#817d8a;font-size:11px;margin-bottom:8px}
-.addon{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--line);color:#c9c4d6;font-size:11px}
+.addon{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--line);color:#c9c4d6;font-size:11px;transition:color .2s}
 .addon:first-of-type{border-top:0}
-.addon input{accent-color:#c4b5fd}
-.total{display:flex;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:16px;font-weight:800;color:#f7f5fb}
+.addon:hover{color:#eee9f8}
+.addon input{accent-color:#c4b5fd;width:15px;height:15px}
+.total{display:flex;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:16px;font-weight:800;background:linear-gradient(135deg,#f7f5fb,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}
 </style></head>
-<body><div class="card"><b>BASE PLAN — $19/mo</b>
+<body data-cf-keep-dark><div class="card"><b>BASE PLAN — $19/mo</b>
 <label class="addon"><span>+ Extra storage ($5)</span><input type="checkbox" data-p="5"></label>
 <label class="addon"><span>+ Advanced API access ($9)</span><input type="checkbox" data-p="9"></label>
 <label class="addon"><span>+ Priority support ($7)</span><input type="checkbox" data-p="7"></label>
 <div class="total"><span>Total</span><span id="total">$19</span></div></div>
 <script>
 const boxes=[...document.querySelectorAll(".addon input")],total=document.getElementById("total");
-boxes.forEach(b=>b.addEventListener("change",()=>{const sum=19+boxes.filter(x=>x.checked).reduce((s,x)=>s+Number(x.dataset.p),0);total.textContent="$"+sum}));
+boxes.forEach(function(b){b.addEventListener("change",function(){const sum=19+boxes.filter(function(x){return x.checked}).reduce(function(s,x){return s+Number(x.dataset.p)},0);total.textContent="$"+sum})});
 </script>
 </body></html>`,
 
@@ -2113,23 +2308,25 @@ boxes.forEach(b=>b.addEventListener("change",()=>{const sum=19+boxes.filter(x=>x
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center}
 .kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;display:block;text-align:center;margin-bottom:14px}
 .widgets{display:grid;gap:10px;width:240px}
-.w{padding:14px;border:1px solid var(--line);border-radius:12px;background:#111017;color:#eee9f8;font-size:11px;display:flex;justify-content:space-between;cursor:grab}
-.w.drag{opacity:.4}
-.w b{color:#c4b5fd}
+.w{padding:14px;border:1px solid var(--line);border-radius:12px;background:#111017;color:#eee9f8;font-size:11px;display:flex;justify-content:space-between;align-items:center;cursor:grab;box-shadow:0 12px 30px -18px rgba(0,0,0,.6);transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s,border-color .2s}
+.w:hover{border-color:#544c67;box-shadow:0 16px 34px -16px rgba(155,138,255,.3)}
+.w.drag{opacity:.4;transform:scale(.98)}
+.w b{background:linear-gradient(90deg,#eee9f8,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}
+.grip{color:#4a4657;font-size:10px;letter-spacing:2px;margin-right:8px}
 </style></head>
-<body><div><span class="kicker">DRAG A ROW TO REORDER</span>
+<body data-cf-keep-dark><div><span class="kicker">DRAG A ROW TO REORDER</span>
 <div class="widgets" id="list">
-<div class="w" draggable="true"><span>Revenue</span><b>$48.4K</b></div>
-<div class="w" draggable="true"><span>Conversion</span><b>8.7%</b></div>
-<div class="w" draggable="true"><span>Active users</span><b>12.8K</b></div>
+<div class="w" draggable="true"><span><i class="grip">⠿</i>Revenue</span><b>$48.4K</b></div>
+<div class="w" draggable="true"><span><i class="grip">⠿</i>Conversion</span><b>8.7%</b></div>
+<div class="w" draggable="true"><span><i class="grip">⠿</i>Active users</span><b>12.8K</b></div>
 </div></div>
 <script>
 const list=document.getElementById("list");let dragged;
-list.addEventListener("dragstart",e=>{dragged=e.target;e.target.classList.add("drag")});
-list.addEventListener("dragend",e=>e.target.classList.remove("drag"));
-list.addEventListener("dragover",e=>{
+list.addEventListener("dragstart",function(e){dragged=e.target;e.target.classList.add("drag")});
+list.addEventListener("dragend",function(e){e.target.classList.remove("drag")});
+list.addEventListener("dragover",function(e){
   e.preventDefault();
-  const after=[...list.children].find(el=>el!==dragged&&e.clientY<el.getBoundingClientRect().top+el.offsetHeight/2);
+  const after=[...list.children].find(function(el){return el!==dragged&&e.clientY<el.getBoundingClientRect().top+el.offsetHeight/2});
   list.insertBefore(dragged, after||null);
 });
 </script>
@@ -2137,66 +2334,86 @@ list.addEventListener("dragover",e=>{
 
   "team-members-status-panel": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Team Members Status Panel</title><style>
-:root{--bg:#050507;--line:#272632}
+:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.panel{width:250px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;overflow:hidden}
-.panel h4{margin:0;padding:12px 14px;font-size:10px;color:#817d8a;border-bottom:1px solid var(--line)}
-.member{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}
+.stage{display:grid;gap:22px;place-items:center;padding:40px}
+.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
+.panel-wrap{position:relative}
+.panel-wrap::before{content:"";position:absolute;inset:-16px;border-radius:26px;background:radial-gradient(circle,rgba(196,181,253,.25),transparent 70%);filter:blur(16px)}
+.panel{position:relative;width:250px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;overflow:hidden;box-shadow:0 20px 50px -20px rgba(0,0,0,.65)}
+.panel h4{margin:0;padding:12px 14px;font-size:10px;color:#817d8a;letter-spacing:1px;border-bottom:1px solid var(--line)}
+.member{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid var(--line);transition:background .2s}
+.member:hover{background:#12101a}
 .member:last-child{border-bottom:0}
-.avatar{position:relative;width:30px;height:30px;border-radius:50%;background:#241d33;display:grid;place-items:center;color:#c4b5fd;font-size:10px;font-weight:800;flex:none}
+.avatar{position:relative;width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#302650,#1a1526);display:grid;place-items:center;color:#c4b5fd;font-size:10px;font-weight:800;flex:none;box-shadow:inset 0 0 0 1px rgba(196,181,253,.2)}
 .dot{position:absolute;right:-1px;bottom:-1px;width:9px;height:9px;border-radius:50%;border:2px solid #0d0d12}
-.dot.online{background:#5fd4a1}.dot.away{background:#e8b563}.dot.offline{background:#4a4657}
+.dot.online{background:#5fd4a1;box-shadow:0 0 8px #5fd4a1;animation:pulse 2s ease-in-out infinite}
+.dot.away{background:#e8b563}.dot.offline{background:#4a4657}
 .member div b{display:block;font-size:11px;color:#eee9f8}
 .member div span{font-size:9px;color:#6f6c77}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 </style></head>
-<body><div class="panel"><h4>TEAM</h4>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">LIVE TEAM STATUS</span>
+<div class="panel-wrap"><div class="panel"><h4>TEAM</h4>
 <div class="member"><div class="avatar">AK<span class="dot online"></span></div><div><b>Aria Kim</b><span>Active now</span></div></div>
 <div class="member"><div class="avatar">TR<span class="dot away"></span></div><div><b>Theo Reyes</b><span>Away · 12m</span></div></div>
 <div class="member"><div class="avatar">NS<span class="dot offline"></span></div><div><b>Nia Santos</b><span>Offline</span></div></div>
-</div>
+</div></div></div>
 </body></html>`,
 
   "goal-progress-tracker": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Goal Progress Tracker</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:250px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12}
-.card h4{margin:0 0 14px;font-size:11px;color:#817d8a}
-.goal{margin-bottom:12px}
+.stage{display:grid;gap:22px;place-items:center;padding:40px}
+.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
+.card-wrap{position:relative}
+.card-wrap::before{content:"";position:absolute;inset:-16px;border-radius:26px;background:radial-gradient(circle,rgba(196,181,253,.28),transparent 70%);filter:blur(16px)}
+.card{position:relative;width:250px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;box-shadow:0 20px 50px -20px rgba(0,0,0,.65)}
+.card h4{margin:0 0 16px;font-size:11px;color:#817d8a;letter-spacing:.5px}
+.goal{margin-bottom:14px}
 .goal:last-child{margin-bottom:0}
-.goal-row{display:flex;justify-content:space-between;font-size:10px;color:#c9c4d6;margin-bottom:5px}
-.track{height:6px;border-radius:4px;background:#1c1a24;overflow:hidden}
-.fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#9b8aff,#c4b5fd);width:0;transition:width 1s ease}
+.goal-row{display:flex;justify-content:space-between;font-size:10px;color:#c9c4d6;margin-bottom:6px}
+.goal-row b{color:#eee9f8}
+.track{height:6px;border-radius:4px;background:#1c1a24;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.5)}
+.fill{position:relative;height:100%;border-radius:4px;background:linear-gradient(90deg,#9b8aff,#d7d0ff);width:0;transition:width 1.1s cubic-bezier(.2,.8,.2,1);box-shadow:0 0 10px rgba(155,138,255,.6)}
 </style></head>
-<body><div class="card"><h4>QUARTERLY GOALS</h4>
-<div class="goal"><div class="goal-row"><span>New signups</span><span>82%</span></div><div class="track"><div class="fill" data-w="82"></div></div></div>
-<div class="goal"><div class="goal-row"><span>Revenue target</span><span>61%</span></div><div class="track"><div class="fill" data-w="61"></div></div></div>
-<div class="goal"><div class="goal-row"><span>Churn reduction</span><span>45%</span></div><div class="track"><div class="fill" data-w="45"></div></div></div>
-</div>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">TRACKING THIS QUARTER</span>
+<div class="card-wrap"><div class="card"><h4>QUARTERLY GOALS</h4>
+<div class="goal"><div class="goal-row"><span>New signups</span><b>82%</b></div><div class="track"><div class="fill" data-w="82"></div></div></div>
+<div class="goal"><div class="goal-row"><span>Revenue target</span><b>61%</b></div><div class="track"><div class="fill" data-w="61"></div></div></div>
+<div class="goal"><div class="goal-row"><span>Churn reduction</span><b>45%</b></div><div class="track"><div class="fill" data-w="45"></div></div></div>
+</div></div></div>
 <script>requestAnimationFrame(()=>document.querySelectorAll(".fill").forEach(f=>f.style.width=f.dataset.w+"%"));</script>
 </body></html>`,
 
   "calendar-heatmap-widget": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Calendar Heatmap Widget</title><style>
-:root{--bg:#050507;--line:#272632}
+:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{padding:20px;border:1px solid var(--line);border-radius:14px;background:#0d0d12}
+.stage{display:grid;gap:22px;place-items:center;padding:40px}
+.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
+.card-wrap{position:relative}
+.card-wrap::before{content:"";position:absolute;inset:-16px;border-radius:24px;background:radial-gradient(circle,rgba(196,181,253,.28),transparent 70%);filter:blur(16px)}
+.card{position:relative;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;box-shadow:0 20px 50px -20px rgba(0,0,0,.65)}
 .card h4{margin:0 0 12px;font-size:11px;color:#817d8a}
 .grid{display:grid;grid-template-columns:repeat(13,10px);gap:3px;position:relative}
-.cell{width:10px;height:10px;border-radius:2px;background:#17131f}
+.cell{width:10px;height:10px;border-radius:2px;background:#17131f;transition:transform .2s cubic-bezier(.34,1.56,.64,1)}
+.cell:hover{transform:scale(1.35)}
 .cell[data-l="1"]{background:#2c2440}
 .cell[data-l="2"]{background:#463584}
 .cell[data-l="3"]{background:#6d55c9}
-.cell[data-l="4"]{background:#a58bff}
-.tip{position:absolute;display:none;padding:5px 7px;border-radius:6px;background:#17131f;border:1px solid var(--line);color:#eee9f8;font-size:9px;transform:translate(-50%,-130%);white-space:nowrap}
+.cell[data-l="4"]{background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 0 8px rgba(155,138,255,.7)}
+.tip{position:absolute;display:none;padding:5px 8px;border-radius:7px;background:#17131f;border:1px solid var(--line);color:#eee9f8;font-size:9px;transform:translate(-50%,-130%);white-space:nowrap;box-shadow:0 10px 24px -10px rgba(0,0,0,.7)}
 </style></head>
-<body><div class="card"><h4>CONTRIBUTION ACTIVITY</h4><div class="grid" id="grid"></div><div class="tip" id="tip"></div></div>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">HOVER A DAY FOR DETAIL</span>
+<div class="card-wrap"><div class="card"><h4>CONTRIBUTION ACTIVITY</h4><div class="grid" id="grid"></div><div class="tip" id="tip"></div></div></div></div>
 <script>
 const grid=document.getElementById("grid"),tip=document.getElementById("tip");
 for(let i=0;i<65;i++){
   const cell=document.createElement("div");cell.className="cell";
   const level=Math.floor(Math.random()*5);cell.dataset.l=level;
-  cell.addEventListener("pointerenter",e=>{tip.style.display="block";tip.style.left=cell.offsetLeft+5+"px";tip.style.top=cell.offsetTop+"px";tip.textContent=level+" commits"});
+  cell.addEventListener("pointerenter",e=>{tip.style.display="block";tip.style.left=(cell.offsetLeft+5)+"px";tip.style.top=cell.offsetTop+"px";tip.textContent=level+" commits"});
   cell.addEventListener("pointerleave",()=>tip.style.display="none");
   grid.appendChild(cell);
 }
@@ -2207,43 +2424,55 @@ for(let i=0;i<65;i++){
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Revenue Comparison Widget</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:250px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12}
-.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.card{position:relative;width:250px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;overflow:hidden;box-shadow:0 20px 50px -20px rgba(0,0,0,.6)}
+.card::before{content:"";position:absolute;top:-40%;left:-20%;width:180px;height:180px;background:radial-gradient(circle,rgba(155,138,255,.16),transparent 70%)}
+.head{position:relative;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
 .head b{color:#817d8a;font-size:11px}
-.delta{padding:3px 8px;border-radius:999px;background:#0f1a12;color:#a9e6b4;font-size:9px;font-weight:700}
-.bars{display:flex;align-items:end;gap:24px;height:80px;padding:0 10px}
+.delta{padding:3px 8px;border-radius:999px;background:linear-gradient(135deg,#173523,#0f1a12);border:1px solid #2b5a3c;color:#a9e6b4;font-size:9px;font-weight:700}
+.bars{position:relative;display:flex;align-items:end;gap:24px;height:80px;padding:0 10px}
 .bar-col{display:grid;gap:6px;justify-items:center}
-.bar-col i{width:34px;border-radius:6px 6px 0 0;display:block}
+.bar-col i{width:34px;border-radius:6px 6px 0 0;display:block;height:0;transition:height 1s cubic-bezier(.2,.8,.2,1)}
 .bar-col .last{background:#2c2440}
-.bar-col .this{background:linear-gradient(180deg,#c4b5fd,#9b8aff)}
+.bar-col .this{background:linear-gradient(180deg,#e7e2ff,#9b8aff 60%,#6d5cc4);box-shadow:0 -8px 16px -10px rgba(155,138,255,.6)}
 .bar-col span{font-size:9px;color:#6f6c77}
 </style></head>
-<body><div class="card"><div class="head"><b>REVENUE, MONTH OVER MONTH</b><span class="delta">+24%</span></div>
+<body data-cf-keep-dark><div class="card"><div class="head"><b>REVENUE, MONTH OVER MONTH</b><span class="delta">+24%</span></div>
 <div class="bars">
-<div class="bar-col"><i class="last" style="height:46px"></i><span>Aug</span></div>
-<div class="bar-col"><i class="this" style="height:70px"></i><span>Sep</span></div>
+<div class="bar-col"><i class="last" id="b1"></i><span>Aug</span></div>
+<div class="bar-col"><i class="this" id="b2"></i><span>Sep</span></div>
 </div></div>
+<script>
+requestAnimationFrame(function(){document.getElementById("b1").style.height="46px";document.getElementById("b2").style.height="70px"});
+</script>
 </body></html>`,
 
   "quick-actions-command-bar": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Quick Actions Command Bar</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.bar{display:flex;align-items:center;gap:6px;padding:8px;border:1px solid var(--line);border-radius:12px;background:#0d0d12;position:relative}
-.bar button{width:34px;height:34px;display:grid;place-items:center;border:0;border-radius:8px;background:#111017;color:#9d94b0;font-size:13px;cursor:pointer}
-.bar button:hover{color:#fff;background:#17131f}
-.bar input{border:0;background:transparent;color:#fff;font-size:11px;outline:0;padding:0 6px;width:120px}
-.results{position:absolute;top:48px;left:0;right:0;border:1px solid var(--line);border-radius:10px;background:#0d0d12;display:none;overflow:hidden}
-.bar.active .results{display:block}
-.results div{padding:9px 12px;font-size:11px;color:#c9c4d6}
-.results div:hover{background:#17131f;color:var(--lav)}
+.stage{display:grid;gap:22px;place-items:center;padding:40px}
+.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
+.bar-wrap{position:relative}
+.bar-wrap::before{content:"";position:absolute;inset:-16px;border-radius:24px;background:radial-gradient(circle,rgba(196,181,253,.3),transparent 70%);filter:blur(16px);opacity:0;transition:opacity .4s}
+.bar-wrap.active::before{opacity:1}
+.bar{position:relative;display:flex;align-items:center;gap:6px;padding:8px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;box-shadow:0 20px 50px -20px rgba(0,0,0,.6);transition:border-color .3s}
+.bar-wrap.active .bar{border-color:#544c67}
+.bar button{width:34px;height:34px;display:grid;place-items:center;border:0;border-radius:9px;background:#111017;color:#9d94b0;font-size:14px;cursor:pointer;transition:transform .15s cubic-bezier(.34,1.56,.64,1),color .2s,background .2s}
+.bar button:hover{color:#0a090f;background:linear-gradient(135deg,#d7d0ff,#9b8aff);transform:translateY(-1px)}
+.bar input{border:0;background:transparent;color:#fff;font-size:11px;outline:0;padding:0 6px;width:130px}
+.bar input::placeholder{color:#6f6c77}
+.results{position:absolute;top:52px;left:0;right:0;border:1px solid var(--line);border-radius:12px;background:#0d0d12;box-shadow:0 20px 50px -20px rgba(0,0,0,.7);overflow:hidden;opacity:0;transform:translateY(-6px) scale(.98);pointer-events:none;transition:opacity .25s cubic-bezier(.2,.8,.2,1),transform .25s cubic-bezier(.2,.8,.2,1)}
+.bar-wrap.active .results{opacity:1;transform:none;pointer-events:auto}
+.results div{padding:10px 12px;font-size:11px;color:#c9c4d6;transition:background .15s,color .15s,padding-left .15s}
+.results div:hover{background:#17131f;color:var(--lav);padding-left:16px}
 </style></head>
-<body><div class="bar" id="bar"><button title="New">+</button><button title="Filter">⚲</button><input id="q" placeholder="Quick action…">
-<div class="results"><div>Create report</div><div>Invite teammate</div><div>Export CSV</div></div></div>
+<body data-cf-keep-dark><div class="stage"><span class="kicker">FOCUS TO SEARCH ACTIONS</span>
+<div class="bar-wrap" id="wrap"><div class="bar" id="bar"><button title="New">+</button><button title="Filter">⚲</button><input id="q" placeholder="Quick action…">
+<div class="results"><div>Create report</div><div>Invite teammate</div><div>Export CSV</div></div></div></div></div>
 <script>
-const bar=document.getElementById("bar"),q=document.getElementById("q");
-q.addEventListener("focus",()=>bar.classList.add("active"));
-q.addEventListener("blur",()=>setTimeout(()=>bar.classList.remove("active"),150));
+const wrap=document.getElementById("wrap"),q=document.getElementById("q");
+q.addEventListener("focus",()=>wrap.classList.add("active"));
+q.addEventListener("blur",()=>setTimeout(()=>wrap.classList.remove("active"),150));
 </script>
 </body></html>`,
 
@@ -2257,7 +2486,7 @@ h1{color:#f7f5fb;font-size:30px;margin:14px 0;transform:translateZ(50px)}
 .card{margin-top:20px;padding:22px;border:1px solid #272632;border-radius:16px;background:linear-gradient(135deg,#171325,#0d0d12);transform:translateZ(70px);box-shadow:0 30px 60px rgba(0,0,0,.4)}
 .card span{color:#c4b5fd;font-size:11px}
 </style></head>
-<body><div class="hero" id="hero"><span class="kicker">TILT-REACTIVE INTERFACE</span><h1>Depth that responds to you.</h1><div class="card"><span>Move your cursor to feel the layers shift.</span></div></div>
+<body data-cf-keep-dark><div class="hero" id="hero"><span class="kicker">TILT-REACTIVE INTERFACE</span><h1>Depth that responds to you.</h1><div class="card"><span>Move your cursor to feel the layers shift.</span></div></div>
 <script>
 const hero=document.getElementById("hero");
 document.addEventListener("pointermove",e=>{
@@ -2273,9 +2502,9 @@ document.addEventListener("pointermove",e=>{
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:"Space Grotesk",Inter,sans-serif}
 .spacer{height:60vh}
 .hero{min-height:100vh;display:grid;place-items:center;text-align:center;position:sticky;top:0}
-.word{display:inline-block;color:#f7f5fb;font-size:38px;font-weight:800;transition:transform .1s linear,opacity .1s linear}
+.word{display:inline-block;color:#f7f5fb;font-size:38px;font-weight:800;transition:transform .1s linear,opacity .1s linear;text-shadow:0 0 30px rgba(196,181,253,.2)}
 </style></head>
-<body><div class="hero"><div id="line">
+<body data-cf-keep-dark><div class="hero"><div id="line">
 <span class="word">Design.</span> <span class="word">Ship.</span> <span class="word">Repeat.</span>
 </div></div><div class="spacer"></div>
 <script>
@@ -2291,15 +2520,16 @@ addEventListener("scroll",()=>{
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Video Frame Hero</title><style>
 :root{--bg:#050507;--line:#272632}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:30px}
-.frame{width:min(460px,100%);border:1px solid var(--line);border-radius:18px;overflow:hidden;background:linear-gradient(135deg,#191527,#0a0a0f)}
-.screen{height:230px;position:relative;display:grid;place-items:center}
-.play{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;cursor:pointer;color:#0a090f;font-size:16px}
+.frame{width:min(460px,100%);border:1px solid var(--line);border-radius:18px;overflow:hidden;background:linear-gradient(135deg,#191527,#0a0a0f);box-shadow:0 30px 70px -24px rgba(0,0,0,.7)}
+.screen{height:230px;position:relative;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,rgba(155,138,255,.14),transparent 60%)}
+.play{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;cursor:pointer;color:#0a090f;font-size:16px;box-shadow:0 10px 30px -8px rgba(0,0,0,.5);transition:transform .2s cubic-bezier(.34,1.56,.64,1)}
+.play:hover{transform:scale(1.08)}
 .controls{display:flex;align-items:center;gap:10px;padding:12px 16px;border-top:1px solid var(--line)}
-.scrub{flex:1;height:3px;border-radius:2px;background:#252230}
-.scrub i{display:block;width:34%;height:100%;background:#c4b5fd;border-radius:2px}
+.scrub{flex:1;height:3px;border-radius:2px;background:#252230;overflow:hidden}
+.scrub i{display:block;width:34%;height:100%;background:linear-gradient(90deg,#9b8aff,#d7d0ff);box-shadow:0 0 8px rgba(196,181,253,.5);border-radius:2px}
 .time{color:#77737f;font-size:9px}
 </style></head>
-<body><div class="frame"><div class="screen"><span class="play">▶</span></div><div class="controls"><div class="scrub"><i></i></div><span class="time">1:12 / 3:20</span></div></div>
+<body data-cf-keep-dark><div class="frame"><div class="screen"><span class="play">▶</span></div><div class="controls"><div class="scrub"><i></i></div><span class="time">1:12 / 3:20</span></div></div>
 </body></html>`,
 
   "3d-cube-rotator-hero": `<!DOCTYPE html>
@@ -2316,42 +2546,59 @@ addEventListener("scroll",()=>{
 @keyframes spin{to{transform:rotateY(360deg)}}
 .kicker{position:absolute;top:40px;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
 </style></head>
-<body><span class="kicker">HOVER TO PAUSE</span>
+<body data-cf-keep-dark><span class="kicker">HOVER TO PAUSE</span>
 <div class="cube-wrap"><div class="face f1">Design</div><div class="face f2">Build</div><div class="face f3">Test</div><div class="face f4">Ship</div></div>
 </body></html>`,
 
   "chat-bubble-hero": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Chat Bubble Hero</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center;padding:30px}
-.thread{width:min(360px,100%);display:grid;gap:10px}
-.bubble{max-width:80%;padding:11px 14px;border-radius:16px;font-size:12px;line-height:1.5;opacity:0;transform:translateY(8px);animation:in .4s forwards}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center;padding:30px;position:relative;overflow:hidden}
+body::before{content:"";position:absolute;inset:-20%;background:radial-gradient(circle at 70% 30%,rgba(155,138,255,.14),transparent 55%);pointer-events:none}
+.thread{position:relative;width:min(360px,100%);display:grid;gap:10px}
+.bubble{max-width:80%;padding:11px 14px;border-radius:16px;font-size:12px;line-height:1.5;opacity:0;transform:translateY(8px) scale(.96);animation:in .4s cubic-bezier(.2,.8,.2,1) forwards;box-shadow:0 12px 30px -16px rgba(0,0,0,.6)}
 .them{background:#17131f;color:#eee9f8;border-bottom-left-radius:4px;justify-self:start}
-.me{background:linear-gradient(135deg,#9b8aff,#7c6cf0);color:#0a090f;border-bottom-right-radius:4px;justify-self:end}
+.me{background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;border-bottom-right-radius:4px;justify-self:end;box-shadow:0 12px 30px -14px rgba(155,138,255,.5)}
+.typing{display:flex;gap:4px;padding:12px 14px;border-radius:16px;border-bottom-left-radius:4px;background:#17131f;justify-self:start;width:fit-content}
+.typing i{width:5px;height:5px;border-radius:50%;background:#847e8f;animation:bounce 1s ease-in-out infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-4px);opacity:1}}
 @keyframes in{to{opacity:1;transform:none}}
 </style></head>
-<body><div class="thread" id="thread"></div>
+<body data-cf-keep-dark><div class="thread" id="thread"></div>
 <script>
 const msgs=[{t:"them",m:"Hey — can this actually ship by Friday?"},{t:"me",m:"Already in staging."},{t:"them",m:"That's the fastest launch we've had."}];
 const thread=document.getElementById("thread");
-msgs.forEach((x,i)=>{setTimeout(()=>{const d=document.createElement("div");d.className="bubble "+x.t;d.textContent=x.m;thread.appendChild(d)},i*550)});
+let delay=0;
+msgs.forEach(function(x){
+  setTimeout(function(){
+    const typing=document.createElement("div");typing.className="typing";typing.innerHTML="<i></i><i></i><i></i>";thread.appendChild(typing);
+    setTimeout(function(){
+      typing.remove();
+      const d=document.createElement("div");d.className="bubble "+x.t;d.textContent=x.m;thread.appendChild(d);
+    },500);
+  },delay);
+  delay+=900;
+});
 </script>
 </body></html>`,
 
   "map-pin-hero": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Map Pin Hero</title><style>
 :root{--bg:#050507}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center;overflow:hidden}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center;overflow:hidden;position:relative}
+body::before{content:"";position:absolute;inset:-20%;background:radial-gradient(circle at 40% 40%,rgba(155,138,255,.1),transparent 55%);pointer-events:none}
 .map{position:relative;width:320px;height:220px}
-.pin{position:absolute;width:12px;height:12px;border-radius:50%;background:#c4b5fd;box-shadow:0 0 0 0 rgba(196,181,253,.5);animation:pulse 2s infinite}
+.pin{position:absolute;width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 0 0 0 rgba(196,181,253,.5),0 0 10px rgba(196,181,253,.6);animation:pulse 2s infinite}
 .pin::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(196,181,253,.4)}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(196,181,253,.5)}70%{box-shadow:0 0 0 14px rgba(196,181,253,0)}100%{box-shadow:0 0 0 0 rgba(196,181,253,0)}}
-.route{position:absolute;stroke:#3a3546;stroke-width:1.5;stroke-dasharray:4 4;fill:none}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(196,181,253,.5),0 0 10px rgba(196,181,253,.6)}70%{box-shadow:0 0 0 14px rgba(196,181,253,0),0 0 10px rgba(196,181,253,.6)}100%{box-shadow:0 0 0 0 rgba(196,181,253,0),0 0 10px rgba(196,181,253,.6)}}
+.route{position:absolute;stroke:#6d5f93;stroke-width:1.5;stroke-dasharray:340;stroke-dashoffset:340;fill:none;filter:drop-shadow(0 0 4px rgba(196,181,253,.3));animation:draw 2.4s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
 .kicker{position:absolute;top:-30px;left:0;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
 </style></head>
-<body><div class="map"><span class="kicker">3 DESTINATIONS PLOTTED</span>
+<body data-cf-keep-dark><div class="map"><span class="kicker">3 DESTINATIONS PLOTTED</span>
 <svg class="route" width="320" height="220"><path d="M30,180 Q120,40 180,90 T290,40"/></svg>
-<div class="pin" style="left:26px;top:176px"></div><div class="pin" style="left:176px;top:86px"></div><div class="pin" style="left:286px;top:36px"></div>
+<div class="pin" style="left:26px;top:176px"></div><div class="pin" style="left:176px;top:86px;animation-delay:.6s"></div><div class="pin" style="left:286px;top:36px;animation-delay:1.2s"></div>
 </div>
 </body></html>`,
 
@@ -2362,10 +2609,11 @@ msgs.forEach((x,i)=>{setTimeout(()=>{const d=document.createElement("div");d.cla
 .wall{display:flex;gap:14px;width:340px;height:260px;overflow:hidden;mask-image:linear-gradient(to bottom,transparent,#000 15%,#000 85%,transparent)}
 .col{display:grid;gap:10px;animation:scroll 14s linear infinite}
 .col.down{animation-direction:reverse}
-.note{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#111017;color:#c9c4d6;font-size:10px;line-height:1.5}
+.note{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#111017;color:#c9c4d6;font-size:10px;line-height:1.5;box-shadow:0 12px 30px -18px rgba(0,0,0,.6);transition:border-color .2s}
+.note:hover{border-color:#544c67}
 @keyframes scroll{from{transform:translateY(0)}to{transform:translateY(-50%)}}
 </style></head>
-<body><div class="wall">
+<body data-cf-keep-dark><div class="wall">
 <div class="col">
 <div class="note">"Shipped our redesign in a week."</div><div class="note">"Feels like a $50k design system."</div><div class="note">"Support answered in minutes."</div>
 <div class="note">"Shipped our redesign in a week."</div><div class="note">"Feels like a $50k design system."</div><div class="note">"Support answered in minutes."</div>
@@ -2381,22 +2629,24 @@ msgs.forEach((x,i)=>{setTimeout(()=>{const d=document.createElement("div");d.cla
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Expandable Review Card</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:280px;padding:18px;border:1px solid var(--line);border-radius:14px;background:#0d0d12}
+.card{width:280px;padding:18px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
 .card b{color:#f7f5fb;font-size:12px}
-.card p{color:#a49dbc;font-size:11px;line-height:1.7;margin:8px 0;overflow:hidden;max-height:38px;transition:max-height .3s ease}
+.card p{color:#a49dbc;font-size:11px;line-height:1.7;margin:8px 0;overflow:hidden;max-height:38px;transition:max-height .35s cubic-bezier(.2,.8,.2,1)}
 .card p.open{max-height:200px}
-.more{border:0;background:none;color:#c4b5fd;font-size:10px;cursor:pointer;padding:0}
+.more{border:0;background:none;color:var(--lav);font-size:10px;cursor:pointer;padding:0;font-weight:700}
 .votes{display:flex;gap:10px;margin-top:12px}
-.votes button{border:1px solid var(--line);border-radius:7px;background:#111017;color:#817d8a;font-size:10px;padding:6px 9px;cursor:pointer}
+.votes button{border:1px solid var(--line);border-radius:7px;background:#111017;color:#817d8a;font-size:10px;padding:6px 9px;cursor:pointer;transition:border-color .2s,color .2s,transform .15s cubic-bezier(.34,1.56,.64,1)}
+.votes button:hover{border-color:#544c67;color:#eee9f8}
+.votes button:active{transform:scale(.94)}
 </style></head>
-<body><div class="card"><b>Priya M. ★★★★★</b>
+<body data-cf-keep-dark><div class="card"><b>Priya M. ★★★★★</b>
 <p id="text">The onboarding alone saved us two weeks of internal debate. Every component slots into our existing design tokens without a fight, and the copy-prompt feature meant our junior devs could extend things confidently on day one.</p>
 <button class="more" id="more">Read more</button>
 <div class="votes"><button id="up">👍 12</button><button id="down">👎 0</button></div></div>
 <script>
 const text=document.getElementById("text"),more=document.getElementById("more");
-more.addEventListener("click",()=>{text.classList.toggle("open");more.textContent=text.classList.contains("open")?"Show less":"Read more"});
-document.getElementById("up").addEventListener("click",e=>{e.target.textContent="👍 13"});
+more.addEventListener("click",function(){text.classList.toggle("open");more.textContent=text.classList.contains("open")?"Show less":"Read more"});
+document.getElementById("up").addEventListener("click",function(e){e.target.textContent="👍 13"});
 </script>
 </body></html>`,
 
@@ -2404,15 +2654,16 @@ document.getElementById("up").addEventListener("click",e=>{e.target.textContent=
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Before/After Results Testimonial</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:290px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12}
-.result{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:14px}
+.card{position:relative;width:290px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;overflow:hidden;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
+.card::before{content:"";position:absolute;top:-50%;right:-20%;width:180px;height:180px;background:radial-gradient(circle,rgba(95,212,161,.14),transparent 70%)}
+.result{position:relative;display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:14px}
 .result b{font-size:26px;color:#5f5c68}
-.result b.after{color:#5fd4a1}
+.result b.after{background:linear-gradient(135deg,#7fe0ac,#41b878);-webkit-background-clip:text;background-clip:text;color:transparent}
 .result span{color:#5f5c68;font-size:16px}
-.card p{color:#c9c4d6;font-size:12px;line-height:1.7;margin:0}
-.card small{display:block;margin-top:10px;color:#817d8a;font-size:10px}
+.card p{position:relative;color:#c9c4d6;font-size:12px;line-height:1.7;margin:0}
+.card small{position:relative;display:block;margin-top:10px;color:#817d8a;font-size:10px}
 </style></head>
-<body><div class="card"><div class="result"><b>41%</b><span>→</span><b class="after">89%</b></div>
+<body data-cf-keep-dark><div class="card"><div class="result"><b>41%</b><span>→</span><b class="after">89%</b></div>
 <p>"Our checkout conversion nearly doubled after we swapped in the pricing and form components — no other changes."</p>
 <small>— Marcus Lee, Growth Lead at Fluent</small></div>
 </body></html>`,
@@ -2423,12 +2674,13 @@ document.getElementById("up").addEventListener("click",e=>{e.target.textContent=
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .wrap{width:290px}
 .tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.tile{position:relative;height:80px;border-radius:10px;background:#141119;display:grid;place-items:center;color:#eee9f8;font-size:11px;font-weight:700}
-.tile.speaking{box-shadow:0 0 0 2px #5fd4a1}
+.tile{position:relative;height:80px;border-radius:10px;background:linear-gradient(135deg,#191527,#141119);display:grid;place-items:center;color:#eee9f8;font-size:11px;font-weight:700;box-shadow:0 12px 30px -18px rgba(0,0,0,.6);transition:box-shadow .3s}
+.tile.speaking{box-shadow:0 0 0 2px #5fd4a1,0 0 20px -4px rgba(95,212,161,.5);animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 2px #5fd4a1,0 0 20px -4px rgba(95,212,161,.5)}50%{box-shadow:0 0 0 2px #5fd4a1,0 0 28px -2px rgba(95,212,161,.7)}}
 .tile span{position:absolute;bottom:6px;left:8px;font-size:8px;color:#817d8a;font-weight:400}
-.quote{margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:12px;background:#0d0d12;color:#c9c4d6;font-size:11px;line-height:1.6}
+.quote{margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:12px;background:#0d0d12;color:#c9c4d6;font-size:11px;line-height:1.6;box-shadow:0 16px 40px -22px rgba(0,0,0,.7)}
 </style></head>
-<body><div class="wrap"><div class="tiles">
+<body data-cf-keep-dark><div class="wrap"><div class="tiles">
 <div class="tile speaking">JR<span>Jordan</span></div><div class="tile">SC<span>Sam</span></div>
 <div class="tile">LP<span>Lena</span></div><div class="tile">DK<span>Devon</span></div>
 </div><div class="quote">"We onboarded the whole team on this library live, on a call — nobody got stuck once."</div></div>
@@ -2438,38 +2690,41 @@ document.getElementById("up").addEventListener("click",e=>{e.target.textContent=
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Star Breakdown Reviews</title><style>
 :root{--bg:#050507;--line:#272632}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:270px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12}
+.card{width:270px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
 .top{display:flex;align-items:center;gap:14px;margin-bottom:14px}
 .top strong{font-size:34px;color:#f7f5fb}
-.top div span{display:block;color:#e8b563;font-size:12px}
+.top div span{display:block;color:#e8b563;font-size:12px;text-shadow:0 0 10px rgba(232,181,99,.4)}
 .top div small{color:#6f6c77;font-size:9px}
 .row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
 .row span{width:12px;font-size:9px;color:#817d8a}
 .track{flex:1;height:5px;border-radius:3px;background:#1c1a24;overflow:hidden}
-.fill{height:100%;background:#e8b563}
+.fill{height:100%;background:linear-gradient(90deg,#c98f3a,#e8b563);box-shadow:0 0 8px rgba(232,181,99,.4);width:0;transition:width 1s cubic-bezier(.2,.8,.2,1)}
 </style></head>
-<body><div class="card"><div class="top"><strong>4.9</strong><div><span>★★★★★</span><small>Based on 1,204 reviews</small></div></div>
-<div class="row"><span>5</span><div class="track"><div class="fill" style="width:88%"></div></div></div>
-<div class="row"><span>4</span><div class="track"><div class="fill" style="width:9%"></div></div></div>
-<div class="row"><span>3</span><div class="track"><div class="fill" style="width:2%"></div></div></div>
-<div class="row"><span>2</span><div class="track"><div class="fill" style="width:1%"></div></div></div>
-<div class="row"><span>1</span><div class="track"><div class="fill" style="width:0%"></div></div></div>
+<body data-cf-keep-dark><div class="card"><div class="top"><strong>4.9</strong><div><span>★★★★★</span><small>Based on 1,204 reviews</small></div></div>
+<div class="row"><span>5</span><div class="track"><div class="fill" data-w="88"></div></div></div>
+<div class="row"><span>4</span><div class="track"><div class="fill" data-w="9"></div></div></div>
+<div class="row"><span>3</span><div class="track"><div class="fill" data-w="2"></div></div></div>
+<div class="row"><span>2</span><div class="track"><div class="fill" data-w="1"></div></div></div>
+<div class="row"><span>1</span><div class="track"><div class="fill" data-w="0"></div></div></div>
 </div>
+<script>
+requestAnimationFrame(function(){document.querySelectorAll(".fill").forEach(function(f){f.style.width=f.dataset.w+"%"})});
+</script>
 </body></html>`,
 
   "case-study-highlight-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Case Study Highlight Card</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:290px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;overflow:hidden}
+.card{width:290px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;overflow:hidden;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
 .tag{padding:14px 18px 0;color:#817d8a;font-size:9px;letter-spacing:1px;display:flex;justify-content:space-between}
-.tag b{color:#c4b5fd;font-weight:700}
+.tag b{color:var(--lav);font-weight:700}
 .card p{padding:12px 18px;margin:0;color:#eee9f8;font-size:13px;line-height:1.6;font-weight:600}
-.stat{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-top:1px solid var(--line);background:#111017}
-.stat strong{color:#5fd4a1;font-size:18px}
+.stat{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-top:1px solid var(--line);background:linear-gradient(135deg,#132318,#111017)}
+.stat strong{background:linear-gradient(135deg,#7fe0ac,#41b878);-webkit-background-clip:text;background-clip:text;color:transparent;font-size:18px}
 .stat span{color:#6f6c77;font-size:9px}
 </style></head>
-<body><div class="card"><div class="tag"><span>CLIENT: ORBIT LABS</span><b>SaaS</b></div>
+<body data-cf-keep-dark><div class="card"><div class="tag"><span>CLIENT: ORBIT LABS</span><b>SaaS</b></div>
 <p>"We replaced three vendor tools with CodeFusion's dashboard kit and cut our build timeline in half."</p>
 <div class="stat"><strong>+52%</strong><span>faster shipping</span></div></div>
 </body></html>`,
@@ -2480,14 +2735,14 @@ document.getElementById("up").addEventListener("click",e=>{e.target.textContent=
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .trail{display:flex;align-items:center}
 .step{display:flex;align-items:center;gap:8px;color:#5f5c68;font-size:11px}
-.step b{width:22px;height:22px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-size:10px;color:#817d8a}
-.step.done b{background:#5fd4a1;border-color:#5fd4a1;color:#0a090f}
+.step b{width:22px;height:22px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-size:10px;color:#817d8a;transition:box-shadow .3s}
+.step.done b{background:linear-gradient(135deg,#7fe0ac,#41b878);border-color:transparent;color:#0a090f}
 .step.active{color:#f7f5fb}
-.step.active b{border-color:var(--lav);color:var(--lav)}
+.step.active b{background:linear-gradient(135deg,#d7d0ff,#9b8aff);border-color:transparent;color:#0a090f;box-shadow:0 0 0 5px rgba(196,181,253,.18)}
 .line{width:36px;height:1px;background:var(--line);margin:0 6px}
-.line.done{background:#5fd4a1}
+.line.done{background:linear-gradient(90deg,#41b878,#7fe0ac)}
 </style></head>
-<body><div class="trail">
+<body data-cf-keep-dark><div class="trail">
 <div class="step done"><b>✓</b>Cart</div><div class="line done"></div>
 <div class="step active"><b>2</b>Shipping</div><div class="line"></div>
 <div class="step"><b>3</b>Payment</div>
@@ -2498,16 +2753,16 @@ document.getElementById("up").addEventListener("click",e=>{e.target.textContent=
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Bottom Tab Bar Nav</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:end center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding-bottom:40px}
-.tabbar{position:relative;display:flex;width:260px;padding:5px;border:1px solid var(--line);border-radius:16px;background:#0d0d12}
-.tabbar button{flex:1;position:relative;z-index:1;border:0;background:none;padding:10px 0;color:#77737f;font-size:9px;cursor:pointer}
+.tabbar{position:relative;display:flex;width:260px;padding:5px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
+.tabbar button{flex:1;position:relative;z-index:1;border:0;background:none;padding:10px 0;color:#77737f;font-size:9px;cursor:pointer;transition:color .25s}
 .tabbar button.active{color:#0a090f}
-.pill{position:absolute;top:5px;bottom:5px;width:calc(33.33% - 4px);border-radius:11px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);transition:left .3s cubic-bezier(.2,.8,.2,1)}
+.pill{position:absolute;top:5px;bottom:5px;width:calc(33.33% - 4px);border-radius:11px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 8px 20px -8px rgba(155,138,255,.6);transition:left .35s cubic-bezier(.34,1.56,.64,1)}
 </style></head>
-<body><div class="tabbar" id="bar"><div class="pill" id="pill"></div>
+<body data-cf-keep-dark><div class="tabbar" id="bar"><div class="pill" id="pill"></div>
 <button class="active">Home</button><button>Search</button><button>Profile</button></div>
 <script>
 const bar=document.getElementById("bar"),pill=document.getElementById("pill"),buttons=[...bar.querySelectorAll("button")];
-buttons.forEach((b,i)=>b.addEventListener("click",()=>{buttons.forEach(x=>x.classList.remove("active"));b.classList.add("active");pill.style.left=(5+i*(250/3))+"px"}));
+buttons.forEach(function(b,i){b.addEventListener("click",function(){buttons.forEach(function(x){x.classList.remove("active")});b.classList.add("active");pill.style.left=(5+i*(250/3))+"px"})});
 </script>
 </body></html>`,
 
@@ -2516,20 +2771,20 @@ buttons.forEach((b,i)=>b.addEventListener("click",()=>{buttons.forEach(x=>x.clas
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;height:100vh;display:flex;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .dotnav{display:grid;gap:16px;align-self:center;padding-left:30px}
-.dotnav button{width:9px;height:9px;border-radius:50%;border:1px solid #4a4657;background:transparent;cursor:pointer;position:relative}
-.dotnav button.active{background:var(--lav);border-color:var(--lav)}
+.dotnav button{width:9px;height:9px;border-radius:50%;border:1px solid #4a4657;background:transparent;cursor:pointer;position:relative;transition:background .3s,border-color .3s,box-shadow .3s,transform .3s cubic-bezier(.34,1.56,.64,1)}
+.dotnav button.active{background:var(--lav);border-color:var(--lav);box-shadow:0 0 0 4px rgba(196,181,253,.18);transform:scale(1.2)}
 .dotnav button.active::after{content:attr(data-l);position:absolute;left:18px;top:-4px;color:#eee9f8;font-size:10px;white-space:nowrap}
 .sections{flex:1;display:grid}
-section{height:100vh;display:grid;place-items:center;color:#4a4657;font-size:40px;font-weight:800;scroll-snap-align:start}
+section{height:100vh;display:grid;place-items:center;color:#4a4657;font-size:40px;font-weight:800;scroll-snap-align:start;background:radial-gradient(circle at 30% 30%,rgba(155,138,255,.06),transparent 60%)}
 .sections{scroll-snap-type:y mandatory;overflow-y:auto}
 </style></head>
-<body><div class="dotnav" id="dots">
+<body data-cf-keep-dark><div class="dotnav" id="dots">
 <button class="active" data-l="Intro"></button><button data-l="Features"></button><button data-l="Pricing"></button>
 </div>
 <div class="sections" id="sections"><section>01</section><section>02</section><section>03</section></div>
 <script>
 const dots=[...document.querySelectorAll("#dots button")],sections=[...document.querySelectorAll("section")];
-dots.forEach((d,i)=>d.addEventListener("click",()=>{dots.forEach(x=>x.classList.remove("active"));d.classList.add("active");sections[i].scrollIntoView({behavior:"smooth"})}));
+dots.forEach(function(d,i){d.addEventListener("click",function(){dots.forEach(function(x){x.classList.remove("active")});d.classList.add("active");sections[i].scrollIntoView({behavior:"smooth"})})});
 </script>
 </body></html>`,
 
@@ -2540,19 +2795,20 @@ dots.forEach((d,i)=>d.addEventListener("click",()=>{dots.forEach(x=>x.classList.
 header{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:1px solid var(--line)}
 header b{color:#f7f5fb;font-size:13px}
 nav{display:flex;gap:18px;color:#817d8a;font-size:11px;align-items:center}
-.search-btn{width:34px;height:34px;border:1px solid var(--line);border-radius:9px;background:#111017;color:#9d94b0;cursor:pointer;transition:width .3s ease}
+.search-btn{width:34px;height:34px;border:1px solid var(--line);border-radius:9px;background:#111017;color:#9d94b0;cursor:pointer;transition:width .3s ease,border-color .2s}
+.search-btn:hover{border-color:#544c67}
 .search-wrap{position:relative;display:flex;align-items:center}
-.search-wrap input{position:absolute;right:0;width:0;opacity:0;padding:0;border:1px solid var(--line);border-radius:9px;background:#111017;color:#fff;font-size:11px;height:34px;transition:width .3s ease,opacity .2s ease,padding .3s ease}
-.search-wrap.open input{width:180px;opacity:1;padding:0 12px;right:0}
+.search-wrap input{position:absolute;right:0;width:0;opacity:0;padding:0;border:1px solid var(--line);border-radius:9px;background:#111017;color:#fff;font-size:11px;height:34px;transition:width .35s cubic-bezier(.2,.8,.2,1),opacity .2s ease,padding .3s ease,box-shadow .2s}
+.search-wrap.open input{width:180px;opacity:1;padding:0 12px;right:0;box-shadow:0 0 0 3px rgba(196,181,253,.15)}
 .search-wrap.open .search-btn{opacity:0;pointer-events:none}
 </style></head>
-<body><header><b>CodeFusion</b><nav><span>Products</span><span>Docs</span>
+<body data-cf-keep-dark><header><b>CodeFusion</b><nav><span>Products</span><span>Docs</span>
 <div class="search-wrap" id="wrap"><input id="input" placeholder="Search…"><button class="search-btn" id="btn">⚲</button></div>
 </nav></header>
 <script>
 const wrap=document.getElementById("wrap"),btn=document.getElementById("btn"),input=document.getElementById("input");
-btn.addEventListener("click",()=>{wrap.classList.add("open");input.focus()});
-input.addEventListener("blur",()=>{if(!input.value)wrap.classList.remove("open")});
+btn.addEventListener("click",function(){wrap.classList.add("open");input.focus()});
+input.addEventListener("blur",function(){if(!input.value)wrap.classList.remove("open")});
 </script>
 </body></html>`,
 
@@ -2560,30 +2816,32 @@ input.addEventListener("blur",()=>{if(!input.value)wrap.classList.remove("open")
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Icon Rail Nav</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;height:100vh;display:flex;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.rail{width:56px;border-right:1px solid var(--line);display:grid;align-content:start;gap:4px;padding:14px 8px;transition:width .25s ease;overflow:hidden}
+.rail{width:56px;border-right:1px solid var(--line);display:grid;align-content:start;gap:4px;padding:14px 8px;transition:width .3s cubic-bezier(.2,.8,.2,1);overflow:hidden}
 .rail:hover{width:150px}
-.rail a{display:flex;align-items:center;gap:12px;padding:10px;border-radius:9px;color:#817d8a;font-size:11px;white-space:nowrap;text-decoration:none}
+.rail a{display:flex;align-items:center;gap:12px;padding:10px;border-radius:9px;color:#817d8a;font-size:11px;white-space:nowrap;text-decoration:none;transition:background .2s,color .2s}
 .rail a:hover{background:#111017;color:#eee9f8}
-.rail a i{width:18px;height:18px;flex:none;border-radius:5px;background:#1c1a24;display:grid;place-items:center;font-style:normal;color:var(--lav);font-size:10px}
-.rail a.active{color:var(--lav);background:#171420}
+.rail a i{width:18px;height:18px;flex:none;border-radius:5px;background:#1c1a24;display:grid;place-items:center;font-style:normal;color:var(--lav);font-size:10px;transition:background .2s,color .2s}
+.rail a.active{color:#e6e1f2;background:linear-gradient(135deg,#221d33,#181425)}
+.rail a.active i{background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f}
 </style></head>
-<body><div class="rail"><a class="active"><i>◧</i>Dashboard</a><a><i>◨</i>Projects</a><a><i>◩</i>Reports</a><a><i>◪</i>Settings</a></div>
+<body data-cf-keep-dark><div class="rail"><a class="active"><i>◧</i>Dashboard</a><a><i>◨</i>Projects</a><a><i>◩</i>Reports</a><a><i>◪</i>Settings</a></div>
 </body></html>`,
 
   "pagination-nav": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Pagination Nav</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.pager{position:relative;display:flex;gap:4px;padding:4px;border:1px solid var(--line);border-radius:12px;background:#0d0d12}
-.pager button{position:relative;z-index:1;width:32px;height:32px;border:0;background:none;color:#817d8a;font-size:11px;cursor:pointer;border-radius:8px}
+.pager{position:relative;display:flex;gap:4px;padding:4px;border:1px solid var(--line);border-radius:12px;background:#0d0d12;box-shadow:0 16px 40px -22px rgba(0,0,0,.7)}
+.pager button{position:relative;z-index:1;width:32px;height:32px;border:0;background:none;color:#817d8a;font-size:11px;cursor:pointer;border-radius:8px;transition:color .25s}
+.pager button:hover{color:#eee9f8}
 .pager button.active{color:#0a090f}
-.pill{position:absolute;top:4px;left:4px;width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);transition:left .25s ease}
+.pill{position:absolute;top:4px;left:4px;width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 6px 16px -6px rgba(155,138,255,.6);transition:left .3s cubic-bezier(.34,1.56,.64,1)}
 </style></head>
-<body><div class="pager" id="pager"><div class="pill" id="pill"></div>
+<body data-cf-keep-dark><div class="pager" id="pager"><div class="pill" id="pill"></div>
 <button>‹</button><button class="active">1</button><button>2</button><button>3</button><button>4</button><button>›</button></div>
 <script>
 const pager=document.getElementById("pager"),pill=document.getElementById("pill"),buttons=[...pager.querySelectorAll("button")].slice(1,5);
-buttons.forEach(b=>b.addEventListener("click",()=>{buttons.forEach(x=>x.classList.remove("active"));b.classList.add("active");pill.style.left=b.offsetLeft+"px"}));
+buttons.forEach(function(b){b.addEventListener("click",function(){buttons.forEach(function(x){x.classList.remove("active")});b.classList.add("active");pill.style.left=b.offsetLeft+"px"})});
 </script>
 </body></html>`,
 
@@ -2591,21 +2849,23 @@ buttons.forEach(b=>b.addEventListener("click",()=>{buttons.forEach(x=>x.classLis
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Rating Feedback Form</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:280px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12}
+.card{width:280px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
 .card b{display:block;color:#eee9f8;font-size:13px;margin-bottom:12px}
 .stars{display:flex;gap:6px;font-size:24px}
-.stars span{color:#2a2833;cursor:pointer}
-.stars span.on{color:#e8b563}
-.note{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.stars span{color:#2a2833;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),color .2s}
+.stars span.on{color:#e8b563;text-shadow:0 0 10px rgba(232,181,99,.5)}
+.stars span:hover{transform:scale(1.2)}
+.note{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.2,.8,.2,1)}
 .note.open{max-height:100px;margin-top:12px}
-.note textarea{width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:#111017;color:#fff;font-size:11px;resize:none;height:60px;outline:0}
+.note textarea{width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:#111017;color:#fff;font-size:11px;resize:none;height:60px;outline:0;transition:border-color .25s,box-shadow .25s}
+.note textarea:focus{border-color:#6d5f93;box-shadow:0 0 0 3px rgba(196,181,253,.2)}
 </style></head>
-<body><div class="card"><b>How was your experience?</b>
+<body data-cf-keep-dark><div class="card"><b>How was your experience?</b>
 <div class="stars" id="stars"><span data-v="1">★</span><span data-v="2">★</span><span data-v="3">★</span><span data-v="4">★</span><span data-v="5">★</span></div>
 <div class="note" id="note"><textarea placeholder="Tell us more (optional)"></textarea></div></div>
 <script>
 const stars=[...document.querySelectorAll("#stars span")],note=document.getElementById("note");
-stars.forEach(s=>s.addEventListener("click",()=>{const v=Number(s.dataset.v);stars.forEach(x=>x.classList.toggle("on",Number(x.dataset.v)<=v));note.classList.add("open")}));
+stars.forEach(function(s){s.addEventListener("click",function(){const v=Number(s.dataset.v);stars.forEach(function(x){x.classList.toggle("on",Number(x.dataset.v)<=v)});note.classList.add("open")})});
 </script>
 </body></html>`,
 
@@ -2613,20 +2873,21 @@ stars.forEach(s=>s.addEventListener("click",()=>{const v=Number(s.dataset.v);sta
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Range Slider Form</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:270px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12}
+.card{width:270px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
 .card b{display:block;color:#817d8a;font-size:11px;margin-bottom:14px}
 .range-wrap{position:relative;height:4px;background:#1c1a24;border-radius:2px;margin:20px 6px}
-.range-fill{position:absolute;height:100%;background:#c4b5fd;border-radius:2px}
+.range-fill{position:absolute;height:100%;background:linear-gradient(90deg,#9b8aff,#d7d0ff);border-radius:2px;box-shadow:0 0 10px rgba(196,181,253,.5)}
 input[type=range]{position:absolute;top:-8px;width:100%;background:transparent;pointer-events:none;-webkit-appearance:none;margin:0}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:16px;height:16px;border-radius:50%;background:#f7f5fb;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:16px;height:16px;border-radius:50%;background:#f7f5fb;cursor:pointer;box-shadow:0 0 0 4px rgba(196,181,253,.2),0 4px 10px rgba(0,0,0,.4);transition:box-shadow .2s}
+input[type=range]:active::-webkit-slider-thumb{box-shadow:0 0 0 7px rgba(196,181,253,.3),0 4px 10px rgba(0,0,0,.4)}
 .values{display:flex;justify-content:space-between;color:#eee9f8;font-size:12px;font-weight:700}
 </style></head>
-<body><div class="card"><b>MONTHLY BUDGET RANGE</b>
+<body data-cf-keep-dark><div class="card"><b>MONTHLY BUDGET RANGE</b>
 <div class="values"><span id="minv">$20</span><span id="maxv">$80</span></div>
 <div class="range-wrap"><div class="range-fill" id="fill"></div><input type="range" id="min" min="0" max="100" value="20"><input type="range" id="max" min="0" max="100" value="80"></div></div>
 <script>
 const min=document.getElementById("min"),max=document.getElementById("max"),fill=document.getElementById("fill"),minv=document.getElementById("minv"),maxv=document.getElementById("maxv");
-function render(){let a=Number(min.value),b=Number(max.value);if(a>b)[a,b]=[b,a];fill.style.left=a+"%";fill.style.width=(b-a)+"%";minv.textContent="$"+a;maxv.textContent="$"+b}
+function render(){let a=Number(min.value),b=Number(max.value);if(a>b){const t=a;a=b;b=t}fill.style.left=a+"%";fill.style.width=(b-a)+"%";minv.textContent="$"+a;maxv.textContent="$"+b}
 min.addEventListener("input",render);max.addEventListener("input",render);render();
 </script>
 </body></html>`,
@@ -2637,42 +2898,48 @@ min.addEventListener("input",render);max.addEventListener("input",render);render
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .field{width:270px}
 .field b{display:block;color:#85818d;font-size:9px;margin-bottom:6px}
-.tag-box{display:flex;flex-wrap:wrap;gap:6px;padding:9px;border:1px solid var(--line);border-radius:10px;background:#111017;min-height:44px}
-.tag{display:flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;background:#1c1730;color:#c4b5fd;font-size:10px}
-.tag button{border:0;background:none;color:#8f7fc9;cursor:pointer;font-size:10px}
+.tag-box{display:flex;flex-wrap:wrap;gap:6px;padding:9px;border:1px solid var(--line);border-radius:10px;background:#111017;min-height:44px;box-shadow:0 16px 40px -22px rgba(0,0,0,.6);transition:border-color .25s,box-shadow .25s}
+.tag-box:focus-within{border-color:#6d5f93;box-shadow:0 0 0 3px rgba(196,181,253,.2)}
+.tag{display:flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;background:linear-gradient(135deg,#241c3d,#1c1730);color:#c4b5fd;font-size:10px;animation:pop .25s cubic-bezier(.34,1.56,.64,1);box-shadow:inset 0 0 0 1px rgba(196,181,253,.15)}
+.tag button{border:0;background:none;color:#8f7fc9;cursor:pointer;font-size:10px;transition:color .2s}
+.tag button:hover{color:#fff}
 .tag-box input{flex:1;min-width:80px;border:0;background:transparent;color:#fff;font-size:11px;outline:0}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
 </style></head>
-<body><div class="field"><b>SKILLS (PRESS ENTER)</b>
+<body data-cf-keep-dark><div class="field"><b>SKILLS (PRESS ENTER)</b>
 <div class="tag-box" id="box"><span class="tag">React<button data-t="React">×</button></span><span class="tag">Node<button data-t="Node">×</button></span><input id="input" placeholder="Add a skill…"></div></div>
 <script>
 const box=document.getElementById("box"),input=document.getElementById("input");
 function addTag(t){if(!t.trim())return;const tag=document.createElement("span");tag.className="tag";tag.innerHTML=t+'<button data-t="'+t+'">×</button>';box.insertBefore(tag,input)}
-input.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===","){e.preventDefault();addTag(input.value);input.value=""}});
-box.addEventListener("click",e=>{if(e.target.tagName==="BUTTON")e.target.parentElement.remove()});
+input.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===","){e.preventDefault();addTag(input.value);input.value=""}});
+box.addEventListener("click",function(e){if(e.target.tagName==="BUTTON")e.target.parentElement.remove()});
 </script>
 </body></html>`,
 
   "signature-pad-form": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Signature Pad Form</title><style>
-:root{--bg:#050507;--line:#272632}
+:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .field{width:280px}
 .field b{display:block;color:#85818d;font-size:9px;margin-bottom:6px}
-canvas{width:100%;height:130px;border:1px dashed var(--line);border-radius:10px;background:#111017;touch-action:none}
+.pad-wrap{position:relative;border-radius:12px;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
+canvas{display:block;width:100%;height:130px;border:1px dashed var(--line);border-radius:12px;background:#111017;touch-action:none;transition:border-color .25s}
+.pad-wrap:focus-within canvas{border-color:#6d5f93}
 .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
-.actions button{padding:7px 11px;border:1px solid var(--line);border-radius:8px;background:#0d0d12;color:#817d8a;font-size:10px;cursor:pointer}
+.actions button{padding:7px 11px;border:1px solid var(--line);border-radius:8px;background:#0d0d12;color:#817d8a;font-size:10px;cursor:pointer;transition:border-color .2s,color .2s}
+.actions button:hover{border-color:#544c67;color:#eee9f8}
 </style></head>
-<body><div class="field"><b>SIGN BELOW</b><canvas id="pad" width="280" height="130"></canvas>
+<body data-cf-keep-dark><div class="field"><b>SIGN BELOW</b><div class="pad-wrap"><canvas id="pad" width="280" height="130"></canvas></div>
 <div class="actions"><button id="clear">Clear</button></div></div>
 <script>
-const pad=document.getElementById("pad"),ctx=pad.getContext("2d");ctx.strokeStyle="#eee9f8";ctx.lineWidth=2;ctx.lineCap="round";
+const pad=document.getElementById("pad"),ctx=pad.getContext("2d");ctx.strokeStyle="#c4b5fd";ctx.lineWidth=2.4;ctx.lineCap="round";ctx.shadowColor="rgba(196,181,253,.6)";ctx.shadowBlur=4;
 let drawing=false;
 function pos(e){const r=pad.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return{x:(t.clientX-r.left)*(pad.width/r.width),y:(t.clientY-r.top)*(pad.height/r.height)}}
 function start(e){drawing=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)}
 function move(e){if(!drawing)return;const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke()}
 function end(){drawing=false}
 pad.addEventListener("pointerdown",start);pad.addEventListener("pointermove",move);pad.addEventListener("pointerup",end);pad.addEventListener("pointerleave",end);
-document.getElementById("clear").addEventListener("click",()=>ctx.clearRect(0,0,pad.width,pad.height));
+document.getElementById("clear").addEventListener("click",function(){ctx.clearRect(0,0,pad.width,pad.height)});
 </script>
 </body></html>`,
 
@@ -2680,20 +2947,23 @@ document.getElementById("clear").addEventListener("click",()=>ctx.clearRect(0,0,
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Conditional Fields Form</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:270px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12}
-.switch{display:flex;border:1px solid var(--line);border-radius:999px;padding:3px;margin-bottom:14px}
-.switch button{flex:1;border:0;background:none;padding:8px 0;border-radius:999px;font-size:11px;color:#817d8a;cursor:pointer}
-.switch button.active{background:#c4b5fd;color:#0a090f}
-.extra{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.card{width:270px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
+.switch{position:relative;display:flex;border:1px solid var(--line);border-radius:999px;padding:3px;margin-bottom:14px;background:#0d0d12}
+.pill{position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);border-radius:999px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.switch.on .pill{transform:translateX(100%)}
+.switch button{position:relative;z-index:1;flex:1;border:0;background:none;padding:8px 0;border-radius:999px;font-size:11px;color:#817d8a;cursor:pointer;transition:color .3s}
+.switch button.active{color:#0a090f}
+.extra{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.2,.8,.2,1)}
 .extra.open{max-height:120px}
-input{width:100%;padding:10px;margin-top:8px;border:1px solid var(--line);border-radius:8px;background:#111017;color:#fff;font-size:11px;outline:0}
+input{width:100%;padding:10px;margin-top:8px;border:1px solid var(--line);border-radius:8px;background:#111017;color:#fff;font-size:11px;outline:0;transition:border-color .25s,box-shadow .25s}
+input:focus{border-color:#6d5f93;box-shadow:0 0 0 3px rgba(196,181,253,.2)}
 </style></head>
-<body><div class="card"><div class="switch" id="switch"><button class="active" data-v="personal">Personal</button><button data-v="business">Business</button></div>
+<body data-cf-keep-dark><div class="card"><div class="switch" id="switch"><div class="pill"></div><button class="active" data-v="personal">Personal</button><button data-v="business">Business</button></div>
 <input placeholder="Full name">
 <div class="extra" id="extra"><input placeholder="Company name"><input placeholder="Tax ID"></div></div>
 <script>
-const buttons=[...document.querySelectorAll("#switch button")],extra=document.getElementById("extra");
-buttons.forEach(b=>b.addEventListener("click",()=>{buttons.forEach(x=>x.classList.remove("active"));b.classList.add("active");extra.classList.toggle("open",b.dataset.v==="business")}));
+const switchEl=document.getElementById("switch"),buttons=[...switchEl.querySelectorAll("button")],extra=document.getElementById("extra");
+buttons.forEach(function(b){b.addEventListener("click",function(){buttons.forEach(function(x){x.classList.remove("active")});b.classList.add("active");switchEl.classList.toggle("on",b.dataset.v==="business");extra.classList.toggle("open",b.dataset.v==="business")})});
 </script>
 </body></html>`,
 
@@ -2702,43 +2972,44 @@ buttons.forEach(b=>b.addEventListener("click",()=>{buttons.forEach(x=>x.classLis
 :root{--bg:#050507;--line:#272632}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .list{padding:30px 24px;display:grid;gap:60px}
-.item{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
+.item{opacity:0;transform:translateY(30px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}
 .item.visible{opacity:1;transform:none}
-.cover{height:140px;border-radius:14px;background:linear-gradient(135deg,#191527,#0d0d12);border:1px solid var(--line)}
+.cover{position:relative;height:140px;border-radius:14px;background:radial-gradient(circle at 30% 20%,rgba(155,138,255,.25),transparent 60%),linear-gradient(135deg,#191527,#0d0d12);border:1px solid var(--line);box-shadow:0 20px 50px -22px rgba(0,0,0,.7)}
 .item h3{color:#f7f5fb;font-size:15px;margin:12px 0 4px}
 .item span{color:#817d8a;font-size:10px}
 </style></head>
-<body><div class="list" id="list">
+<body data-cf-keep-dark><div class="list" id="list">
 <div class="item"><div class="cover"></div><h3>Nova SaaS redesign</h3><span>Product · 2026</span></div>
 <div class="item"><div class="cover"></div><h3>Finora onboarding</h3><span>Fintech · 2026</span></div>
 <div class="item"><div class="cover"></div><h3>Travelora campaign</h3><span>Travel · 2025</span></div>
 </div>
 <script>
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add("visible")}),{threshold:.2});
-document.querySelectorAll(".item").forEach(i=>io.observe(i));
+const io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)e.target.classList.add("visible")})},{threshold:.2});
+document.querySelectorAll(".item").forEach(function(i){io.observe(i)});
 </script>
 </body></html>`,
 
   "cursor-preview-portfolio-list": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Cursor Preview Portfolio List</title><style>
-:root{--bg:#050507;--line:#272632}
+:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:30px}
-.row{display:flex;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--line);color:#eee9f8;font-size:16px;font-weight:700;cursor:pointer}
+.row{display:flex;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--line);color:#eee9f8;font-size:16px;font-weight:700;cursor:pointer;transition:color .2s}
+.row:hover{color:var(--lav)}
 .row span{color:#5f5c68;font-size:11px;font-weight:400}
-.preview{position:fixed;width:130px;height:90px;border-radius:10px;background:linear-gradient(135deg,#191527,#0d0d12);border:1px solid var(--line);pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.9);transition:opacity .2s,transform .2s;z-index:9}
-.preview.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.preview{position:fixed;width:130px;height:90px;border-radius:10px;background:radial-gradient(circle at 30% 20%,rgba(155,138,255,.3),transparent 60%),linear-gradient(135deg,#191527,#0d0d12);border:1px solid var(--line);box-shadow:0 30px 60px -20px rgba(0,0,0,.7);pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.9) rotate(-3deg);transition:opacity .25s,transform .25s;z-index:9}
+.preview.show{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}
 </style></head>
-<body>
+<body data-cf-keep-dark>
 <div class="row">Atlas Agency <span>Branding</span></div>
 <div class="row">CommerceX <span>Ecommerce</span></div>
 <div class="row">DevDock <span>Docs</span></div>
 <div class="preview" id="prev"></div>
 <script>
 const prev=document.getElementById("prev");
-document.querySelectorAll(".row").forEach(r=>{
-  r.addEventListener("pointerenter",()=>prev.classList.add("show"));
-  r.addEventListener("pointerleave",()=>prev.classList.remove("show"));
-  r.addEventListener("pointermove",e=>{prev.style.left=e.clientX+"px";prev.style.top=e.clientY-70+"px"});
+document.querySelectorAll(".row").forEach(function(r){
+  r.addEventListener("pointerenter",function(){prev.classList.add("show")});
+  r.addEventListener("pointerleave",function(){prev.classList.remove("show")});
+  r.addEventListener("pointermove",function(e){prev.style.left=e.clientX+"px";prev.style.top=e.clientY-70+"px"});
 });
 </script>
 </body></html>`,
@@ -2748,29 +3019,29 @@ document.querySelectorAll(".row").forEach(r=>{
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;height:100vh;display:flex;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .list{width:180px;border-right:1px solid var(--line);padding:20px 0;display:grid;align-content:start}
-.list div{padding:12px 20px;color:#817d8a;font-size:12px;cursor:pointer}
-.list div.active{color:#f7f5fb;background:#111017;border-left:2px solid var(--lav)}
-.preview{flex:1;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,rgba(155,138,255,.1),transparent 40%)}
-.preview div{width:200px;height:130px;border-radius:14px;background:linear-gradient(135deg,#191527,#0d0d12);border:1px solid var(--line)}
+.list div{padding:12px 20px;color:#817d8a;font-size:12px;cursor:pointer;border-left:2px solid transparent;transition:color .25s,background .25s,border-color .25s}
+.list div.active{color:#f7f5fb;background:linear-gradient(90deg,#141020,transparent);border-left-color:var(--lav)}
+.preview{flex:1;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,rgba(155,138,255,.14),transparent 45%)}
+.preview div{width:200px;height:130px;border-radius:14px;background:radial-gradient(circle at 30% 20%,rgba(155,138,255,.28),transparent 60%),linear-gradient(135deg,#191527,#0d0d12);border:1px solid var(--line);box-shadow:0 30px 70px -24px rgba(0,0,0,.7);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
 </style></head>
-<body><div class="list" id="list"><div class="active">Medora</div><div>LearnFlow</div><div>Socially</div></div>
+<body data-cf-keep-dark><div class="list" id="list"><div class="active">Medora</div><div>LearnFlow</div><div>Socially</div></div>
 <div class="preview"><div></div></div>
 <script>
-document.querySelectorAll("#list div").forEach(d=>d.addEventListener("click",()=>{document.querySelectorAll("#list div").forEach(x=>x.classList.remove("active"));d.classList.add("active")}));
+document.querySelectorAll("#list div").forEach(function(d){d.addEventListener("click",function(){document.querySelectorAll("#list div").forEach(function(x){x.classList.remove("active")});d.classList.add("active")})});
 </script>
 </body></html>`,
 
   "client-logo-showcase-grid": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Client Logo Showcase Grid</title><style>
-:root{--bg:#050507;--line:#272632}
+:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:320px}
-.logo{padding:20px 10px;border:1px solid var(--line);border-radius:12px;display:grid;place-items:center;color:#3a3546;font-weight:800;font-size:12px;letter-spacing:1px;transition:color .25s,border-color .25s,background .25s;position:relative}
-.logo:hover{color:#eee9f8;border-color:#514960;background:#111017}
-.logo small{position:absolute;bottom:-16px;color:#5f5c68;font-size:8px;opacity:0;transition:opacity .25s}
+.logo{padding:20px 10px;border:1px solid var(--line);border-radius:12px;display:grid;place-items:center;color:#3a3546;font-weight:800;font-size:12px;letter-spacing:1px;transition:color .25s,border-color .25s,background .25s,transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s;position:relative}
+.logo:hover{color:#eee9f8;border-color:#544c67;background:#111017;transform:translateY(-4px);box-shadow:0 16px 34px -18px rgba(155,138,255,.35)}
+.logo small{position:absolute;bottom:-16px;color:var(--lav);font-size:8px;opacity:0;transition:opacity .25s}
 .logo:hover small{opacity:1}
 </style></head>
-<body><div class="grid">
+<body data-cf-keep-dark><div class="grid">
 <div class="logo">ORBIT<small>Since 2023</small></div><div class="logo">NORTHSTAR<small>Since 2022</small></div><div class="logo">FLUENT<small>Since 2024</small></div>
 <div class="logo">ATLAS<small>Since 2021</small></div><div class="logo">MEDORA<small>Since 2023</small></div><div class="logo">FINORA<small>Since 2022</small></div>
 </div>
@@ -2781,15 +3052,16 @@ document.querySelectorAll("#list div").forEach(d=>d.addEventListener("click",()=
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:30px}
 .timeline{position:relative;max-width:320px;margin:auto;padding-left:20px}
-.timeline::before{content:"";position:absolute;left:4px;top:4px;bottom:4px;width:1px;background:var(--line)}
+.timeline::before{content:"";position:absolute;left:4px;top:4px;bottom:4px;width:1px;background:linear-gradient(180deg,#9b8aff,var(--line))}
 .entry{position:relative;padding-bottom:26px}
 .entry:last-child{padding-bottom:0}
-.entry::before{content:"";position:absolute;left:-20px;top:3px;width:9px;height:9px;border-radius:50%;background:var(--lav)}
+.entry::before{content:"";position:absolute;left:-20px;top:3px;width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 0 10px rgba(196,181,253,.5)}
+.entry:first-child::before{box-shadow:0 0 0 4px rgba(196,181,253,.2),0 0 10px rgba(196,181,253,.5)}
 .entry b{display:block;color:#f7f5fb;font-size:12px}
 .entry span{display:block;color:#5f5c68;font-size:9px;margin:2px 0 4px}
 .entry p{margin:0;color:#a49dbc;font-size:10px;line-height:1.6}
 </style></head>
-<body><div class="timeline">
+<body data-cf-keep-dark><div class="timeline">
 <div class="entry"><b>Senior Product Designer</b><span>Orbit Labs · 2024—Now</span><p>Led the design system rebuild across 4 product lines.</p></div>
 <div class="entry"><b>Product Designer</b><span>Northstar · 2021—2024</span><p>Shipped the mobile onboarding redesign.</p></div>
 <div class="entry"><b>UI Designer</b><span>Freelance · 2019—2021</span><p>Worked with early-stage startups on launch identities.</p></div>
@@ -2801,12 +3073,13 @@ document.querySelectorAll("#list div").forEach(d=>d.addEventListener("click",()=
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:340px}
-.card{position:relative;height:110px;border:1px solid var(--line);border-radius:12px;background:#0d0d12;overflow:hidden;padding:14px}
+.card{position:relative;height:110px;border:1px solid var(--line);border-radius:12px;background:#0d0d12;overflow:hidden;padding:14px;box-shadow:0 16px 40px -22px rgba(0,0,0,.7);transition:border-color .3s,box-shadow .3s}
+.card:hover{border-color:#544c67;box-shadow:0 20px 44px -16px rgba(155,138,255,.3)}
 .card b{color:#eee9f8;font-size:11px}
-.reveal{position:absolute;left:0;right:0;bottom:0;padding:10px 14px;background:#141020;color:#a49dbc;font-size:9px;line-height:1.5;transform:translateY(100%);transition:transform .3s ease}
+.reveal{position:absolute;left:0;right:0;bottom:0;padding:10px 14px;background:linear-gradient(180deg,#1b1628,#141020);color:#c9c4d6;font-size:9px;line-height:1.5;transform:translateY(100%);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
 .card:hover .reveal{transform:translateY(0)}
 </style></head>
-<body><div class="grid">
+<body data-cf-keep-dark><div class="grid">
 <div class="card"><b>Speed</b><div class="reveal">Sub-100ms interaction latency by default.</div></div>
 <div class="card"><b>Security</b><div class="reveal">Sanitized, dependency-light source code.</div></div>
 <div class="card"><b>Scale</b><div class="reveal">From prototype to production, unchanged.</div></div>
@@ -2819,33 +3092,41 @@ document.querySelectorAll("#list div").forEach(d=>d.addEventListener("click",()=
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .steps{display:flex;align-items:flex-start;width:360px}
 .step{flex:1;text-align:center;position:relative}
-.step b{display:block;width:30px;height:30px;margin:0 auto 10px;border-radius:50%;border:1px solid var(--lav);color:var(--lav);display:grid;place-items:center;font-size:12px;background:#0d0d12;position:relative;z-index:1}
+.step b{display:flex;align-items:center;justify-content:center;width:30px;height:30px;margin:0 auto 10px;border-radius:50%;border:1px solid var(--lav);color:var(--lav);font-size:12px;background:#0d0d12;position:relative;z-index:1;box-shadow:0 0 0 4px rgba(196,181,253,.1);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.step:hover b{transform:scale(1.12);background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f}
+.step.done b{background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;border-color:transparent}
 .step span{color:#c9c4d6;font-size:10px}
-.connector{position:absolute;top:15px;left:50%;right:-50%;height:1px;background:var(--line);z-index:0}
+.connector{position:absolute;top:15px;left:50%;right:-50%;height:1px;background:var(--line);z-index:0;overflow:hidden}
+.connector::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#9b8aff,transparent);transform:scaleX(0);transform-origin:left;transition:transform .5s ease}
+.step.done .connector::after{transform:scaleX(1)}
 .step:last-child .connector{display:none}
 </style></head>
-<body><div class="steps">
-<div class="step"><b>1</b><span>Pick a component</span><div class="connector"></div></div>
-<div class="step"><b>2</b><span>Copy the code</span><div class="connector"></div></div>
+<body data-cf-keep-dark><div class="steps">
+<div class="step done"><b>1</b><span>Pick a component</span><div class="connector"></div></div>
+<div class="step done"><b>2</b><span>Copy the code</span><div class="connector"></div></div>
 <div class="step"><b>3</b><span>Ship it</span></div>
 </div>
 </body></html>`,
 
   "code-snippet-feature-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Code Snippet Feature Card</title><style>
-:root{--bg:#050507;--line:#272632}
+:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:300px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;overflow:hidden}
-.bar{display:flex;gap:5px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.card{position:relative;width:300px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;overflow:hidden;box-shadow:0 24px 60px -24px rgba(0,0,0,.7)}
+.card::before{content:"";position:absolute;top:-40%;right:-20%;width:180px;height:180px;background:radial-gradient(circle,rgba(155,138,255,.14),transparent 70%)}
+.bar{position:relative;display:flex;gap:5px;padding:10px 12px;border-bottom:1px solid var(--line)}
 .bar i{width:7px;height:7px;border-radius:50%;background:#2f2d3a}
-pre{margin:0;padding:16px;font:11px/1.7 ui-monospace,Menlo,monospace;color:#a9e6b4;white-space:pre-wrap}
+.bar i:nth-child(1){background:#c0525f}.bar i:nth-child(2){background:#c79a3f}.bar i:nth-child(3){background:#3f9f5f}
+pre{position:relative;margin:0;padding:16px;font:11px/1.7 ui-monospace,Menlo,monospace;color:#a9e6b4;white-space:pre-wrap}
 .k{color:#c4b5fd}.s{color:#e8b563}
+.cursor{display:inline-block;width:6px;height:12px;background:var(--lav);box-shadow:0 0 6px var(--lav);margin-left:1px;animation:blink 1s step-end infinite;vertical-align:-2px}
+@keyframes blink{50%{opacity:0}}
 </style></head>
-<body><div class="card"><div class="bar"><i></i><i></i><i></i></div><pre id="pre"></pre></div>
+<body data-cf-keep-dark><div class="card"><div class="bar"><i></i><i></i><i></i></div><pre id="pre"></pre></div>
 <script>
 const code='<span class="k">import</span> { Button } <span class="k">from</span> <span class="s">"codefusion"</span>;\\n\\n<span class="k">export default function</span> App(){\\n  <span class="k">return</span> <Button>Ship it</Button>;\\n}';
 const pre=document.getElementById("pre");let i=0;
-function type(){if(i<=code.length){pre.innerHTML=code.slice(0,i);i+=3;setTimeout(type,20)}}
+function type(){if(i<=code.length){pre.innerHTML=code.slice(0,i)+'<span class="cursor"></span>';i+=3;setTimeout(type,20)}}
 type();
 </script>
 </body></html>`,
@@ -2854,14 +3135,16 @@ type();
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Comparison Checklist Features</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.table{width:300px;border:1px solid var(--line);border-radius:14px;overflow:hidden}
-.row{display:grid;grid-template-columns:1fr 60px 60px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);font-size:10px;color:#c9c4d6}
-.row:first-child{background:#111017;color:#817d8a;font-weight:700}
+.table{width:300px;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
+.row{position:relative;display:grid;grid-template-columns:1fr 60px 60px;align-items:center;padding:11px 14px;border-bottom:1px solid var(--line);font-size:10px;color:#c9c4d6;transition:background .2s}
+.row:not(:first-child):hover{background:#111017}
+.row:first-child{background:linear-gradient(135deg,#181425,#111017);color:#817d8a;font-weight:700}
 .row:last-child{border-bottom:0}
 .row span{text-align:center}
-.yes{color:#5fd4a1}.no{color:#e88ba0}
+.row::after{content:"";position:absolute;top:0;bottom:0;left:calc(100% - 120px);width:60px;background:linear-gradient(180deg,rgba(196,181,253,.06),transparent);pointer-events:none}
+.yes{color:#5fd4a1;text-shadow:0 0 8px rgba(95,212,161,.5)}.no{color:#e88ba0}
 </style></head>
-<body><div class="table">
+<body data-cf-keep-dark><div class="table">
 <div class="row"><span></span><span>Us</span><span>Them</span></div>
 <div class="row">Live interactive preview<span class="yes">✓</span><span class="no">✕</span></div>
 <div class="row">Copyable source<span class="yes">✓</span><span class="yes">✓</span></div>
@@ -2873,19 +3156,20 @@ type();
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Interactive Toggle Feature Demo</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:280px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;text-align:center}
+.card{width:280px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;text-align:center;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
 .card b{display:block;color:#817d8a;font-size:11px;margin-bottom:14px}
-.swatch{height:70px;border-radius:12px;background:#f4f3fa;transition:background .3s ease,color .3s ease;display:grid;place-items:center;color:#15131c;font-size:11px;font-weight:700}
-.swatch.dark{background:#111017;color:#eee9f8}
-.toggle-row{display:flex;justify-content:center;gap:8px;margin-top:14px}
-.toggle-row button{padding:7px 12px;border:1px solid var(--line);border-radius:8px;background:#111017;color:#817d8a;font-size:10px;cursor:pointer}
-.toggle-row button.active{color:#fff;border-color:#514960}
+.swatch{height:70px;border-radius:12px;background:#f4f3fa;transition:background .4s ease,color .4s ease,box-shadow .4s;display:grid;place-items:center;color:#15131c;font-size:11px;font-weight:700;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)}
+.swatch.dark{background:#111017;color:#eee9f8;box-shadow:inset 0 0 0 1px rgba(196,181,253,.15),0 0 30px -10px rgba(155,138,255,.4)}
+.toggle-row{position:relative;display:flex;justify-content:center;gap:8px;margin-top:14px}
+.toggle-row button{padding:7px 12px;border:1px solid var(--line);border-radius:8px;background:#111017;color:#817d8a;font-size:10px;cursor:pointer;transition:color .3s,border-color .3s,transform .2s cubic-bezier(.34,1.56,.64,1)}
+.toggle-row button:active{transform:scale(.94)}
+.toggle-row button.active{color:#0a090f;border-color:transparent;background:linear-gradient(135deg,#d7d0ff,#9b8aff)}
 </style></head>
-<body><div class="card"><b>LIVE THEME PREVIEW</b><div class="swatch" id="swatch">Aa Preview text</div>
+<body data-cf-keep-dark><div class="card"><b>LIVE THEME PREVIEW</b><div class="swatch" id="swatch">Aa Preview text</div>
 <div class="toggle-row"><button class="active" data-t="light">Light</button><button data-t="dark">Dark</button></div></div>
 <script>
 const buttons=[...document.querySelectorAll(".toggle-row button")],swatch=document.getElementById("swatch");
-buttons.forEach(b=>b.addEventListener("click",()=>{buttons.forEach(x=>x.classList.remove("active"));b.classList.add("active");swatch.classList.toggle("dark",b.dataset.t==="dark")}));
+buttons.forEach(function(b){b.addEventListener("click",function(){buttons.forEach(function(x){x.classList.remove("active")});b.classList.add("active");swatch.classList.toggle("dark",b.dataset.t==="dark")})});
 </script>
 </body></html>`,
 
@@ -2893,16 +3177,19 @@ buttons.forEach(b=>b.addEventListener("click",()=>{buttons.forEach(x=>x.classLis
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Launch Banner</title><style>
 :root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.banner{display:flex;align-items:center;gap:14px;padding:14px 18px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;width:320px}
-.icon{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);flex:none}
+.banner{display:flex;align-items:center;gap:14px;padding:14px 18px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;width:320px;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
+.icon{position:relative;width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);flex:none;box-shadow:0 8px 20px -8px rgba(155,138,255,.6)}
 .info b{display:block;color:#f7f5fb;font-size:12px}
 .info span{color:#817d8a;font-size:9px}
-.upvote{margin-left:auto;display:grid;place-items:center;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:#111017;color:#eee9f8;font-size:11px;cursor:pointer;text-align:center}
+.upvote{margin-left:auto;display:grid;place-items:center;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:#111017;color:#eee9f8;font-size:11px;cursor:pointer;text-align:center;transition:transform .2s cubic-bezier(.34,1.56,.64,1),border-color .2s,background .2s}
+.upvote.voted{border-color:transparent;background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f}
+.upvote:active{transform:scale(.92)}
 .upvote small{display:block;color:#5f5c68;font-size:8px}
+.upvote.voted small{color:#3a2f57}
 </style></head>
-<body><div class="banner"><div class="icon"></div><div class="info"><b>CodeFusion is live on Launch Day</b><span>#3 Product of the Day</span></div>
+<body data-cf-keep-dark><div class="banner"><div class="icon"></div><div class="info"><b>CodeFusion is live on Launch Day</b><span>#3 Product of the Day</span></div>
 <button class="upvote" id="up">▲<br><small id="count">412</small></button></div>
-<script>document.getElementById("up").addEventListener("click",()=>{document.getElementById("count").textContent="413"});</script>
+<script>document.getElementById("up").addEventListener("click",function(e){e.currentTarget.classList.add("voted");document.getElementById("count").textContent="413"});</script>
 </body></html>`,
 
   "newsletter-signup-split-section": `<!DOCTYPE html>
@@ -2913,44 +3200,48 @@ buttons.forEach(b=>b.addEventListener("click",()=>{buttons.forEach(x=>x.classLis
 .section h2{color:#f7f5fb;font-size:20px;margin:0 0 8px}
 .section p{color:#a49dbc;font-size:11px;line-height:1.7;margin:0}
 form{display:grid;gap:8px}
-input{padding:12px;border:1px solid var(--line);border-radius:10px;background:#111017;color:#fff;font-size:11px;outline:0}
-button{padding:12px;border:0;border-radius:10px;background:#f7f5fb;color:#0a090f;font-weight:800;font-size:11px;cursor:pointer}
-.done{display:none;color:#5fd4a1;font-size:11px}
+input{padding:12px;border:1px solid var(--line);border-radius:10px;background:#111017;color:#fff;font-size:11px;outline:0;transition:border-color .25s,box-shadow .25s}
+input:focus{border-color:#6d5f93;box-shadow:0 0 0 3px rgba(196,181,253,.2)}
+button{padding:12px;border:0;border-radius:10px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;font-weight:800;font-size:11px;cursor:pointer;box-shadow:0 10px 24px -10px rgba(155,138,255,.6);transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
+button:active{transform:scale(.96)}
+.done{display:none;color:#5fd4a1;font-size:11px;animation:fade .3s ease}
+@keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 </style></head>
-<body><div class="section"><div><h2>The weekly build note.</h2><p>One email a week with new components and release notes. No spam.</p></div>
+<body data-cf-keep-dark><div class="section"><div><h2>The weekly build note.</h2><p>One email a week with new components and release notes. No spam.</p></div>
 <form id="form"><input type="email" placeholder="you@company.com" required><button>Subscribe</button><div class="done" id="done">✓ You're subscribed.</div></form></div>
-<script>document.getElementById("form").addEventListener("submit",e=>{e.preventDefault();e.target.querySelector("button").style.display="none";document.getElementById("done").style.display="block"});</script>
+<script>document.getElementById("form").addEventListener("submit",function(e){e.preventDefault();e.target.querySelector("button").style.display="none";document.getElementById("done").style.display="block"});</script>
 </body></html>`,
 
   "social-share-cta-section": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Social Share CTA Section</title><style>
-:root{--bg:#050507;--line:#272632}
+:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .wrap{text-align:center}
 .wrap h2{color:#f7f5fb;font-size:22px;margin:0 0 16px}
 .icons{display:flex;gap:10px;justify-content:center}
-.icons button{width:40px;height:40px;border:1px solid var(--line);border-radius:10px;background:#111017;color:#c9c4d6;font-size:13px;cursor:pointer}
-.icons button:hover{color:#fff;border-color:#514960}
-.copy{margin-top:14px;display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--line);border-radius:9px;background:#0d0d12;color:#817d8a;font-size:10px}
-.copy button{border:0;background:none;color:#c4b5fd;cursor:pointer;font-size:10px}
+.icons button{width:40px;height:40px;border:1px solid var(--line);border-radius:10px;background:#111017;color:#c9c4d6;font-size:13px;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),border-color .2s,color .2s,box-shadow .2s}
+.icons button:hover{color:#fff;border-color:#544c67;transform:translateY(-3px);box-shadow:0 10px 20px -10px rgba(155,138,255,.5)}
+.copy{margin-top:14px;display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--line);border-radius:9px;background:#0d0d12;color:#817d8a;font-size:10px;box-shadow:0 12px 30px -18px rgba(0,0,0,.6)}
+.copy button{border:0;background:none;color:var(--lav);cursor:pointer;font-size:10px;font-weight:700}
 </style></head>
-<body><div class="wrap"><h2>Loved it? Share it.</h2>
+<body data-cf-keep-dark><div class="wrap"><h2>Loved it? Share it.</h2>
 <div class="icons"><button>𝕏</button><button>in</button><button>f</button></div>
 <div class="copy"><span id="url">codefusion.dev/launch</span><button id="copy">Copy link</button></div></div>
-<script>document.getElementById("copy").addEventListener("click",e=>{e.target.textContent="Copied ✓";setTimeout(()=>e.target.textContent="Copy link",1500)});</script>
+<script>document.getElementById("copy").addEventListener("click",function(e){e.target.textContent="Copied ✓";setTimeout(function(){e.target.textContent="Copy link"},1500)});</script>
 </body></html>`,
 
   "trust-badges-security-band": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Trust Badges Security Band</title><style>
-:root{--bg:#050507;--line:#272632}
+:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.band{display:flex;gap:12px;padding:18px 22px;border:1px solid var(--line);border-radius:14px;background:#0d0d12}
-.badge{display:grid;place-items:center;gap:6px;padding:10px 14px;border-radius:10px;transition:transform .2s}
-.badge:hover{transform:translateY(-3px)}
-.badge i{width:26px;height:26px;border-radius:50%;background:#141020;display:grid;place-items:center;color:#c4b5fd;font-size:12px;font-style:normal}
+.band{display:flex;gap:12px;padding:18px 22px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
+.badge{display:grid;place-items:center;gap:6px;padding:10px 14px;border-radius:10px;transition:transform .25s cubic-bezier(.2,.8,.2,1),background .25s}
+.badge:hover{transform:translateY(-4px);background:#12101a}
+.badge i{width:26px;height:26px;border-radius:50%;background:#141020;display:grid;place-items:center;color:var(--lav);font-size:12px;font-style:normal;transition:box-shadow .3s,background .3s}
+.badge:hover i{box-shadow:0 0 0 5px rgba(196,181,253,.15);background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f}
 .badge span{color:#6f6c77;font-size:8px;letter-spacing:.5px}
 </style></head>
-<body><div class="band">
+<body data-cf-keep-dark><div class="band">
 <div class="badge"><i>✓</i><span>SOC 2</span></div><div class="badge"><i>⚿</i><span>GDPR</span></div><div class="badge"><i>◈</i><span>ISO 27001</span></div>
 </div>
 </body></html>`,
@@ -2958,14 +3249,16 @@ button{padding:12px;border:0;border-radius:10px;background:#f7f5fb;color:#0a090f
   "final-cta-gradient-section": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Final CTA Gradient Section</title><style>
 :root{--bg:#050507}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.wrap{text-align:center;padding:40px}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;overflow:hidden;position:relative}
+body::before{content:"";position:absolute;inset:-20%;background:radial-gradient(circle at 50% 50%,rgba(155,138,255,.16),transparent 60%);pointer-events:none}
+.wrap{position:relative;text-align:center;padding:40px}
 .wrap h2{color:#f7f5fb;font-size:26px;margin:0 0 20px}
-.shimmer-btn{position:relative;padding:16px 34px;border:0;border-radius:14px;font-size:13px;font-weight:800;color:#0a090f;cursor:pointer;background:linear-gradient(135deg,#d7d0ff,#9b8aff);overflow:hidden}
+.shimmer-btn{position:relative;padding:17px 36px;border:0;border-radius:14px;font-size:13px;font-weight:800;color:#0a090f;cursor:pointer;background:linear-gradient(135deg,#d7d0ff,#9b8aff);overflow:hidden;box-shadow:0 20px 50px -16px rgba(155,138,255,.6);transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
+.shimmer-btn:active{transform:scale(.96)}
 .shimmer-btn::after{content:"";position:absolute;top:0;bottom:0;width:60px;background:linear-gradient(120deg,transparent,rgba(255,255,255,.55),transparent);animation:sweep 2.6s infinite}
 @keyframes sweep{from{left:-80px}to{left:120%}}
 </style></head>
-<body><div class="wrap"><h2>Stop rebuilding the basics.</h2><button class="shimmer-btn">Start building free →</button></div>
+<body data-cf-keep-dark><div class="wrap"><h2>Stop rebuilding the basics.</h2><button class="shimmer-btn">Start building free →</button></div>
 </body></html>`,
 
   "circuit-trace-border": `<!DOCTYPE html>

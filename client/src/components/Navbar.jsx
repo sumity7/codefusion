@@ -2,6 +2,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Search, Heart, UserRound, Menu, X, Sun, Moon, LogIn } from "lucide-react";
 import { useState } from "react";
 import { useTheme } from "../hooks/useTheme";
+import Logo from "./Logo";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -22,11 +23,7 @@ export default function Navbar() {
     <header className="navbar">
       <div className="nav-inner">
         <Link to="/" className="brand">
-          <span>⌘/⌘</span>
-          <div>
-            <b>CodeFusion</b>
-            <small>Premium digital products</small>
-          </div>
+          <Logo />
         </Link>
         <nav className={open ? "open" : ""}>
           <NavLink to="/" end>Home</NavLink>
