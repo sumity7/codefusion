@@ -5014,4 +5014,319 @@ h1{font-size:clamp(38px,6.4vw,70px);line-height:1.04;color:#fff;text-shadow:0 2p
 })();
 </script>
 </body></html>`,
+  "enterprise-delivery-landing-page": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Enterprise Delivery Landing Page</title><style>
+:root{--blue:#2146f7;--blue-d:#1736d8;--ink:#0c0f16;--mut:#6b7280;--dark:#010101;--card:#0d041a;--line:#e8eaf1;--lined:rgba(255,255,255,.08)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--dark);color:#fff;font-family:Inter,ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3{font-family:"Space Grotesk",Inter,ui-sans-serif,sans-serif;margin:0;font-weight:500;letter-spacing:-.03em}
+p{margin:0}
+button{font-family:inherit;cursor:pointer;border:0}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+.rv{opacity:0;transform:translateY(26px)}
+.grad{background:linear-gradient(95deg,#4a9eff,#8b5cf6 34%,#e879a8 66%,#f59e5b);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* ---------- floating pill nav ---------- */
+.nav{position:fixed;top:14px;left:0;right:0;z-index:80;display:flex;justify-content:center;pointer-events:none}
+.nav-in{pointer-events:auto;display:flex;align-items:center;gap:22px;padding:9px 9px 9px 20px;border-radius:999px;background:#fff;box-shadow:0 12px 40px rgba(0,0,0,.34);transition:box-shadow .35s,transform .35s cubic-bezier(.2,.8,.2,1)}
+.nav.on .nav-in{transform:translateY(-1px);box-shadow:0 16px 46px rgba(0,0,0,.44)}
+.brand{display:flex;align-items:center;gap:10px;color:var(--ink);font-family:"Space Grotesk",sans-serif;font-size:17px;font-weight:600;letter-spacing:-.03em}
+.ring{width:19px;height:19px;border-radius:50%;border:2px solid #8b5cf6;flex:none;transition:transform .45s cubic-bezier(.2,.8,.2,1),border-color .35s}
+.brand:hover .ring{transform:rotate(140deg) scale(1.12);border-color:var(--blue)}
+.nav-links{display:flex;gap:20px;font-size:13.5px;color:#3f4654}
+.nav-links a{position:relative;cursor:pointer;padding-bottom:2px}
+.nav-links a:after{content:"";position:absolute;left:0;bottom:0;width:100%;height:1.5px;background:var(--blue);transform:scaleX(0);transform-origin:right;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.nav-links a:hover:after{transform:scaleX(1);transform-origin:left}
+.nav-srch{display:grid;place-items:center;width:26px;height:26px;color:#3f4654;transition:color .25s,transform .25s}
+.nav-srch:hover{color:var(--blue);transform:scale(1.1)}
+.nav-srch svg{width:16px;height:16px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;padding:11px 22px;font-size:14px;font-weight:600;transition:transform .25s cubic-bezier(.2,.8,.2,1),background .25s,box-shadow .3s,border-color .25s}
+.btn i{font-style:normal;display:inline-block;transition:transform .26s}
+.btn:hover i{transform:translateX(4px)}
+.b-blue{background:var(--blue);color:#fff}
+.b-blue:hover{transform:translateY(-2px);background:var(--blue-d);box-shadow:0 14px 30px rgba(33,70,247,.45)}
+.b-grad{background:linear-gradient(95deg,#6d3bf5,#c2410c);color:#fff;width:100%}
+.b-grad:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(140,60,200,.5)}
+.b-line{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.3)}
+.b-line:hover{transform:translateY(-2px);border-color:#fff;background:rgba(255,255,255,.08)}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding:200px 0 90px;text-align:center;overflow:hidden}
+/* fanned light panels behind the nav, like the reference ceiling */
+.fanlight{position:absolute;top:-96px;left:50%;transform:translateX(-50%);width:1600px;height:420px;pointer-events:none;
+  background:
+    conic-gradient(from 200deg at 50% 120%,transparent 0deg,rgba(60,90,220,.5) 14deg,transparent 26deg,rgba(150,80,220,.42) 40deg,transparent 54deg,rgba(210,120,90,.4) 70deg,transparent 84deg);
+  filter:blur(3px);opacity:1}
+.beam{position:absolute;left:50%;bottom:-140px;transform:translateX(-50%);width:760px;height:520px;pointer-events:none;background:radial-gradient(50% 50% at 50% 100%,rgba(255,215,170,.5),rgba(190,120,255,.22) 42%,transparent 72%);filter:blur(24px)}
+.hero>.wrap{position:relative;z-index:2}
+h1{font-size:clamp(32px,5.2vw,60px);line-height:1.12}
+.hero p{margin:20px auto 0;max-width:62ch;font-size:15.5px;line-height:1.7;color:rgba(255,255,255,.58)}
+
+/* ---------- capability cards ---------- */
+.cards{position:relative;padding:0 0 130px;overflow:hidden}
+.cards:after{content:"";position:absolute;left:-10%;right:-10%;bottom:-30px;height:340px;pointer-events:none;background:radial-gradient(60% 80% at 50% 100%,rgba(214,200,255,.95),rgba(214,200,255,.4) 45%,transparent 74%)}
+.c-grid{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.c-card{position:relative;min-height:330px;display:flex;flex-direction:column;justify-content:flex-end;padding:26px 22px;border-radius:18px;background:linear-gradient(180deg,#160a28,var(--card));border:1px solid rgba(255,255,255,.09);overflow:hidden;transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .35s,box-shadow .35s}
+.c-card:before{content:"";position:absolute;inset:0;border-radius:18px;padding:1px;background:linear-gradient(160deg,rgba(140,110,255,.55),transparent 45%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.8;pointer-events:none}
+.c-card:hover{transform:translateY(-8px);border-color:rgba(160,130,255,.5);box-shadow:0 30px 60px -22px rgba(120,80,255,.5)}
+.c-tag{position:absolute;top:18px;left:18px;display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);font-size:12.5px;font-weight:500}
+.c-tag u{width:11px;height:11px;border-radius:50%;border:2px solid #a78bfa;text-decoration:none;flex:none}
+.c-card h3{font-size:21px;line-height:1.26;margin-bottom:16px}
+.c-card ul{list-style:none;margin:0;padding:0}
+.c-card li{display:flex;gap:9px;font-size:13px;line-height:1.5;color:rgba(255,255,255,.66);margin-bottom:9px}
+.c-card li:before{content:"";width:12px;height:12px;border-radius:50%;border:2px solid #a78bfa;flex:none;margin-top:3px}
+.c-card .btn{margin-top:14px}
+
+/* ---------- light comparison ---------- */
+.cmp{background:#fff;color:var(--ink);padding:96px 0 110px}
+.cmp h2{text-align:center;font-size:clamp(28px,4vw,46px);line-height:1.12;margin-bottom:12px}
+.cmp .lead{text-align:center;max-width:56ch;margin:0 auto 54px;font-size:15.5px;line-height:1.7;color:var(--mut)}
+.cmp-grid{display:grid;grid-template-columns:1fr .86fr 1fr;gap:30px;align-items:center}
+.col{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:12px;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:14px;line-height:1.5;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s,border-color .3s}
+.row:hover{transform:translateY(-3px);box-shadow:0 16px 34px -14px rgba(12,15,22,.18);border-color:#d5d9e6}
+.row svg{width:15px;height:15px;flex:none;margin-top:2px}
+.col.bad .row{color:var(--mut)}
+.col.bad svg{color:#9aa1ae}
+.col.good svg{color:var(--blue)}
+.col.good .row:hover{border-color:#b9c6ff}
+/* gradient orb */
+.orb{position:relative;aspect-ratio:1;display:grid;place-items:center}
+.orb-glow{position:absolute;inset:-4%;border-radius:50%;background:radial-gradient(circle at 50% 50%,#fff 14%,rgba(233,225,255,.95) 30%,rgba(196,170,253,.72) 52%,rgba(251,186,140,.55) 74%,transparent 88%);filter:blur(10px)}
+.orb-ring{position:relative;width:78%;aspect-ratio:1;border-radius:50%;border:3px solid transparent;background:linear-gradient(#fff,#fff) padding-box,conic-gradient(from 210deg,#4a9eff,#8b5cf6,#e879a8,#f59e5b,#fbbf24,#4a9eff) border-box;animation:orbspin 18s linear infinite}
+@keyframes orbspin{to{transform:rotate(360deg)}}
+.orb-mesh{position:absolute;inset:11%;border-radius:50%;opacity:.5;
+  background:repeating-linear-gradient(0deg,rgba(140,110,220,.22) 0 1px,transparent 1px 13px),repeating-linear-gradient(90deg,rgba(140,110,220,.22) 0 1px,transparent 1px 13px)}
+.orb-core{position:absolute;width:24%;aspect-ratio:1;border-radius:50%;background:#fff;box-shadow:0 0 46px 22px rgba(255,255,255,.98)}
+
+/* ---------- flow / phases ---------- */
+.flow{position:relative;background:#fff;color:var(--ink);padding:20px 0 120px;overflow:hidden}
+.ph-grid{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.ph{padding-left:2px}
+.ph b{display:flex;align-items:center;gap:9px;font-size:16px;font-weight:600;margin-bottom:16px}
+.ph b u{width:13px;height:13px;border-radius:50%;border:2px solid #a78bfa;text-decoration:none;flex:none}
+.ph div{position:relative;padding:9px 0 9px 22px;font-size:14px;color:var(--mut);transition:color .25s,transform .25s}
+.ph div:hover{color:var(--ink);transform:translateX(3px)}
+.ph-line{position:absolute;left:5px;top:0;bottom:0;width:2px;border-radius:2px;background:linear-gradient(180deg,#8b5cf6,#f59e5b)}
+.ph-items{position:relative}
+.waves{position:absolute;left:0;right:0;bottom:-10px;height:300px;z-index:1;pointer-events:none}
+.waves svg{width:100%;height:100%}
+.waves path{fill:none;stroke-width:1}
+
+/* ---------- final cta ---------- */
+.fin{position:relative;background:var(--dark);padding:104px 0;text-align:center;overflow:hidden}
+.fin .beam{bottom:-200px}
+.fin>.wrap{position:relative;z-index:2}
+.fin h2{font-size:clamp(28px,4.4vw,50px);line-height:1.12}
+.fin p{margin:18px auto 30px;max-width:50ch;font-size:15.5px;line-height:1.7;color:rgba(255,255,255,.56)}
+.fin-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.fin-cta .btn{width:auto}
+
+/* ---------- footer ---------- */
+.ft{background:var(--dark);border-top:1px solid var(--lined);padding:44px 0 34px}
+.ft-in{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:center}
+.ft .brand{color:#fff}
+.ft-links{display:flex;gap:26px;font-size:13.5px;color:rgba(255,255,255,.5)}
+.ft-links a{cursor:pointer;transition:color .25s}
+.ft-links a:hover{color:#fff}
+.ft-copy{width:100%;padding-top:24px;font-size:12.5px;color:rgba(255,255,255,.34)}
+
+/* ---------- responsive ---------- */
+@media(max-width:1000px){
+  .nav-links,.nav-srch{display:none}
+  .c-grid{grid-template-columns:1fr 1fr}
+  .cmp-grid{grid-template-columns:1fr}
+  .orb{max-width:340px;margin:8px auto}
+  .ph-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:620px){
+  .wrap{padding:0 18px}
+  .hero{padding:150px 0 70px}
+  .c-grid,.ph-grid{grid-template-columns:1fr}
+  .c-card{min-height:0;padding-top:64px}
+  .cmp,.fin{padding:66px 0}
+  .fin-cta .btn{flex:1 1 100%}
+}
+@media(prefers-reduced-motion:reduce){
+  .rv{opacity:1!important;transform:none!important}
+  .orb-ring{animation:none}
+}
+</style></head>
+<body data-cf-keep-dark>
+
+<nav class="nav" id="nav"><div class="nav-in">
+  <div class="brand"><span class="ring"></span>NexaCore</div>
+  <div class="nav-links"><a>What We Build</a><a>Our Method</a><a>Who We Are</a><a>Thinking</a></div>
+  <span class="nav-srch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></span>
+  <button class="btn b-blue">Contact</button>
+</div></nav>
+
+<header class="hero">
+  <div class="fanlight"></div>
+  <div class="beam"></div>
+  <div class="wrap">
+    <h1 class="rv">Relied on by enterprise teams<br><span class="grad">from groundbreak to go-live.</span></h1>
+    <p class="rv">Built for operational clarity through constant change. Proven across 530+ MW of critical infrastructure.</p>
+  </div>
+</header>
+
+<section class="cards">
+  <div class="wrap"><div class="c-grid">
+    <article class="c-card rv">
+      <span class="c-tag"><u></u>Planning</span>
+      <h3>Turn new programs into structured plans without the noise.</h3>
+      <ul><li>Embedded program leads</li><li>Decision-ready roadmaps</li></ul>
+    </article>
+    <article class="c-card rv">
+      <span class="c-tag"><u></u>Procurement</span>
+      <h3>Source and qualify vendors with far less friction.</h3>
+      <ul><li>Cross-org scope alignment</li><li>End-to-end accountability</li></ul>
+    </article>
+    <article class="c-card rv">
+      <span class="c-tag"><u></u>Logistics</span>
+      <h3>Move the right materials on time without surprises.</h3>
+      <ul><li>Spec and fit validations</li><li>Change order ownership</li></ul>
+    </article>
+    <article class="c-card rv">
+      <span class="c-tag"><u></u>Commissioning</span>
+      <h3>Activate systems with complete context, not guesswork.</h3>
+      <ul><li>Uninterrupted workflows</li><li>Verified clean handoffs</li></ul>
+      <button class="btn b-grad">Learn more <i>&rarr;</i></button>
+    </article>
+  </div></div>
+</section>
+
+<section class="cmp">
+  <div class="wrap">
+    <h2 class="rv">Replace the guesswork.<br><span class="grad">Run with confidence.</span></h2>
+    <p class="lead rv">The same program, seen from both sides — before the operating model changes, and after.</p>
+
+    <div class="cmp-grid">
+      <div class="col bad">
+        <div class="row rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6 6 18M6 6l12 12"/></svg>Reactive firefighting when foundational issues surface too late</div>
+        <div class="row rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6 6 18M6 6l12 12"/></svg>Bloated coordination overhead drains bandwidth from core teams</div>
+        <div class="row rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6 6 18M6 6l12 12"/></svg>Constant re-verification because source data can't be trusted</div>
+        <div class="row rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6 6 18M6 6l12 12"/></svg>Fragmented vendor relations produce mismatched deliverables</div>
+        <div class="row rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6 6 18M6 6l12 12"/></svg>Scattered specs and decisions buried across siloed systems</div>
+      </div>
+
+      <div class="orb rv">
+        <div class="orb-glow"></div>
+        <div class="orb-ring"></div>
+        <div class="orb-mesh"></div>
+        <div class="orb-core"></div>
+      </div>
+
+      <div class="col good">
+        <div class="row rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Layered dependency maps eliminate costly surprises at every phase</div>
+        <div class="row rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Streamlined team handoffs deliver production-ready outcomes fast</div>
+        <div class="row rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Live validation loops keep requirements locked across all stages</div>
+        <div class="row rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Unified vendor management through a single accountable contact</div>
+        <div class="row rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Centralized context and clear records accelerate every decision</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="flow">
+  <div class="wrap"><div class="ph-grid">
+    <div class="ph rv"><b><u></u>Scopes</b><div class="ph-items"><span class="ph-line"></span><div>conditions</div><div>capacity</div><div>specs</div><div>timelines</div></div></div>
+    <div class="ph rv"><b><u></u>Integrates</b><div class="ph-items"><span class="ph-line"></span><div>civil</div><div>mechanical</div><div>electrical</div><div>controls</div></div></div>
+    <div class="ph rv"><b><u></u>Certifies</b><div class="ph-items"><span class="ph-line"></span><div>redundancy</div><div>testing</div><div>compliance</div><div>sign-offs</div></div></div>
+    <div class="ph rv"><b><u></u>Activates</b><div class="ph-items"><span class="ph-line"></span><div>cutover</div><div>runbooks</div><div>handoff</div><div>SLAs</div></div></div>
+  </div></div>
+  <div class="waves" id="waves"><svg viewBox="0 0 1200 300" preserveAspectRatio="none" id="wsvg"></svg></div>
+</section>
+
+<section class="fin">
+  <div class="beam"></div>
+  <div class="wrap">
+    <h2 class="rv">Bring the same clarity<br><span class="grad">to your next program.</span></h2>
+    <p class="rv">Tell us where the plan stops being trusted, and we will show you what changes in the first ninety days.</p>
+    <div class="fin-cta rv">
+      <button class="btn b-blue">Contact <i>&rarr;</i></button>
+      <button class="btn b-line">Read our method</button>
+    </div>
+  </div>
+</section>
+
+<footer class="ft"><div class="wrap"><div class="ft-in">
+  <div class="brand"><span class="ring"></span>NexaCore</div>
+  <div class="ft-links"><a>What We Build</a><a>Our Method</a><a>Who We Are</a><a>Thinking</a><a>Contact</a></div>
+  <div class="ft-copy">&copy; 2026 NexaCore. Operational clarity for critical infrastructure.</div>
+</div></div></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  var nav = document.getElementById("nav");
+  document.addEventListener("scroll", function(){
+    nav.classList.toggle("on", window.scrollY > 12);
+  }, { passive: true });
+
+  // The wave band is drawn rather than hand-authored: 26 offset sine paths read as a
+  // single swept ribbon, and writing them out by hand would be unmaintainable.
+  var svg = document.getElementById("wsvg");
+  var lines = 26;
+  for (var i = 0; i < lines; i++) {
+    var t = i / (lines - 1);
+    var amp = 52 - t * 16;
+    var base = 150 + t * 80;
+    var d = "M0 " + base;
+    for (var x = 0; x <= 1200; x += 40) {
+      var y = base - Math.sin((x / 1200) * Math.PI * 2.1 + t * 0.55) * amp;
+      d += " L" + x + " " + y.toFixed(1);
+    }
+    var p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    p.setAttribute("d", d);
+    p.setAttribute("stroke", "url(#wg)");
+    p.setAttribute("opacity", (0.16 + t * 0.3).toFixed(2));
+    svg.appendChild(p);
+  }
+  var defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+  defs.innerHTML = '<linearGradient id="wg" x1="0" y1="0" x2="1" y2="0">' +
+    '<stop offset="0" stop-color="#4a9eff"/><stop offset="0.36" stop-color="#8b5cf6"/>' +
+    '<stop offset="0.66" stop-color="#e879a8"/><stop offset="1" stop-color="#f59e5b"/></linearGradient>';
+  svg.insertBefore(defs, svg.firstChild);
+
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!window.gsap || !window.ScrollTrigger || reduced) {
+    document.querySelectorAll(".rv").forEach(function(el){
+      el.style.opacity = 1;
+      el.style.transform = "none";
+    });
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.to(".hero .rv", { opacity: 1, y: 0, duration: .9, stagger: .12, ease: "power3.out" });
+
+  // Cards rise in sequence rather than all at once, so the row reads left to right.
+  gsap.to(".c-card", {
+    opacity: 1, y: 0, duration: .8, stagger: .11, ease: "power3.out",
+    scrollTrigger: { trigger: ".c-grid", start: "top 84%", once: true }
+  });
+
+  document.querySelectorAll(".cmp .rv, .flow .rv, .fin .rv").forEach(function(el){
+    gsap.to(el, {
+      opacity: 1, y: 0, duration: .7, ease: "power3.out",
+      scrollTrigger: { trigger: el, start: "top 90%", once: true }
+    });
+  });
+
+  // The beams drift slower than the page so the dark sections gain depth.
+  gsap.to(".hero .beam", { yPercent: 26, ease: "none",
+    scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
+  gsap.to(".fanlight", { yPercent: -18, ease: "none",
+    scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
+  gsap.to(".waves", { yPercent: -14, ease: "none",
+    scrollTrigger: { trigger: ".flow", start: "top bottom", end: "bottom top", scrub: true } });
+
+  window.addEventListener("load", function(){ ScrollTrigger.refresh(); });
+})();
+</script>
+</body></html>`,
 };
