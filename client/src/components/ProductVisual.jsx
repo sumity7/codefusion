@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { getCombinedSourceCode } from "../services/combinedSource";
 import { useTheme } from "../hooks/useTheme";
 
@@ -211,6 +211,22 @@ const LISTING_SCROLL_SCRIPT = `
 </script>
 `;
 
+/*
+ * Complete pages are laid out for a desktop viewport, so rendering one at the card's
+ * own width gives the page's mobile layout — an oversized nav and a hero cropped to
+ * its first band. Those render at a desktop width and are scaled down instead, which
+ * shows the whole composition. Components are designed to sit at the card's width
+ * already and would only shrink into illegibility, so they are left alone.
+ */
+const PREVIEW_DESIGN_WIDTH = 1440;
+
+function isFullPagePreview(product) {
+  return (
+    product?.previewLayout === "page" ||
+    product?.category === "Boilerplates"
+  );
+}
+
 function usesLightCanvas(product) {
   return product?.category !== "Boilerplates";
 }
@@ -379,6 +395,7 @@ export function SourcePreview({
   const { theme } = useTheme() || {};
 
   const frameRef = useRef(null);
+  const wrapRef = useRef(null);
 
   const source =
     buildPreviewSource(
@@ -389,6 +406,50 @@ export function SourcePreview({
 
   const listing = mode === "listing";
 
+  const scaled = listing && isFullPagePreview(product);
+
+  useEffect(() => {
+    if (!scaled) return;
+
+    const wrap = wrapRef.current;
+    const frame = frameRef.current;
+    if (!wrap || !frame) return;
+
+    function fit() {
+      // clientWidth/Height, not getBoundingClientRect: the app renders at a 125% UI
+      // scale, and the rect reports scaled pixels while the frame is laid out in
+      // unscaled ones. Mixing the two makes the preview overflow its card.
+      const width = wrap.clientWidth;
+      const height = wrap.clientHeight;
+      if (!width || !height) return;
+
+      const scale = width / PREVIEW_DESIGN_WIDTH;
+
+      // Taking the frame out of flow is what makes this safe to run from a
+      // ResizeObserver. Left in flow, a wrapper whose own height is content-driven
+      // grows to fit the tall frame, which resizes the wrapper, which enlarges the
+      // frame again — the page reached the browser's 33.5M px layout ceiling.
+      frame.style.position = "absolute";
+      frame.style.top = "0";
+      frame.style.left = "0";
+      frame.style.width = `${PREVIEW_DESIGN_WIDTH}px`;
+      frame.style.height = `${Math.round(height / scale)}px`;
+      frame.style.minHeight = "0";
+      // The shared frame rule caps width at 100%, which would clamp the desktop
+      // viewport back to the card and leave the scale shrinking an already-small frame.
+      frame.style.maxWidth = "none";
+      frame.style.maxHeight = "none";
+      frame.style.transform = `scale(${scale})`;
+      frame.style.transformOrigin = "top left";
+    }
+
+    fit();
+
+    const observer = new ResizeObserver(fit);
+    observer.observe(wrap);
+    return () => observer.disconnect();
+  }, [scaled]);
+
   function drive(action) {
     frameRef.current?.contentWindow?.postMessage(
       { cf: "preview-scroll", action },
@@ -398,6 +459,7 @@ export function SourcePreview({
 
   return (
     <div
+      ref={wrapRef}
       className={`source-preview-wrap ${mode}`}
       onMouseEnter={listing ? () => drive("start") : undefined}
       onMouseLeave={listing ? () => drive("stop") : undefined}

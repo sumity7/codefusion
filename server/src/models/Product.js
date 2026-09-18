@@ -149,6 +149,15 @@ const productSchema = new mongoose.Schema(
       default: "card"
     },
 
+    // "page" products are complete pages, so their card preview is rendered at a
+    // desktop width and scaled down. Components keep rendering at the card's own
+    // width, where they are designed to sit.
+    previewLayout: {
+      type: String,
+      enum: ["auto", "page"],
+      default: "auto"
+    },
+
     isFeatured: {
       type: Boolean,
       default: false
