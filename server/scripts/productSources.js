@@ -3247,18 +3247,432 @@ button:active{transform:scale(.96)}
 </body></html>`,
 
   "final-cta-gradient-section": `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Final CTA Gradient Section</title><style>
-:root{--bg:#050507}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;overflow:hidden;position:relative}
-body::before{content:"";position:absolute;inset:-20%;background:radial-gradient(circle at 50% 50%,rgba(155,138,255,.16),transparent 60%);pointer-events:none}
-.wrap{position:relative;text-align:center;padding:40px}
-.wrap h2{color:#f7f5fb;font-size:26px;margin:0 0 20px}
-.shimmer-btn{position:relative;padding:17px 36px;border:0;border-radius:14px;font-size:13px;font-weight:800;color:#0a090f;cursor:pointer;background:linear-gradient(135deg,#d7d0ff,#9b8aff);overflow:hidden;box-shadow:0 20px 50px -16px rgba(155,138,255,.6);transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
-.shimmer-btn:active{transform:scale(.96)}
-.shimmer-btn::after{content:"";position:absolute;top:0;bottom:0;width:60px;background:linear-gradient(120deg,transparent,rgba(255,255,255,.55),transparent);animation:sweep 2.6s infinite}
-@keyframes sweep{from{left:-80px}to{left:120%}}
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>AI Palette Generator Landing Page</title><style>
+:root{--bg:#030303;--surf:#0a0a0a;--surf2:#1e1e1e;--red:#de3145;--line:rgba(255,255,255,.1);--muted:rgba(255,255,255,.5);--ink:#f2f2f2}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3{margin:0;font-weight:650;letter-spacing:-.02em}
+p{margin:0}
+button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
+.serif{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-weight:400}
+.mono{font-family:ui-monospace,"SF Mono",Menlo,monospace}
+.wrap{max-width:1080px;margin:0 auto;padding:0 40px}
+.rv{opacity:0;transform:translateY(28px)}
+
+/* ---------- fixed overlay chrome: crosshairs + scroll pill ---------- */
+.frame{position:fixed;inset:0;z-index:90;pointer-events:none}
+.frame i{position:absolute;width:13px;height:13px;color:rgba(255,255,255,.3)}
+.frame i:before,.frame i:after{content:"";position:absolute;background:currentColor}
+.frame i:before{width:100%;height:1px;top:50%}
+.frame i:after{width:1px;height:100%;left:50%}
+.frame .tl{top:20px;left:20px}.frame .tr{top:20px;right:20px}.frame .bl{bottom:20px;left:20px}.frame .br{bottom:20px;right:20px}
+.frame.on-light i{color:rgba(17,17,17,.35)}
+.scrollpill{position:fixed;right:24px;bottom:24px;z-index:91;display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid var(--line);color:rgba(255,255,255,.7);font-size:11px;letter-spacing:.08em;text-transform:uppercase;backdrop-filter:blur(6px)}
+.scrollpill svg{width:11px;height:11px;animation:bob 1.8s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}
+
+/* ---------- shared section rhythm ---------- */
+.sec{position:relative;padding:150px 0}
+.head{text-align:center;max-width:640px;margin:0 auto 60px}
+.eyebrow{display:block;margin-bottom:16px;font-size:17px;color:var(--muted)}
+.head h2{font-size:clamp(26px,3.4vw,38px);line-height:1.25}
+.head-lg{text-align:center}
+.head-lg .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-style:normal;font-family:Inter,sans-serif;margin-bottom:14px}
+.head-lg h2{font-size:clamp(34px,5vw,54px)}
+
+/* ---------- hero ---------- */
+.hero{min-height:100vh;display:flex;align-items:center;padding:0}
+.hero-grid{display:grid;grid-template-columns:.85fr 1fr;gap:56px;align-items:center;width:100%}
+.hero-art{width:100%;aspect-ratio:1;border-radius:22px;transform:rotate(-7deg);box-shadow:0 40px 90px -20px rgba(0,0,0,.7);background:
+  radial-gradient(120% 120% at 15% 10%,#ff8a4c,transparent 45%),
+  radial-gradient(110% 110% at 85% 15%,#c04cff,transparent 50%),
+  radial-gradient(120% 120% at 20% 90%,#20d9d9,transparent 55%),
+  linear-gradient(135deg,#5b2bd6,#1c1c8f 55%,#0c1030)}
+.hero-copy .eyebrow{text-align:right}
+.hero-copy h1{font-size:clamp(30px,3.6vw,40px);line-height:1.18;font-weight:600;letter-spacing:-.02em;margin-bottom:34px}
+.dropzone{height:150px;border:1px dashed var(--line);border-radius:14px;background:rgba(255,255,255,.02)}
+
+/* ---------- swatch cards (shared look, reused across 3 sections) ---------- */
+.swatches{display:flex;justify-content:center;gap:26px;margin-top:20px;flex-wrap:wrap;min-height:200px}
+.sw{width:120px;height:158px;border-radius:14px;padding:14px;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:0 24px 46px -14px rgba(0,0,0,.55);transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.sw b{font-size:9px;letter-spacing:.1em;text-transform:uppercase;opacity:.6;font-family:ui-monospace,monospace;font-weight:500}
+.sw span{display:block;margin-top:3px;font-size:11px;font-family:ui-monospace,monospace;font-weight:600}
+.scatter .sw:nth-child(1){transform:rotate(-8deg) translateY(6px)}
+.scatter .sw:nth-child(2){transform:rotate(6deg) translateY(-10px)}
+.scatter .sw:nth-child(3){transform:rotate(-3deg) translateY(18px)}
+.scatter .sw:nth-child(4){transform:rotate(9deg) translateY(-4px)}
+.scatter .sw:nth-child(5){transform:rotate(-6deg) translateY(10px)}
+.aligned .sw{transform:none}
+.sw.c-primary{background:#abc7fa;color:#0a0a0a}
+.sw.c-secondary{background:#f1c6d4;color:#0a0a0a}
+.sw.c-tertiary{background:#e2d3b6;color:#0a0a0a}
+.sw.c-surface{background:#1e1e1e;color:#fff}
+.sw.c-background{background:#0a0a0a;color:#fff;border:1px solid var(--line)}
+/* light-mode variant palette used inside the sync section */
+.light-variant .c-primary{background:#006fb8;color:#fff}
+.light-variant .c-secondary{background:#7b2c82;color:#fff}
+.light-variant .c-tertiary{background:#6c6e3f;color:#fff}
+.light-variant .c-surface{background:#ffffff;color:#0a0a0a;border:1px solid #e2e2e2}
+.light-variant .c-background{background:#f8f8f8;color:#0a0a0a;border:1px solid #e2e2e2}
+
+/* ---------- code window ---------- */
+.codewin{max-width:520px;margin:40px auto 0;border-radius:12px;overflow:hidden;background:var(--surf);border:1px solid var(--line)}
+.codewin .bar{display:flex;gap:7px;padding:11px 14px;border-bottom:1px solid var(--line)}
+.codewin .bar i{width:9px;height:9px;border-radius:50%;background:#333}
+.codewin pre{margin:0;padding:18px 20px;font-size:12.5px;line-height:1.85;font-family:ui-monospace,Menlo,monospace;color:#d6d6d6}
+.codewin .k{color:#c792ea}
+.codewin .p{color:#7ec6ee}
+.codewin .v{color:#f1c6d4}
+
+/* ---------- light "sync" section ---------- */
+.sync{background:#f4f4f4;color:#111}
+.sync .eyebrow{color:rgba(17,17,17,.5)}
+.sync .codewin{background:#fff;border-color:#e2e2e2}
+.sync .codewin .bar{border-color:#e2e2e2}
+.sync .codewin pre{color:#333}
+.sync .codewin .k{color:#8b3fc7}
+.sync .codewin .p{color:#0b6fa8}
+.sync .codewin .v{color:#a8447a}
+
+/* ---------- dashboard morph ---------- */
+.dash{max-width:560px;margin:40px auto 0;border-radius:14px;overflow:hidden;background:var(--surf);border:1px solid var(--line)}
+.dash .bar{display:flex;gap:7px;padding:11px 14px;border-bottom:1px solid var(--line)}
+.dash .bar i{width:9px;height:9px;border-radius:50%;background:#333}
+.dash-body{display:grid;grid-template-columns:110px 1fr;min-height:220px}
+.dash-side{border-right:1px solid var(--line);padding:16px 12px;display:flex;flex-direction:column;gap:9px}
+.dash-side i{height:9px;border-radius:4px;background:var(--line);display:block}
+.dash-main{padding:18px}
+.dash-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.dash-top i{height:11px;width:120px;border-radius:4px;background:var(--line);display:block}
+.deploy{padding:9px 16px;border-radius:8px;background:#abc7fa;color:#0a0a0a;font-size:11px;font-weight:700}
+.dash-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.dash-card{border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.dash-card .av{width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,.2)}
+.dash-card u{height:7px;width:70%;border-radius:4px;background:rgba(0,0,0,.18);text-decoration:none;display:block}
+.dash-card.a{background:#e2d3b6;color:#0a0a0a}
+.dash-card.b{background:#f1c6d4;color:#0a0a0a}
+
+/* ---------- comparison stack ---------- */
+.cmp-stack{display:flex;flex-direction:column;gap:22px;max-width:760px;margin:0 auto}
+.cmp-card{position:relative;padding:34px 40px;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.cmp-card:before,.cmp-card:after{content:"";position:absolute;width:11px;height:11px}
+.cmp-num{display:block;margin-bottom:14px;font-size:11px;letter-spacing:.1em;color:var(--muted);font-family:ui-monospace,monospace}
+.cmp-card h3{font-size:clamp(19px,2.4vw,25px);line-height:1.3;color:var(--red);font-weight:400}
+.sweep{position:absolute;top:0;bottom:0;left:0;width:2px;background:#fff;box-shadow:0 0 30px 6px rgba(255,255,255,.7);opacity:0}
+
+/* ---------- architecture stacked deck ---------- */
+.deck{position:relative;max-width:560px;height:300px;margin:20px auto 0}
+.deck-card{position:absolute;inset:0;border-radius:12px;background:var(--surf);border:1px solid var(--line);padding:24px 26px;opacity:0;transform:translateY(14px) scale(.97);transition:opacity .45s,transform .45s}
+.deck-card.on{opacity:1;transform:none;z-index:2}
+.deck-num{font-size:11px;letter-spacing:.08em;color:#7ec6ee;font-family:ui-monospace,monospace}
+.deck-card h4{margin:16px 0 8px;font-size:19px;font-weight:600}
+.deck-card p{font-size:13.5px;line-height:1.6;color:var(--muted);max-width:70%}
+.chart{position:absolute;top:24px;right:26px;width:160px}
+.chart svg{width:100%;height:36px;display:block}
+.chart-meta{display:flex;justify-content:space-between;font-size:9px;color:var(--muted);font-family:ui-monospace,monospace;margin-top:4px}
+.pillrow{display:flex;gap:8px;margin-bottom:18px}
+.pillrow span{padding:7px 13px;border-radius:6px;font-size:10.5px;font-family:ui-monospace,monospace;background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--muted)}
+.pillrow span.on{background:#1a2c3a;color:#7ec6ee;border-color:#2c4256}
+.deck-dots{display:flex;justify-content:center;gap:7px;margin-top:22px}
+.deck-dots button{width:6px;height:6px;border-radius:99px;background:var(--line);transition:width .3s,background .3s}
+.deck-dots button.on{width:20px;background:#7ec6ee}
+
+/* ---------- final cta ---------- */
+.cta-box{position:relative;max-width:640px;margin:0 auto;text-align:center;padding:70px 40px;border:1px solid var(--line)}
+.cta-box:before,.cta-box:after{content:"";position:absolute;width:11px;height:11px}
+.cta-ring{position:absolute;inset:-140px;z-index:-1;pointer-events:none;background:
+  radial-gradient(circle,transparent 0 22%,rgba(255,255,255,.02) 22% 23%,transparent 23% 34%,rgba(255,255,255,.02) 34% 35%,transparent 35% 100%)}
+.cta-box h2{font-size:clamp(28px,4vw,40px);margin-bottom:34px}
+.cta-actions{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:26px}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:14px 26px;font-size:13.5px;font-weight:600;border-radius:4px;transition:transform .25s,background .25s,border-color .25s}
+.btn.solid{background:#fff;color:#0a0a0a}
+.btn.solid:hover{transform:translateY(-2px);background:#e8e8e8}
+.btn.line{border:1px solid var(--line);color:var(--ink)}
+.btn.line:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.3)}
+.btn i{font-style:normal;transition:transform .25s}
+.btn.solid:hover i{transform:translateX(3px)}
+.cta-note{font-size:11px;letter-spacing:.08em;color:var(--muted);font-family:ui-monospace,monospace}
+
+/* ---------- footer ---------- */
+.ft{padding:90px 0 34px;border-top:1px solid var(--line)}
+.ft-grid{display:grid;grid-template-columns:1.4fr .8fr .8fr;gap:40px}
+.ft-brand b{font-size:26px;font-family:Georgia,serif;font-style:italic;font-weight:400}
+.ft-tag{margin-top:10px;font-size:13px;color:var(--muted)}
+.ft-desc{margin-top:14px;font-size:13px;line-height:1.7;color:var(--muted);max-width:38ch}
+.status{display:inline-flex;align-items:center;gap:8px;margin-top:20px;padding:8px 14px;border:1px solid var(--line);border-radius:6px;font-size:10.5px;font-family:ui-monospace,monospace;color:var(--muted)}
+.status s{width:6px;height:6px;border-radius:50%;background:#3ddc84;text-decoration:none;box-shadow:0 0 0 3px rgba(61,220,132,.18)}
+.ft-col b{display:block;margin-bottom:16px;font-size:11px;letter-spacing:.08em;font-family:ui-monospace,monospace;color:var(--muted)}
+.ft-col a{display:block;margin-bottom:12px;font-size:14px;color:rgba(255,255,255,.75);cursor:pointer;transition:color .25s,transform .25s}
+.ft-col a:hover{color:#fff;transform:translateX(3px)}
+.ft-bottom{display:flex;justify-content:space-between;margin-top:60px;padding-top:22px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);font-family:ui-monospace,monospace}
+.ft-bottom .links{display:flex;gap:22px}
+
+/* ---------- responsive ---------- */
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr;gap:36px}
+  .hero-copy .eyebrow{text-align:left}
+  .ft-grid{grid-template-columns:1fr;gap:34px}
+  .dash-body{grid-template-columns:1fr}
+  .dash-side{display:none}
+}
+@media(max-width:620px){
+  .wrap{padding:0 22px}
+  .sec{padding:100px 0}
+  .swatches{gap:14px}
+  .sw{width:88px;height:118px;padding:10px}
+  .cmp-card{padding:24px 22px}
+  .frame{display:none}
+  .scrollpill{right:14px;bottom:14px;font-size:10px;padding:8px 12px}
+  .dash-cards{grid-template-columns:1fr}
+  .ft-bottom{flex-direction:column;gap:10px}
+}
+@media(prefers-reduced-motion:reduce){
+  .rv{opacity:1!important;transform:none!important}
+  .scrollpill svg{animation:none}
+}
 </style></head>
-<body data-cf-keep-dark><div class="wrap"><h2>Stop rebuilding the basics.</h2><button class="shimmer-btn">Start building free →</button></div>
+<body data-cf-keep-dark>
+
+<div class="frame"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+<div class="scrollpill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>Auto Scroll Experience</div>
+
+<header class="sec hero">
+  <div class="wrap hero-grid">
+    <div class="hero-art rv"></div>
+    <div class="hero-copy">
+      <span class="eyebrow serif rv">100% Client-Side Privacy</span>
+      <h1 class="rv">Drag and drop your logo, brand asset, or photograph. It never leaves your browser.</h1>
+      <div class="dropzone rv"></div>
+    </div>
+  </div>
+</header>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow serif rv">Material Design 3 Engine</span>
+      <h2 class="rv">Our algorithm identifies the dominant colors and builds an accessible, WCAG-compliant palette.</h2>
+    </div>
+    <div class="swatches scatter rv">
+      <div class="sw c-primary"><b>Primary</b><span>#ABC7FA</span></div>
+      <div class="sw c-secondary"><b>Secondary</b><span>#F1C6D4</span></div>
+      <div class="sw c-background"><b>Background</b><span>#0A0A0A</span></div>
+      <div class="sw c-surface"><b>Surface</b><span>#1E1E1E</span></div>
+      <div class="sw c-tertiary"><b>Tertiary</b><span>#E2D3B6</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow serif rv">Tailwind CSS v4 Ready</span>
+      <h2 class="rv">Instantly generated <span class="mono" style="background:rgba(255,255,255,.08);padding:2px 8px;border-radius:5px;font-size:.7em">@theme</span> variables. Perfectly mapped for Shadcn UI components.</h2>
+    </div>
+    <div class="swatches aligned rv">
+      <div class="sw c-primary"><b>Primary</b><span>#ABC7FA</span></div>
+      <div class="sw c-secondary"><b>Secondary</b><span>#F1C6D4</span></div>
+      <div class="sw c-background"><b>Background</b><span>#0A0A0A</span></div>
+      <div class="sw c-surface"><b>Surface</b><span>#1E1E1E</span></div>
+      <div class="sw c-tertiary"><b>Tertiary</b><span>#E2D3B6</span></div>
+    </div>
+    <div class="codewin rv">
+      <div class="bar"><i></i><i></i><i></i></div>
+      <pre><span class="k">@theme</span> {
+  <span class="p">--color-primary</span>: <span class="v">#ABC7FA</span>;
+  <span class="p">--color-secondary</span>: <span class="v">#F1C6D4</span>;
+  <span class="p">--color-tertiary</span>: <span class="v">#E2D3B6</span>;
+  <span class="p">--color-surface</span>: <span class="v">#1E1E1E</span>;
+  <span class="p">--color-background</span>: <span class="v">#0A0A0A</span>;
+}</pre>
+    </div>
+  </div>
+</section>
+
+<section class="sec sync">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow serif rv">Light &amp; Dark Mode Sync</span>
+      <h2 class="rv">Automatic generation of both environments. One click to implement everywhere.</h2>
+    </div>
+    <div class="swatches aligned light-variant rv">
+      <div class="sw c-primary"><b>Primary</b><span>#006FB8</span></div>
+      <div class="sw c-secondary"><b>Secondary</b><span>#7B2C82</span></div>
+      <div class="sw c-background"><b>Background</b><span>#F8F8F8</span></div>
+      <div class="sw c-surface"><b>Surface</b><span>#FFFFFF</span></div>
+      <div class="sw c-tertiary"><b>Tertiary</b><span>#6C6E3F</span></div>
+    </div>
+    <div class="codewin rv">
+      <div class="bar"><i></i><i></i><i></i></div>
+      <pre><span class="k">@theme</span> {
+  <span class="p">--color-primary</span>: <span class="v">#006FB8</span>;
+  <span class="p">--color-secondary</span>: <span class="v">#7B2C82</span>;
+  <span class="p">--color-tertiary</span>: <span class="v">#6C6E3F</span>;
+  <span class="p">--color-surface</span>: <span class="v">#FFFFFF</span>;
+  <span class="p">--color-background</span>: <span class="v">#F8F8F8</span>;
+}</pre>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow serif rv">Component Mapping</span>
+      <h2 class="rv">Your generated Material palette instantly brings your Shadcn UI to life.</h2>
+    </div>
+    <div class="dash rv">
+      <div class="bar"><i></i><i></i><i></i></div>
+      <div class="dash-body">
+        <div class="dash-side"><i style="width:70%"></i><i style="width:50%"></i><i style="width:60%"></i></div>
+        <div class="dash-main">
+          <div class="dash-top"><i></i><button class="deploy">Deploy Theme</button></div>
+          <div class="dash-cards">
+            <div class="dash-card a"><span class="av"></span><u></u></div>
+            <div class="dash-card b"><span class="av"></span><u></u></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="head-lg" style="margin-bottom:64px"><span class="eyebrow rv">No Comparison</span></div>
+    <div class="cmp-stack">
+      <div class="cmp-card rv"><span class="sweep"></span><span class="cmp-num">01 // COLOR GENERATION</span><h3 class="serif">Generic hex color pickers and manual tweaking.</h3></div>
+      <div class="cmp-card rv"><span class="sweep"></span><span class="cmp-num">02 // CSS INTEGRATION</span><h3 class="serif">Tedious manual mapping to framework utilities.</h3></div>
+      <div class="cmp-card rv"><span class="sweep"></span><span class="cmp-num">03 // ACCESSIBILITY</span><h3 class="serif">No built-in contrast or WCAG compliance checks.</h3></div>
+      <div class="cmp-card rv"><span class="sweep"></span><span class="cmp-num">04 // SECURITY</span><h3 class="serif">Uploads proprietary brand assets to external servers.</h3></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="head-lg" style="margin-bottom:20px"><span class="eyebrow rv">Architecture</span><h2 class="serif rv">Modular by design.</h2></div>
+    <div class="deck" id="deck">
+      <div class="deck-card on" data-i="0">
+        <div class="deck-num">04 // WASM COMPILE</div>
+        <div class="chart"><svg viewBox="0 0 160 36" preserveAspectRatio="none"><polyline points="0,30 20,26 40,10 60,20 80,4 100,18 120,12 140,22 160,16" fill="none" stroke="#7ec6ee" stroke-width="1.5"/></svg><div class="chart-meta"><span>CPU 7-BUILT</span><span>5.4ms MAX</span></div></div>
+        <h4>WebAssembly Acceleration</h4>
+        <p>Quantization algorithms written in Rust compile down to bare-metal execution speeds.</p>
+      </div>
+      <div class="deck-card" data-i="1">
+        <div class="deck-num">05 // EXPORT</div>
+        <div class="pillrow"><span class="on">JSON</span><span>YAML</span><span>ENV</span></div>
+        <h4>Universal Format</h4>
+        <p>Ships as JSON, CSS custom properties, or a Tailwind config, whichever your pipeline expects.</p>
+      </div>
+      <div class="deck-card" data-i="2">
+        <div class="deck-num">06 // BUILD</div>
+        <div class="pillrow"><span>JSON</span><span>CSS</span><span class="on">TRW4</span></div>
+        <h4>Pipeline Exports</h4>
+        <p>Stream data as raw tokens, raw CSS, or straight to the clipboard to drop directly into Shadcn projects.</p>
+      </div>
+    </div>
+    <div class="deck-dots" id="deckDots"><button class="on"></button><button></button><button></button></div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="cta-box rv">
+      <div class="cta-ring"></div>
+      <h2 class="serif">Start building.</h2>
+      <div class="cta-actions">
+        <button class="btn solid">Launch App <i>&rarr;</i></button>
+        <button class="btn line">Open Studio <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><rect x="5" y="11" width="14" height="9" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></button>
+      </div>
+      <span class="cta-note">100% FREE + PROPRIETARY API</span>
+    </div>
+  </div>
+</section>
+
+<footer class="ft">
+  <div class="wrap">
+    <div class="ft-grid">
+      <div class="ft-brand">
+        <b>px2m3.</b>
+        <p class="ft-tag mono">The exactness of code.</p>
+        <p class="ft-desc">Extract the mathematical essence of any visual source. Generate pure Material Design 3 and Tailwind v4 syntax instantly.</p>
+        <span class="status"><s></s>CORE ENGINE ONLINE</span>
+      </div>
+      <div class="ft-col"><b>01 // DIRECTORY</b><a>Palette Generator</a><a>Theme Studio</a><a>Blog &amp; Guides</a></div>
+      <div class="ft-col"><b>02 // NETWORK</b><a>GitHub</a><a>Twitter (X)</a></div>
+    </div>
+    <div class="ft-bottom">
+      <span>&copy; 2026 PX2M3 // ALL RIGHTS RESERVED.</span>
+      <span class="links"><a style="color:inherit;cursor:pointer">PRIVACY POLICY</a><a style="color:inherit;cursor:pointer">TERMS OF SERVICE</a></span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // The corner crosshairs recolour once a light section (the sync section) fills the
+  // viewport, so they stay visible against either background.
+  var syncEl = document.querySelector(".sync");
+  var frame = document.querySelector(".frame");
+  function checkFrame(){
+    var r = syncEl.getBoundingClientRect();
+    var mid = window.innerHeight / 2;
+    frame.classList.toggle("on-light", r.top < mid && r.bottom > mid);
+  }
+  document.addEventListener("scroll", checkFrame, { passive: true });
+  checkFrame();
+
+  // Architecture deck: click a dot to bring that card to the front.
+  var cards = [].slice.call(document.querySelectorAll(".deck-card"));
+  var dots = [].slice.call(document.querySelectorAll("#deckDots button"));
+  function showCard(i){
+    cards.forEach(function(c, ci){ c.classList.toggle("on", ci === i); });
+    dots.forEach(function(d, di){ d.classList.toggle("on", di === i); });
+  }
+  dots.forEach(function(d, i){ d.addEventListener("click", function(){ showCard(i); }); });
+  var deckIdx = 0, deckTimer;
+  if (!reduced) {
+    deckTimer = setInterval(function(){ deckIdx = (deckIdx + 1) % cards.length; showCard(deckIdx); }, 3200);
+    document.getElementById("deck").addEventListener("mouseenter", function(){ clearInterval(deckTimer); });
+  }
+
+  if (!window.gsap || !window.ScrollTrigger || reduced) {
+    document.querySelectorAll(".rv").forEach(function(el){ el.style.opacity = 1; el.style.transform = "none"; });
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.to(".hero .rv", { opacity: 1, y: 0, duration: .9, stagger: .12, ease: "power3.out", delay: .1 });
+
+  document.querySelectorAll("section .rv").forEach(function(el){
+    gsap.to(el, { opacity: 1, y: 0, duration: .8, ease: "power3.out",
+      scrollTrigger: { trigger: el, start: "top 85%", once: true } });
+  });
+
+  // Swatches settle from their scattered rotation into an aligned row as the reader
+  // scrolls past the "Tailwind CSS v4 Ready" heading, echoing the reference's morph.
+  gsap.to(".scatter .sw", {
+    rotation: 0, y: 0, duration: 1, ease: "power3.out", stagger: .05,
+    scrollTrigger: { trigger: ".scatter", start: "top 60%", once: true }
+  });
+
+  // Comparison cards: a bright vertical line sweeps across each card as it enters.
+  document.querySelectorAll(".cmp-card").forEach(function(card){
+    var sweep = card.querySelector(".sweep");
+    gsap.timeline({ scrollTrigger: { trigger: card, start: "top 80%", once: true } })
+      .fromTo(sweep, { left: "0%", opacity: 1 }, { left: "100%", opacity: 1, duration: .9, ease: "power2.inOut" })
+      .to(sweep, { opacity: 0, duration: .3 });
+  });
+
+  window.addEventListener("load", function(){ ScrollTrigger.refresh(); });
+})();
+</script>
 </body></html>`,
 
   "circuit-trace-border": `<!DOCTYPE html>
