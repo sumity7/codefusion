@@ -3930,225 +3930,259 @@ body{margin:0;min-height:100vh;display:grid;place-items:center;background:#05050
 </body></html>`,
   "editorial-saas-landing-page": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Editorial SaaS Landing Page</title><style>
-:root{--pur:#5B4BFF;--vio:#7C3AED;--ink:#111118;--navy:#161a2e;--mut:#6F6F7A;--light:#F7F6FB;--wash:#f5f7fa;--dark:#08080D;--line:#e7e5ef;--lined:rgba(255,255,255,.09)}
+:root{--pur:#7e21fe;--pur-d:#6b16e0;--ink:#0f172b;--mut:#979eac;--wash:#f7f8fb;--line:#e8eaf0;--black:#000;--node:#272727;--lined:rgba(255,255,255,.1)}
 *{box-sizing:border-box}
 body{margin:0;background:#fff;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-h1,h2,h3,h4{font-family:"Space Grotesk",Inter,ui-sans-serif,sans-serif;margin:0;font-weight:500;letter-spacing:-.035em;color:var(--navy)}
+h1,h2,h3{font-family:"Space Grotesk",Inter,ui-sans-serif,sans-serif;margin:0;font-weight:500;letter-spacing:-.035em;color:var(--ink)}
 p{margin:0}
 button{font-family:inherit;cursor:pointer;border:0}
 .wrap{max-width:1140px;margin:0 auto;padding:0 28px}
 .rv{opacity:0;transform:translateY(28px)}
 
-/* eyebrow: small dash + label, left aligned */
 .eb{display:flex;align-items:center;gap:12px;font-size:13.5px;color:var(--pur);margin-bottom:16px}
-.eb:before{content:"";width:28px;height:1px;background:#cfcadf}
+.eb:before{content:"";width:28px;height:1px;background:#cdd2dd}
 
-/* buttons */
-.btn{display:inline-flex;align-items:center;gap:9px;border-radius:999px;padding:14px 24px;font-size:14.5px;font-weight:600;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s,background .25s,border-color .25s,color .25s}
-.btn i{font-style:normal;display:inline-block;transition:transform .25s}
-.btn:hover i{transform:translateX(3px)}
-.btn-dark{background:linear-gradient(120deg,#17162a,#08080d 60%);color:#fff;box-shadow:0 10px 26px rgba(8,8,13,.22)}
-.btn-dark:hover{transform:translateY(-2px);box-shadow:0 16px 34px rgba(8,8,13,.3)}
-.btn-white{background:#fff;color:var(--navy);border:1px solid var(--line)}
-.btn-white:hover{transform:translateY(-2px);border-color:#c9c3dd}
-.btn-pur{background:var(--vio);color:#fff}
-.btn-pur:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(124,58,237,.42)}
-.btn svg{width:15px;height:15px}
+/* ---------- buttons ---------- */
+.btn{position:relative;display:inline-flex;align-items:center;gap:9px;border-radius:999px;padding:14px 24px;font-size:14.5px;font-weight:600;overflow:hidden;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .3s,border-color .25s,color .25s}
+.btn i{font-style:normal;display:inline-block;transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+.btn:hover i{transform:translateX(4px)}
+.btn svg{width:15px;height:15px;flex:none}
+/* sheen sweeps across on hover */
+.btn:before{content:"";position:absolute;top:0;bottom:0;left:-60%;width:45%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.28),transparent);transform:skewX(-18deg);transition:left .55s cubic-bezier(.2,.8,.2,1)}
+.btn:hover:before{left:120%}
+.btn-dark{background:linear-gradient(120deg,#1c2338,var(--ink) 62%);color:#fff;box-shadow:0 10px 26px rgba(15,23,43,.24)}
+.btn-dark:hover{transform:translateY(-2px);box-shadow:0 18px 38px rgba(15,23,43,.32)}
+.btn-white{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.btn-white:hover{transform:translateY(-2px);border-color:#c6c1e2;box-shadow:0 14px 30px rgba(15,23,43,.1)}
+.btn-pur{background:var(--pur);color:#fff}
+.btn-pur:hover{transform:translateY(-2px);background:var(--pur-d);box-shadow:0 16px 34px rgba(126,33,254,.45)}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 
-/* ---------- nav: transparent at top, white bar on scroll ---------- */
-.nav{position:sticky;top:0;z-index:60;transition:background .35s,box-shadow .35s,border-color .35s}
-.nav-in{max-width:1220px;margin:0 auto;padding:20px 28px;display:flex;align-items:center;gap:30px;transition:padding .35s}
-.nav.on{background:rgba(255,255,255,.88);backdrop-filter:blur(16px);box-shadow:0 1px 0 rgba(17,17,24,.07),0 8px 24px rgba(17,17,24,.05)}
-.nav.on .nav-in{padding:12px 28px}
-.brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk",sans-serif;font-size:19px;font-weight:600;letter-spacing:-.035em;color:var(--navy)}
-.brand em{color:var(--vio);font-style:normal}
-.brand .mk{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--pur),var(--vio));display:grid;place-items:center;color:#fff;font-size:14px;font-weight:700}
-.nav-links{display:flex;gap:30px;margin:0 auto;font-size:14.5px;color:var(--mut)}
-.nav-links a{cursor:pointer;position:relative;padding-bottom:3px}
-.nav-links a:after{content:"";position:absolute;left:0;right:100%;bottom:0;height:1.5px;background:var(--navy);transition:right .28s}
-.nav-links a:hover{color:var(--navy)}
-.nav-links a:hover:after{right:0}
-.nav-right{display:flex;align-items:center;gap:18px}
-.nav-right .lg{font-size:14.5px;color:var(--mut);cursor:pointer}
-.nav-right .lg:hover{color:var(--navy)}
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:60;transition:background .4s,box-shadow .4s,backdrop-filter .4s}
+.nav-in{max-width:1240px;margin:0 auto;padding:20px 28px;display:flex;align-items:center;gap:30px;transition:padding .4s}
+.nav.on{background:rgba(255,255,255,.86);backdrop-filter:blur(18px) saturate(1.6);box-shadow:0 1px 0 rgba(15,23,43,.07),0 10px 30px rgba(15,23,43,.06)}
+.nav.on .nav-in{padding:11px 28px}
+.brand{display:flex;align-items:center;gap:11px;font-family:"Space Grotesk",sans-serif;font-size:21px;font-weight:600;letter-spacing:-.04em;color:var(--ink)}
+.brand em{color:var(--pur);font-style:normal}
+.brand svg{width:30px;height:30px;color:var(--pur);flex:none;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.brand:hover svg{transform:rotate(-12deg) scale(1.08)}
+.nav-links{display:flex;gap:32px;margin:0 auto;font-size:14.5px;color:#5c6577}
+.nav-links a{position:relative;cursor:pointer;padding-bottom:4px;transition:color .25s}
+.nav-links a:after{content:"";position:absolute;left:0;bottom:0;width:100%;height:1.5px;background:var(--ink);transform:scaleX(0);transform-origin:right;transition:transform .32s cubic-bezier(.2,.8,.2,1)}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a:hover:after{transform:scaleX(1);transform-origin:left}
+.nav-right{display:flex;align-items:center;gap:20px}
+.nav-right .lg{font-size:14.5px;color:#5c6577;cursor:pointer;transition:color .25s}
+.nav-right .lg:hover{color:var(--ink)}
 .nav-right .btn{padding:11px 20px;font-size:13.5px}
 
 /* ---------- hero ---------- */
-.hero{position:relative;padding:74px 0 54px;text-align:center;overflow:hidden}
-.blob{position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;z-index:0}
-.b1{width:560px;height:440px;top:-110px;left:-140px;background:rgba(124,58,237,.2)}
-.b2{width:460px;height:380px;top:40px;right:-130px;background:rgba(91,75,255,.15)}
-.b3{width:520px;height:300px;bottom:-120px;left:34%;background:rgba(160,120,255,.13)}
+.hero{position:relative;padding:76px 0 52px;text-align:center;overflow:hidden}
+/* organic ink-blot wash rather than tidy circles, like the reference backdrop */
+.wash{position:absolute;inset:-12% -6% auto -6%;height:660px;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(38% 46% at 14% 34%,rgba(126,33,254,.2),transparent 70%),
+    radial-gradient(30% 40% at 30% 12%,rgba(126,33,254,.13),transparent 72%),
+    radial-gradient(26% 52% at 62% 26%,rgba(150,80,255,.14),transparent 70%),
+    radial-gradient(34% 38% at 86% 46%,rgba(126,33,254,.11),transparent 72%),
+    radial-gradient(24% 30% at 48% 62%,rgba(170,120,255,.1),transparent 70%);
+  filter:blur(26px)}
 .hero>.wrap{position:relative;z-index:1}
-.pill{display:inline-flex;align-items:center;gap:9px;padding:9px 17px;border-radius:999px;background:#14131f;color:#e8e5f5;font-size:12.5px;margin-bottom:30px;box-shadow:0 10px 24px rgba(8,8,13,.2)}
-.pill svg{width:13px;height:13px;color:#a99cff}
-h1{font-size:clamp(40px,6.4vw,76px);line-height:1.02}
-h1 .pu{color:var(--vio)}
-.sub{margin:26px auto 30px;max-width:58ch;font-size:17px;line-height:1.7;color:var(--mut)}
-.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-.micro{margin-top:16px;font-size:12.5px;color:#93909c}
+.pill{display:inline-flex;align-items:center;gap:9px;padding:9px 18px;border-radius:999px;background:#12121a;color:#eceaf4;font-size:12.5px;margin-bottom:28px;box-shadow:0 12px 26px rgba(0,0,0,.22);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.pill:hover{transform:translateY(-2px)}
+.pill svg{width:13px;height:13px;color:#b795ff}
+h1{font-size:clamp(38px,6.3vw,74px);line-height:1.04}
+h1 .pu{color:var(--pur)}
+/* rotating middle line: fixed height so the headline never reflows */
+.rot{display:block;position:relative;height:1.04em;overflow:hidden}
+.rot span{position:absolute;left:0;right:0;top:0;transform:translateY(100%)}
+.rot span.in{transform:none}
+.sub{margin:26px auto 30px;max-width:56ch;font-size:17px;line-height:1.72;color:var(--mut)}
+.micro{margin-top:16px;font-size:12.5px;color:#a7adb9}
 .socials{display:flex;gap:10px;justify-content:center;margin-top:26px}
-.socials a{width:40px;height:40px;border-radius:11px;background:#14131f;display:grid;place-items:center;color:#fff;transition:transform .25s,background .25s}
-.socials a:hover{transform:translateY(-3px);background:var(--vio)}
+.socials a{width:40px;height:40px;border-radius:11px;background:#12121a;display:grid;place-items:center;color:#fff;transition:transform .3s cubic-bezier(.2,.8,.2,1),background .3s,box-shadow .3s}
+.socials a:hover{transform:translateY(-4px);background:var(--pur);box-shadow:0 12px 24px rgba(126,33,254,.4)}
 .socials svg{width:16px;height:16px}
 
-/* ---------- logo marquee ---------- */
-.marq{position:relative;margin-top:46px;padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
-.marq-track{display:flex;gap:56px;width:max-content;animation:slide 32s linear infinite}
+/* ---------- marquee ---------- */
+.marq{position:relative;margin-top:44px;padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.marq-track{display:flex;gap:56px;width:max-content;animation:slide 34s linear infinite}
 .marq:hover .marq-track{animation-play-state:paused}
 @keyframes slide{to{transform:translateX(-50%)}}
-.mi{display:flex;align-items:center;gap:11px;font-size:15px;color:#8a8794;white-space:nowrap}
-.mi b{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-size:11px;color:#fff}
+.mi{display:flex;align-items:center;gap:11px;font-size:15px;color:#9aa1ad;white-space:nowrap;transition:color .3s}
+.mi:hover{color:var(--ink)}
+.mi b{width:23px;height:23px;border-radius:7px;display:grid;place-items:center;font-size:11px;color:#fff;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.mi:hover b{transform:scale(1.15) rotate(-6deg)}
+
+/* ---------- floating review badge ---------- */
+.rev{position:fixed;right:0;top:34%;z-index:40;width:132px;border-radius:12px 0 0 12px;overflow:hidden;background:#fff;border:1px solid var(--line);border-right:0;box-shadow:-8px 14px 34px rgba(15,23,43,.14);font-size:10px;text-align:center;transform:translateX(74px);transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.rev:hover{transform:translateX(0)}
+.rev-h{background:var(--ink);color:#fff;padding:6px;font-weight:600;letter-spacing:.02em}
+.rev-b{padding:9px 8px}
+.rev-s{color:#f0a020;font-size:12px;letter-spacing:1px}
+.rev-b b{display:block;font-size:12px;margin:4px 0 2px}
+.rev-b span{color:var(--mut);font-size:9.5px}
 
 /* ---------- dark 3D showcase ---------- */
-.shows{position:relative;background:var(--dark);padding:96px 0 110px;overflow:hidden}
-.shows:before{content:"";position:absolute;width:720px;height:520px;top:-180px;left:-160px;border-radius:50%;filter:blur(90px);background:rgba(124,58,237,.28)}
-.shows:after{content:"";position:absolute;width:560px;height:420px;bottom:-160px;right:-140px;border-radius:50%;filter:blur(90px);background:rgba(91,75,255,.18)}
+.shows{position:relative;background:var(--black);padding:94px 0 108px;overflow:hidden}
+.shows:before{content:"";position:absolute;width:760px;height:540px;top:-190px;left:-170px;border-radius:50%;filter:blur(100px);background:rgba(126,33,254,.3)}
+.shows:after{content:"";position:absolute;width:580px;height:430px;bottom:-170px;right:-150px;border-radius:50%;filter:blur(100px);background:rgba(126,33,254,.17)}
 .shows .wrap{position:relative;z-index:1}
-.shows .eb{color:#b5a9ff}
-.shows .eb:before{background:rgba(255,255,255,.22)}
+.shows .eb{color:#bda2ff}
+.shows .eb:before{background:rgba(255,255,255,.24)}
 .shows h2{color:#fff;font-size:clamp(28px,3.8vw,44px);line-height:1.08}
-.shows .lead{margin-top:16px;max-width:52ch;color:rgba(255,255,255,.55);font-size:16px;line-height:1.7}
-/* The centre card stays in normal flow so it sets the section's height; the two
-   side cards are absolute, which keeps the composition from leaving dead space. */
-.fan{position:relative;margin-top:64px;padding-bottom:52px;perspective:1900px;transform-style:preserve-3d}
-.card3d{border-radius:16px;overflow:hidden;background:#fff;border:1px solid rgba(255,255,255,.14);box-shadow:0 50px 110px -24px rgba(0,0,0,.72);will-change:transform}
+.shows .lead{margin-top:16px;max-width:52ch;color:rgba(255,255,255,.56);font-size:16px;line-height:1.7}
+/* centre card holds the flow height; side cards are absolute and pushed back in Z */
+.fan{position:relative;margin-top:62px;padding-bottom:52px;perspective:1900px;transform-style:preserve-3d}
+.card3d{border-radius:16px;overflow:hidden;background:#fff;border:1px solid rgba(255,255,255,.15);box-shadow:0 50px 110px -24px rgba(0,0,0,.8);will-change:transform}
 .c-mid{position:relative;width:58%;margin:0 auto;z-index:3}
 .c-left{position:absolute;left:2%;top:38px;width:34%;z-index:2;transform-origin:right center}
 .c-right{position:absolute;right:2%;top:38px;width:34%;z-index:2;transform-origin:left center}
-.tag{position:absolute;z-index:5;display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;background:rgba(18,17,26,.92);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(8px);color:#fff;font-size:13px;font-weight:600;box-shadow:0 14px 34px rgba(0,0,0,.5)}
-.tag s{width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 0 3px rgba(52,211,153,.2)}
+.tag{position:absolute;z-index:5;display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;background:rgba(20,20,24,.92);border:1px solid rgba(255,255,255,.13);backdrop-filter:blur(8px);color:#fff;font-size:13px;font-weight:600;box-shadow:0 14px 34px rgba(0,0,0,.6)}
+.tag s{width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 0 3px rgba(52,211,153,.2);animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 3px rgba(52,211,153,.2)}50%{box-shadow:0 0 0 6px rgba(52,211,153,.06)}}
 .t1{left:18%;top:11%}
 .t2{left:4%;top:44%}
 .t3{right:7%;top:26%}
-.fan-cap{position:absolute;left:4%;bottom:0;z-index:6;color:#fff;font-family:"Space Grotesk",sans-serif;font-size:30px;font-weight:600;letter-spacing:-.04em;text-shadow:0 6px 30px rgba(0,0,0,.6)}
+.fan-cap{position:absolute;left:4%;bottom:0;z-index:6;color:#fff;font-family:"Space Grotesk",sans-serif;font-size:30px;font-weight:600;letter-spacing:-.04em;text-shadow:0 6px 30px rgba(0,0,0,.7)}
 
-/* mini app mockup (used inside 3D cards) */
+/* mini app mockup */
 .app{background:#fff;font-size:0}
-.app-top{display:flex;align-items:center;gap:7px;padding:9px 12px;border-bottom:1px solid #eeecf4}
-.app-top s{width:7px;height:7px;border-radius:50%;background:#e2dfec;display:block}
-.app-top u{margin-left:6px;height:7px;width:76px;border-radius:4px;background:#efedf6;display:block}
+.app-top{display:flex;align-items:center;gap:7px;padding:9px 12px;border-bottom:1px solid #eef0f5}
+.app-top s{width:7px;height:7px;border-radius:50%;background:#e3e6ee;display:block}
+.app-top u{margin-left:6px;height:7px;width:76px;border-radius:4px;background:#f0f2f7;display:block}
 .app-b{display:grid;grid-template-columns:62px 1fr}
-.app-side{border-right:1px solid #f0eef6;padding:10px 8px;display:flex;flex-direction:column;gap:6px}
-.app-side i{height:7px;border-radius:4px;background:#f0eef6;display:block}
-.app-side i.on{background:linear-gradient(90deg,rgba(124,58,237,.3),rgba(124,58,237,.08))}
+.app-side{border-right:1px solid #f1f3f8;padding:10px 8px;display:flex;flex-direction:column;gap:6px}
+.app-side i{height:7px;border-radius:4px;background:#f1f3f8;display:block}
+.app-side i.on{background:linear-gradient(90deg,rgba(126,33,254,.3),rgba(126,33,254,.07))}
 .app-main{padding:11px;display:flex;flex-direction:column;gap:8px}
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
-.kpis div{border:1px solid #f0eef6;border-radius:7px;padding:8px 7px}
-.kpis u{display:block;height:5px;width:60%;border-radius:3px;background:#efedf6;margin-bottom:6px}
-.kpis b{display:block;height:9px;width:78%;border-radius:4px;background:#ddd8ec}
-.kpis div:first-child b{background:linear-gradient(90deg,var(--vio),var(--pur))}
-.chart{border:1px solid #f0eef6;border-radius:8px;padding:10px;display:flex;align-items:flex-end;gap:5px;height:96px}
-.chart i{flex:1;border-radius:3px 3px 0 0;background:#ece9f7;display:block}
-.chart i:nth-child(2n){background:linear-gradient(180deg,rgba(124,58,237,.6),rgba(91,75,255,.9))}
+.kpis div{border:1px solid #f1f3f8;border-radius:7px;padding:8px 7px}
+.kpis u{display:block;height:5px;width:60%;border-radius:3px;background:#f0f2f7;margin-bottom:6px}
+.kpis b{display:block;height:9px;width:78%;border-radius:4px;background:#dfe3ec}
+.kpis div:first-child b{background:linear-gradient(90deg,var(--pur),#a259ff)}
+.chart{border:1px solid #f1f3f8;border-radius:8px;padding:10px;display:flex;align-items:flex-end;gap:5px;height:96px}
+.chart i{flex:1;border-radius:3px 3px 0 0;background:#eef0f7;display:block}
+.chart i:nth-child(2n){background:linear-gradient(180deg,#a259ff,var(--pur))}
 .rows{display:flex;flex-direction:column;gap:6px}
-.rows i{height:9px;border-radius:5px;background:#f2f0f8;display:block}
+.rows i{height:9px;border-radius:5px;background:#f3f5fa;display:block}
 .rows i:nth-child(2){width:74%}
 .rows i:nth-child(3){width:58%}
 
 /* ---------- use cases ---------- */
-.uc{padding:104px 0}
+.uc{padding:100px 0}
 .uc h2{font-size:clamp(28px,3.9vw,46px);line-height:1.08}
-.uc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
-.uc-card{border:1px solid var(--line);border-radius:18px;padding:28px;background:#fff;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s,border-color .3s}
-.uc-card:hover{transform:translateY(-4px);border-color:#d6d0e8;box-shadow:0 22px 48px -16px rgba(17,17,24,.13)}
-.ic{width:46px;height:46px;border-radius:13px;background:var(--wash);display:grid;place-items:center;color:var(--navy);margin-bottom:20px}
+.uc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:46px}
+.uc-card{position:relative;border:1px solid var(--line);border-radius:18px;padding:28px;background:#fff;overflow:hidden;transition:transform .34s cubic-bezier(.2,.8,.2,1),box-shadow .34s,border-color .34s}
+.uc-card:after{content:"";position:absolute;inset:auto auto 0 0;width:100%;height:2px;background:linear-gradient(90deg,var(--pur),#a259ff);transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.uc-card:hover{transform:translateY(-6px);border-color:#ddd9ee;box-shadow:0 26px 54px -18px rgba(15,23,43,.16)}
+.uc-card:hover:after{transform:scaleX(1)}
+.ic{width:46px;height:46px;border-radius:13px;background:var(--wash);display:grid;place-items:center;color:var(--ink);margin-bottom:20px;transition:background .34s,color .34s,transform .34s cubic-bezier(.2,.8,.2,1)}
+.uc-card:hover .ic{background:var(--pur);color:#fff;transform:rotate(-8deg) scale(1.06)}
 .ic svg{width:20px;height:20px}
 .uc-card h3{font-size:19px;margin-bottom:9px}
 .uc-card p{font-size:14.5px;line-height:1.7;color:var(--mut)}
 
-/* ---------- workflow feature grid ---------- */
-.wf{background:var(--wash);padding:104px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+/* ---------- workflow grid ---------- */
+.wf{background:var(--wash);padding:100px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .wf h2{font-size:clamp(28px,3.9vw,46px);line-height:1.08}
-.wf .lead{margin-top:18px;max-width:58ch;font-size:16.5px;line-height:1.7;color:var(--mut)}
-.wf-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:52px}
-.wf-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:26px;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
-.wf-card:hover{transform:translateY(-4px);box-shadow:0 24px 54px -18px rgba(17,17,24,.14)}
+.wf .lead{margin-top:18px;max-width:58ch;font-size:16.5px;line-height:1.72;color:var(--mut)}
+.wf-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:50px}
+.wf-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:26px;transition:transform .34s cubic-bezier(.2,.8,.2,1),box-shadow .34s}
+.wf-card:hover{transform:translateY(-5px);box-shadow:0 28px 58px -20px rgba(15,23,43,.16)}
 .wf-card h3{font-size:22px;margin:24px 0 10px}
 .wf-card p{font-size:15px;line-height:1.75;color:var(--mut)}
-.shot{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:var(--light)}
-.shot-h{display:flex;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--line);font-size:12px;color:var(--mut);background:#fbfaff}
+.shot{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:var(--wash);transition:transform .34s cubic-bezier(.2,.8,.2,1)}
+.wf-card:hover .shot{transform:scale(1.02)}
+.shot-h{display:flex;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--line);font-size:12px;color:var(--mut);background:#fcfcfe}
 .shot-h em{font-style:normal;color:#10b981}
-.li{display:flex;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #f1eff7;font-size:12.5px;color:var(--navy)}
+.li{display:flex;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #f2f4f9;font-size:12.5px;color:var(--ink)}
 .li:last-child{border:0}
 .li span:last-child{font-family:ui-monospace,Menlo,monospace;color:var(--mut)}
-.li.tot{background:#f6f4fd;font-weight:600}
-.li.tot span:last-child{color:var(--navy)}
+.li.tot{background:#f6f3ff;font-weight:600}
+.li.tot span:last-child{color:var(--ink)}
 .ok{display:flex;align-items:center;gap:12px;padding:16px;background:#f0fdf6;border:1px solid #d5f5e3;border-radius:13px}
 .ok .cr{width:30px;height:30px;border-radius:50%;background:#d9f7e7;display:grid;place-items:center;color:#10b981;flex:none}
-.ok b{display:block;font-size:13.5px;color:var(--navy)}
+.ok b{display:block;font-size:13.5px;color:var(--ink)}
 .ok small{font-size:12.5px;color:#10b981}
 .stack{display:flex;flex-direction:column;gap:9px}
-.srow{display:flex;align-items:center;gap:11px;padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:#fff;font-size:13px;color:var(--navy)}
-.srow u{width:8px;height:8px;border-radius:50%;background:var(--vio);flex:none}
+.srow{display:flex;align-items:center;gap:11px;padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:#fff;font-size:13px;color:var(--ink);transition:border-color .3s,transform .3s}
+.srow:hover{border-color:var(--pur);transform:translateX(3px)}
+.srow u{width:8px;height:8px;border-radius:50%;background:var(--pur);flex:none}
 .srow small{margin-left:auto;color:var(--mut);font-size:11.5px}
 .bars{display:flex;align-items:flex-end;gap:7px;height:120px;padding:14px;border:1px solid var(--line);border-radius:13px;background:#fff}
-.bars i{flex:1;border-radius:5px 5px 0 0;background:#eeebf8;display:block}
-.bars i.hi{background:linear-gradient(180deg,var(--vio),var(--pur))}
+.bars i{flex:1;border-radius:5px 5px 0 0;background:#eff1f7;display:block;transition:background .3s}
+.bars i.hi{background:linear-gradient(180deg,#a259ff,var(--pur))}
+.wf-card:hover .bars i{background:#e8eaf3}
+.wf-card:hover .bars i.hi{background:linear-gradient(180deg,#a259ff,var(--pur))}
 
-/* ---------- dark flow pipeline ---------- */
-.flow{position:relative;background:var(--dark);padding:104px 0 116px;overflow:hidden}
-.stars{position:absolute;inset:0;background-image:radial-gradient(1.4px 1.4px at 12% 18%,rgba(255,255,255,.5),transparent),radial-gradient(1.4px 1.4px at 74% 12%,rgba(190,170,255,.45),transparent),radial-gradient(1.6px 1.6px at 32% 62%,rgba(255,255,255,.4),transparent),radial-gradient(1.4px 1.4px at 88% 48%,rgba(255,255,255,.35),transparent),radial-gradient(1.6px 1.6px at 55% 84%,rgba(190,170,255,.4),transparent),radial-gradient(1.2px 1.2px at 22% 90%,rgba(255,255,255,.3),transparent),radial-gradient(1.2px 1.2px at 66% 34%,rgba(255,255,255,.28),transparent)}
-.flow:before{content:"";position:absolute;width:640px;height:460px;top:14%;right:-150px;border-radius:50%;filter:blur(96px);background:rgba(124,58,237,.2)}
+/* ---------- dark pipeline ---------- */
+.flow{position:relative;background:var(--black);padding:100px 0 112px;overflow:hidden}
+.stars{position:absolute;inset:0;background-image:radial-gradient(1.4px 1.4px at 12% 18%,rgba(255,255,255,.5),transparent),radial-gradient(1.4px 1.4px at 74% 12%,rgba(196,168,255,.5),transparent),radial-gradient(1.6px 1.6px at 32% 62%,rgba(255,255,255,.4),transparent),radial-gradient(1.4px 1.4px at 88% 48%,rgba(255,255,255,.34),transparent),radial-gradient(1.6px 1.6px at 55% 84%,rgba(196,168,255,.42),transparent),radial-gradient(1.2px 1.2px at 22% 90%,rgba(255,255,255,.3),transparent),radial-gradient(1.2px 1.2px at 66% 34%,rgba(255,255,255,.28),transparent),radial-gradient(1.3px 1.3px at 44% 22%,rgba(255,255,255,.26),transparent);animation:twinkle 7s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.75}50%{opacity:1}}
+.flow:before{content:"";position:absolute;width:660px;height:480px;top:12%;right:-160px;border-radius:50%;filter:blur(100px);background:rgba(126,33,254,.22)}
 .flow .wrap{position:relative;z-index:1}
 .flow-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
-.flow .eb{color:#b5a9ff}
-.flow .eb:before{background:rgba(255,255,255,.22)}
+.flow .eb{color:#bda2ff}
+.flow .eb:before{background:rgba(255,255,255,.24)}
 .flow h2{color:#fff;font-size:clamp(27px,3.6vw,42px);line-height:1.1}
-.flow .lead{margin-top:18px;color:rgba(255,255,255,.55);font-size:16px;line-height:1.75}
-.checks{margin:26px 0;border:1px solid var(--lined);border-radius:16px;background:rgba(255,255,255,.03);padding:8px 4px}
-.checks div{display:flex;align-items:center;gap:11px;padding:11px 16px;font-size:14px;color:rgba(255,255,255,.76)}
-.checks svg{width:14px;height:14px;color:#a99cff;flex:none}
-.pipe{position:relative;display:flex;flex-direction:column;align-items:center;gap:20px}
+.flow .lead{margin-top:18px;color:rgba(255,255,255,.56);font-size:16px;line-height:1.75}
+.checks{margin:26px 0;border:1px solid var(--lined);border-radius:16px;background:rgba(255,255,255,.035);padding:8px 4px}
+.checks div{display:flex;align-items:center;gap:11px;padding:11px 16px;font-size:14px;color:rgba(255,255,255,.78);transition:color .3s,transform .3s}
+.checks div:hover{color:#fff;transform:translateX(4px)}
+.checks svg{width:14px;height:14px;color:#b795ff;flex:none}
+.pipe{position:relative;display:flex;flex-direction:column;align-items:center;gap:18px}
+.node{display:inline-flex;align-items:center;gap:9px;padding:12px 20px;border-radius:999px;background:linear-gradient(145deg,#2e2e2e,var(--node));border:1px solid var(--lined);color:#fff;font-size:13.5px;font-weight:600;box-shadow:0 16px 34px rgba(0,0,0,.55);transition:transform .32s cubic-bezier(.2,.8,.2,1),border-color .32s,box-shadow .32s}
+.node:hover{transform:translateY(-3px);border-color:rgba(126,33,254,.6);box-shadow:0 20px 42px rgba(126,33,254,.28)}
+.node svg{width:14px;height:14px;color:#b795ff}
 .inputs{display:flex;gap:14px}
-.node{display:inline-flex;align-items:center;gap:9px;padding:12px 20px;border-radius:999px;background:linear-gradient(145deg,#1b1a28,#101019);border:1px solid var(--lined);color:#fff;font-size:13.5px;font-weight:600;box-shadow:0 16px 34px rgba(0,0,0,.45)}
-.node svg{width:14px;height:14px;color:#b5a9ff}
 .big{width:100%;flex-direction:column;gap:3px;border-radius:16px;padding:15px 20px;text-align:center}
-.big small{font-size:10.5px;letter-spacing:.11em;color:rgba(255,255,255,.4);font-weight:500}
-.conn{width:100%;height:42px;display:block}
-.conn path{fill:none;stroke:#7c6cf0;stroke-width:1.4;stroke-dasharray:5 5;opacity:.75}
+.big small{font-size:10.5px;letter-spacing:.11em;color:rgba(255,255,255,.42);font-weight:500}
+.conn{width:100%;height:40px;display:block}
+.conn path{fill:none;stroke:#8b45ff;stroke-width:1.4;stroke-dasharray:5 5;opacity:.8}
 
 /* ---------- final cta ---------- */
-.fin{position:relative;padding:112px 0;text-align:center;overflow:hidden;background:#fff}
-.fin .g1{width:700px;height:460px;top:-140px;left:50%;margin-left:-350px;background:rgba(124,58,237,.22)}
+.fin{position:relative;padding:110px 0;text-align:center;overflow:hidden;background:#fff}
+.fin-glow{position:absolute;width:760px;height:500px;top:-150px;left:50%;margin-left:-380px;border-radius:50%;filter:blur(90px);background:rgba(126,33,254,.24);animation:breathe 9s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.8;transform:scale(1)}50%{opacity:1;transform:scale(1.07)}}
 .fin>.wrap{position:relative;z-index:1}
 .fin h2{font-size:clamp(30px,4.6vw,56px);line-height:1.08}
 .fin p{margin:20px auto 32px;max-width:48ch;font-size:16.5px;line-height:1.7;color:var(--mut)}
 
 /* ---------- footer ---------- */
-.ft{background:var(--dark);color:#fff;padding:64px 0 34px}
-.ft-top{display:flex;justify-content:space-between;gap:48px;flex-wrap:wrap;padding-bottom:40px;border-bottom:1px solid var(--lined)}
+.ft{background:var(--black);color:#fff;padding:62px 0 32px}
+.ft-top{display:flex;justify-content:space-between;gap:48px;flex-wrap:wrap;padding-bottom:38px;border-bottom:1px solid var(--lined)}
 .ft .brand{color:#fff}
 .ft-brand{max-width:290px}
-.ft-brand p{margin-top:14px;font-size:13.5px;line-height:1.75;color:rgba(255,255,255,.45)}
+.ft-brand p{margin-top:14px;font-size:13.5px;line-height:1.75;color:rgba(255,255,255,.46)}
 .ft-cols{display:flex;gap:56px;flex-wrap:wrap}
 .ft-cols div{display:flex;flex-direction:column;gap:11px}
 .ft-cols b{font-size:12.5px;color:#fff;margin-bottom:4px}
-.ft-cols a{font-size:13.5px;color:rgba(255,255,255,.45);cursor:pointer}
-.ft-cols a:hover{color:#fff}
-.ft-bot{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;padding-top:24px;font-size:12.5px;color:rgba(255,255,255,.35)}
+.ft-cols a{font-size:13.5px;color:rgba(255,255,255,.46);cursor:pointer;transition:color .25s,transform .25s;display:inline-block}
+.ft-cols a:hover{color:#fff;transform:translateX(3px)}
+.ft-bot{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;padding-top:24px;font-size:12.5px;color:rgba(255,255,255,.36)}
 
 /* ---------- responsive ---------- */
 @media(max-width:1000px){
   .nav-links{display:none}
-  .flow-grid{grid-template-columns:1fr;gap:40px}
-  .uc-grid{grid-template-columns:1fr}
-  .wf-grid{grid-template-columns:1fr}
+  .flow-grid{grid-template-columns:1fr;gap:38px}
+  .uc-grid,.wf-grid{grid-template-columns:1fr}
   .fan-cap{font-size:24px;left:6%}
+  .rev{display:none}
 }
 @media(max-width:680px){
   .wrap{padding:0 18px}
-  .hero{padding:48px 0 34px}
+  .hero{padding:46px 0 32px}
   .nav-right .lg{display:none}
-  h1{font-size:clamp(30px,8.4vw,40px)}
+  h1{font-size:clamp(29px,8.2vw,40px)}
   .sub{font-size:15.5px;margin:20px auto 24px}
   .cta .btn{flex:1 1 100%;justify-content:center}
-  /* 3D fan flattens into stacked cards on phones */
-  .fan{perspective:none;display:flex;flex-direction:column;gap:18px;margin-top:40px;padding-bottom:0}
+  .fan{perspective:none;display:flex;flex-direction:column;gap:18px;margin-top:38px;padding-bottom:0}
   .card3d{position:relative;left:auto;right:auto;top:auto;width:100%;margin:0;transform:none!important}
   .tag{position:relative;left:auto;right:auto;top:auto;align-self:flex-start;margin-bottom:-8px}
   .fan-cap{position:relative;left:auto;bottom:auto;font-size:22px;margin-top:4px}
-  .shows,.uc,.wf,.flow,.fin{padding:64px 0}
+  .shows,.uc,.wf,.flow,.fin{padding:60px 0}
   .app-side{display:none}
   .app-b{grid-template-columns:1fr}
   .app-main{min-height:132px}
@@ -4159,35 +4193,47 @@ h1 .pu{color:var(--vio)}
 }
 @media(prefers-reduced-motion:reduce){
   .rv{opacity:1!important;transform:none!important}
-  .marq-track{animation:none}
+  .marq-track,.stars,.fin-glow,.tag s{animation:none}
   .card3d{transform:none!important}
+  .rot span{position:relative;opacity:1;transform:none}
+  .rot span~span{display:none}
+  .btn:before{display:none}
 }
 </style></head>
 <body data-cf-keep-dark>
 
+<aside class="rev">
+  <div class="rev-h">Verified Reviews</div>
+  <div class="rev-b"><div class="rev-s">&#9733;&#9733;&#9733;&#9733;&#9733;</div><b>4.9 / 5.0</b><span>2,480 teams rated us</span></div>
+</aside>
+
 <nav class="nav" id="nav"><div class="nav-in">
-  <div class="brand"><span class="mk">C</span><span>Code<em>Fusion</em></span></div>
-  <div class="nav-links"><a>Workflow</a><a>Showcase</a><a>Use Cases</a><a>Demo</a><a>Pricing</a></div>
-  <div class="nav-right"><span class="lg">Log in</span><button class="btn btn-pur"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.9 5.7L19.6 9l-4.3 3.4 1.2 5.8L12 15l-4.5 3.2 1.2-5.8L4.4 9l5.7-1.3L12 2z"/></svg>Get Started</button></div>
+  <div class="brand">
+    <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M22 9c-3-2.6-9-2.6-11 .6-2 3.2 1.4 5.2 5 6.4 3.6 1.2 7 3.2 5 6.4-2 3.2-8 3.2-11 .6"/><circle cx="24.5" cy="7" r="1.8" fill="currentColor" stroke="none"/></svg>
+    <span>QuoteFlow<em>AI</em></span>
+  </div>
+  <div class="nav-links"><a>Workflow</a><a>Screenshots</a><a>Use Cases</a><a>Demo</a><a>Pricing</a></div>
+  <div class="nav-right"><span class="lg">Log in</span><button class="btn btn-pur"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.9 5.7L19.6 9l-4.3 3.4 1.2 5.8L12 15l-4.5 3.2 1.2-5.8L4.4 9l5.7-1.3L12 2z"/></svg>Ask Flow AI</button></div>
 </div></nav>
 
 <header class="hero">
-  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <div class="wash"></div>
   <div class="wrap">
-    <div class="pill rv"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.9 5.7L19.6 9l-4.3 3.4 1.2 5.8L12 15l-4.5 3.2 1.2-5.8L4.4 9l5.7-1.3L12 2z"/></svg>New — Editorial landing system, ready to ship</div>
-    <h1 class="rv">Ship products faster.<br>Design them once.<br><span class="pu">All in one system.</span></h1>
-    <p class="sub rv">Describe the page you need and pull ready-made sections, real interface mockups and production HTML straight into your project — no rebuilding the same hero for the fifth time.</p>
+    <div class="pill rv"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16v3H4zM4 10h16v3H4zM4 16h10v3H4z"/></svg>E-invoicing ready &middot; Built for 2026 compliance</div>
+    <h1 class="rv">Win jobs faster.<span class="rot" id="rot"><span class="in">By voice message.</span><span>Or by photo.</span><span>Even by text.</span></span><span class="pu">All in one platform.</span></h1>
+    <p class="sub rv">Tell Flow AI what the job needs and it drafts a ready-to-sign quote in seconds. Scheduling, time tracking and exports come along for free.</p>
     <div class="cta rv">
-      <button class="btn btn-dark">Start 7 days free <i>→</i></button>
-      <button class="btn btn-white"><svg viewBox="0 0 24 24" fill="#7C3AED"><path d="M8 5v14l11-7z"/></svg>Watch Demo</button>
+      <button class="btn btn-dark">Start 7 days free <i>&rarr;</i></button>
+      <button class="btn btn-white"><svg viewBox="0 0 24 24" fill="#7e21fe"><path d="M8 5v14l11-7z"/></svg>Watch Demo</button>
     </div>
-    <p class="micro rv">No credit card required · Share via link · Commercial licence</p>
+    <p class="micro rv">No mailbox required &middot; Share via link &middot; Digital signature</p>
     <div class="socials rv">
       <a aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.2 8.2L23 22h-6.9l-5.4-7-6.2 7H1.3l7.7-8.8L1 2h7l4.9 6.4L18.9 2z"/></svg></a>
       <a aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3V9zm7 0h3.8v1.7h.05c.53-1 1.83-2 3.76-2 4 0 4.7 2.6 4.7 6v6.3h-4v-5.6c0-1.34-.02-3.06-1.87-3.06-1.87 0-2.16 1.46-2.16 2.96V21h-4V9z"/></svg></a>
-      <a aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.5c.5.1.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03a9.6 9.6 0 0 1 5 0c1.9-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.35 4.68-4.58 4.93.36.31.68.92.68 1.85v2.75c0 .26.18.58.69.48A10 10 0 0 0 12 2z"/></svg></a>
+      <a aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+      <a aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 2h-3v13.2a2.9 2.9 0 1 1-2.4-2.85V9.3a6 6 0 1 0 5.4 5.97V8.9a6.8 6.8 0 0 0 4 1.3V7.2a4 4 0 0 1-4-4z"/></svg></a>
       <a aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 12s0-3.8-.5-5.6a2.9 2.9 0 0 0-2-2C18.7 4 12 4 12 4s-6.7 0-8.5.4a2.9 2.9 0 0 0-2 2C1 8.2 1 12 1 12s0 3.8.5 5.6a2.9 2.9 0 0 0 2 2C5.3 20 12 20 12 20s6.7 0 8.5-.4a2.9 2.9 0 0 0 2-2C23 15.8 23 12 23 12zM9.8 15.4V8.6l5.9 3.4-5.9 3.4z"/></svg></a>
-      <a aria-label="Dribbble"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm6.6 4.6a8.2 8.2 0 0 1 1.9 5.1c-.3-.06-3.2-.65-6.1-.29-.06-.15-.13-.3-.2-.46-.18-.42-.38-.84-.59-1.24 3.2-1.3 4.7-3.2 4.99-3.11zM12 3.5c2.1 0 4 .8 5.4 2.1-.24.35-1.58 2.12-4.67 3.27A42 42 0 0 0 9.7 3.8 8.4 8.4 0 0 1 12 3.5zM8.1 4.4a49 49 0 0 1 3 5.03A31 31 0 0 1 3.6 10.4a8.5 8.5 0 0 1 4.5-6zM3.5 12.02v-.26c.36.01 4.9.07 9.1-1.2.24.47.47.95.68 1.43-4.1 1.2-6.4 4.7-6.8 5.36A8.46 8.46 0 0 1 3.5 12.02zM12 20.5a8.44 8.44 0 0 1-5.2-1.79c.28-.58 2.02-3.85 6.5-5.41l.03-.01c1.13 2.92 1.6 5.37 1.72 6.07A8.4 8.4 0 0 1 12 20.5zm4.5-1.86c-.08-.5-.51-2.84-1.56-5.72 2.73-.44 5.12.27 5.42.37a8.46 8.46 0 0 1-3.86 5.35z"/></svg></a>
+      <a aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg></a>
     </div>
   </div>
 
@@ -4196,20 +4242,20 @@ h1 .pu{color:var(--vio)}
       <div class="mi"><b style="background:#4285f4">D</b>Drive Sync</div>
       <div class="mi"><b style="background:#3ecf8e">S</b>Supabase Database</div>
       <div class="mi"><b style="background:#d97757">C</b>Claude MCP Access</div>
-      <div class="mi"><b style="background:#7c3aed">F</b>Figma Handoff</div>
-      <div class="mi"><b style="background:#111118">V</b>Vercel Deploy</div>
+      <div class="mi"><b style="background:#7e21fe">F</b>Figma Handoff</div>
+      <div class="mi"><b style="background:#0f172b">V</b>Vercel Deploy</div>
       <div class="mi"><b style="background:#f24e1e">N</b>Notion Export</div>
       <div class="mi"><b style="background:#0ea5e9">T</b>Tailwind Ready</div>
-      <div class="mi"><b style="background:#111118">G</b>GitHub Sync</div>
+      <div class="mi"><b style="background:#0f172b">G</b>GitHub Sync</div>
     </div>
   </div>
 </header>
 
 <section class="shows" id="shows">
   <div class="wrap">
-    <div class="eb rv">Showcase</div>
-    <h2 class="rv">Your whole product,<br>one workspace.</h2>
-    <p class="lead rv">Sections, mockups, tokens and exports — everything lives together, so the page you preview is the page you ship.</p>
+    <div class="eb rv">Live</div>
+    <h2 class="rv">Your business,<br>one dashboard.</h2>
+    <p class="lead rv">Quotes, planning, time tracking and Flow AI — all live, all in one place.</p>
 
     <div class="fan" id="fan">
       <span class="tag t1" id="tag1"><s></s>7 days free</span>
@@ -4246,22 +4292,22 @@ h1 .pu{color:var(--vio)}
 <section class="uc">
   <div class="wrap">
     <div class="eb rv">Use Cases</div>
-    <h2 class="rv">Who is this built for?</h2>
+    <h2 class="rv">Who is QuoteFlowAI for?</h2>
     <div class="uc-grid">
       <div class="uc-card rv">
-        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16M4 12h10M4 17h7"/></svg></div>
-        <h3>Indie builders</h3>
-        <p>Ship a credible landing page the same weekend you ship the product, without hiring a designer first.</p>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M14.7 6.3a4 4 0 0 1-5.4 5.4L4 17v3h3l5.3-5.3a4 4 0 0 1 5.4-5.4l-2.6 2.6"/></svg></div>
+        <h3>Craft &amp; Construction</h3>
+        <p>Quote on site from a voice note, get it signed before you pack the van, and turn it straight into a scheduled job.</p>
       </div>
       <div class="uc-card rv">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div>
-        <h3>Product teams</h3>
-        <p>Keep marketing pages on the same tokens as the app, so a rebrand is a variable change and not a rewrite.</p>
+        <h3>Services &amp; Consulting</h3>
+        <p>Track billable hours against every project and let the invoice build itself from what your team actually logged.</p>
       </div>
       <div class="uc-card rv">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg></div>
-        <h3>Studios &amp; agencies</h3>
-        <p>Start every client engagement from a finished system instead of a blank canvas and a deadline.</p>
+        <h3>Digital &amp; Creative</h3>
+        <p>Send a scoped proposal with line items and legal text included, then watch it move from sent to signed in one view.</p>
       </div>
     </div>
   </div>
@@ -4270,42 +4316,42 @@ h1 .pu{color:var(--vio)}
 <section class="wf">
   <div class="wrap">
     <div class="eb rv">Your Workflow</div>
-    <h2 class="rv">From first idea to shipped page</h2>
-    <p class="lead rv">One continuous flow — no exporting to three tools, no re-typing the same content, no design drift between preview and production.</p>
+    <h2 class="rv">From first contact to final invoice</h2>
+    <p class="lead rv">QuoteFlowAI guides you through the entire project lifecycle — no media breaks and no double data entry.</p>
 
     <div class="wf-grid">
       <div class="wf-card rv">
         <div class="shot">
-          <div class="shot-h"><span>Section #1847 · Preview</span><em>ready</em></div>
-          <div class="li"><span>Hero — editorial, centered</span><span>1 of 6</span></div>
-          <div class="li"><span>Feature grid — 2 column</span><span>2 of 6</span></div>
-          <div class="li"><span>Pricing — 3 tier</span><span>3 of 6</span></div>
-          <div class="li tot"><span>Total sections</span><span>6</span></div>
+          <div class="shot-h"><span>Quote #1847 &middot; Example</span><em>done</em></div>
+          <div class="li"><span>Wallbox 11 kW, Type 2</span><span>1,140.00</span></div>
+          <div class="li"><span>Cable NYM-J 5x6, 14 m</span><span>238.00</span></div>
+          <div class="li"><span>Installation 4.5 hrs</span><span>382.50</span></div>
+          <div class="li tot"><span>Total net</span><span>1,760.50</span></div>
         </div>
-        <h3>Compose the page</h3>
-        <p>Pick sections that already share a type scale and spacing rhythm, so the page reads as one design instead of six pasted blocks.</p>
+        <h3>Customer &amp; Quote</h3>
+        <p>Describe the project in a few sentences. Flow AI creates a professional quote with line items, prices and legal texts.</p>
       </div>
 
       <div class="wf-card rv">
-        <div class="ok"><div class="cr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg></div><div><b>Tokens applied</b><small>Colour, radius and type synced automatically</small></div></div>
-        <h3>Keep it consistent</h3>
-        <p>Every surface reads from the same variables. Change the accent once and the hero, cards and dark sections all follow.</p>
+        <div class="ok"><div class="cr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg></div><div><b>Signed digitally</b><small>Quote &rarr; project created automatically</small></div></div>
+        <h3>Acceptance &amp; Project</h3>
+        <p>Share quotes via a simple link — no mailbox required. The customer signs digitally and the quote turns into a project.</p>
       </div>
 
       <div class="wf-card rv">
         <div class="stack">
-          <div class="srow"><u></u>Desktop — 1440px<small>pass</small></div>
-          <div class="srow"><u></u>Tablet — 900px<small>pass</small></div>
-          <div class="srow"><u></u>Mobile — 390px<small>pass</small></div>
+          <div class="srow"><u></u>Team scheduling<small>4 assigned</small></div>
+          <div class="srow"><u></u>Time tracking<small>works offline</small></div>
+          <div class="srow"><u></u>Material list<small>synced</small></div>
         </div>
-        <h3>Check every width</h3>
-        <p>Layouts are authored per breakpoint rather than scaled down, so the phone view is designed and not merely survivable.</p>
+        <h3>Planning &amp; Execution</h3>
+        <p>Plan assignments in the planner, assign jobs to your team, and let everyone log hours from the site — even without signal.</p>
       </div>
 
       <div class="wf-card rv">
         <div class="bars"><i style="height:36%"></i><i style="height:54%"></i><i class="hi" style="height:72%"></i><i style="height:46%"></i><i class="hi" style="height:88%"></i><i style="height:60%"></i><i style="height:40%"></i></div>
-        <h3>Ship and measure</h3>
-        <p>Export production HTML, CSS and JS with no build step required — then watch what the page actually does.</p>
+        <h3>Invoice &amp; Export</h3>
+        <p>Turn logged hours and materials into a compliant invoice, then export the whole month to your accounting tool in one click.</p>
       </div>
     </div>
   </div>
@@ -4317,39 +4363,39 @@ h1 .pu{color:var(--vio)}
     <div>
       <div class="eb rv">Under the hood</div>
       <h2 class="rv">Everything connected,<br>nothing duplicated.</h2>
-      <p class="lead rv">Content, components and exports run through one pipeline, so a change at the start reaches the end without anyone copying anything by hand.</p>
+      <p class="lead rv">Voice, photo or text goes in one end. A signed quote, a scheduled job and a compliant invoice come out the other — with nothing re-typed in between.</p>
       <div class="checks rv">
-        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg>Semantic HTML, no framework lock-in</div>
-        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg>Reduced-motion respected everywhere</div>
-        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg>Commercial licence included</div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg>Legal texts included automatically</div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg>Works offline on site</div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg>Export to your accounting tool</div>
       </div>
-      <button class="btn btn-pur rv">Try it now <i>→</i></button>
+      <button class="btn btn-pur rv">Try it now <i>&rarr;</i></button>
     </div>
 
     <div class="pipe" id="pipe">
       <div class="inputs">
-        <span class="node rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>Prompt</span>
-        <span class="node rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-6 6"/></svg>Figma</span>
-        <span class="node rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>Markdown</span>
+        <span class="node rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>Voice</span>
+        <span class="node rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-6 6"/></svg>Photo</span>
+        <span class="node rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>Text</span>
       </div>
-      <svg class="conn" viewBox="0 0 300 42" preserveAspectRatio="none"><path d="M58 2 C58 24, 150 18, 150 40"/><path d="M150 2 L150 40"/><path d="M242 2 C242 24, 150 18, 150 40"/></svg>
-      <span class="node big rv"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="vertical-align:-2px;margin-right:7px"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>Section composer</span><small>TOKENS APPLIED</small></span>
-      <svg class="conn" viewBox="0 0 300 42" preserveAspectRatio="none"><path d="M150 2 L150 40"/></svg>
-      <span class="node big rv"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="vertical-align:-2px;margin-right:7px"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>Responsive preview</span><small>320PX TO DESKTOP</small></span>
-      <svg class="conn" viewBox="0 0 300 42" preserveAspectRatio="none"><path d="M150 2 L150 40"/></svg>
-      <span class="node big rv"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="vertical-align:-2px;margin-right:7px"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Production export</span><small>HTML · CSS · JS</small></span>
+      <svg class="conn" viewBox="0 0 300 40" preserveAspectRatio="none"><path d="M58 2 C58 23, 150 17, 150 38"/><path d="M150 2 L150 38"/><path d="M242 2 C242 23, 150 17, 150 38"/></svg>
+      <span class="node big rv"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="vertical-align:-2px;margin-right:7px"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>Digital signature</span><small>ON-SITE, ON THE PHONE</small></span>
+      <svg class="conn" viewBox="0 0 300 40" preserveAspectRatio="none"><path d="M150 2 L150 38"/></svg>
+      <span class="node big rv"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="vertical-align:-2px;margin-right:7px"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>Job scheduling</span><small>PLANBOOK</small></span>
+      <svg class="conn" viewBox="0 0 300 40" preserveAspectRatio="none"><path d="M150 2 L150 38"/></svg>
+      <span class="node big rv"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="vertical-align:-2px;margin-right:7px"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>Time tracking</span><small>WORKS OFFLINE</small></span>
     </div>
   </div></div>
 </section>
 
 <section class="fin">
-  <div class="blob g1"></div>
+  <div class="fin-glow"></div>
   <div class="wrap">
-    <h2 class="rv">Turn your next idea<br>into something real.</h2>
-    <p class="rv">Join thousands of teams building with CodeFusion's premium components and templates.</p>
+    <h2 class="rv">Turn your next job<br>into a signed deal.</h2>
+    <p class="rv">Join thousands of teams quoting faster, scheduling smarter and invoicing without the paperwork.</p>
     <div class="cta rv">
-      <button class="btn btn-dark">Get Started <i>→</i></button>
-      <button class="btn btn-white">Explore Products</button>
+      <button class="btn btn-dark">Start 7 days free <i>&rarr;</i></button>
+      <button class="btn btn-white">Book a demo</button>
     </div>
   </div>
 </section>
@@ -4357,17 +4403,20 @@ h1 .pu{color:var(--vio)}
 <footer class="ft"><div class="wrap">
   <div class="ft-top">
     <div class="ft-brand">
-      <div class="brand"><span class="mk">C</span><span>Code<em>Fusion</em></span></div>
-      <p>Original interfaces, thoughtful interactions and ready-to-use code for modern web products.</p>
+      <div class="brand">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M22 9c-3-2.6-9-2.6-11 .6-2 3.2 1.4 5.2 5 6.4 3.6 1.2 7 3.2 5 6.4-2 3.2-8 3.2-11 .6"/><circle cx="24.5" cy="7" r="1.8" fill="currentColor" stroke="none"/></svg>
+        <span>QuoteFlow<em>AI</em></span>
+      </div>
+      <p>Quotes, scheduling, time tracking and invoicing for teams who would rather be on site than at a desk.</p>
     </div>
     <div class="ft-cols">
-      <div><b>Products</b><a>Landing Pages</a><a>Components</a><a>Boilerplates</a></div>
-      <div><b>Collections</b><a>New</a><a>Trending</a><a>Free</a></div>
+      <div><b>Product</b><a>Workflow</a><a>Screenshots</a><a>Pricing</a></div>
+      <div><b>Use Cases</b><a>Construction</a><a>Consulting</a><a>Creative</a></div>
       <div><b>Resources</b><a>Getting started</a><a>Documentation</a><a>Changelog</a></div>
       <div><b>Company</b><a>About</a><a>Support</a><a>Contact</a></div>
     </div>
   </div>
-  <div class="ft-bot"><span>© 2026 CodeFusion. All rights reserved.</span><span>Privacy · Terms · Licence</span></div>
+  <div class="ft-bot"><span>&copy; 2026 QuoteFlowAI. All rights reserved.</span><span>Privacy &middot; Terms &middot; Imprint</span></div>
 </div></footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -4379,7 +4428,7 @@ h1 .pu{color:var(--vio)}
     nav.classList.toggle("on", window.scrollY > 14);
   }, { passive: true });
 
-  // Marquee loops by duplicating its own children, so the -50% keyframe lands seamlessly.
+  // Duplicate the marquee so the -50% keyframe wraps seamlessly.
   var track = document.getElementById("marq");
   track.innerHTML += track.innerHTML;
 
@@ -4391,16 +4440,39 @@ h1 .pu{color:var(--vio)}
       el.style.opacity = 1;
       el.style.transform = "none";
     });
+    // Without GSAP every rotating line stays parked below the clipped box, which
+    // would leave the headline missing a line. Show the first and drop the rest.
+    document.querySelectorAll("#rot span").forEach(function(el, i){
+      if (i === 0) el.style.transform = "none";
+      else el.style.display = "none";
+    });
     return;
   }
 
   gsap.registerPlugin(ScrollTrigger);
 
-  // Hero copy: staggered rise, once, on load.
+  // Hero copy rises in on load.
   gsap.to(".hero .rv", { opacity: 1, y: 0, duration: .85, stagger: .085, ease: "power3.out" });
 
-  // Everything else reveals as it enters.
-  document.querySelectorAll("section .rv, .flow .rv").forEach(function(el){
+  // Rotating middle headline line. This rolls on position alone with every line at
+  // full opacity — a crossfade leaves a frame where both lines are half-faded and the
+  // headline reads as blank, which the clipped box already makes unnecessary.
+  // y:0 matters — the CSS parks each line at translateY(100%), and GSAP folds that
+  // existing transform into its own base, so yPercent alone would stack to 200%.
+  var lines = document.querySelectorAll("#rot span");
+  var idx = 0;
+  gsap.set(lines, { y: 0, yPercent: 100, opacity: 1 });
+  gsap.set(lines[0], { y: 0, yPercent: 0 });
+  setInterval(function(){
+    var cur = lines[idx];
+    idx = (idx + 1) % lines.length;
+    var next = lines[idx];
+    gsap.to(cur, { yPercent: -100, duration: .6, ease: "power2.inOut" });
+    gsap.fromTo(next, { y: 0, yPercent: 100 }, { yPercent: 0, duration: .6, ease: "power2.inOut" });
+  }, 2600);
+
+  // Everything below the fold reveals as it enters.
+  document.querySelectorAll("section .rv").forEach(function(el){
     gsap.to(el, {
       opacity: 1, y: 0, duration: .8, ease: "power3.out",
       scrollTrigger: { trigger: el, start: "top 88%", once: true }
@@ -4408,7 +4480,6 @@ h1 .pu{color:var(--vio)}
   });
 
   if (!phone) {
-    // The fanned cards start folded inward and open out as the section scrolls through.
     // Negative translateZ is what puts the side cards behind the centre one: inside a
     // preserve-3d parent the browser sorts by computed depth and ignores z-index.
     gsap.set("#cM", { y: 60, scale: .94, opacity: 0 });
@@ -4422,9 +4493,8 @@ h1 .pu{color:var(--vio)}
       .to("#cR", { xPercent: 0, y: 34, rotationY: -28, z: -190, scale: 1, opacity: 1, duration: 1.1, ease: "power3.out" }, "<")
       .to([".tag", ".fan-cap"], { opacity: 1, y: 0, duration: .55, stagger: .09, ease: "power2.out" }, "-=0.5");
 
-    // Continuous scrub drifts the three planes at different speeds. It deliberately
-    // animates only yPercent — touching rotationY here would fight the entrance above,
-    // which tweens the same property from a different starting value.
+    // Scrub drift at three depths. Deliberately animates only yPercent — tweening
+    // rotationY here would fight the entrance timeline, which starts it elsewhere.
     var drift = { trigger: "#shows", start: "top bottom", end: "bottom top", scrub: true };
     gsap.to("#cM", { yPercent: -7, ease: "none", scrollTrigger: drift });
     gsap.to("#cL", { yPercent: -13, ease: "none", scrollTrigger: drift });
@@ -4433,12 +4503,11 @@ h1 .pu{color:var(--vio)}
     gsap.to("#tag2", { yPercent: -80, ease: "none", scrollTrigger: drift });
     gsap.to("#tag3", { yPercent: -34, ease: "none", scrollTrigger: drift });
 
-    // Hero blobs drift slower than the page for depth.
-    gsap.to(".b1", { yPercent: 34, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
-    gsap.to(".b2", { yPercent: 52, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
+    // Hero wash drifts slower than the page for depth.
+    gsap.to(".wash", { yPercent: 22, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
   }
 
-  // Pipeline connectors draw themselves as the flow section arrives.
+  // Pipeline connectors draw themselves in, then settle back to a dashed stroke.
   document.querySelectorAll(".conn path").forEach(function(path){
     var len = path.getTotalLength();
     gsap.fromTo(path,
