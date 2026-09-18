@@ -5450,10 +5450,13 @@ button{cursor:pointer;border:0}
 .menu b{display:block;margin-top:4px;font-size:19px;letter-spacing:-.02em}
 
 /* pill with an arrow disc that slides across on hover */
-.pill{position:relative;display:inline-flex;align-items:center;gap:14px;padding:6px 6px 6px 24px;border-radius:999px;background:var(--lime);color:var(--dark);font-size:16px;font-weight:600;overflow:hidden;transition:background .3s}
-.pill .disc{width:44px;height:44px;border-radius:50%;background:#fff;display:grid;place-items:center;flex:none;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.pill{position:relative;display:inline-flex;align-items:center;gap:14px;padding:6px 6px 6px 24px;border-radius:999px;background:var(--lime);color:var(--dark);font-size:16px;font-weight:600;overflow:hidden;transition:background .3s,color .3s}
+/* Icon colour is pinned to --dark rather than inherited, so the disc stays legible
+   once .pill:hover turns the button's own text white — a white icon on the disc's
+   white circle would otherwise vanish. */
+.pill .disc{width:44px;height:44px;border-radius:50%;background:#fff;color:var(--dark);display:grid;place-items:center;flex:none;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
 .pill .disc svg{width:17px;height:17px;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
-.pill:hover{background:var(--lime-d)}
+.pill:hover{background:var(--dark);color:#fff}
 .pill:hover .disc svg{transform:rotate(45deg)}
 .pill.bare{padding:6px;gap:0}
 .pill.bare .disc{background:var(--dark);color:#fff}
@@ -5466,11 +5469,18 @@ button{cursor:pointer;border:0}
    studio-lit portrait video — the reference's own footage is licensed stock bundled
    with that specific template and isn't cleared for reuse in a different resold
    product. Grain overlay + GSAP scroll-zoom below reproduce its camera movement. */
-.hero-art{position:absolute;inset:-6%;width:112%;height:112%;object-fit:cover;object-position:50% 30%;pointer-events:none;will-change:transform;filter:brightness(.8) saturate(1.05)}
+/* inset:0 alone isn't enough here — Chrome still sizes the box to the video's raw
+   1920x1080 intrinsic dimensions and ignores the offsets. Only inset:0 paired with
+   an explicit width/height:100% reliably fills the parent, including once .hero
+   grows past its min-height from its own content. */
+.hero-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%;pointer-events:none;will-change:transform;filter:brightness(.8) saturate(1.05)}
 .hero-art:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.22),transparent 38%,rgba(0,0,0,.58))}
 .hero-grain{position:absolute;inset:0;pointer-events:none;opacity:.18;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-.hero>*{position:relative;z-index:2}
+/* Scoped to the two text blocks, not a bare *: that previously also matched
+   .hero-art/.hero-grain and reset their position back to relative, which broke
+   their absolute inset:0 sizing entirely. */
+.hero>.tagline,.hero>.hero-word{position:relative;z-index:2}
 .tagline{display:flex;align-items:flex-start;gap:16px;max-width:420px;margin-bottom:16px;color:rgba(255,255,255,.72);font-size:16px;line-height:1.55}
 .tagline em{font-style:normal;color:var(--lime)}
 .star{width:36px;height:36px;flex:none;color:var(--lime);animation:spin 12s linear infinite}
