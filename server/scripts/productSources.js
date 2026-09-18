@@ -5462,17 +5462,11 @@ button{cursor:pointer;border:0}
 
 /* ---------- hero ---------- */
 .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 28px 44px;overflow:hidden;background:#050606}
-/* Stand-in for the reference's studio-lit portrait video: a lit figure-shaped glow on
-   black with a film-grain overlay, cropped and scaled by GSAP on scroll the way a real
-   background video would be. No photograph or likeness — licensed footage from the
-   reference can't be re-hosted in a resold template, so the composition is rebuilt from
-   gradients instead of the source clip. */
-.hero-art{position:absolute;inset:-6%;pointer-events:none;will-change:transform;
-  background:
-    radial-gradient(20% 30% at 52% 26%,rgba(180,170,155,.5),transparent 70%),
-    radial-gradient(32% 40% at 54% 74%,rgba(130,127,114,.52),transparent 72%),
-    radial-gradient(58% 58% at 50% 58%,rgba(38,40,38,.92),transparent 75%),
-    #050606}
+/* A Pexels-licensed clip (free for commercial reuse) standing in for the reference's
+   studio-lit portrait video — the reference's own footage is licensed stock bundled
+   with that specific template and isn't cleared for reuse in a different resold
+   product. Grain overlay + GSAP scroll-zoom below reproduce its camera movement. */
+.hero-art{position:absolute;inset:-6%;width:112%;height:112%;object-fit:cover;object-position:50% 30%;pointer-events:none;will-change:transform;filter:brightness(.8) saturate(1.05)}
 .hero-art:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.22),transparent 38%,rgba(0,0,0,.58))}
 .hero-grain{position:absolute;inset:0;pointer-events:none;opacity:.18;mix-blend-mode:overlay;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
@@ -5517,12 +5511,12 @@ button{cursor:pointer;border:0}
 .proj:hover h3{color:#617a2a}
 .chips{display:flex;gap:8px;flex-wrap:wrap}
 .chips span{padding:7px 14px;border:1px solid #d3dadd;border-radius:999px;font-size:14px;color:var(--dark);background:#fff}
-.a1{background:radial-gradient(circle at 30% 30%,#e7dccc,#b8a58a 60%,#6d5f4c)}
-.a2{background:linear-gradient(160deg,#c9d2c8,#8a9a88)}
-.a3{background:radial-gradient(circle at 70% 60%,#ff5a3c,#b3171d 55%,#4a0a0c)}
-.a4{background:linear-gradient(180deg,#8fb8e3 0 45%,#f5c64c 45% 60%,#2b2f38 60%)}
-.a5{background:radial-gradient(circle at 50% 40%,#dbe8f0,#8aa6b8 60%,#344553)}
-.a6{background:linear-gradient(135deg,#1f292d,#3b4d52 50%,#c3ff76)}
+.a1{background:url('https://images.pexels.com/photos/12969358/pexels-photo-12969358.jpeg?auto=compress&cs=tinysrgb&w=900') center/cover}
+.a2{background:url('https://images.pexels.com/photos/326514/pexels-photo-326514.jpeg?auto=compress&cs=tinysrgb&w=900') center/cover}
+.a3{background:url('https://images.pexels.com/photos/326518/pexels-photo-326518.jpeg?auto=compress&cs=tinysrgb&w=900') center/cover}
+.a4{background:url('https://images.pexels.com/photos/196645/pexels-photo-196645.jpeg?auto=compress&cs=tinysrgb&w=900') center/cover}
+.a5{background:url('https://images.pexels.com/photos/28918449/pexels-photo-28918449.jpeg?auto=compress&cs=tinysrgb&w=900') center/cover}
+.a6{background:url('https://images.pexels.com/photos/16023919/pexels-photo-16023919.jpeg?auto=compress&cs=tinysrgb&w=900') center/cover}
 
 /* ---------- about bento ---------- */
 /* ---------- services (dark section: sticky image + active list) ---------- */
@@ -5535,12 +5529,12 @@ button{cursor:pointer;border:0}
 .sv-shot{position:absolute;inset:0;opacity:0;transition:opacity .5s ease}
 .sv-shot.on{opacity:1}
 .sv-shot i{position:absolute;border-radius:12px}
-.sh1 i{inset:14% 10%;background:linear-gradient(135deg,#3a2e28,#171310)}
-.sh1 i:after{content:"";position:absolute;inset:18% 14%;border-radius:6px;background:linear-gradient(160deg,#ff5a3c,#7a1f14)}
-.sh2 i{inset:16% 12%;background:#0d1b22;border:1px solid rgba(195,255,118,.18)}
-.sh2 i:after{content:"";position:absolute;top:12%;left:8%;right:8%;height:10px;border-radius:4px;background:rgba(195,255,118,.5)}
-.sh3 i{inset:14% 10%;background:linear-gradient(160deg,#20323a,#0d1518)}
-.sh4 i{inset:0;background:radial-gradient(circle at 50% 42%,rgba(195,255,118,.22),transparent 60%),#0d1418}
+.sh1 i{inset:14% 10%;background:url('https://images.pexels.com/photos/12969358/pexels-photo-12969358.jpeg?auto=compress&cs=tinysrgb&w=900') center/cover;border-radius:12px}
+
+.sh2 i{inset:16% 12%;background:url('https://images.pexels.com/photos/16023919/pexels-photo-16023919.jpeg?auto=compress&cs=tinysrgb&w=900') center/cover;border:1px solid rgba(195,255,118,.35);border-radius:12px}
+
+.sh3 i{inset:14% 10%;background:url('https://images.pexels.com/photos/326518/pexels-photo-326518.jpeg?auto=compress&cs=tinysrgb&w=900') center/cover;border-radius:12px}
+.sh4 i{inset:0;background:radial-gradient(circle at 50% 42%,rgba(195,255,118,.3),transparent 60%),url('https://images.pexels.com/photos/29450016/pexels-photo-29450016.jpeg?auto=compress&cs=tinysrgb&w=900') center/cover}
 .sv-item{padding:26px 0;border-bottom:1px solid rgba(255,255,255,.12);cursor:pointer;transition:padding .3s}
 .sv-item:last-child{border-bottom:0}
 .sv-item b{display:block;font-size:26px;font-weight:600;letter-spacing:-.03em;color:rgba(255,255,255,.6);transition:color .3s}
@@ -5554,7 +5548,7 @@ button{cursor:pointer;border:0}
 .team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:8px}
 .team-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:30px 16px;border:1px solid var(--line);border-radius:14px;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
 .team-card:hover{transform:translateY(-6px);box-shadow:0 22px 46px -18px rgba(31,41,45,.2)}
-.team-av{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:18px}
+.team-av{width:64px;height:64px;border-radius:50%;background-size:cover;background-position:center;display:grid;place-items:center;color:#fff;font-weight:700;font-size:18px;text-indent:-9999px}
 .team-card strong{font-size:17px}
 .team-card span{font-size:14px;color:var(--mut)}
 
@@ -5577,9 +5571,9 @@ button{cursor:pointer;border:0}
 .nw-cat{display:inline-block;margin-top:16px;font-size:12.5px;font-weight:600;color:var(--mut)}
 .nw-card h3{margin-top:8px;font-size:20px;line-height:1.3;transition:color .3s}
 .nw-card:hover h3{color:#617a2a}
-.n1{background:linear-gradient(160deg,#1c6fa0,#0d3a55)}
-.n2{background:linear-gradient(160deg,#4a7fae,#22405e)}
-.n3{background:linear-gradient(160deg,#a8557a,#5c2740)}
+.n1{background:url('https://images.pexels.com/photos/33126955/pexels-photo-33126955.jpeg?auto=compress&cs=tinysrgb&w=900') center/cover}
+.n2{background:url('https://images.pexels.com/photos/9953924/pexels-photo-9953924.jpeg?auto=compress&cs=tinysrgb&w=900') center/cover}
+.n3{background:url('https://images.pexels.com/photos/38290948/pexels-photo-38290948.jpeg?auto=compress&cs=tinysrgb&w=900') center/cover}
 
 .bento{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:auto auto;gap:24px}
 .bx{padding:24px;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
@@ -5595,7 +5589,7 @@ button{cursor:pointer;border:0}
 .av{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:16px;color:#fff;flex:none}
 .who strong{display:block;font-size:17px}
 .who span{font-size:14px;color:#4b5a3a}
-.bx-img{padding:0;min-height:170px;background:radial-gradient(circle at 78% 30%,#f0a53a 0 7%,transparent 7.5%),linear-gradient(180deg,#bfc6c0 0 55%,#e9d9bd 55%)}
+.bx-img{padding:0;min-height:170px;background:url('https://images.pexels.com/photos/13926637/pexels-photo-13926637.jpeg?auto=compress&cs=tinysrgb&w=900') center/cover}
 .bx-dark{background:var(--dark);color:#fff}
 .bx-dark b{display:block;font-family:"Space Grotesk",sans-serif;font-size:46px;letter-spacing:-.04em}
 .bx-dark span{color:rgba(255,255,255,.66);font-size:15px}
@@ -5721,7 +5715,7 @@ button{cursor:pointer;border:0}
 </div>
 
 <header class="hero">
-  <div class="hero-art" id="heroArt"></div>
+  <video class="hero-art" id="heroArt" autoplay muted loop playsinline poster="https://images.pexels.com/photos/7670512/pexels-photo-7670512.jpeg?auto=compress&cs=tinysrgb&w=1200"><source src="https://videos.pexels.com/video-files/7670512/7670512-hd_1920_1080_25fps.mp4" type="video/mp4"></video>
   <div class="hero-grain"></div>
   <div class="tagline rv">
     <svg class="star" viewBox="0 0 40 40" fill="currentColor"><path d="M17 0h6l-1 15 13-8 3 5-13 7 13 7-3 5-13-8 1 15h-6l1-15-13 8-3-5 13-7-13-7 3-5 13 8z"/></svg>
@@ -5856,10 +5850,10 @@ button{cursor:pointer;border:0}
     </div>
   </div>
   <div class="team-grid">
-    <div class="team-card rv"><span class="team-av" style="background:#3f5b4a">MF</span><strong>Martha Foley</strong><span>Creative Director</span></div>
-    <div class="team-card rv"><span class="team-av" style="background:#5c4a6e">FM</span><strong>Floyd Miles</strong><span>Lead Developer</span></div>
-    <div class="team-card rv"><span class="team-av" style="background:#2f4f5d">GS</span><strong>Glenna Snyder</strong><span>Brand Strategist</span></div>
-    <div class="team-card rv"><span class="team-av" style="background:#6e4a3f">AF</span><strong>Albert Flores</strong><span>Motion Designer</span></div>
+    <div class="team-card rv"><span class="team-av" style="background-image:url('https://images.pexels.com/photos/29856511/pexels-photo-29856511.jpeg?auto=compress&cs=tinysrgb&w=300')">MF</span><strong>Martha Foley</strong><span>Creative Director</span></div>
+    <div class="team-card rv"><span class="team-av" style="background-image:url('https://images.pexels.com/photos/34381970/pexels-photo-34381970.jpeg?auto=compress&cs=tinysrgb&w=300')">FM</span><strong>Floyd Miles</strong><span>Lead Developer</span></div>
+    <div class="team-card rv"><span class="team-av" style="background-image:url('https://images.pexels.com/photos/18809829/pexels-photo-18809829.jpeg?auto=compress&cs=tinysrgb&w=300')">GS</span><strong>Glenna Snyder</strong><span>Brand Strategist</span></div>
+    <div class="team-card rv"><span class="team-av" style="background-image:url('https://images.pexels.com/photos/30767572/pexels-photo-30767572.jpeg?auto=compress&cs=tinysrgb&w=300')">AF</span><strong>Albert Flores</strong><span>Motion Designer</span></div>
   </div>
 </section>
 
