@@ -4034,9 +4034,12 @@ h1 .pu{color:var(--pur)}
 .shows h2{color:#fff;font-size:clamp(28px,3.8vw,44px);line-height:1.08}
 .shows .lead{margin-top:16px;max-width:52ch;color:rgba(255,255,255,.56);font-size:16px;line-height:1.7}
 /* centre card holds the flow height; side cards are absolute and pushed back in Z */
-.fan{position:relative;margin-top:62px;padding-bottom:52px;perspective:1900px;transform-style:preserve-3d}
+.fan{position:relative;margin-top:62px;padding-bottom:74px;perspective:1900px;transform-style:preserve-3d}
 .card3d{border-radius:16px;overflow:hidden;background:#fff;border:1px solid rgba(255,255,255,.15);box-shadow:0 50px 110px -24px rgba(0,0,0,.8);will-change:transform}
 .c-mid{position:relative;width:58%;margin:0 auto;z-index:3}
+/* The caption is white and the mock beneath it is not, so the centre card carries a
+   scrim under its lower third to keep the slide title legible. */
+.c-mid:after{content:"";position:absolute;left:0;right:0;bottom:0;height:44%;z-index:2;pointer-events:none;background:linear-gradient(180deg,transparent,rgba(6,6,10,.9))}
 .c-left{position:absolute;left:2%;top:38px;width:34%;z-index:2;transform-origin:right center}
 .c-right{position:absolute;right:2%;top:38px;width:34%;z-index:2;transform-origin:left center}
 .tag{position:absolute;z-index:5;display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;background:rgba(20,20,24,.92);border:1px solid rgba(255,255,255,.13);backdrop-filter:blur(8px);color:#fff;font-size:13px;font-weight:600;box-shadow:0 14px 34px rgba(0,0,0,.6)}
@@ -4045,7 +4048,14 @@ h1 .pu{color:var(--pur)}
 .t1{left:18%;top:11%}
 .t2{left:4%;top:44%}
 .t3{right:7%;top:26%}
-.fan-cap{position:absolute;left:4%;bottom:0;z-index:6;color:#fff;font-family:"Space Grotesk",sans-serif;font-size:30px;font-weight:600;letter-spacing:-.04em;text-shadow:0 6px 30px rgba(0,0,0,.7)}
+.fan-cap{position:absolute;left:22%;bottom:92px;z-index:6;max-width:40%;color:#fff;text-shadow:0 6px 30px rgba(0,0,0,.8)}
+.fan-cap b{display:block;font-family:"Space Grotesk",sans-serif;font-size:30px;font-weight:600;letter-spacing:-.04em}
+.fan-cap span{display:block;margin-top:6px;font-size:14px;line-height:1.55;color:rgba(255,255,255,.66)}
+/* dot pagination: the active slide reads as a pill, the rest as dots */
+.fan-dots{position:absolute;left:0;right:0;bottom:0;z-index:6;display:flex;justify-content:center;gap:7px}
+.fan-dots button{width:8px;height:8px;padding:0;border-radius:99px;background:rgba(255,255,255,.28);transition:width .35s cubic-bezier(.2,.8,.2,1),background .35s}
+.fan-dots button:hover{background:rgba(255,255,255,.5)}
+.fan-dots button.on{width:26px;background:var(--vio)}
 
 /* mini app mockup */
 .app{background:#fff;font-size:0}
@@ -4168,7 +4178,8 @@ h1 .pu{color:var(--pur)}
   .nav-links{display:none}
   .flow-grid{grid-template-columns:1fr;gap:38px}
   .uc-grid,.wf-grid{grid-template-columns:1fr}
-  .fan-cap{font-size:24px;left:6%}
+  .fan-cap{left:6%;max-width:60%}
+  .fan-cap b{font-size:24px}
   .rev{display:none}
 }
 @media(max-width:680px){
@@ -4181,7 +4192,9 @@ h1 .pu{color:var(--pur)}
   .fan{perspective:none;display:flex;flex-direction:column;gap:18px;margin-top:38px;padding-bottom:0}
   .card3d{position:relative;left:auto;right:auto;top:auto;width:100%;margin:0;transform:none!important}
   .tag{position:relative;left:auto;right:auto;top:auto;align-self:flex-start;margin-bottom:-8px}
-  .fan-cap{position:relative;left:auto;bottom:auto;font-size:22px;margin-top:4px}
+  .fan-cap{position:relative;left:auto;bottom:auto;max-width:none;margin-top:4px}
+  .fan-cap b{font-size:22px}
+  .fan-dots{position:relative;justify-content:flex-start;margin-top:14px}
   .shows,.uc,.wf,.flow,.fin{padding:60px 0}
   .app-side{display:none}
   .app-b{grid-template-columns:1fr}
@@ -4284,7 +4297,13 @@ h1 .pu{color:var(--pur)}
           <div class="app-main"><div class="kpis" style="grid-template-columns:1fr 1fr"><div><u></u><b></b></div><div><u></u><b></b></div></div><div class="rows"><i></i><i></i><i></i><i></i></div></div></div>
       </div></div>
 
-      <span class="fan-cap">Dashboard</span>
+      <div class="fan-cap" id="fanCap"><b>Dashboard</b><span>Every project, its revenue and what is due, at a glance.</span></div>
+      <div class="fan-dots" id="fanDots">
+        <button class="on" aria-label="Dashboard"></button>
+        <button aria-label="Time tracking"></button>
+        <button aria-label="Quotes"></button>
+        <button aria-label="Scheduling"></button>
+      </div>
     </div>
   </div>
 </section>
@@ -4491,7 +4510,46 @@ h1 .pu{color:var(--pur)}
       .to("#cM", { y: 0, scale: 1, opacity: 1, duration: 1, ease: "power3.out" })
       .to("#cL", { xPercent: 0, y: 34, rotationY: 28, z: -190, scale: 1, opacity: 1, duration: 1.1, ease: "power3.out" }, "-=0.75")
       .to("#cR", { xPercent: 0, y: 34, rotationY: -28, z: -190, scale: 1, opacity: 1, duration: 1.1, ease: "power3.out" }, "<")
-      .to([".tag", ".fan-cap"], { opacity: 1, y: 0, duration: .55, stagger: .09, ease: "power2.out" }, "-=0.5");
+      .to([".tag", ".fan-cap", ".fan-dots"], { opacity: 1, y: 0, duration: .55, stagger: .09, ease: "power2.out" }, "-=0.5");
+
+    // Carousel: the three cards hold their positions while the slide content and the
+    // caption cycle through them, which is cheaper than moving four cards around and
+    // keeps the fan's composition fixed.
+    var slides = [
+      { t: "Dashboard", d: "Every project, its revenue and what is due, at a glance." },
+      { t: "Time tracking", d: "Hours logged on site, even with no signal, ready to bill." },
+      { t: "Quotes", d: "Drafted from a sentence, signed from a link, never re-typed." },
+      { t: "Scheduling", d: "Who is where, what they need, and what happens next." }
+    ];
+    var cap = document.getElementById("fanCap");
+    var dots = [].slice.call(document.querySelectorAll("#fanDots button"));
+    var slide = 0, timer;
+
+    function show(next){
+      slide = (next + slides.length) % slides.length;
+      dots.forEach(function(d, i){ d.classList.toggle("on", i === slide); });
+
+      gsap.timeline()
+        .to(cap, { opacity: 0, y: 10, duration: .25, ease: "power2.in" })
+        .add(function(){
+          cap.querySelector("b").textContent = slides[slide].t;
+          cap.querySelector("span").textContent = slides[slide].d;
+        })
+        .to(cap, { opacity: 1, y: 0, duration: .35, ease: "power2.out" });
+
+      // A small nudge on the stack sells the change without re-running the entrance.
+      gsap.fromTo("#cM", { scale: .985 }, { scale: 1, duration: .5, ease: "power2.out" });
+    }
+
+    function play(){ timer = setInterval(function(){ show(slide + 1); }, 3800); }
+    function pause(){ clearInterval(timer); }
+
+    dots.forEach(function(d, i){
+      d.addEventListener("click", function(){ pause(); show(i); play(); });
+    });
+    document.getElementById("fan").addEventListener("mouseenter", pause);
+    document.getElementById("fan").addEventListener("mouseleave", play);
+    play();
 
     // Scrub drift at three depths. Deliberately animates only yPercent — tweening
     // rotationY here would fight the entrance timeline, which starts it elsewhere.
