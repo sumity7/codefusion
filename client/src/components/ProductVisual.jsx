@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { getCombinedSourceCode } from "../services/combinedSource";
 import { useTheme } from "../hooks/useTheme";
 
@@ -147,6 +148,69 @@ const LIGHT_CANVAS_SCRIPT = `
 </script>
 `;
 
+/*
+ * Card previews walk through the whole page while the pointer is over the card.
+ *
+ * The scrolling has to happen inside the frame: the sandbox deliberately withholds
+ * allow-same-origin, so the parent cannot reach contentDocument. It posts a message
+ * instead and this listener does the work, which keeps the sandbox intact.
+ *
+ * Products shorter than their card have nothing to travel through, so they ignore
+ * the message entirely rather than twitching in place.
+ */
+const LISTING_SCROLL_SCRIPT = `
+<script>
+(function(){
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var raf = null, dir = 1, hold = 0, last = 0;
+
+  function el(){ return document.scrollingElement || document.documentElement; }
+  function distance(){ var e = el(); return e.scrollHeight - e.clientHeight; }
+  function stop(){ if (raf) cancelAnimationFrame(raf); raf = null; }
+  function reset(){ stop(); el().scrollTop = 0; }
+
+  function start(){
+    if (reduced || raf) return;
+    var travel = distance();
+    if (travel < 40) return;
+
+    // Speed is derived from the travel so every product takes about the same time to
+    // read, rather than a fixed px/sec that crawls through tall pages. The floor stops
+    // near-static products from creeping.
+    var speed = Math.max(45, travel / 7);
+    dir = 1;
+    hold = 380;
+    last = performance.now();
+
+    function step(now){
+      var dt = (now - last) / 1000;
+      last = now;
+      if (hold > 0) { hold -= dt * 1000; raf = requestAnimationFrame(step); return; }
+
+      var e = el();
+      var limit = distance();
+      var y = e.scrollTop + dir * speed * dt;
+
+      if (y >= limit) { y = limit; dir = -1; hold = 900; }
+      else if (y <= 0) { y = 0; dir = 1; hold = 700; }
+
+      e.scrollTop = y;
+      raf = requestAnimationFrame(step);
+    }
+
+    raf = requestAnimationFrame(step);
+  }
+
+  window.addEventListener("message", function(event){
+    var data = event.data;
+    if (!data || data.cf !== "preview-scroll") return;
+    if (data.action === "start") start();
+    else reset();
+  });
+})();
+</script>
+`;
+
 function usesLightCanvas(product) {
   return product?.category !== "Boilerplates";
 }
@@ -186,14 +250,32 @@ function buildPreviewSource(
   const previewCSS =
     mode === "listing"
       ? `
-        html,
+        /* The card preview scrolls itself on hover, so the document has to stay
+           scrollable. The scrollbar is hidden instead of the overflow, and the frame
+           takes no pointer events, so the wheel still belongs to the page behind it. */
+        html {
+          width: 100% !important;
+          min-width: 0 !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          overflow-x: hidden !important;
+          overflow-y: auto !important;
+          scrollbar-width: none !important;
+        }
+
+        html::-webkit-scrollbar {
+          width: 0 !important;
+          height: 0 !important;
+          display: none !important;
+        }
+
         body {
           width: 100% !important;
           min-width: 0 !important;
           min-height: 100% !important;
           margin: 0 !important;
           padding: 0 !important;
-          overflow: hidden !important;
+          overflow-x: hidden !important;
         }
 
         img,
@@ -244,7 +326,9 @@ function buildPreviewSource(
 
   const themedCSS = lightCanvas ? previewCSS + LIGHT_CANVAS_CSS : previewCSS;
 
-  const themedScript = lightCanvas ? LIGHT_CANVAS_SCRIPT : "";
+  const themedScript =
+    (lightCanvas ? LIGHT_CANVAS_SCRIPT : "") +
+    (mode === "listing" ? LISTING_SCROLL_SCRIPT : "");
 
   if (/<\/head>/i.test(output)) {
     output = output.replace(
@@ -294,6 +378,8 @@ export function SourcePreview({
 }) {
   const { theme } = useTheme() || {};
 
+  const frameRef = useRef(null);
+
   const source =
     buildPreviewSource(
       product,
@@ -301,11 +387,23 @@ export function SourcePreview({
       theme
     );
 
+  const listing = mode === "listing";
+
+  function drive(action) {
+    frameRef.current?.contentWindow?.postMessage(
+      { cf: "preview-scroll", action },
+      "*"
+    );
+  }
+
   return (
     <div
       className={`source-preview-wrap ${mode}`}
+      onMouseEnter={listing ? () => drive("start") : undefined}
+      onMouseLeave={listing ? () => drive("stop") : undefined}
     >
       <iframe
+        ref={frameRef}
         title={`${
           product?.name ||
           "Product"
