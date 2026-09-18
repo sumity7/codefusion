@@ -5462,14 +5462,20 @@ button{cursor:pointer;border:0}
 
 /* ---------- hero ---------- */
 .hero{position:relative;min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 28px 44px;overflow:hidden;background:#050606}
-/* stand-in for the reference's portrait video: a lit figure-shaped glow on black */
-.hero-art{position:absolute;inset:0;pointer-events:none;
+/* Stand-in for the reference's studio-lit portrait video: a lit figure-shaped glow on
+   black with a film-grain overlay, cropped and scaled by GSAP on scroll the way a real
+   background video would be. No photograph or likeness — licensed footage from the
+   reference can't be re-hosted in a resold template, so the composition is rebuilt from
+   gradients instead of the source clip. */
+.hero-art{position:absolute;inset:-6%;pointer-events:none;will-change:transform;
   background:
-    radial-gradient(22% 34% at 50% 30%,rgba(170,160,145,.55),transparent 70%),
-    radial-gradient(34% 44% at 52% 78%,rgba(125,122,110,.55),transparent 72%),
-    radial-gradient(60% 60% at 50% 60%,rgba(40,42,40,.9),transparent 75%),
+    radial-gradient(20% 30% at 52% 26%,rgba(180,170,155,.5),transparent 70%),
+    radial-gradient(32% 40% at 54% 74%,rgba(130,127,114,.52),transparent 72%),
+    radial-gradient(58% 58% at 50% 58%,rgba(38,40,38,.92),transparent 75%),
     #050606}
-.hero-art:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.2),transparent 40%,rgba(0,0,0,.55))}
+.hero-art:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.22),transparent 38%,rgba(0,0,0,.58))}
+.hero-grain{position:absolute;inset:0;pointer-events:none;opacity:.18;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 .hero>*{position:relative;z-index:2}
 .tagline{display:flex;align-items:flex-start;gap:16px;max-width:420px;margin-bottom:16px;color:rgba(255,255,255,.72);font-size:16px;line-height:1.55}
 .tagline em{font-style:normal;color:var(--lime)}
@@ -5519,6 +5525,62 @@ button{cursor:pointer;border:0}
 .a6{background:linear-gradient(135deg,#1f292d,#3b4d52 50%,#c3ff76)}
 
 /* ---------- about bento ---------- */
+/* ---------- services (dark section: sticky image + active list) ---------- */
+.sv{background:var(--dark);color:#fff}
+.sv .lab i{background:rgba(255,255,255,.18)}
+.sv .lab b{background:#fff;color:var(--dark)}
+.sv .lead{color:rgba(255,255,255,.55)}
+.sv-wrap{display:grid;grid-template-columns:.85fr 1fr;gap:44px;margin-top:8px}
+.sv-img{position:sticky;top:110px;height:380px;border-radius:16px;overflow:hidden;background:#141b1f;border:1px solid rgba(255,255,255,.08)}
+.sv-shot{position:absolute;inset:0;opacity:0;transition:opacity .5s ease}
+.sv-shot.on{opacity:1}
+.sv-shot i{position:absolute;border-radius:12px}
+.sh1 i{inset:14% 10%;background:linear-gradient(135deg,#3a2e28,#171310)}
+.sh1 i:after{content:"";position:absolute;inset:18% 14%;border-radius:6px;background:linear-gradient(160deg,#ff5a3c,#7a1f14)}
+.sh2 i{inset:16% 12%;background:#0d1b22;border:1px solid rgba(195,255,118,.18)}
+.sh2 i:after{content:"";position:absolute;top:12%;left:8%;right:8%;height:10px;border-radius:4px;background:rgba(195,255,118,.5)}
+.sh3 i{inset:14% 10%;background:linear-gradient(160deg,#20323a,#0d1518)}
+.sh4 i{inset:0;background:radial-gradient(circle at 50% 42%,rgba(195,255,118,.22),transparent 60%),#0d1418}
+.sv-item{padding:26px 0;border-bottom:1px solid rgba(255,255,255,.12);cursor:pointer;transition:padding .3s}
+.sv-item:last-child{border-bottom:0}
+.sv-item b{display:block;font-size:26px;font-weight:600;letter-spacing:-.03em;color:rgba(255,255,255,.6);transition:color .3s}
+.sv-item.on b{color:var(--lime)}
+.sv-item p{max-height:0;overflow:hidden;opacity:0;font-size:14.5px;line-height:1.65;color:rgba(255,255,255,.5);transition:max-height .4s ease,opacity .3s,margin-top .4s}
+.sv-item.on p{max-height:80px;opacity:1;margin-top:10px}
+.sv-cta{margin-top:16px;background:var(--lime);color:var(--dark)}
+.sv-cta:hover{background:var(--lime-d)}
+
+/* ---------- team ---------- */
+.team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:8px}
+.team-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:30px 16px;border:1px solid var(--line);border-radius:14px;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
+.team-card:hover{transform:translateY(-6px);box-shadow:0 22px 46px -18px rgba(31,41,45,.2)}
+.team-av{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-size:18px}
+.team-card strong{font-size:17px}
+.team-card span{font-size:14px;color:var(--mut)}
+
+/* ---------- logo cloud ---------- */
+.lc{text-align:center}
+.lc>p{font-size:16px;color:var(--mut);margin-bottom:44px}
+.lc-row{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.lc-track{display:flex;gap:64px;width:max-content;animation:lcslide 30s linear infinite}
+.lc-row:hover .lc-track{animation-play-state:paused}
+@keyframes lcslide{to{transform:translateX(-50%)}}
+.lc-item{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:700;letter-spacing:-.02em;color:#9aa1a6;white-space:nowrap}
+.lc-item svg{width:24px;height:24px}
+
+/* ---------- recent news ---------- */
+.nw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:8px}
+.nw-card{cursor:pointer}
+.nw-img{height:220px;border-radius:12px;overflow:hidden}
+.nw-img div{width:100%;height:100%;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.nw-card:hover .nw-img div{transform:scale(1.06)}
+.nw-cat{display:inline-block;margin-top:16px;font-size:12.5px;font-weight:600;color:var(--mut)}
+.nw-card h3{margin-top:8px;font-size:20px;line-height:1.3;transition:color .3s}
+.nw-card:hover h3{color:#617a2a}
+.n1{background:linear-gradient(160deg,#1c6fa0,#0d3a55)}
+.n2{background:linear-gradient(160deg,#4a7fae,#22405e)}
+.n3{background:linear-gradient(160deg,#a8557a,#5c2740)}
+
 .bento{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:auto auto;gap:24px}
 .bx{padding:24px;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
 .bx:hover{transform:translateY(-6px);box-shadow:0 26px 50px -20px rgba(31,41,45,.25)}
@@ -5619,7 +5681,9 @@ button{cursor:pointer;border:0}
   .split{grid-template-columns:1fr}
   .bento{grid-template-columns:1fr 1fr}
   .bx-lime,.bx-line{grid-row:auto}
-  .tm-grid,.pr-grid{grid-template-columns:1fr}
+  .tm-grid,.pr-grid,.sv-wrap,.nw-grid{grid-template-columns:1fr}
+  .team-grid{grid-template-columns:1fr 1fr}
+  .sv-img{position:relative;top:auto;height:280px}
   .ft-grid{grid-template-columns:1fr 1fr}
   .ft-copy{text-align:left}
 }
@@ -5630,6 +5694,7 @@ button{cursor:pointer;border:0}
   .logo{font-size:30px}
   .hero{padding:0 18px 34px}
   .stats,.bento,.form{grid-template-columns:1fr}
+  .team-grid{grid-template-columns:1fr}
   .menu{left:14px;right:14px;width:auto}
   .proj{width:250px}
   .ft{padding:80px 18px 34px}
@@ -5637,7 +5702,7 @@ button{cursor:pointer;border:0}
 }
 @media(prefers-reduced-motion:reduce){
   .rv{opacity:1!important;transform:none!important}
-  .pf-track,.star{animation:none}
+  .pf-track,.lc-track,.star{animation:none}
 }
 </style></head>
 <body data-cf-keep-dark>
@@ -5656,7 +5721,8 @@ button{cursor:pointer;border:0}
 </div>
 
 <header class="hero">
-  <div class="hero-art"></div>
+  <div class="hero-art" id="heroArt"></div>
+  <div class="hero-grain"></div>
   <div class="tagline rv">
     <svg class="star" viewBox="0 0 40 40" fill="currentColor"><path d="M17 0h6l-1 15 13-8 3 5-13 7 13 7-3 5-13-8 1 15h-6l1-15-13 8-3-5 13-7-13-7 3-5 13 8z"/></svg>
     <p>We create <em>high-performing</em> digital designs that elevate brands and enhance conversions.</p>
@@ -5704,6 +5770,30 @@ button{cursor:pointer;border:0}
   </div>
 </section>
 
+<section class="sec sv">
+  <div class="split">
+    <div class="lab rv"><u>03</u><i></i><b>Services</b></div>
+    <div>
+      <h2 class="rv">What we do best</h2>
+      <p class="lead rv">A glimpse into our craft — the disciplines we bring to every engagement, from first sketch to final launch.</p>
+    </div>
+  </div>
+  <div class="sv-wrap">
+    <div class="sv-img" id="svImg">
+      <div class="sv-shot sh1 on"><i></i></div>
+      <div class="sv-shot sh2"><i></i></div>
+      <div class="sv-shot sh3"><i></i></div>
+      <div class="sv-shot sh4"><i></i></div>
+    </div>
+    <div class="sv-list" id="svList">
+      <div class="sv-item on" data-i="0"><b>Brand identity</b><p>Strategy, naming and visual systems built to hold up across every touchpoint your customers meet.</p></div>
+      <div class="sv-item" data-i="1"><b>Web development</b><p>Fast, accessible builds on a component system your team can extend long after launch.</p></div>
+      <div class="sv-item" data-i="2"><b>Content creation</b><p>Photography, copy and campaign assets produced in-house, tuned to how the brand actually sounds.</p></div>
+      <div class="sv-item" data-i="3"><b>Motion &amp; 3d modeling</b><p>Product renders and motion pieces that make a launch feel like an event.</p><a class="pill sv-cta">See our Work<span class="disc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M8 7h9v9"/></svg></span></a></div>
+    </div>
+  </div>
+</section>
+
 <section class="sec">
   <div class="split">
     <div>
@@ -5734,7 +5824,10 @@ button{cursor:pointer;border:0}
 <section class="sec tm">
   <div class="split">
     <div class="lab rv"><u>05</u><i></i><b>Testimonials</b></div>
-    <h2 class="rv">What our clients say</h2>
+    <div>
+      <h2 class="rv">Stories from clients</h2>
+      <p class="lead rv">Real experiences, genuine feedback — discover how our creative solutions have transformed brands and elevated businesses.</p>
+    </div>
   </div>
   <div class="tm-grid">
     <div class="tc l rv">
@@ -5756,7 +5849,23 @@ button{cursor:pointer;border:0}
 
 <section class="sec">
   <div class="split">
-    <div class="lab rv"><u>06</u><i></i><b>Pricing</b></div>
+    <div class="lab rv"><u>06</u><i></i><b>The team</b></div>
+    <div>
+      <h2 class="rv">Meet our team</h2>
+      <p class="lead rv">Our team is committed to redefining digital experiences through innovative web solutions while fostering a diverse and collaborative environment.</p>
+    </div>
+  </div>
+  <div class="team-grid">
+    <div class="team-card rv"><span class="team-av" style="background:#3f5b4a">MF</span><strong>Martha Foley</strong><span>Creative Director</span></div>
+    <div class="team-card rv"><span class="team-av" style="background:#5c4a6e">FM</span><strong>Floyd Miles</strong><span>Lead Developer</span></div>
+    <div class="team-card rv"><span class="team-av" style="background:#2f4f5d">GS</span><strong>Glenna Snyder</strong><span>Brand Strategist</span></div>
+    <div class="team-card rv"><span class="team-av" style="background:#6e4a3f">AF</span><strong>Albert Flores</strong><span>Motion Designer</span></div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="split">
+    <div class="lab rv"><u>07</u><i></i><b>Pricing</b></div>
     <h2 class="rv">Simple plans, serious results</h2>
   </div>
   <div class="pr-grid">
@@ -5787,9 +5896,23 @@ button{cursor:pointer;border:0}
   </div>
 </section>
 
+<section class="sec lc" style="background:var(--light)">
+  <p class="rv">More than 320 trusted partners &amp; clients</p>
+  <div class="lc-row">
+    <div class="lc-track" id="lcTrack">
+      <span class="lc-item"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="9"/></svg>Northwind</span>
+      <span class="lc-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="4"/></svg>Brightline</span>
+      <span class="lc-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l9 9-9 9-9-9z"/></svg>Meridian</span>
+      <span class="lc-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l10 6v8l-10 6L2 16V8z"/></svg>Kirin Motors</span>
+      <span class="lc-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>Slice House</span>
+      <span class="lc-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16v4H4zm0 6h16v4H4zm0 6h10v4H4z"/></svg>Halven</span>
+    </div>
+  </div>
+</section>
+
 <section class="sec" style="background:var(--light)">
   <div class="split">
-    <div class="lab rv"><u>07</u><i></i><b>FAQs</b></div>
+    <div class="lab rv"><u>08</u><i></i><b>FAQs</b></div>
     <div>
       <h2 class="rv" style="margin-bottom:34px">Got questions?</h2>
       <div class="faq">
@@ -5804,8 +5927,23 @@ button{cursor:pointer;border:0}
 
 <section class="sec">
   <div class="split">
+    <div class="lab rv"><u>09</u><i></i><b>Resources</b></div>
     <div>
-      <div class="lab rv"><u>08</u><i></i><b>Contact</b></div>
+      <h2 class="rv">Recent news</h2>
+      <p class="lead rv">Explore the latest trends, bold projects, and creative insights from our agency — shaping the future of branding, digital experiences, and storytelling.</p>
+    </div>
+  </div>
+  <div class="nw-grid">
+    <div class="nw-card rv"><div class="nw-img"><div class="n1"></div></div><span class="nw-cat">Motion</span><h3>Breaking boundaries — our latest brand redesign</h3></div>
+    <div class="nw-card rv"><div class="nw-img"><div class="n2"></div></div><span class="nw-cat">Strategy</span><h3>A campaign that connects across every channel</h3></div>
+    <div class="nw-card rv"><div class="nw-img"><div class="n3"></div></div><span class="nw-cat">Branding</span><h3>Recognized for design excellence, three years running</h3></div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="split">
+    <div>
+      <div class="lab rv"><u>10</u><i></i><b>Contact</b></div>
       <h2 class="rv" style="margin-top:40px">Let's talk</h2>
     </div>
     <form class="form rv" onsubmit="return false">
@@ -5860,6 +5998,18 @@ button{cursor:pointer;border:0}
 
   var track = document.getElementById("pf");
   track.innerHTML += track.innerHTML;
+  var lcTrack = document.getElementById("lcTrack");
+  lcTrack.innerHTML += lcTrack.innerHTML;
+
+  // Services: clicking a list item jumps straight to it; scroll-driven activation
+  // (which item highlights as the section is pinned) is wired up below with GSAP.
+  var svItems = [].slice.call(document.querySelectorAll(".sv-item"));
+  var svShots = [].slice.call(document.querySelectorAll(".sv-shot"));
+  function setActiveService(i){
+    svItems.forEach(function(el, ei){ el.classList.toggle("on", ei === i); });
+    svShots.forEach(function(el, ei){ el.classList.toggle("on", ei === i); });
+  }
+  svItems.forEach(function(el, i){ el.addEventListener("click", function(){ setActiveService(i); }); });
 
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -5896,8 +6046,24 @@ button{cursor:pointer;border:0}
     ScrollTrigger.create({ trigger: el, start: "top 90%", once: true, onEnter: function(){ countUp(el); } });
   });
 
-  // The hero art drifts down as it leaves, so the wordmark appears to rise off it.
-  gsap.to(".hero-art", { yPercent: 18, scale: 1.06, ease: "none",
+  // Services: the image is CSS position:sticky, so it already stays put while the
+  // list scrolls past it — this only has to decide which item counts as "current".
+  if (svItems.length) {
+    ScrollTrigger.create({
+      trigger: "#svList", start: "top 55%", end: "bottom 55%",
+      onUpdate: function(self){
+        setActiveService(Math.min(svItems.length - 1, Math.floor(self.progress * svItems.length)));
+      }
+    });
+  }
+
+  // Entrance mimics a video that opens zoomed in and settles — starts scaled up,
+  // eases down to rest, independent of the scroll-linked zoom below.
+  gsap.fromTo("#heroArt", { scale: 1.16 }, { scale: 1, duration: 1.8, ease: "power2.out" });
+
+  // The hero art continues zooming in and drifts down as it leaves, so the wordmark
+  // appears to rise off it — the same slow push-in a background video would have.
+  gsap.to(".hero-art", { yPercent: 18, scale: 1.14, ease: "none",
     scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
   gsap.to(".bg-star", { rotation: 40, ease: "none",
     scrollTrigger: { trigger: ".stats-sec", start: "top bottom", end: "bottom top", scrub: true } });
