@@ -3928,4 +3928,456 @@ body{margin:0;min-height:100vh;display:grid;place-items:center;background:#05050
 </div>
 </div>
 </body></html>`,
+  "editorial-saas-landing-page": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Editorial SaaS Landing Page</title><style>
+:root{--purple:#5B4BFF;--purple2:#8E7CFF;--dark:#08080D;--ink:#111118;--muted:#6F6F7A;--light:#F7F6FB;--line:rgba(17,17,24,.09);--lined:rgba(255,255,255,.1)}
+*{box-sizing:border-box}
+html,body{background:var(--light)}
+body{margin:0;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:"Space Grotesk",Inter,ui-sans-serif,sans-serif;margin:0}
+p{margin:0}
+button{font-family:inherit;cursor:pointer}
+.ep-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.12em;color:var(--purple)}
+
+/* ---------- buttons ---------- */
+.ep-btn{border-radius:999px;padding:14px 24px;font-size:15px;font-weight:600;border:1px solid transparent;display:inline-flex;align-items:center;gap:8px;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s,background .25s,color .25s,border-color .25s}
+.ep-btn i{font-style:normal;display:inline-block;transition:transform .25s}
+.ep-btn:hover i{transform:translateX(3px)}
+.ep-btn-dark{background:var(--ink);color:#fff}
+.ep-btn-dark:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(17,17,24,.22)}
+.ep-btn-ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.ep-btn-ghost:hover{transform:translateY(-2px);border-color:#c8c4d6}
+.ep-btn-light{background:#fff;color:var(--ink)}
+.ep-btn-light:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(0,0,0,.35)}
+.ep-btn-ghost-dark{background:transparent;color:#fff;border-color:var(--lined)}
+.ep-btn-ghost-dark:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.3)}
+.ep-cta-row{display:flex;gap:12px;flex-wrap:wrap}
+
+/* ---------- nav ---------- */
+.ep-nav{position:sticky;top:0;z-index:50;padding:18px 0}
+.ep-nav-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:28px;padding:12px 22px;border-radius:999px;border:1px solid transparent;transition:background .35s,border-color .35s,backdrop-filter .35s,padding .35s,box-shadow .35s}
+.ep-nav.scrolled .ep-nav-in{background:rgba(247,246,251,.72);backdrop-filter:blur(16px);border-color:var(--line);box-shadow:0 10px 30px rgba(17,17,24,.06);padding:9px 22px}
+.ep-logo{font-weight:700;font-size:17px;letter-spacing:-.03em;color:var(--ink);text-decoration:none;font-family:"Space Grotesk",sans-serif}
+.ep-logo span{color:var(--purple)}
+.ep-links{display:flex;gap:26px;margin-left:8px;font-size:14px;color:var(--muted)}
+.ep-links a{cursor:pointer}
+.ep-links a:hover{color:var(--ink)}
+.ep-actions{margin-left:auto;display:flex;align-items:center;gap:16px}
+.ep-login{font-size:14px;color:var(--muted);cursor:pointer}
+.ep-login:hover{color:var(--ink)}
+.ep-actions .ep-btn{padding:10px 18px;font-size:13px}
+
+/* ---------- hero ---------- */
+.ep-hero{position:relative;padding:96px 24px 60px;max-width:1180px;margin:0 auto;overflow:hidden}
+.ep-hero-glow{position:absolute;inset:-20% -10% auto -10%;height:640px;background:radial-gradient(circle at 50% 30%,rgba(91,75,255,.24),transparent 60%);filter:blur(10px);pointer-events:none;z-index:0}
+.ep-hero-in{position:relative;z-index:1;text-align:center;max-width:840px;margin:0 auto}
+.ep-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:12.5px;color:var(--muted);margin-bottom:26px}
+.ep-h1{font-size:clamp(48px,7vw,104px);line-height:.94;letter-spacing:-.045em;font-weight:650}
+.ep-grad{background:linear-gradient(100deg,var(--purple),var(--purple2) 60%,#c3b6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ep-lead{margin:26px auto 34px;max-width:52ch;font-size:18px;line-height:1.65;color:var(--muted)}
+.ep-hero .ep-cta-row{justify-content:center}
+
+/* ---------- hero visual / mock studio ---------- */
+.ep-hero-visual{position:relative;z-index:1;max-width:980px;margin:64px auto 0;will-change:transform,opacity}
+.ep-mock{border-radius:26px;border:1px solid var(--line);background:#fff;box-shadow:0 50px 110px -30px rgba(17,17,24,.28),0 0 0 1px rgba(91,75,255,.05);overflow:hidden}
+.ep-mock-bar{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.ep-mock-bar span{width:9px;height:9px;border-radius:50%;background:#e4e1ee}
+.ep-mock-bar b{font-size:12.5px;color:var(--muted);font-weight:500;margin-left:4px}
+.ep-mock-avatars{margin-left:auto;display:flex}
+.ep-mock-avatars i{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--purple2));border:2px solid #fff;margin-left:-7px}
+.ep-mock-body{display:grid;grid-template-columns:180px 1fr;min-height:360px}
+.ep-mock-side{padding:20px 16px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.ep-mock-side b{font-size:10.5px;letter-spacing:.08em;color:var(--muted);margin:10px 0 2px}
+.ep-mock-side i{height:11px;border-radius:6px;background:#f0eef7}
+.ep-mock-side i.on{background:linear-gradient(90deg,rgba(91,75,255,.16),rgba(91,75,255,.05))}
+.ep-mock-canvas{padding:22px;display:flex;flex-direction:column;gap:14px;background:linear-gradient(180deg,#fbfaff,#fff)}
+.ep-mock-block{border-radius:14px;background:#f2f0f9;height:64px}
+.ep-mock-block.big{height:120px;background:linear-gradient(135deg,rgba(91,75,255,.14),rgba(142,124,255,.06))}
+.ep-mock-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ---------- feature showcase ---------- */
+.ep-features{max-width:1180px;margin:0 auto;padding:150px 24px 60px}
+.ep-features-head h2{font-size:clamp(34px,4.4vw,52px);letter-spacing:-.035em;line-height:1.05;font-weight:600;text-align:center;margin-bottom:120px}
+.ep-feature{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;margin-bottom:130px}
+.ep-feature:last-child{margin-bottom:0}
+.ep-feature.reverse .ep-feature-text{order:2}
+.ep-feature.reverse .ep-feature-visual{order:1}
+.ep-feature-text h3{font-size:clamp(26px,3vw,36px);letter-spacing:-.03em;font-weight:600;margin:14px 0 16px;line-height:1.15}
+.ep-feature-text p{font-size:16.5px;line-height:1.7;color:var(--muted);max-width:44ch}
+.ep-feature-visual{opacity:0;transform:translateY(40px) scale(.96)}
+.ep-feature-text{opacity:0;transform:translateY(24px)}
+
+/* feature visual mocks */
+.ep-type-scale{border-radius:20px;border:1px solid var(--line);background:#fff;padding:28px;display:flex;flex-direction:column;gap:14px;box-shadow:0 30px 70px -24px rgba(17,17,24,.14)}
+.ep-type-scale i{display:block;font-family:"Space Grotesk",sans-serif;font-weight:600;letter-spacing:-.03em;color:var(--ink);border-bottom:1px dashed var(--line);padding-bottom:10px}
+.ep-type-scale i:nth-child(1){font-size:38px}
+.ep-type-scale i:nth-child(2){font-size:26px}
+.ep-type-scale i:nth-child(3){font-size:18px;font-weight:500;color:var(--muted);border-bottom:0;padding-bottom:0}
+
+.ep-timeline-card{border-radius:20px;border:1px solid var(--line);background:#fff;padding:28px;box-shadow:0 30px 70px -24px rgba(17,17,24,.14)}
+.ep-timeline-track{position:relative;height:5px;border-radius:99px;background:#eeecf6;margin:34px 0 18px}
+.ep-timeline-fill{position:absolute;inset:0;width:62%;border-radius:99px;background:linear-gradient(90deg,var(--purple),var(--purple2))}
+.ep-timeline-track i{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--purple);transform:translate(-50%,-50%)}
+.ep-timeline-track i:nth-child(1){left:0}
+.ep-timeline-track i:nth-child(2){left:32%}
+.ep-timeline-track i:nth-child(3){left:62%}
+.ep-timeline-track i:nth-child(4){left:100%;border-color:#dcd9e6}
+.ep-timeline-labels{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted)}
+
+.ep-swatch-grid{border-radius:20px;border:1px solid var(--line);background:#fff;padding:26px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;box-shadow:0 30px 70px -24px rgba(17,17,24,.14)}
+.ep-swatch{border-radius:14px;height:70px;display:flex;align-items:flex-end;padding:10px;font-size:10.5px;color:#fff;font-weight:600}
+.ep-swatch:nth-child(1){background:linear-gradient(135deg,var(--purple),var(--purple2))}
+.ep-swatch:nth-child(2){background:var(--ink)}
+.ep-swatch:nth-child(3){background:#f2f0f9;color:var(--muted)}
+.ep-swatch:nth-child(4),.ep-swatch:nth-child(5),.ep-swatch:nth-child(6){background:#fbfaff;border:1px solid var(--line);color:var(--muted)}
+
+/* ---------- pinned showcase ---------- */
+.ep-pin-wrap{max-width:1180px;margin:0 auto;padding:0 24px 60px}
+.ep-pin-head{text-align:center;max-width:640px;margin:0 auto 56px}
+.ep-pin-head h2{font-size:clamp(30px,4vw,46px);letter-spacing:-.035em;font-weight:600;margin-top:10px;line-height:1.1}
+.ep-pin-stage{position:relative;height:560px;border-radius:28px;border:1px solid var(--line);background:linear-gradient(165deg,#fff,#f7f6fb);overflow:hidden;box-shadow:0 40px 100px -30px rgba(17,17,24,.18)}
+.ep-pin-frame{position:absolute;inset:0}
+.ep-stage-panel{position:absolute;inset:40px 40px 96px;border-radius:18px;background:#fff;border:1px solid var(--line);opacity:0;transform:translateY(24px) scale(.97);box-shadow:0 30px 60px -20px rgba(17,17,24,.16);overflow:hidden}
+.ep-stage-panel.active{opacity:1;transform:none}
+.ep-stage-panel .sp-bar{display:flex;gap:8px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.ep-stage-panel .sp-bar span{width:8px;height:8px;border-radius:50%;background:#e4e1ee}
+.ep-stage-panel .sp-body{padding:22px;height:calc(100% - 45px)}
+.sp-1 .sp-body{display:flex;align-items:center;justify-content:center}
+.sp-1 .sp-empty{width:120px;height:120px;border:2px dashed #d9d5e8;border-radius:16px}
+.sp-2 .sp-body{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sp-2 .sp-body i{border-radius:12px;background:#f2f0f9;height:60px}
+.sp-2 .sp-body i:first-child{grid-column:1/-1;height:90px;background:linear-gradient(135deg,rgba(91,75,255,.14),rgba(142,124,255,.06))}
+.sp-3 .sp-body{display:flex;gap:16px;justify-content:center;align-items:center}
+.sp-3 .device{border:1px solid var(--line);border-radius:14px;background:#fbfaff}
+.sp-3 .device.d1{width:60%;height:100%}
+.sp-3 .device.d2{width:26%;height:88%}
+.sp-3 .device.d3{width:14%;height:70%;border-radius:20px}
+.sp-4 .sp-body{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.sp-4 .sp-check{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--purple2));display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px}
+.sp-4 b{font-size:14px}
+.ep-pin-caption{position:absolute;left:0;right:0;bottom:0;padding:22px 32px;text-align:center}
+.ep-cap{position:absolute;left:0;right:0;bottom:22px;margin:0;font-size:15px;color:var(--muted);opacity:0;transition:opacity .25s}
+.ep-cap.active{opacity:1}
+
+/* ---------- dark section ---------- */
+.ep-dark{position:relative;background:var(--dark);color:#fff;padding:130px 24px 150px;overflow:hidden;text-align:center}
+.ep-dark-glow{position:absolute;inset:auto -10% 0 -10%;height:70%;background:radial-gradient(circle at 50% 100%,rgba(91,75,255,.32),transparent 65%);pointer-events:none}
+.ep-dark-h2{position:relative;z-index:1;font-size:clamp(34px,5vw,64px);letter-spacing:-.04em;font-weight:600;line-height:1.06}
+.ep-dark-lead{position:relative;z-index:1;display:block;margin:20px auto 70px;max-width:44ch;color:rgba(255,255,255,.56);font-size:16.5px;line-height:1.6}
+.ep-dark-stage{position:relative;z-index:1;max-width:760px;margin:0 auto;min-height:420px}
+.ep-dark-main{border-radius:24px;border:1px solid var(--lined);background:#0f0f16;box-shadow:0 60px 140px -30px rgba(0,0,0,.6),0 0 90px rgba(91,75,255,.18);overflow:hidden;opacity:0;transform:translateY(90px) scale(.92);will-change:transform,opacity}
+.ep-dark-main .sp-bar{border-bottom:1px solid var(--lined)}
+.ep-dark-main .sp-bar span{background:rgba(255,255,255,.14)}
+.ep-dark-main .sp-body{padding:24px;display:grid;grid-template-columns:2fr 1fr;gap:16px}
+.ep-dm-chart{border-radius:14px;background:rgba(255,255,255,.04);display:flex;align-items:flex-end;gap:8px;padding:16px;height:170px}
+.ep-dm-chart i{flex:1;border-radius:6px 6px 0 0;background:linear-gradient(180deg,var(--purple2),var(--purple))}
+.ep-dm-side{display:flex;flex-direction:column;gap:10px}
+.ep-dm-side i{border-radius:10px;background:rgba(255,255,255,.05);height:36px}
+.ep-float{position:absolute;padding:12px 16px;border-radius:14px;background:rgba(20,19,28,.85);border:1px solid var(--lined);backdrop-filter:blur(10px);font-size:12.5px;color:#e9e6f5;box-shadow:0 20px 50px rgba(0,0,0,.4);opacity:0;will-change:transform,opacity}
+.ep-float-1{left:-6%;top:8%}
+.ep-float-2{right:-8%;top:38%}
+.ep-float-3{left:2%;bottom:6%}
+
+/* ---------- stats ---------- */
+.ep-stats{max-width:1100px;margin:0 auto;padding:100px 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
+.ep-stat b{display:block;font-family:"Space Grotesk",sans-serif;font-size:clamp(32px,4.6vw,54px);letter-spacing:-.03em;font-weight:600}
+.ep-stat span{font-size:14px;color:var(--muted)}
+.ep-stat{opacity:0;transform:translateY(20px)}
+
+/* ---------- final cta ---------- */
+.ep-final{position:relative;margin:0 24px 100px;border-radius:32px;background:var(--dark);color:#fff;padding:110px 24px;text-align:center;overflow:hidden}
+.ep-final-glow{position:absolute;inset:-30% -10% auto -10%;height:80%;background:radial-gradient(circle at 50% 40%,rgba(91,75,255,.4),transparent 62%)}
+.ep-final h2{position:relative;z-index:1;font-size:clamp(32px,5vw,58px);letter-spacing:-.04em;font-weight:600;line-height:1.08}
+.ep-final p{position:relative;z-index:1;display:block;margin:20px auto 36px;max-width:44ch;color:rgba(255,255,255,.6);font-size:16.5px}
+.ep-final .ep-cta-row{position:relative;z-index:1;justify-content:center}
+
+/* ---------- footer ---------- */
+.ep-footer{max-width:1180px;margin:0 auto;padding:20px 24px 60px}
+.ep-footer-top{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;padding-bottom:40px;border-bottom:1px solid var(--line)}
+.ep-footer-brand{max-width:280px}
+.ep-footer-brand b{font-family:"Space Grotesk",sans-serif;font-size:18px;letter-spacing:-.03em}
+.ep-footer-brand b span{color:var(--purple)}
+.ep-footer-brand p{margin-top:10px;font-size:13.5px;color:var(--muted);line-height:1.65}
+.ep-footer-cols{display:flex;gap:48px;flex-wrap:wrap}
+.ep-footer-cols div{display:flex;flex-direction:column;gap:10px}
+.ep-footer-cols b{font-size:12.5px;color:var(--ink);margin-bottom:4px}
+.ep-footer-cols a{font-size:13.5px;color:var(--muted);cursor:pointer}
+.ep-footer-cols a:hover{color:var(--ink)}
+.ep-footer-bottom{display:flex;justify-content:space-between;align-items:center;gap:14px;padding-top:22px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.ep-social{display:flex;gap:10px}
+.ep-social a{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.ep-social a:hover{color:var(--ink);border-color:#c8c4d6}
+.ep-social svg{width:14px;height:14px}
+
+/* ---------- responsive ---------- */
+@media(max-width:1080px){
+  .ep-feature{grid-template-columns:1fr;gap:36px}
+  .ep-feature.reverse .ep-feature-text,.ep-feature.reverse .ep-feature-visual{order:0}
+  .ep-mock-body{grid-template-columns:140px 1fr}
+  .ep-stats{grid-template-columns:repeat(2,1fr);row-gap:40px}
+  .ep-float-1{left:0}
+  .ep-float-2{right:0}
+}
+@media(max-width:680px){
+  .ep-nav-in{gap:12px}
+  .ep-links{display:none}
+  .ep-hero{padding:70px 20px 40px}
+  .ep-features{padding:70px 20px 40px}
+  .ep-features-head h2{margin-bottom:56px}
+  .ep-feature{margin-bottom:64px}
+  .ep-mock-side{display:none}
+  .ep-mock-body{grid-template-columns:1fr}
+  .ep-pin-stage{height:auto;min-height:0}
+  .ep-pin-frame{position:relative;display:flex;flex-direction:column;gap:16px;padding:20px}
+  .ep-stage-panel{position:relative;inset:auto;opacity:1;transform:none;height:260px;margin:0}
+  .ep-pin-caption{display:none}
+  .ep-dark{padding:80px 20px 100px}
+  .ep-dm-side{display:none}
+  .ep-dm-chart{height:120px}
+  .ep-final{margin:0 16px 70px;padding:70px 20px}
+  .ep-footer-top{gap:28px}
+}
+
+/* ---------- reduced motion ---------- */
+@media(prefers-reduced-motion:reduce){
+  .ep-hero-visual,.ep-feature-visual,.ep-feature-text,.ep-stat,.ep-dark-main,.ep-float{opacity:1!important;transform:none!important}
+  .ep-stage-panel{opacity:1!important;transform:none!important;position:relative;inset:auto;height:auto;margin-bottom:16px}
+}
+</style></head>
+<body data-cf-keep-dark>
+
+<nav class="ep-nav" id="epNav"><div class="ep-nav-in">
+  <a class="ep-logo">Code<span>Fusion</span></a>
+  <div class="ep-links"><a>Products</a><a>Solutions</a><a>Resources</a><a>Pricing</a></div>
+  <div class="ep-actions"><a class="ep-login">Log in</a><button class="ep-btn ep-btn-dark">Get Started</button></div>
+</div></nav>
+
+<header class="ep-hero">
+  <div class="ep-hero-glow"></div>
+  <div class="ep-hero-in">
+    <span class="ep-badge">✦ New — Editorial Landing System</span>
+    <h1 class="ep-h1">Build digital products<br>that feel <span class="ep-grad">unforgettable.</span></h1>
+    <p class="ep-lead">A premium landing page system for teams shipping products people remember — considered typography, cinematic motion, and interfaces that feel real.</p>
+    <div class="ep-cta-row"><button class="ep-btn ep-btn-dark">Get Started <i>→</i></button><button class="ep-btn ep-btn-ghost">Explore Products</button></div>
+  </div>
+  <div class="ep-hero-visual" id="epHeroVisual">
+    <div class="ep-mock">
+      <div class="ep-mock-bar"><span></span><span></span><span></span><b>Studio — untitled page</b><div class="ep-mock-avatars"><i></i><i></i><i></i></div></div>
+      <div class="ep-mock-body">
+        <aside class="ep-mock-side"><b>PAGES</b><i class="on"></i><i></i><i></i><i></i><b>COMPONENTS</b><i></i><i></i></aside>
+        <div class="ep-mock-canvas">
+          <div class="ep-mock-block big"></div>
+          <div class="ep-mock-row"><div class="ep-mock-block"></div><div class="ep-mock-block"></div></div>
+          <div class="ep-mock-block"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="ep-features">
+  <div class="ep-features-head"><h2>Everything you need.<br>Nothing you don't.</h2></div>
+
+  <div class="ep-feature">
+    <div class="ep-feature-text"><span class="ep-eyebrow">01 — COMPOSITION</span><h3>Design that holds its shape.</h3><p>Every section is built on a strict spacing and type scale, so nothing feels improvised — from the hero down to the footer.</p></div>
+    <div class="ep-feature-visual"><div class="ep-type-scale"><i>Aa</i><i>Aa Bb</i><i>The quiet detail in every scale.</i></div></div>
+  </div>
+
+  <div class="ep-feature reverse">
+    <div class="ep-feature-visual"><div class="ep-timeline-card"><div class="ep-timeline-track"><div class="ep-timeline-fill"></div><i></i><i></i><i></i><i></i></div><div class="ep-timeline-labels"><span>Enter</span><span>Hold</span><span>Reveal</span><span>Settle</span></div></div></div>
+    <div class="ep-feature-text"><span class="ep-eyebrow">02 — MOTION</span><h3>Motion with intent.</h3><p>Scroll-driven transitions reveal content the way a reader naturally moves through a page — nothing arrives instantly, nothing lingers too long.</p></div>
+  </div>
+
+  <div class="ep-feature">
+    <div class="ep-feature-text"><span class="ep-eyebrow">03 — SYSTEM</span><h3>One system, every surface.</h3><p>Buttons, cards and inputs share the same tokens throughout, so light and dark sections feel like one considered product instead of two templates stitched together.</p></div>
+    <div class="ep-feature-visual"><div class="ep-swatch-grid"><div class="ep-swatch">Primary</div><div class="ep-swatch">Ink</div><div class="ep-swatch">Muted</div><div class="ep-swatch">Card</div><div class="ep-swatch">Card</div><div class="ep-swatch">Card</div></div></div>
+  </div>
+</section>
+
+<section class="ep-pin-wrap" id="epPinWrap">
+  <div class="ep-pin-head"><span class="ep-eyebrow">A CLOSER LOOK</span><h2>One page, four stages.</h2></div>
+  <div class="ep-pin-stage" id="epPinStage">
+    <div class="ep-pin-frame">
+      <div class="ep-stage-panel sp-1 active" data-stage="1"><div class="sp-bar"><span></span><span></span><span></span></div><div class="sp-body"><div class="sp-empty"></div></div></div>
+      <div class="ep-stage-panel sp-2" data-stage="2"><div class="sp-bar"><span></span><span></span><span></span></div><div class="sp-body"><i></i><i></i><i></i></div></div>
+      <div class="ep-stage-panel sp-3" data-stage="3"><div class="sp-bar"><span></span><span></span><span></span></div><div class="sp-body"><div class="device d1"></div><div class="device d2"></div><div class="device d3"></div></div></div>
+      <div class="ep-stage-panel sp-4" data-stage="4"><div class="sp-bar"><span></span><span></span><span></span></div><div class="sp-body"><div class="sp-check">✓</div><b>Published</b></div></div>
+    </div>
+    <div class="ep-pin-caption">
+      <p class="ep-cap active" data-cap="1">Start from a blank canvas.</p>
+      <p class="ep-cap" data-cap="2">Drop in real components.</p>
+      <p class="ep-cap" data-cap="3">Preview it responsively.</p>
+      <p class="ep-cap" data-cap="4">Ship with confidence.</p>
+    </div>
+  </div>
+</section>
+
+<section class="ep-dark" id="epDark">
+  <div class="ep-dark-glow"></div>
+  <h2 class="ep-dark-h2">Made to move<br>at your speed.</h2>
+  <p class="ep-dark-lead">Every interaction responds immediately — nothing waits, nothing stutters.</p>
+  <div class="ep-dark-stage">
+    <div class="ep-dark-main" id="epDarkMain">
+      <div class="sp-bar"><span></span><span></span><span></span></div>
+      <div class="sp-body"><div class="ep-dm-chart"><i style="height:40%"></i><i style="height:65%"></i><i style="height:48%"></i><i style="height:82%"></i><i style="height:58%"></i><i style="height:94%"></i><i style="height:70%"></i></div><div class="ep-dm-side"><i></i><i></i><i></i></div></div>
+    </div>
+    <div class="ep-float ep-float-1" id="epFloat1">Published ✓</div>
+    <div class="ep-float ep-float-2" id="epFloat2">+238 creators today</div>
+    <div class="ep-float ep-float-3" id="epFloat3">98% uptime</div>
+  </div>
+</section>
+
+<section class="ep-stats">
+  <div class="ep-stat"><b data-count="12" data-suffix="K+">0</b><span>Creators</span></div>
+  <div class="ep-stat"><b data-count="240" data-suffix="+">0</b><span>Products</span></div>
+  <div class="ep-stat"><b data-count="98" data-suffix="%">0</b><span>Satisfaction</span></div>
+  <div class="ep-stat"><b data-count="0" data-static="24/7">24/7</b><span>Access</span></div>
+</section>
+
+<section class="ep-final">
+  <div class="ep-final-glow"></div>
+  <h2>Turn your next idea<br>into something real.</h2>
+  <p>Join thousands of teams building with CodeFusion's premium components and templates.</p>
+  <div class="ep-cta-row"><button class="ep-btn ep-btn-light">Get Started <i>→</i></button><button class="ep-btn ep-btn-ghost-dark">Explore Products</button></div>
+</section>
+
+<footer class="ep-footer">
+  <div class="ep-footer-top">
+    <div class="ep-footer-brand"><b>Code<span>Fusion</span></b><p>Original interfaces, thoughtful interactions and ready-to-use code for modern web products.</p></div>
+    <div class="ep-footer-cols">
+      <div><b>Products</b><a>Landing Pages</a><a>Components</a><a>Boilerplates</a></div>
+      <div><b>Collections</b><a>New</a><a>Trending</a><a>Free</a></div>
+      <div><b>Resources</b><a>Getting started</a><a>Documentation</a><a>Changelog</a></div>
+      <div><b>Company</b><a>About</a><a>Support</a><a>Contact</a></div>
+    </div>
+  </div>
+  <div class="ep-footer-bottom">
+    <span>© 2026 CodeFusion. All rights reserved.</span>
+    <div class="ep-social">
+      <a aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.2 8.2L23 22h-6.9l-5.4-7-6.2 7H1.3l7.7-8.8L1 2h7l4.9 6.4L18.9 2z"/></svg></a>
+      <a aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.5c.5.1.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03a9.6 9.6 0 0 1 5 0c1.9-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.35 4.68-4.58 4.93.36.31.68.92.68 1.85v2.75c0 .26.18.58.69.48A10 10 0 0 0 12 2z"/></svg></a>
+      <a aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3V9zm7 0h3.8v1.7h.05c.53-1 1.83-2 3.76-2 4 0 4.7 2.6 4.7 6v6.3h-4v-5.6c0-1.34-.02-3.06-1.87-3.06-1.87 0-2.16 1.46-2.16 2.96V21h-4V9z"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  var nav = document.getElementById("epNav");
+  document.addEventListener("scroll", function(){
+    if (window.scrollY > 12) nav.classList.add("scrolled");
+    else nav.classList.remove("scrolled");
+  }, { passive: true });
+
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function animateStats(){
+    var stats = document.querySelectorAll(".ep-stat b[data-count]");
+    stats.forEach(function(el){
+      var target = parseInt(el.getAttribute("data-count"), 10) || 0;
+      var suffix = el.getAttribute("data-suffix") || "";
+      var staticText = el.getAttribute("data-static");
+      if (staticText){ el.textContent = staticText; return; }
+      if (reduced){ el.textContent = target + suffix; return; }
+      var start = null, duration = 1100;
+      function step(ts){
+        if (!start) start = ts;
+        var p = Math.min((ts - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(target * eased) + suffix;
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  }
+
+  if (!window.gsap || !window.ScrollTrigger || reduced) {
+    document.querySelectorAll(".ep-feature-visual,.ep-feature-text,.ep-hero-visual,.ep-stat,.ep-dark-main,.ep-float").forEach(function(el){
+      el.style.opacity = 1;
+      el.style.transform = "none";
+    });
+    var statsFallback = document.querySelector(".ep-stats");
+    if (statsFallback && "IntersectionObserver" in window) {
+      new IntersectionObserver(function(entries, obs){
+        entries.forEach(function(entry){
+          if (entry.isIntersecting){ animateStats(); obs.disconnect(); }
+        });
+      }, { threshold: .4 }).observe(statsFallback);
+    } else {
+      animateStats();
+    }
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Hero visual: rises, scales and settles as the hero scrolls past.
+  gsap.fromTo("#epHeroVisual",
+    { y: 100, scale: .88, rotate: -2, opacity: .8 },
+    { y: 0, scale: 1, rotate: 0, opacity: 1, ease: "none",
+      scrollTrigger: { trigger: ".ep-hero", start: "top top", end: "bottom top", scrub: true } }
+  );
+
+  // Feature blocks: staggered reveal on entry, once.
+  document.querySelectorAll(".ep-feature").forEach(function(feature){
+    var text = feature.querySelector(".ep-feature-text");
+    var visual = feature.querySelector(".ep-feature-visual");
+    gsap.timeline({ scrollTrigger: { trigger: feature, start: "top 78%", toggleActions: "play none none reverse" } })
+      .to(text, { opacity: 1, y: 0, duration: .8, ease: "power3.out" })
+      .to(visual, { opacity: 1, y: 0, scale: 1, duration: .9, ease: "power3.out" }, "-=0.55");
+  });
+
+  // Pinned showcase: four stages crossfade while the section stays pinned.
+  ScrollTrigger.matchMedia({
+    "(min-width: 681px)": function(){
+      var panels = document.querySelectorAll(".ep-stage-panel");
+      var caps = document.querySelectorAll(".ep-cap");
+      var tl = gsap.timeline({
+        scrollTrigger: { trigger: "#epPinWrap", start: "top top", end: "+=280%", scrub: 1, pin: "#epPinStage", anticipatePin: 1 }
+      });
+      for (var i = 0; i < panels.length - 1; i++) {
+        tl.to(panels[i], { opacity: 0, y: -20, scale: .97, duration: 1 }, i)
+          .to(caps[i], { opacity: 0, duration: .5 }, i)
+          .fromTo(panels[i + 1], { opacity: 0, y: 20, scale: .97 }, { opacity: 1, y: 0, scale: 1, duration: 1 }, i + .3)
+          .to(caps[i + 1], { opacity: 1, duration: .5 }, i + .6);
+      }
+    }
+  });
+
+  // Dark section: main UI + floating cards enter, then drift at different parallax speeds.
+  gsap.fromTo("#epDarkMain",
+    { y: 90, scale: .92, opacity: 0 },
+    { y: 0, scale: 1, opacity: 1, duration: 1, ease: "power3.out",
+      scrollTrigger: { trigger: "#epDark", start: "top 70%" } }
+  );
+  gsap.fromTo(["#epFloat1", "#epFloat2", "#epFloat3"],
+    { y: 24, opacity: 0 },
+    { y: 0, opacity: 1, duration: .8, stagger: .12, ease: "power2.out",
+      scrollTrigger: { trigger: "#epDark", start: "top 60%" } }
+  );
+  gsap.to("#epDarkMain", { yPercent: -6, ease: "none",
+    scrollTrigger: { trigger: "#epDark", start: "top bottom", end: "bottom top", scrub: true } });
+  gsap.to("#epFloat1", { yPercent: -16, ease: "none",
+    scrollTrigger: { trigger: "#epDark", start: "top bottom", end: "bottom top", scrub: true } });
+  gsap.to("#epFloat2", { yPercent: -22, ease: "none",
+    scrollTrigger: { trigger: "#epDark", start: "top bottom", end: "bottom top", scrub: true } });
+  gsap.to("#epFloat3", { yPercent: -10, ease: "none",
+    scrollTrigger: { trigger: "#epDark", start: "top bottom", end: "bottom top", scrub: true } });
+
+  // Stats: reveal + count up once.
+  gsap.timeline({ scrollTrigger: { trigger: ".ep-stats", start: "top 80%", once: true } })
+    .to(".ep-stat", { opacity: 1, y: 0, duration: .7, stagger: .1, ease: "power2.out", onStart: animateStats });
+
+  // Final CTA: gentle reveal.
+  gsap.fromTo(".ep-final", { opacity: 0, y: 30 }, {
+    opacity: 1, y: 0, duration: .9, ease: "power3.out",
+    scrollTrigger: { trigger: ".ep-final", start: "top 82%" }
+  });
+
+  window.addEventListener("load", function(){ ScrollTrigger.refresh(); });
+})();
+</script>
+</body></html>`,
 };
