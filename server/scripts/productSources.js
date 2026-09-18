@@ -4522,4 +4522,433 @@ h1 .pu{color:var(--pur)}
 })();
 </script>
 </body></html>`,
+  "ai-music-app-landing-page": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>AI Music App Landing Page</title><style>
+:root{--or:#ed7706;--or-d:#d76a04;--or-l:#f59a3f;--ink:#000;--mut:#8a8a8a;--line:#e9e9e9;--line-s:#f1f1f1}
+*{box-sizing:border-box}
+body{margin:0;background:#fafafa;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3{font-family:"Space Grotesk",Inter,ui-sans-serif,sans-serif;margin:0;font-weight:700;letter-spacing:-.035em}
+p{margin:0}
+button,input{font-family:inherit}
+button{cursor:pointer;border:0}
+.rv{opacity:0;transform:translateY(26px)}
+
+/* the whole page sits in a ruled column, like the reference */
+.shell{max-width:1120px;margin:0 auto;background:#fff;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+.pad{padding:0 40px}
+
+/* diagonal hatch band used as a section divider */
+.hatch{height:26px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background-image:repeating-linear-gradient(45deg,transparent 0 5px,rgba(0,0,0,.07) 5px 6px)}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border-radius:5px;font-size:14px;font-weight:600;transition:transform .22s cubic-bezier(.2,.8,.2,1),background .22s,color .22s,border-color .22s,box-shadow .22s}
+.btn i{font-style:normal;display:inline-block;transition:transform .24s}
+.btn:hover i{transform:translateX(3px)}
+.b-dark{background:var(--ink);color:#fff}
+.b-dark:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(0,0,0,.26)}
+.b-line{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.b-line:hover{transform:translateY(-2px);border-color:#c9c9c9}
+.b-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.8)}
+.b-ghost:hover{transform:translateY(-2px);background:rgba(255,255,255,.14)}
+.b-or{background:var(--or);color:#fff}
+.b-or:hover{transform:translateY(-2px);background:var(--or-d);box-shadow:0 12px 26px rgba(237,119,6,.4)}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-bottom:1px solid transparent;transition:border-color .3s,box-shadow .3s}
+.nav.on{border-bottom-color:var(--line);box-shadow:0 6px 22px rgba(0,0,0,.05)}
+.nav-in{max-width:1120px;margin:0 auto;padding:14px 40px;display:flex;align-items:center;gap:28px}
+.brand{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:700;letter-spacing:-.04em}
+.mk{width:28px;height:28px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#ffb347,var(--or) 52%,#c2410c);display:grid;place-items:center;color:#fff;font-size:7px;font-weight:800;letter-spacing:.04em;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.brand:hover .mk{transform:rotate(-14deg) scale(1.08)}
+.nav-links{display:flex;gap:26px;margin:0 auto;font-size:14px;color:#3c3c3c}
+.nav-links a{position:relative;cursor:pointer;padding-bottom:3px}
+.nav-links a:after{content:"";position:absolute;left:0;bottom:0;width:100%;height:1.5px;background:var(--or);transform:scaleX(0);transform-origin:right;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.nav-links a:hover:after{transform:scaleX(1);transform-origin:left}
+.nav-right{display:flex;gap:10px}
+.nav-right .btn{padding:9px 17px;font-size:13px}
+
+/* ---------- hero ---------- */
+.hero{position:relative;text-align:center;padding:52px 40px 0;background:linear-gradient(180deg,#fff 0%,#fdf1e4 32%,#f5ad63 72%,var(--or) 100%)}
+.tag{display:inline-flex;align-items:center;gap:0;border:1px solid rgba(0,0,0,.1);border-radius:6px;overflow:hidden;background:rgba(255,255,255,.7);font-size:12.5px;margin-bottom:26px;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.tag:hover{transform:translateY(-2px)}
+.tag b{background:var(--ink);color:#fff;padding:6px 10px;font-weight:600}
+.tag span{padding:6px 12px;color:#222}
+h1{font-size:clamp(38px,6.4vw,70px);line-height:1.04;color:#fff;text-shadow:0 2px 24px rgba(180,90,10,.18)}
+.lead{margin:20px auto 30px;max-width:56ch;font-size:15.5px;line-height:1.75;color:rgba(255,255,255,.92)}
+.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;padding-bottom:34px}
+
+/* ---------- phones ---------- */
+/* The handsets are taller than this band on purpose; the mask fades them out at the
+   bottom instead of letting them spill over the copy that follows. */
+.phones{position:relative;height:430px;overflow:hidden;background:linear-gradient(180deg,var(--or) 0%,#f2a765 42%,#fff 88%);perspective:1600px;-webkit-mask-image:linear-gradient(180deg,#000 66%,transparent 98%);mask-image:linear-gradient(180deg,#000 66%,transparent 98%)}
+.ph{position:absolute;bottom:-40px;width:212px;height:428px;border-radius:34px;background:#1c1c1e;padding:8px;box-shadow:0 34px 70px rgba(120,55,0,.4);will-change:transform}
+.ph-s{position:absolute;inset:8px;border-radius:27px;overflow:hidden;background:#fff}
+.notch{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:66px;height:15px;border-radius:99px;background:#1c1c1e;z-index:3}
+.notch:after{content:"";position:absolute;right:9px;top:4px;width:7px;height:7px;border-radius:50%;background:#3a3a3d}
+.p-mid{left:50%;margin-left:-106px;z-index:3}
+.p-left{left:50%;margin-left:-250px;z-index:2;transform-origin:right center}
+.p-right{left:50%;margin-left:44px;z-index:2;transform-origin:left center}
+
+/* centre phone: player */
+.pl{height:100%;background:linear-gradient(180deg,#e8760a,#7a3b06);color:#fff;padding:30px 16px 16px;display:flex;flex-direction:column;align-items:center}
+.pl small{font-size:8px;letter-spacing:.14em;opacity:.85;align-self:flex-start}
+.disc{width:126px;height:126px;border-radius:50%;background:#1a1008;margin:16px 0 14px;display:grid;place-items:center;border:2px dotted rgba(255,190,120,.6);animation:spin 14s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.disc i{width:26px;height:26px;border-radius:50%;background:var(--or);display:block}
+.pl b{font-size:22px;letter-spacing:.12em;font-weight:800}
+.pl span{font-size:9px;opacity:.85;margin-top:3px}
+.bar{width:100%;height:3px;border-radius:9px;background:rgba(255,255,255,.28);margin-top:auto;position:relative}
+.bar:after{content:"";position:absolute;left:0;top:0;bottom:0;width:58%;border-radius:9px;background:#fff}
+.times{width:100%;display:flex;justify-content:space-between;font-size:8px;opacity:.8;margin-top:6px}
+
+/* side phones: discover / library */
+.dc{height:100%;background:#fff;padding:26px 12px 12px}
+.dc-h{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700}
+.dc-h u{width:17px;height:17px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:11px;text-decoration:none}
+.srch{display:flex;align-items:center;gap:6px;margin:11px 0;padding:7px 9px;border:1px solid var(--line);border-radius:8px;font-size:8.5px;color:#9a9a9a}
+.dc b{font-size:10.5px}
+.art{margin-top:8px;height:86px;border-radius:9px;background:linear-gradient(140deg,#f6b26b,#ed7706)}
+.art.alt{background:linear-gradient(140deg,#fde3c8,#f7c58d)}
+.dc em{display:block;font-style:normal;font-size:8px;color:#8a8a8a;margin-top:5px}
+.rowline{height:7px;border-radius:5px;background:#f2f2f2;margin-top:7px}
+
+/* ---------- trusted / logos ---------- */
+.trust{padding:52px 40px 30px;text-align:center;font-size:14px;color:var(--mut)}
+.logos{display:grid;grid-template-columns:repeat(6,1fr)}
+.logos div{padding:26px 8px;text-align:center;border-right:1px solid var(--line);font-size:14px;font-weight:700;color:#b9b9b9;letter-spacing:-.02em;transition:color .3s}
+.logos div:last-child{border-right:0}
+.logos div:hover{color:var(--ink)}
+
+/* ---------- features ---------- */
+.sec{padding:66px 40px}
+.sec-h{text-align:center;font-size:clamp(23px,3.1vw,33px);line-height:1.28;color:#b6b6b6;font-weight:700;margin-bottom:40px}
+.f-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.f-card{border:1px solid var(--line);border-radius:6px;padding:28px 24px;display:flex;flex-direction:column;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s,border-color .3s}
+.f-card:hover{transform:translateY(-5px);box-shadow:0 22px 46px -18px rgba(0,0,0,.14)}
+.f-card.hot{border-color:var(--or)}
+.f-card h3{font-size:24px;line-height:1.2;margin-bottom:14px}
+.f-card p{font-size:13.5px;line-height:1.75;color:var(--mut);margin-bottom:24px}
+.wave{display:flex;align-items:center;gap:3px;height:70px;margin-top:auto}
+.wave i{flex:1;border-radius:2px;background:var(--or);opacity:.62;display:block;animation:pump 1.5s ease-in-out infinite}
+.f-card:hover .wave i{opacity:1}
+@keyframes pump{0%,100%{transform:scaleY(.72)}50%{transform:scaleY(1)}}
+.prompt{margin-top:auto}
+.prompt .pill{display:inline-block;max-width:100%;background:var(--or);color:#fff;border-radius:16px;padding:9px 16px;font-size:11.5px;font-weight:600;line-height:1.5;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.f-card:hover .prompt .pill{transform:translateY(-2px)}
+.dots{display:flex;gap:5px;margin:12px 0 7px}
+.dots u{width:6px;height:6px;border-radius:50%;background:#dcdcdc;text-decoration:none}
+.dots u.on{background:var(--or)}
+.prompt em{font-style:normal;font-size:11px;color:#a5a5a5}
+.socs{display:flex;gap:14px;margin-top:auto;color:var(--or)}
+.socs a{display:grid;place-items:center;transition:transform .25s cubic-bezier(.2,.8,.2,1),color .25s}
+.socs a:hover{transform:translateY(-3px);color:var(--ink)}
+.socs svg{width:19px;height:19px}
+
+/* ---------- pricing ---------- */
+.pr-h{text-align:center;font-size:clamp(30px,4.2vw,46px);margin-bottom:20px}
+.toggle{display:flex;justify-content:center;margin-bottom:38px}
+.toggle div{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;font-size:13px}
+.toggle button{padding:10px 18px;background:#fff;color:#555;transition:background .25s,color .25s}
+.toggle button.on{background:var(--ink);color:#fff}
+.toggle button:not(.on):hover{background:#f6f6f6}
+.p-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start}
+.p-card{position:relative;border:1px solid var(--line);border-radius:6px;padding:28px 24px;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
+.p-card:hover{transform:translateY(-5px);box-shadow:0 22px 46px -18px rgba(0,0,0,.14)}
+.p-card.hot{border-color:var(--or)}
+.badge{position:absolute;right:16px;top:-11px;background:var(--or);color:#fff;font-size:9.5px;font-weight:700;letter-spacing:.06em;padding:5px 10px;border-radius:4px}
+.p-card h3{font-size:25px;margin-bottom:10px}
+.p-card>p{font-size:13px;color:var(--mut);line-height:1.6;min-height:38px}
+.price{margin:16px 0 20px;font-family:"Space Grotesk",sans-serif;font-size:40px;font-weight:700;letter-spacing:-.04em}
+.price small{font-size:13px;color:var(--mut);font-weight:500;letter-spacing:0}
+.p-card ul{list-style:none;padding:0;margin:0 0 24px}
+.p-card li{display:flex;gap:10px;font-size:12.5px;line-height:1.6;color:#4a4a4a;margin-bottom:11px}
+.p-card li:before{content:"";width:9px;height:9px;background:var(--ink);flex:none;margin-top:4px}
+.p-card .btn{width:100%}
+
+/* ---------- closing gradient ---------- */
+.close-g{height:190px;background:linear-gradient(180deg,#fff 0%,#f7c894 62%,var(--or) 100%)}
+
+/* ---------- footer ---------- */
+.ft{padding:52px 40px 34px;display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:40px}
+.ft h4{margin:0 0 16px;font-family:"Space Grotesk",sans-serif;font-size:19px;font-weight:700;letter-spacing:-.03em}
+.news{display:flex;gap:8px;max-width:330px}
+.news input{flex:1;padding:11px 13px;border:1px solid var(--line);border-radius:5px;font-size:13px;outline:0;transition:border-color .25s}
+.news input:focus{border-color:var(--or)}
+.ft-soc{display:flex;gap:14px;margin-top:38px;color:#4a4a4a}
+.ft-soc a{transition:transform .25s cubic-bezier(.2,.8,.2,1),color .25s}
+.ft-soc a:hover{transform:translateY(-3px);color:var(--or)}
+.ft-soc svg{width:15px;height:15px}
+.copy{margin-top:14px;font-size:12px;color:var(--mut)}
+.ft-col a{display:block;font-size:14px;color:var(--mut);margin-bottom:13px;cursor:pointer;transition:color .25s,transform .25s}
+.ft-col a:hover{color:var(--ink);transform:translateX(3px)}
+
+/* ---------- responsive ---------- */
+@media(max-width:940px){
+  .nav-links{display:none}
+  .f-grid,.p-grid{grid-template-columns:1fr}
+  .logos{grid-template-columns:repeat(3,1fr)}
+  .logos div:nth-child(3n){border-right:0}
+  .logos div:nth-child(-n+3){border-bottom:1px solid var(--line)}
+  .ft{grid-template-columns:1fr 1fr}
+  .ft-brand{grid-column:1/-1}
+}
+@media(max-width:620px){
+  .pad,.nav-in,.sec,.trust,.ft{padding-left:18px;padding-right:18px}
+  .hero{padding:34px 18px 0}
+  .hero-cta .btn{flex:1 1 100%}
+  .nav-right .btn:first-child{display:none}
+  .phones{height:300px;perspective:none}
+  .ph{width:150px;height:304px;bottom:-30px;border-radius:26px}
+  .ph-s{border-radius:20px}
+  .p-mid{margin-left:-75px}
+  .p-left,.p-right{display:none}
+  .disc{width:92px;height:92px}
+  .logos{grid-template-columns:repeat(2,1fr)}
+  .logos div:nth-child(2n){border-right:0}
+  .ft{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  .rv{opacity:1!important;transform:none!important}
+  .disc,.wave i{animation:none}
+  .ph{transform:none!important}
+}
+</style></head>
+<body data-cf-keep-dark>
+
+<nav class="nav" id="nav"><div class="nav-in">
+  <div class="brand"><span class="mk">WAVE</span>MelodiaAI</div>
+  <div class="nav-links"><a>Products</a><a>Customer</a><a>Solution</a><a>Pricing</a><a>About</a></div>
+  <div class="nav-right"><button class="btn b-line">Watch Demo</button><button class="btn b-dark">Install Now</button></div>
+</div></nav>
+
+<div class="shell">
+
+  <header class="hero">
+    <div class="tag rv"><b>Hiring</b><span>Apply for Design Engineer &rarr;</span></div>
+    <h1 class="rv">Make Any Song<br>You Can Imagine</h1>
+    <p class="lead rv">Create stunning original music for free in seconds using AI. Make your own masterpieces, share with friends, and discover music from artists worldwide.</p>
+    <div class="hero-cta rv">
+      <button class="btn b-dark">Install Now</button>
+      <button class="btn b-ghost">Watch Demo</button>
+    </div>
+  </header>
+
+  <div class="hatch"></div>
+
+  <div class="phones" id="phones">
+    <div class="ph p-left" id="phL"><div class="notch"></div><div class="ph-s"><div class="dc">
+      <div class="dc-h"><u>+</u>Discover</div>
+      <div class="srch">&#9906; Search tracks and artists</div>
+      <b>Fresh for you</b>
+      <div class="art"></div><em>Midnight Signals</em>
+      <div class="art alt" style="height:56px"></div><em>Paper Lanterns</em>
+      <div class="rowline"></div><div class="rowline"></div>
+    </div></div></div>
+
+    <div class="ph p-mid" id="phM"><div class="notch"></div><div class="ph-s"><div class="pl">
+      <small>NOW PLAYING</small>
+      <div class="disc"><i></i></div>
+      <b>MELODIA</b>
+      <span>Make any song you can imagine</span>
+      <div class="bar"></div>
+      <div class="times"><span>1:42</span><span>3:05</span></div>
+    </div></div></div>
+
+    <div class="ph p-right" id="phR"><div class="notch"></div><div class="ph-s"><div class="dc">
+      <div class="dc-h"><u>&#9835;</u>Library</div>
+      <div class="art" style="height:104px"></div><em>Saved this week</em>
+      <div class="rowline"></div><div class="rowline"></div><div class="rowline"></div>
+      <div class="art alt" style="height:64px"></div><em>Your mixes</em>
+    </div></div></div>
+  </div>
+
+  <p class="trust rv">Trusted By The World's Best Companies</p>
+  <div class="hatch"></div>
+  <div class="logos">
+    <div>billboard</div><div>COMPLEX</div><div>Forbes</div><div>RollingStone</div><div>Variety</div><div>WIRED</div>
+  </div>
+  <div class="hatch"></div>
+
+  <section class="sec">
+    <h2 class="sec-h rv">Everything You Need To<br>Make Music Your Way</h2>
+    <div class="f-grid">
+      <div class="f-card rv">
+        <h3>100 free<br>songs daily</h3>
+        <p>Turn any moment into customized music instantly, from your commute to inside jokes. Express what words can't. Free forever, no subscription needed.</p>
+        <div class="wave">
+          <i style="height:24%;animation-delay:0s"></i><i style="height:58%;animation-delay:.1s"></i><i style="height:36%;animation-delay:.2s"></i>
+          <i style="height:82%;animation-delay:.3s"></i><i style="height:48%;animation-delay:.4s"></i><i style="height:96%;animation-delay:.5s"></i>
+          <i style="height:62%;animation-delay:.6s"></i><i style="height:30%;animation-delay:.7s"></i><i style="height:74%;animation-delay:.8s"></i>
+          <i style="height:44%;animation-delay:.9s"></i><i style="height:88%;animation-delay:1s"></i><i style="height:52%;animation-delay:1.1s"></i>
+          <i style="height:68%;animation-delay:1.2s"></i><i style="height:26%;animation-delay:1.3s"></i><i style="height:56%;animation-delay:1.4s"></i>
+        </div>
+      </div>
+
+      <div class="f-card hot rv">
+        <h3>Free AI music<br>generator</h3>
+        <p>Discover what's possible when anyone can make music. Access the market-leading AI song generator — millions of songs, remixes, jokes, and raw emotion awaiting.</p>
+        <div class="prompt">
+          <span class="pill">Make a house song about quitting your job</span>
+          <div class="dots"><u class="on"></u><u></u><u></u></div>
+          <em>Generating a house song about quitting the job</em>
+        </div>
+      </div>
+
+      <div class="f-card rv">
+        <h3>Share It with<br>the world</h3>
+        <p>Make music that matters to you, then share it with people who'll feel it too. From your inner circle to millions of music fans, your next track can go far.</p>
+        <div class="socs">
+          <a aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 12s0-3.8-.5-5.6a2.9 2.9 0 0 0-2-2C18.7 4 12 4 12 4s-6.7 0-8.5.4a2.9 2.9 0 0 0-2 2C1 8.2 1 12 1 12s0 3.8.5 5.6a2.9 2.9 0 0 0 2 2C5.3 20 12 20 12 20s6.7 0 8.5-.4a2.9 2.9 0 0 0 2-2C23 15.8 23 12 23 12zM9.8 15.4V8.6l5.9 3.4-5.9 3.4z"/></svg></a>
+          <a aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.2 8.2L23 22h-6.9l-5.4-7-6.2 7H1.3l7.7-8.8L1 2h7l4.9 6.4L18.9 2z"/></svg></a>
+          <a aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3V9zm7 0h3.8v1.7h.05c.53-1 1.83-2 3.76-2 4 0 4.7 2.6 4.7 6v6.3h-4v-5.6c0-1.34-.02-3.06-1.87-3.06-1.87 0-2.16 1.46-2.16 2.96V21h-4V9z"/></svg></a>
+          <a aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg></a>
+          <a aria-label="Threads"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.2 22h-.05c-3.35-.02-5.93-1.13-7.66-3.29C3.04 16.78 2.25 14.02 2.24 12v-.02c.01-2.02.8-4.78 2.25-6.7C6.22 3.13 8.8 2.02 12.15 2h.05c2.57.02 4.72.68 6.39 1.97a7.9 7.9 0 0 1 2.66 3.85l-1.87.52a6 6 0 0 0-2-2.88C16.06 4.45 14.33 3.94 12.2 3.92h-.04c-2.75.02-4.82.88-6.16 2.56C4.73 8.05 4.2 10.2 4.19 12c.01 1.8.54 3.95 1.81 5.52 1.34 1.68 3.41 2.54 6.16 2.56h.04c2.48-.02 4.12-.6 5.48-1.94 1.55-1.53 1.52-3.41 1.02-4.55-.3-.67-.83-1.23-1.55-1.65-.18 1.27-.58 2.3-1.2 3.07-.83 1.03-2.01 1.6-3.5 1.68-1.13.06-2.22-.2-3.06-.75a3.55 3.55 0 0 1-1.63-2.72c-.12-2.16 1.6-3.72 4.3-3.88 .95-.05 1.85 0 2.67.13-.11-.66-.33-1.18-.67-1.56-.46-.52-1.17-.78-2.12-.79h-.03c-.76 0-1.8.21-2.46 1.2l-1.6-1.08c.88-1.31 2.32-2.03 4.06-2.03h.05c2.9.02 4.63 1.8 4.8 4.9l.1.05c1.32.62 2.29 1.56 2.8 2.71.71 1.6.78 4.2-1.34 6.3C17.36 21.24 15.24 21.98 12.2 22zm-.63-11.1c-.2 0-.4 0-.6.02-1.94.11-2.53.98-2.48 1.78.05.87.99 1.28 1.9 1.23.83-.05 1.92-.37 2.1-2.85a7.5 7.5 0 0 0-.92-.17z"/></svg></a>
+          <a aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="hatch"></div>
+
+  <section class="sec">
+    <h2 class="pr-h rv">Pricing</h2>
+    <div class="toggle rv"><div><button class="on" id="mo">Monthly</button><button id="yr">Yearly ( 20% Off )</button></div></div>
+    <div class="p-grid">
+      <div class="p-card rv">
+        <h3>Hobbyist Plan</h3>
+        <p>Our starter plan.</p>
+        <div class="price"><span data-m="$0" data-y="$0">$0</span> <small>/mo</small></div>
+        <ul>
+          <li>Access to v4.5-all</li>
+          <li>50 credits renew daily (10 songs)</li>
+          <li>Standard features only</li>
+          <li>Upload up to 1 min of audio</li>
+          <li>No add-on credit purchases</li>
+        </ul>
+        <button class="btn b-line">Sign Up</button>
+      </div>
+
+      <div class="p-card hot rv">
+        <span class="badge">MOST POPULAR</span>
+        <h3>Artist Plan</h3>
+        <p>Access to our best models and editing tools</p>
+        <div class="price"><span data-m="$10" data-y="$8">$10</span> <small>/mo</small></div>
+        <ul>
+          <li>Access to latest and most advanced v5 model</li>
+          <li>2,500 credits (up to 500 songs), refreshes monthly</li>
+          <li>Commercial use rights for new songs</li>
+          <li>Split songs into up to 12 vocal and instrument stems</li>
+          <li>Upload up to 8 min of audio</li>
+          <li>Early access to new features</li>
+        </ul>
+        <button class="btn b-or">Subscribe</button>
+      </div>
+
+      <div class="p-card rv">
+        <h3>Professional Plan</h3>
+        <p>Maximum credits and every feature unlocked</p>
+        <div class="price"><span data-m="$30" data-y="$24">$30</span> <small>/mo</small></div>
+        <ul>
+          <li>Access to Melodia Studio</li>
+          <li>10,000 credits (up to 2,000 songs), refreshes monthly</li>
+          <li>Standard + Pro features (personas and advanced editing)</li>
+          <li>Upload up to 8 min of audio</li>
+          <li>Priority queue, up to 10 songs at once</li>
+        </ul>
+        <button class="btn b-dark">Subscribe</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="close-g"></div>
+
+  <footer class="ft">
+    <div class="ft-brand">
+      <h4>Newsletter</h4>
+      <div class="news"><input placeholder="Enter Your Email"><button class="btn b-dark">Submit</button></div>
+      <div class="ft-soc">
+        <a aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.2 8.2L23 22h-6.9l-5.4-7-6.2 7H1.3l7.7-8.8L1 2h7l4.9 6.4L18.9 2z"/></svg></a>
+        <a aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3V9zm7 0h3.8v1.7h.05c.53-1 1.83-2 3.76-2 4 0 4.7 2.6 4.7 6v6.3h-4v-5.6c0-1.34-.02-3.06-1.87-3.06-1.87 0-2.16 1.46-2.16 2.96V21h-4V9z"/></svg></a>
+        <a aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg></a>
+        <a aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg></a>
+        <a aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 2h-3v13.2a2.9 2.9 0 1 1-2.4-2.85V9.3a6 6 0 1 0 5.4 5.97V8.9a6.8 6.8 0 0 0 4 1.3V7.2a4 4 0 0 1-4-4z"/></svg></a>
+        <a aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 12s0-3.8-.5-5.6a2.9 2.9 0 0 0-2-2C18.7 4 12 4 12 4s-6.7 0-8.5.4a2.9 2.9 0 0 0-2 2C1 8.2 1 12 1 12s0 3.8.5 5.6a2.9 2.9 0 0 0 2 2C5.3 20 12 20 12 20s6.7 0 8.5-.4a2.9 2.9 0 0 0 2-2C23 15.8 23 12 23 12zM9.8 15.4V8.6l5.9 3.4-5.9 3.4z"/></svg></a>
+      </div>
+      <p class="copy">&copy; 2026 Melodia AI, All rights reserved</p>
+    </div>
+    <div class="ft-col"><h4>Brand</h4><a>About</a><a>Work at Melodia</a><a>Blog</a><a>Pricing</a><a>Hub</a></div>
+    <div class="ft-col"><h4>Support</h4><a>Help</a><a>Contact Us</a><a>Guidelines</a><a>FAQs</a><a>T&amp;S</a><a>Privacy</a></div>
+  </footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  var nav = document.getElementById("nav");
+  document.addEventListener("scroll", function(){
+    nav.classList.toggle("on", window.scrollY > 10);
+  }, { passive: true });
+
+  // Pricing toggle swaps the figures rather than only restyling the switch.
+  var mo = document.getElementById("mo"), yr = document.getElementById("yr");
+  var figures = document.querySelectorAll(".price span");
+  function bill(yearly){
+    mo.classList.toggle("on", !yearly);
+    yr.classList.toggle("on", yearly);
+    figures.forEach(function(f){
+      f.textContent = f.getAttribute(yearly ? "data-y" : "data-m");
+    });
+  }
+  mo.addEventListener("click", function(){ bill(false); });
+  yr.addEventListener("click", function(){ bill(true); });
+
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var phone = window.matchMedia("(max-width: 620px)").matches;
+
+  if (!window.gsap || !window.ScrollTrigger || reduced) {
+    document.querySelectorAll(".rv").forEach(function(el){
+      el.style.opacity = 1;
+      el.style.transform = "none";
+    });
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.to(".hero .rv", { opacity: 1, y: 0, duration: .8, stagger: .09, ease: "power3.out" });
+
+  document.querySelectorAll("section .rv, .trust.rv").forEach(function(el){
+    gsap.to(el, {
+      opacity: 1, y: 0, duration: .75, ease: "power3.out",
+      scrollTrigger: { trigger: el, start: "top 88%", once: true }
+    });
+  });
+
+  if (!phone) {
+    // Side handsets sit behind the centre one via negative translateZ: inside a
+    // perspective parent the browser sorts by depth and ignores z-index.
+    gsap.set("#phM", { y: 120, opacity: 0 });
+    gsap.set("#phL", { x: 120, y: 150, rotationY: 40, rotation: -14, z: -260, opacity: 0 });
+    gsap.set("#phR", { x: -120, y: 150, rotationY: -40, rotation: 14, z: -260, opacity: 0 });
+
+    gsap.timeline({ scrollTrigger: { trigger: "#phones", start: "top 82%", once: true } })
+      .to("#phM", { y: 0, opacity: 1, duration: 1, ease: "power3.out" })
+      .to("#phL", { x: 0, y: 46, rotationY: 24, rotation: -10, z: -150, opacity: 1, duration: 1.1, ease: "power3.out" }, "-=0.78")
+      .to("#phR", { x: 0, y: 46, rotationY: -24, rotation: 10, z: -150, opacity: 1, duration: 1.1, ease: "power3.out" }, "<");
+
+    // Parallax drift at three depths. Only yPercent is scrubbed here — tweening the
+    // rotations would fight the entrance above, which starts them elsewhere.
+    var drift = { trigger: "#phones", start: "top bottom", end: "bottom top", scrub: true };
+    gsap.to("#phM", { yPercent: -9, ease: "none", scrollTrigger: drift });
+    gsap.to("#phL", { yPercent: -15, ease: "none", scrollTrigger: drift });
+    gsap.to("#phR", { yPercent: -15, ease: "none", scrollTrigger: drift });
+  }
+
+  window.addEventListener("load", function(){ ScrollTrigger.refresh(); });
+})();
+</script>
+</body></html>`,
 };
