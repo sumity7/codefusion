@@ -4568,7 +4568,10 @@ button{cursor:pointer;border:0}
 .nav-right .btn{padding:9px 17px;font-size:13px}
 
 /* ---------- hero ---------- */
-.hero{position:relative;text-align:center;padding:52px 40px 0;background:linear-gradient(180deg,#fff 0%,#fdf1e4 32%,#f5ad63 72%,var(--or) 100%)}
+/* The hero fills the viewport so the handsets below stay under the fold. Without that
+   their entrance trigger is already past on load, the animation plays while the reader
+   is still on the hero, and the section looks static by the time they scroll to it. */
+.hero{position:relative;text-align:center;padding:52px 40px 0;min-height:calc(100vh - 58px);display:flex;flex-direction:column;justify-content:center;background:linear-gradient(180deg,#fff 0%,#fdf1e4 32%,#f5ad63 72%,var(--or) 100%)}
 .tag{display:inline-flex;align-items:center;gap:0;border:1px solid rgba(0,0,0,.1);border-radius:6px;overflow:hidden;background:rgba(255,255,255,.7);font-size:12.5px;margin-bottom:26px;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
 .tag:hover{transform:translateY(-2px)}
 .tag b{background:var(--ink);color:#fff;padding:6px 10px;font-weight:600}
@@ -4934,7 +4937,9 @@ h1{font-size:clamp(38px,6.4vw,70px);line-height:1.04;color:#fff;text-shadow:0 2p
     gsap.set("#phL", { x: 120, y: 150, rotationY: 40, rotation: -14, z: -260, opacity: 0 });
     gsap.set("#phR", { x: -120, y: 150, rotationY: -40, rotation: 14, z: -260, opacity: 0 });
 
-    gsap.timeline({ scrollTrigger: { trigger: "#phones", start: "top 82%", once: true } })
+    // Replays on re-entry rather than running once, so the fan is still worth
+    // scrolling back to and a short preview viewport cannot burn it on load.
+    gsap.timeline({ scrollTrigger: { trigger: "#phones", start: "top 84%", toggleActions: "restart none none reverse" } })
       .to("#phM", { y: 0, opacity: 1, duration: 1, ease: "power3.out" })
       .to("#phL", { x: 0, y: 46, rotationY: 24, rotation: -10, z: -150, opacity: 1, duration: 1.1, ease: "power3.out" }, "-=0.78")
       .to("#phR", { x: 0, y: 46, rotationY: -24, rotation: 10, z: -150, opacity: 1, duration: 1.1, ease: "power3.out" }, "<");
