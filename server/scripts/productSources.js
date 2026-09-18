@@ -3930,450 +3930,523 @@ body{margin:0;min-height:100vh;display:grid;place-items:center;background:#05050
 </body></html>`,
   "editorial-saas-landing-page": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Editorial SaaS Landing Page</title><style>
-:root{--purple:#5B4BFF;--purple2:#8E7CFF;--dark:#08080D;--ink:#111118;--muted:#6F6F7A;--light:#F7F6FB;--line:rgba(17,17,24,.09);--lined:rgba(255,255,255,.1)}
+:root{--pur:#5B4BFF;--vio:#7C3AED;--ink:#111118;--navy:#161a2e;--mut:#6F6F7A;--light:#F7F6FB;--wash:#f5f7fa;--dark:#08080D;--line:#e7e5ef;--lined:rgba(255,255,255,.09)}
 *{box-sizing:border-box}
-html,body{background:var(--light)}
-body{margin:0;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-h1,h2,h3{font-family:"Space Grotesk",Inter,ui-sans-serif,sans-serif;margin:0}
+body{margin:0;background:#fff;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3,h4{font-family:"Space Grotesk",Inter,ui-sans-serif,sans-serif;margin:0;font-weight:500;letter-spacing:-.035em;color:var(--navy)}
 p{margin:0}
-button{font-family:inherit;cursor:pointer}
-.ep-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.12em;color:var(--purple)}
+button{font-family:inherit;cursor:pointer;border:0}
+.wrap{max-width:1140px;margin:0 auto;padding:0 28px}
+.rv{opacity:0;transform:translateY(28px)}
 
-/* ---------- buttons ---------- */
-.ep-btn{border-radius:999px;padding:14px 24px;font-size:15px;font-weight:600;border:1px solid transparent;display:inline-flex;align-items:center;gap:8px;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s,background .25s,color .25s,border-color .25s}
-.ep-btn i{font-style:normal;display:inline-block;transition:transform .25s}
-.ep-btn:hover i{transform:translateX(3px)}
-.ep-btn-dark{background:var(--ink);color:#fff}
-.ep-btn-dark:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(17,17,24,.22)}
-.ep-btn-ghost{background:transparent;color:var(--ink);border-color:var(--line)}
-.ep-btn-ghost:hover{transform:translateY(-2px);border-color:#c8c4d6}
-.ep-btn-light{background:#fff;color:var(--ink)}
-.ep-btn-light:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(0,0,0,.35)}
-.ep-btn-ghost-dark{background:transparent;color:#fff;border-color:var(--lined)}
-.ep-btn-ghost-dark:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.3)}
-.ep-cta-row{display:flex;gap:12px;flex-wrap:wrap}
+/* eyebrow: small dash + label, left aligned */
+.eb{display:flex;align-items:center;gap:12px;font-size:13.5px;color:var(--pur);margin-bottom:16px}
+.eb:before{content:"";width:28px;height:1px;background:#cfcadf}
 
-/* ---------- nav ---------- */
-.ep-nav{position:sticky;top:0;z-index:50;padding:18px 0}
-.ep-nav-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:28px;padding:12px 22px;border-radius:999px;border:1px solid transparent;transition:background .35s,border-color .35s,backdrop-filter .35s,padding .35s,box-shadow .35s}
-.ep-nav.scrolled .ep-nav-in{background:rgba(247,246,251,.72);backdrop-filter:blur(16px);border-color:var(--line);box-shadow:0 10px 30px rgba(17,17,24,.06);padding:9px 22px}
-.ep-logo{font-weight:700;font-size:17px;letter-spacing:-.03em;color:var(--ink);text-decoration:none;font-family:"Space Grotesk",sans-serif}
-.ep-logo span{color:var(--purple)}
-.ep-links{display:flex;gap:26px;margin-left:8px;font-size:14px;color:var(--muted)}
-.ep-links a{cursor:pointer}
-.ep-links a:hover{color:var(--ink)}
-.ep-actions{margin-left:auto;display:flex;align-items:center;gap:16px}
-.ep-login{font-size:14px;color:var(--muted);cursor:pointer}
-.ep-login:hover{color:var(--ink)}
-.ep-actions .ep-btn{padding:10px 18px;font-size:13px}
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:9px;border-radius:999px;padding:14px 24px;font-size:14.5px;font-weight:600;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s,background .25s,border-color .25s,color .25s}
+.btn i{font-style:normal;display:inline-block;transition:transform .25s}
+.btn:hover i{transform:translateX(3px)}
+.btn-dark{background:linear-gradient(120deg,#17162a,#08080d 60%);color:#fff;box-shadow:0 10px 26px rgba(8,8,13,.22)}
+.btn-dark:hover{transform:translateY(-2px);box-shadow:0 16px 34px rgba(8,8,13,.3)}
+.btn-white{background:#fff;color:var(--navy);border:1px solid var(--line)}
+.btn-white:hover{transform:translateY(-2px);border-color:#c9c3dd}
+.btn-pur{background:var(--vio);color:#fff}
+.btn-pur:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(124,58,237,.42)}
+.btn svg{width:15px;height:15px}
+
+/* ---------- nav: transparent at top, white bar on scroll ---------- */
+.nav{position:sticky;top:0;z-index:60;transition:background .35s,box-shadow .35s,border-color .35s}
+.nav-in{max-width:1220px;margin:0 auto;padding:20px 28px;display:flex;align-items:center;gap:30px;transition:padding .35s}
+.nav.on{background:rgba(255,255,255,.88);backdrop-filter:blur(16px);box-shadow:0 1px 0 rgba(17,17,24,.07),0 8px 24px rgba(17,17,24,.05)}
+.nav.on .nav-in{padding:12px 28px}
+.brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk",sans-serif;font-size:19px;font-weight:600;letter-spacing:-.035em;color:var(--navy)}
+.brand em{color:var(--vio);font-style:normal}
+.brand .mk{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--pur),var(--vio));display:grid;place-items:center;color:#fff;font-size:14px;font-weight:700}
+.nav-links{display:flex;gap:30px;margin:0 auto;font-size:14.5px;color:var(--mut)}
+.nav-links a{cursor:pointer;position:relative;padding-bottom:3px}
+.nav-links a:after{content:"";position:absolute;left:0;right:100%;bottom:0;height:1.5px;background:var(--navy);transition:right .28s}
+.nav-links a:hover{color:var(--navy)}
+.nav-links a:hover:after{right:0}
+.nav-right{display:flex;align-items:center;gap:18px}
+.nav-right .lg{font-size:14.5px;color:var(--mut);cursor:pointer}
+.nav-right .lg:hover{color:var(--navy)}
+.nav-right .btn{padding:11px 20px;font-size:13.5px}
 
 /* ---------- hero ---------- */
-.ep-hero{position:relative;padding:96px 24px 60px;max-width:1180px;margin:0 auto;overflow:hidden}
-.ep-hero-glow{position:absolute;inset:-20% -10% auto -10%;height:640px;background:radial-gradient(circle at 50% 30%,rgba(91,75,255,.24),transparent 60%);filter:blur(10px);pointer-events:none;z-index:0}
-.ep-hero-in{position:relative;z-index:1;text-align:center;max-width:840px;margin:0 auto}
-.ep-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:12.5px;color:var(--muted);margin-bottom:26px}
-.ep-h1{font-size:clamp(48px,7vw,104px);line-height:.94;letter-spacing:-.045em;font-weight:650}
-.ep-grad{background:linear-gradient(100deg,var(--purple),var(--purple2) 60%,#c3b6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
-.ep-lead{margin:26px auto 34px;max-width:52ch;font-size:18px;line-height:1.65;color:var(--muted)}
-.ep-hero .ep-cta-row{justify-content:center}
+.hero{position:relative;padding:74px 0 54px;text-align:center;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;z-index:0}
+.b1{width:560px;height:440px;top:-110px;left:-140px;background:rgba(124,58,237,.2)}
+.b2{width:460px;height:380px;top:40px;right:-130px;background:rgba(91,75,255,.15)}
+.b3{width:520px;height:300px;bottom:-120px;left:34%;background:rgba(160,120,255,.13)}
+.hero>.wrap{position:relative;z-index:1}
+.pill{display:inline-flex;align-items:center;gap:9px;padding:9px 17px;border-radius:999px;background:#14131f;color:#e8e5f5;font-size:12.5px;margin-bottom:30px;box-shadow:0 10px 24px rgba(8,8,13,.2)}
+.pill svg{width:13px;height:13px;color:#a99cff}
+h1{font-size:clamp(40px,6.4vw,76px);line-height:1.02}
+h1 .pu{color:var(--vio)}
+.sub{margin:26px auto 30px;max-width:58ch;font-size:17px;line-height:1.7;color:var(--mut)}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.micro{margin-top:16px;font-size:12.5px;color:#93909c}
+.socials{display:flex;gap:10px;justify-content:center;margin-top:26px}
+.socials a{width:40px;height:40px;border-radius:11px;background:#14131f;display:grid;place-items:center;color:#fff;transition:transform .25s,background .25s}
+.socials a:hover{transform:translateY(-3px);background:var(--vio)}
+.socials svg{width:16px;height:16px}
 
-/* ---------- hero visual / mock studio ---------- */
-.ep-hero-visual{position:relative;z-index:1;max-width:980px;margin:64px auto 0;will-change:transform,opacity}
-.ep-mock{border-radius:26px;border:1px solid var(--line);background:#fff;box-shadow:0 50px 110px -30px rgba(17,17,24,.28),0 0 0 1px rgba(91,75,255,.05);overflow:hidden}
-.ep-mock-bar{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line)}
-.ep-mock-bar span{width:9px;height:9px;border-radius:50%;background:#e4e1ee}
-.ep-mock-bar b{font-size:12.5px;color:var(--muted);font-weight:500;margin-left:4px}
-.ep-mock-avatars{margin-left:auto;display:flex}
-.ep-mock-avatars i{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--purple2));border:2px solid #fff;margin-left:-7px}
-.ep-mock-body{display:grid;grid-template-columns:180px 1fr;min-height:360px}
-.ep-mock-side{padding:20px 16px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
-.ep-mock-side b{font-size:10.5px;letter-spacing:.08em;color:var(--muted);margin:10px 0 2px}
-.ep-mock-side i{height:11px;border-radius:6px;background:#f0eef7}
-.ep-mock-side i.on{background:linear-gradient(90deg,rgba(91,75,255,.16),rgba(91,75,255,.05))}
-.ep-mock-canvas{padding:22px;display:flex;flex-direction:column;gap:14px;background:linear-gradient(180deg,#fbfaff,#fff)}
-.ep-mock-block{border-radius:14px;background:#f2f0f9;height:64px}
-.ep-mock-block.big{height:120px;background:linear-gradient(135deg,rgba(91,75,255,.14),rgba(142,124,255,.06))}
-.ep-mock-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+/* ---------- logo marquee ---------- */
+.marq{position:relative;margin-top:46px;padding:22px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.marq-track{display:flex;gap:56px;width:max-content;animation:slide 32s linear infinite}
+.marq:hover .marq-track{animation-play-state:paused}
+@keyframes slide{to{transform:translateX(-50%)}}
+.mi{display:flex;align-items:center;gap:11px;font-size:15px;color:#8a8794;white-space:nowrap}
+.mi b{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-size:11px;color:#fff}
 
-/* ---------- feature showcase ---------- */
-.ep-features{max-width:1180px;margin:0 auto;padding:150px 24px 60px}
-.ep-features-head h2{font-size:clamp(34px,4.4vw,52px);letter-spacing:-.035em;line-height:1.05;font-weight:600;text-align:center;margin-bottom:120px}
-.ep-feature{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;margin-bottom:130px}
-.ep-feature:last-child{margin-bottom:0}
-.ep-feature.reverse .ep-feature-text{order:2}
-.ep-feature.reverse .ep-feature-visual{order:1}
-.ep-feature-text h3{font-size:clamp(26px,3vw,36px);letter-spacing:-.03em;font-weight:600;margin:14px 0 16px;line-height:1.15}
-.ep-feature-text p{font-size:16.5px;line-height:1.7;color:var(--muted);max-width:44ch}
-.ep-feature-visual{opacity:0;transform:translateY(40px) scale(.96)}
-.ep-feature-text{opacity:0;transform:translateY(24px)}
+/* ---------- dark 3D showcase ---------- */
+.shows{position:relative;background:var(--dark);padding:96px 0 110px;overflow:hidden}
+.shows:before{content:"";position:absolute;width:720px;height:520px;top:-180px;left:-160px;border-radius:50%;filter:blur(90px);background:rgba(124,58,237,.28)}
+.shows:after{content:"";position:absolute;width:560px;height:420px;bottom:-160px;right:-140px;border-radius:50%;filter:blur(90px);background:rgba(91,75,255,.18)}
+.shows .wrap{position:relative;z-index:1}
+.shows .eb{color:#b5a9ff}
+.shows .eb:before{background:rgba(255,255,255,.22)}
+.shows h2{color:#fff;font-size:clamp(28px,3.8vw,44px);line-height:1.08}
+.shows .lead{margin-top:16px;max-width:52ch;color:rgba(255,255,255,.55);font-size:16px;line-height:1.7}
+/* The centre card stays in normal flow so it sets the section's height; the two
+   side cards are absolute, which keeps the composition from leaving dead space. */
+.fan{position:relative;margin-top:64px;padding-bottom:52px;perspective:1900px;transform-style:preserve-3d}
+.card3d{border-radius:16px;overflow:hidden;background:#fff;border:1px solid rgba(255,255,255,.14);box-shadow:0 50px 110px -24px rgba(0,0,0,.72);will-change:transform}
+.c-mid{position:relative;width:58%;margin:0 auto;z-index:3}
+.c-left{position:absolute;left:2%;top:38px;width:34%;z-index:2;transform-origin:right center}
+.c-right{position:absolute;right:2%;top:38px;width:34%;z-index:2;transform-origin:left center}
+.tag{position:absolute;z-index:5;display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:999px;background:rgba(18,17,26,.92);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(8px);color:#fff;font-size:13px;font-weight:600;box-shadow:0 14px 34px rgba(0,0,0,.5)}
+.tag s{width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 0 3px rgba(52,211,153,.2)}
+.t1{left:18%;top:11%}
+.t2{left:4%;top:44%}
+.t3{right:7%;top:26%}
+.fan-cap{position:absolute;left:4%;bottom:0;z-index:6;color:#fff;font-family:"Space Grotesk",sans-serif;font-size:30px;font-weight:600;letter-spacing:-.04em;text-shadow:0 6px 30px rgba(0,0,0,.6)}
 
-/* feature visual mocks */
-.ep-type-scale{border-radius:20px;border:1px solid var(--line);background:#fff;padding:28px;display:flex;flex-direction:column;gap:14px;box-shadow:0 30px 70px -24px rgba(17,17,24,.14)}
-.ep-type-scale i{display:block;font-family:"Space Grotesk",sans-serif;font-weight:600;letter-spacing:-.03em;color:var(--ink);border-bottom:1px dashed var(--line);padding-bottom:10px}
-.ep-type-scale i:nth-child(1){font-size:38px}
-.ep-type-scale i:nth-child(2){font-size:26px}
-.ep-type-scale i:nth-child(3){font-size:18px;font-weight:500;color:var(--muted);border-bottom:0;padding-bottom:0}
+/* mini app mockup (used inside 3D cards) */
+.app{background:#fff;font-size:0}
+.app-top{display:flex;align-items:center;gap:7px;padding:9px 12px;border-bottom:1px solid #eeecf4}
+.app-top s{width:7px;height:7px;border-radius:50%;background:#e2dfec;display:block}
+.app-top u{margin-left:6px;height:7px;width:76px;border-radius:4px;background:#efedf6;display:block}
+.app-b{display:grid;grid-template-columns:62px 1fr}
+.app-side{border-right:1px solid #f0eef6;padding:10px 8px;display:flex;flex-direction:column;gap:6px}
+.app-side i{height:7px;border-radius:4px;background:#f0eef6;display:block}
+.app-side i.on{background:linear-gradient(90deg,rgba(124,58,237,.3),rgba(124,58,237,.08))}
+.app-main{padding:11px;display:flex;flex-direction:column;gap:8px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.kpis div{border:1px solid #f0eef6;border-radius:7px;padding:8px 7px}
+.kpis u{display:block;height:5px;width:60%;border-radius:3px;background:#efedf6;margin-bottom:6px}
+.kpis b{display:block;height:9px;width:78%;border-radius:4px;background:#ddd8ec}
+.kpis div:first-child b{background:linear-gradient(90deg,var(--vio),var(--pur))}
+.chart{border:1px solid #f0eef6;border-radius:8px;padding:10px;display:flex;align-items:flex-end;gap:5px;height:96px}
+.chart i{flex:1;border-radius:3px 3px 0 0;background:#ece9f7;display:block}
+.chart i:nth-child(2n){background:linear-gradient(180deg,rgba(124,58,237,.6),rgba(91,75,255,.9))}
+.rows{display:flex;flex-direction:column;gap:6px}
+.rows i{height:9px;border-radius:5px;background:#f2f0f8;display:block}
+.rows i:nth-child(2){width:74%}
+.rows i:nth-child(3){width:58%}
 
-.ep-timeline-card{border-radius:20px;border:1px solid var(--line);background:#fff;padding:28px;box-shadow:0 30px 70px -24px rgba(17,17,24,.14)}
-.ep-timeline-track{position:relative;height:5px;border-radius:99px;background:#eeecf6;margin:34px 0 18px}
-.ep-timeline-fill{position:absolute;inset:0;width:62%;border-radius:99px;background:linear-gradient(90deg,var(--purple),var(--purple2))}
-.ep-timeline-track i{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--purple);transform:translate(-50%,-50%)}
-.ep-timeline-track i:nth-child(1){left:0}
-.ep-timeline-track i:nth-child(2){left:32%}
-.ep-timeline-track i:nth-child(3){left:62%}
-.ep-timeline-track i:nth-child(4){left:100%;border-color:#dcd9e6}
-.ep-timeline-labels{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted)}
+/* ---------- use cases ---------- */
+.uc{padding:104px 0}
+.uc h2{font-size:clamp(28px,3.9vw,46px);line-height:1.08}
+.uc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+.uc-card{border:1px solid var(--line);border-radius:18px;padding:28px;background:#fff;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s,border-color .3s}
+.uc-card:hover{transform:translateY(-4px);border-color:#d6d0e8;box-shadow:0 22px 48px -16px rgba(17,17,24,.13)}
+.ic{width:46px;height:46px;border-radius:13px;background:var(--wash);display:grid;place-items:center;color:var(--navy);margin-bottom:20px}
+.ic svg{width:20px;height:20px}
+.uc-card h3{font-size:19px;margin-bottom:9px}
+.uc-card p{font-size:14.5px;line-height:1.7;color:var(--mut)}
 
-.ep-swatch-grid{border-radius:20px;border:1px solid var(--line);background:#fff;padding:26px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;box-shadow:0 30px 70px -24px rgba(17,17,24,.14)}
-.ep-swatch{border-radius:14px;height:70px;display:flex;align-items:flex-end;padding:10px;font-size:10.5px;color:#fff;font-weight:600}
-.ep-swatch:nth-child(1){background:linear-gradient(135deg,var(--purple),var(--purple2))}
-.ep-swatch:nth-child(2){background:var(--ink)}
-.ep-swatch:nth-child(3){background:#f2f0f9;color:var(--muted)}
-.ep-swatch:nth-child(4),.ep-swatch:nth-child(5),.ep-swatch:nth-child(6){background:#fbfaff;border:1px solid var(--line);color:var(--muted)}
+/* ---------- workflow feature grid ---------- */
+.wf{background:var(--wash);padding:104px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.wf h2{font-size:clamp(28px,3.9vw,46px);line-height:1.08}
+.wf .lead{margin-top:18px;max-width:58ch;font-size:16.5px;line-height:1.7;color:var(--mut)}
+.wf-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:52px}
+.wf-card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:26px;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
+.wf-card:hover{transform:translateY(-4px);box-shadow:0 24px 54px -18px rgba(17,17,24,.14)}
+.wf-card h3{font-size:22px;margin:24px 0 10px}
+.wf-card p{font-size:15px;line-height:1.75;color:var(--mut)}
+.shot{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:var(--light)}
+.shot-h{display:flex;justify-content:space-between;padding:11px 14px;border-bottom:1px solid var(--line);font-size:12px;color:var(--mut);background:#fbfaff}
+.shot-h em{font-style:normal;color:#10b981}
+.li{display:flex;justify-content:space-between;padding:11px 14px;border-bottom:1px solid #f1eff7;font-size:12.5px;color:var(--navy)}
+.li:last-child{border:0}
+.li span:last-child{font-family:ui-monospace,Menlo,monospace;color:var(--mut)}
+.li.tot{background:#f6f4fd;font-weight:600}
+.li.tot span:last-child{color:var(--navy)}
+.ok{display:flex;align-items:center;gap:12px;padding:16px;background:#f0fdf6;border:1px solid #d5f5e3;border-radius:13px}
+.ok .cr{width:30px;height:30px;border-radius:50%;background:#d9f7e7;display:grid;place-items:center;color:#10b981;flex:none}
+.ok b{display:block;font-size:13.5px;color:var(--navy)}
+.ok small{font-size:12.5px;color:#10b981}
+.stack{display:flex;flex-direction:column;gap:9px}
+.srow{display:flex;align-items:center;gap:11px;padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:#fff;font-size:13px;color:var(--navy)}
+.srow u{width:8px;height:8px;border-radius:50%;background:var(--vio);flex:none}
+.srow small{margin-left:auto;color:var(--mut);font-size:11.5px}
+.bars{display:flex;align-items:flex-end;gap:7px;height:120px;padding:14px;border:1px solid var(--line);border-radius:13px;background:#fff}
+.bars i{flex:1;border-radius:5px 5px 0 0;background:#eeebf8;display:block}
+.bars i.hi{background:linear-gradient(180deg,var(--vio),var(--pur))}
 
-/* ---------- pinned showcase ---------- */
-.ep-pin-wrap{max-width:1180px;margin:0 auto;padding:0 24px 60px}
-.ep-pin-head{text-align:center;max-width:640px;margin:0 auto 56px}
-.ep-pin-head h2{font-size:clamp(30px,4vw,46px);letter-spacing:-.035em;font-weight:600;margin-top:10px;line-height:1.1}
-.ep-pin-stage{position:relative;height:560px;border-radius:28px;border:1px solid var(--line);background:linear-gradient(165deg,#fff,#f7f6fb);overflow:hidden;box-shadow:0 40px 100px -30px rgba(17,17,24,.18)}
-.ep-pin-frame{position:absolute;inset:0}
-.ep-stage-panel{position:absolute;inset:40px 40px 96px;border-radius:18px;background:#fff;border:1px solid var(--line);opacity:0;transform:translateY(24px) scale(.97);box-shadow:0 30px 60px -20px rgba(17,17,24,.16);overflow:hidden}
-.ep-stage-panel.active{opacity:1;transform:none}
-.ep-stage-panel .sp-bar{display:flex;gap:8px;padding:14px 16px;border-bottom:1px solid var(--line)}
-.ep-stage-panel .sp-bar span{width:8px;height:8px;border-radius:50%;background:#e4e1ee}
-.ep-stage-panel .sp-body{padding:22px;height:calc(100% - 45px)}
-.sp-1 .sp-body{display:flex;align-items:center;justify-content:center}
-.sp-1 .sp-empty{width:120px;height:120px;border:2px dashed #d9d5e8;border-radius:16px}
-.sp-2 .sp-body{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.sp-2 .sp-body i{border-radius:12px;background:#f2f0f9;height:60px}
-.sp-2 .sp-body i:first-child{grid-column:1/-1;height:90px;background:linear-gradient(135deg,rgba(91,75,255,.14),rgba(142,124,255,.06))}
-.sp-3 .sp-body{display:flex;gap:16px;justify-content:center;align-items:center}
-.sp-3 .device{border:1px solid var(--line);border-radius:14px;background:#fbfaff}
-.sp-3 .device.d1{width:60%;height:100%}
-.sp-3 .device.d2{width:26%;height:88%}
-.sp-3 .device.d3{width:14%;height:70%;border-radius:20px}
-.sp-4 .sp-body{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
-.sp-4 .sp-check{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--purple2));display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px}
-.sp-4 b{font-size:14px}
-.ep-pin-caption{position:absolute;left:0;right:0;bottom:0;padding:22px 32px;text-align:center}
-.ep-cap{position:absolute;left:0;right:0;bottom:22px;margin:0;font-size:15px;color:var(--muted);opacity:0;transition:opacity .25s}
-.ep-cap.active{opacity:1}
-
-/* ---------- dark section ---------- */
-.ep-dark{position:relative;background:var(--dark);color:#fff;padding:130px 24px 150px;overflow:hidden;text-align:center}
-.ep-dark-glow{position:absolute;inset:auto -10% 0 -10%;height:70%;background:radial-gradient(circle at 50% 100%,rgba(91,75,255,.32),transparent 65%);pointer-events:none}
-.ep-dark-h2{position:relative;z-index:1;font-size:clamp(34px,5vw,64px);letter-spacing:-.04em;font-weight:600;line-height:1.06}
-.ep-dark-lead{position:relative;z-index:1;display:block;margin:20px auto 70px;max-width:44ch;color:rgba(255,255,255,.56);font-size:16.5px;line-height:1.6}
-.ep-dark-stage{position:relative;z-index:1;max-width:760px;margin:0 auto;min-height:420px}
-.ep-dark-main{border-radius:24px;border:1px solid var(--lined);background:#0f0f16;box-shadow:0 60px 140px -30px rgba(0,0,0,.6),0 0 90px rgba(91,75,255,.18);overflow:hidden;opacity:0;transform:translateY(90px) scale(.92);will-change:transform,opacity}
-.ep-dark-main .sp-bar{border-bottom:1px solid var(--lined)}
-.ep-dark-main .sp-bar span{background:rgba(255,255,255,.14)}
-.ep-dark-main .sp-body{padding:24px;display:grid;grid-template-columns:2fr 1fr;gap:16px}
-.ep-dm-chart{border-radius:14px;background:rgba(255,255,255,.04);display:flex;align-items:flex-end;gap:8px;padding:16px;height:170px}
-.ep-dm-chart i{flex:1;border-radius:6px 6px 0 0;background:linear-gradient(180deg,var(--purple2),var(--purple))}
-.ep-dm-side{display:flex;flex-direction:column;gap:10px}
-.ep-dm-side i{border-radius:10px;background:rgba(255,255,255,.05);height:36px}
-.ep-float{position:absolute;padding:12px 16px;border-radius:14px;background:rgba(20,19,28,.85);border:1px solid var(--lined);backdrop-filter:blur(10px);font-size:12.5px;color:#e9e6f5;box-shadow:0 20px 50px rgba(0,0,0,.4);opacity:0;will-change:transform,opacity}
-.ep-float-1{left:-6%;top:8%}
-.ep-float-2{right:-8%;top:38%}
-.ep-float-3{left:2%;bottom:6%}
-
-/* ---------- stats ---------- */
-.ep-stats{max-width:1100px;margin:0 auto;padding:100px 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
-.ep-stat b{display:block;font-family:"Space Grotesk",sans-serif;font-size:clamp(32px,4.6vw,54px);letter-spacing:-.03em;font-weight:600}
-.ep-stat span{font-size:14px;color:var(--muted)}
-.ep-stat{opacity:0;transform:translateY(20px)}
+/* ---------- dark flow pipeline ---------- */
+.flow{position:relative;background:var(--dark);padding:104px 0 116px;overflow:hidden}
+.stars{position:absolute;inset:0;background-image:radial-gradient(1.4px 1.4px at 12% 18%,rgba(255,255,255,.5),transparent),radial-gradient(1.4px 1.4px at 74% 12%,rgba(190,170,255,.45),transparent),radial-gradient(1.6px 1.6px at 32% 62%,rgba(255,255,255,.4),transparent),radial-gradient(1.4px 1.4px at 88% 48%,rgba(255,255,255,.35),transparent),radial-gradient(1.6px 1.6px at 55% 84%,rgba(190,170,255,.4),transparent),radial-gradient(1.2px 1.2px at 22% 90%,rgba(255,255,255,.3),transparent),radial-gradient(1.2px 1.2px at 66% 34%,rgba(255,255,255,.28),transparent)}
+.flow:before{content:"";position:absolute;width:640px;height:460px;top:14%;right:-150px;border-radius:50%;filter:blur(96px);background:rgba(124,58,237,.2)}
+.flow .wrap{position:relative;z-index:1}
+.flow-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.flow .eb{color:#b5a9ff}
+.flow .eb:before{background:rgba(255,255,255,.22)}
+.flow h2{color:#fff;font-size:clamp(27px,3.6vw,42px);line-height:1.1}
+.flow .lead{margin-top:18px;color:rgba(255,255,255,.55);font-size:16px;line-height:1.75}
+.checks{margin:26px 0;border:1px solid var(--lined);border-radius:16px;background:rgba(255,255,255,.03);padding:8px 4px}
+.checks div{display:flex;align-items:center;gap:11px;padding:11px 16px;font-size:14px;color:rgba(255,255,255,.76)}
+.checks svg{width:14px;height:14px;color:#a99cff;flex:none}
+.pipe{position:relative;display:flex;flex-direction:column;align-items:center;gap:20px}
+.inputs{display:flex;gap:14px}
+.node{display:inline-flex;align-items:center;gap:9px;padding:12px 20px;border-radius:999px;background:linear-gradient(145deg,#1b1a28,#101019);border:1px solid var(--lined);color:#fff;font-size:13.5px;font-weight:600;box-shadow:0 16px 34px rgba(0,0,0,.45)}
+.node svg{width:14px;height:14px;color:#b5a9ff}
+.big{width:100%;flex-direction:column;gap:3px;border-radius:16px;padding:15px 20px;text-align:center}
+.big small{font-size:10.5px;letter-spacing:.11em;color:rgba(255,255,255,.4);font-weight:500}
+.conn{width:100%;height:42px;display:block}
+.conn path{fill:none;stroke:#7c6cf0;stroke-width:1.4;stroke-dasharray:5 5;opacity:.75}
 
 /* ---------- final cta ---------- */
-.ep-final{position:relative;margin:0 24px 100px;border-radius:32px;background:var(--dark);color:#fff;padding:110px 24px;text-align:center;overflow:hidden}
-.ep-final-glow{position:absolute;inset:-30% -10% auto -10%;height:80%;background:radial-gradient(circle at 50% 40%,rgba(91,75,255,.4),transparent 62%)}
-.ep-final h2{position:relative;z-index:1;font-size:clamp(32px,5vw,58px);letter-spacing:-.04em;font-weight:600;line-height:1.08}
-.ep-final p{position:relative;z-index:1;display:block;margin:20px auto 36px;max-width:44ch;color:rgba(255,255,255,.6);font-size:16.5px}
-.ep-final .ep-cta-row{position:relative;z-index:1;justify-content:center}
+.fin{position:relative;padding:112px 0;text-align:center;overflow:hidden;background:#fff}
+.fin .g1{width:700px;height:460px;top:-140px;left:50%;margin-left:-350px;background:rgba(124,58,237,.22)}
+.fin>.wrap{position:relative;z-index:1}
+.fin h2{font-size:clamp(30px,4.6vw,56px);line-height:1.08}
+.fin p{margin:20px auto 32px;max-width:48ch;font-size:16.5px;line-height:1.7;color:var(--mut)}
 
 /* ---------- footer ---------- */
-.ep-footer{max-width:1180px;margin:0 auto;padding:20px 24px 60px}
-.ep-footer-top{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;padding-bottom:40px;border-bottom:1px solid var(--line)}
-.ep-footer-brand{max-width:280px}
-.ep-footer-brand b{font-family:"Space Grotesk",sans-serif;font-size:18px;letter-spacing:-.03em}
-.ep-footer-brand b span{color:var(--purple)}
-.ep-footer-brand p{margin-top:10px;font-size:13.5px;color:var(--muted);line-height:1.65}
-.ep-footer-cols{display:flex;gap:48px;flex-wrap:wrap}
-.ep-footer-cols div{display:flex;flex-direction:column;gap:10px}
-.ep-footer-cols b{font-size:12.5px;color:var(--ink);margin-bottom:4px}
-.ep-footer-cols a{font-size:13.5px;color:var(--muted);cursor:pointer}
-.ep-footer-cols a:hover{color:var(--ink)}
-.ep-footer-bottom{display:flex;justify-content:space-between;align-items:center;gap:14px;padding-top:22px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
-.ep-social{display:flex;gap:10px}
-.ep-social a{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;color:var(--muted)}
-.ep-social a:hover{color:var(--ink);border-color:#c8c4d6}
-.ep-social svg{width:14px;height:14px}
+.ft{background:var(--dark);color:#fff;padding:64px 0 34px}
+.ft-top{display:flex;justify-content:space-between;gap:48px;flex-wrap:wrap;padding-bottom:40px;border-bottom:1px solid var(--lined)}
+.ft .brand{color:#fff}
+.ft-brand{max-width:290px}
+.ft-brand p{margin-top:14px;font-size:13.5px;line-height:1.75;color:rgba(255,255,255,.45)}
+.ft-cols{display:flex;gap:56px;flex-wrap:wrap}
+.ft-cols div{display:flex;flex-direction:column;gap:11px}
+.ft-cols b{font-size:12.5px;color:#fff;margin-bottom:4px}
+.ft-cols a{font-size:13.5px;color:rgba(255,255,255,.45);cursor:pointer}
+.ft-cols a:hover{color:#fff}
+.ft-bot{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;padding-top:24px;font-size:12.5px;color:rgba(255,255,255,.35)}
 
 /* ---------- responsive ---------- */
-@media(max-width:1080px){
-  .ep-feature{grid-template-columns:1fr;gap:36px}
-  .ep-feature.reverse .ep-feature-text,.ep-feature.reverse .ep-feature-visual{order:0}
-  .ep-mock-body{grid-template-columns:140px 1fr}
-  .ep-stats{grid-template-columns:repeat(2,1fr);row-gap:40px}
-  .ep-float-1{left:0}
-  .ep-float-2{right:0}
+@media(max-width:1000px){
+  .nav-links{display:none}
+  .flow-grid{grid-template-columns:1fr;gap:40px}
+  .uc-grid{grid-template-columns:1fr}
+  .wf-grid{grid-template-columns:1fr}
+  .fan-cap{font-size:24px;left:6%}
 }
 @media(max-width:680px){
-  .ep-nav-in{gap:12px}
-  .ep-links{display:none}
-  .ep-hero{padding:70px 20px 40px}
-  .ep-features{padding:70px 20px 40px}
-  .ep-features-head h2{margin-bottom:56px}
-  .ep-feature{margin-bottom:64px}
-  .ep-mock-side{display:none}
-  .ep-mock-body{grid-template-columns:1fr}
-  .ep-pin-stage{height:auto;min-height:0}
-  .ep-pin-frame{position:relative;display:flex;flex-direction:column;gap:16px;padding:20px}
-  .ep-stage-panel{position:relative;inset:auto;opacity:1;transform:none;height:260px;margin:0}
-  .ep-pin-caption{display:none}
-  .ep-dark{padding:80px 20px 100px}
-  .ep-dm-side{display:none}
-  .ep-dm-chart{height:120px}
-  .ep-final{margin:0 16px 70px;padding:70px 20px}
-  .ep-footer-top{gap:28px}
+  .wrap{padding:0 18px}
+  .hero{padding:48px 0 34px}
+  .nav-right .lg{display:none}
+  h1{font-size:clamp(30px,8.4vw,40px)}
+  .sub{font-size:15.5px;margin:20px auto 24px}
+  .cta .btn{flex:1 1 100%;justify-content:center}
+  /* 3D fan flattens into stacked cards on phones */
+  .fan{perspective:none;display:flex;flex-direction:column;gap:18px;margin-top:40px;padding-bottom:0}
+  .card3d{position:relative;left:auto;right:auto;top:auto;width:100%;margin:0;transform:none!important}
+  .tag{position:relative;left:auto;right:auto;top:auto;align-self:flex-start;margin-bottom:-8px}
+  .fan-cap{position:relative;left:auto;bottom:auto;font-size:22px;margin-top:4px}
+  .shows,.uc,.wf,.flow,.fin{padding:64px 0}
+  .app-side{display:none}
+  .app-b{grid-template-columns:1fr}
+  .app-main{min-height:132px}
+  .kpis{grid-template-columns:1fr 1fr}
+  .chart{height:78px}
+  .inputs{flex-wrap:wrap;justify-content:center}
+  .ft-cols{gap:30px}
 }
-
-/* ---------- reduced motion ---------- */
 @media(prefers-reduced-motion:reduce){
-  .ep-hero-visual,.ep-feature-visual,.ep-feature-text,.ep-stat,.ep-dark-main,.ep-float{opacity:1!important;transform:none!important}
-  .ep-stage-panel{opacity:1!important;transform:none!important;position:relative;inset:auto;height:auto;margin-bottom:16px}
+  .rv{opacity:1!important;transform:none!important}
+  .marq-track{animation:none}
+  .card3d{transform:none!important}
 }
 </style></head>
 <body data-cf-keep-dark>
 
-<nav class="ep-nav" id="epNav"><div class="ep-nav-in">
-  <a class="ep-logo">Code<span>Fusion</span></a>
-  <div class="ep-links"><a>Products</a><a>Solutions</a><a>Resources</a><a>Pricing</a></div>
-  <div class="ep-actions"><a class="ep-login">Log in</a><button class="ep-btn ep-btn-dark">Get Started</button></div>
+<nav class="nav" id="nav"><div class="nav-in">
+  <div class="brand"><span class="mk">C</span><span>Code<em>Fusion</em></span></div>
+  <div class="nav-links"><a>Workflow</a><a>Showcase</a><a>Use Cases</a><a>Demo</a><a>Pricing</a></div>
+  <div class="nav-right"><span class="lg">Log in</span><button class="btn btn-pur"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.9 5.7L19.6 9l-4.3 3.4 1.2 5.8L12 15l-4.5 3.2 1.2-5.8L4.4 9l5.7-1.3L12 2z"/></svg>Get Started</button></div>
 </div></nav>
 
-<header class="ep-hero">
-  <div class="ep-hero-glow"></div>
-  <div class="ep-hero-in">
-    <span class="ep-badge">✦ New — Editorial Landing System</span>
-    <h1 class="ep-h1">Build digital products<br>that feel <span class="ep-grad">unforgettable.</span></h1>
-    <p class="ep-lead">A premium landing page system for teams shipping products people remember — considered typography, cinematic motion, and interfaces that feel real.</p>
-    <div class="ep-cta-row"><button class="ep-btn ep-btn-dark">Get Started <i>→</i></button><button class="ep-btn ep-btn-ghost">Explore Products</button></div>
+<header class="hero">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+  <div class="wrap">
+    <div class="pill rv"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.9 5.7L19.6 9l-4.3 3.4 1.2 5.8L12 15l-4.5 3.2 1.2-5.8L4.4 9l5.7-1.3L12 2z"/></svg>New — Editorial landing system, ready to ship</div>
+    <h1 class="rv">Ship products faster.<br>Design them once.<br><span class="pu">All in one system.</span></h1>
+    <p class="sub rv">Describe the page you need and pull ready-made sections, real interface mockups and production HTML straight into your project — no rebuilding the same hero for the fifth time.</p>
+    <div class="cta rv">
+      <button class="btn btn-dark">Start 7 days free <i>→</i></button>
+      <button class="btn btn-white"><svg viewBox="0 0 24 24" fill="#7C3AED"><path d="M8 5v14l11-7z"/></svg>Watch Demo</button>
+    </div>
+    <p class="micro rv">No credit card required · Share via link · Commercial licence</p>
+    <div class="socials rv">
+      <a aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.2 8.2L23 22h-6.9l-5.4-7-6.2 7H1.3l7.7-8.8L1 2h7l4.9 6.4L18.9 2z"/></svg></a>
+      <a aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3V9zm7 0h3.8v1.7h.05c.53-1 1.83-2 3.76-2 4 0 4.7 2.6 4.7 6v6.3h-4v-5.6c0-1.34-.02-3.06-1.87-3.06-1.87 0-2.16 1.46-2.16 2.96V21h-4V9z"/></svg></a>
+      <a aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.5c.5.1.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03a9.6 9.6 0 0 1 5 0c1.9-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.35 4.68-4.58 4.93.36.31.68.92.68 1.85v2.75c0 .26.18.58.69.48A10 10 0 0 0 12 2z"/></svg></a>
+      <a aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 12s0-3.8-.5-5.6a2.9 2.9 0 0 0-2-2C18.7 4 12 4 12 4s-6.7 0-8.5.4a2.9 2.9 0 0 0-2 2C1 8.2 1 12 1 12s0 3.8.5 5.6a2.9 2.9 0 0 0 2 2C5.3 20 12 20 12 20s6.7 0 8.5-.4a2.9 2.9 0 0 0 2-2C23 15.8 23 12 23 12zM9.8 15.4V8.6l5.9 3.4-5.9 3.4z"/></svg></a>
+      <a aria-label="Dribbble"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm6.6 4.6a8.2 8.2 0 0 1 1.9 5.1c-.3-.06-3.2-.65-6.1-.29-.06-.15-.13-.3-.2-.46-.18-.42-.38-.84-.59-1.24 3.2-1.3 4.7-3.2 4.99-3.11zM12 3.5c2.1 0 4 .8 5.4 2.1-.24.35-1.58 2.12-4.67 3.27A42 42 0 0 0 9.7 3.8 8.4 8.4 0 0 1 12 3.5zM8.1 4.4a49 49 0 0 1 3 5.03A31 31 0 0 1 3.6 10.4a8.5 8.5 0 0 1 4.5-6zM3.5 12.02v-.26c.36.01 4.9.07 9.1-1.2.24.47.47.95.68 1.43-4.1 1.2-6.4 4.7-6.8 5.36A8.46 8.46 0 0 1 3.5 12.02zM12 20.5a8.44 8.44 0 0 1-5.2-1.79c.28-.58 2.02-3.85 6.5-5.41l.03-.01c1.13 2.92 1.6 5.37 1.72 6.07A8.4 8.4 0 0 1 12 20.5zm4.5-1.86c-.08-.5-.51-2.84-1.56-5.72 2.73-.44 5.12.27 5.42.37a8.46 8.46 0 0 1-3.86 5.35z"/></svg></a>
+    </div>
   </div>
-  <div class="ep-hero-visual" id="epHeroVisual">
-    <div class="ep-mock">
-      <div class="ep-mock-bar"><span></span><span></span><span></span><b>Studio — untitled page</b><div class="ep-mock-avatars"><i></i><i></i><i></i></div></div>
-      <div class="ep-mock-body">
-        <aside class="ep-mock-side"><b>PAGES</b><i class="on"></i><i></i><i></i><i></i><b>COMPONENTS</b><i></i><i></i></aside>
-        <div class="ep-mock-canvas">
-          <div class="ep-mock-block big"></div>
-          <div class="ep-mock-row"><div class="ep-mock-block"></div><div class="ep-mock-block"></div></div>
-          <div class="ep-mock-block"></div>
-        </div>
-      </div>
+
+  <div class="marq">
+    <div class="marq-track" id="marq">
+      <div class="mi"><b style="background:#4285f4">D</b>Drive Sync</div>
+      <div class="mi"><b style="background:#3ecf8e">S</b>Supabase Database</div>
+      <div class="mi"><b style="background:#d97757">C</b>Claude MCP Access</div>
+      <div class="mi"><b style="background:#7c3aed">F</b>Figma Handoff</div>
+      <div class="mi"><b style="background:#111118">V</b>Vercel Deploy</div>
+      <div class="mi"><b style="background:#f24e1e">N</b>Notion Export</div>
+      <div class="mi"><b style="background:#0ea5e9">T</b>Tailwind Ready</div>
+      <div class="mi"><b style="background:#111118">G</b>GitHub Sync</div>
     </div>
   </div>
 </header>
 
-<section class="ep-features">
-  <div class="ep-features-head"><h2>Everything you need.<br>Nothing you don't.</h2></div>
+<section class="shows" id="shows">
+  <div class="wrap">
+    <div class="eb rv">Showcase</div>
+    <h2 class="rv">Your whole product,<br>one workspace.</h2>
+    <p class="lead rv">Sections, mockups, tokens and exports — everything lives together, so the page you preview is the page you ship.</p>
 
-  <div class="ep-feature">
-    <div class="ep-feature-text"><span class="ep-eyebrow">01 — COMPOSITION</span><h3>Design that holds its shape.</h3><p>Every section is built on a strict spacing and type scale, so nothing feels improvised — from the hero down to the footer.</p></div>
-    <div class="ep-feature-visual"><div class="ep-type-scale"><i>Aa</i><i>Aa Bb</i><i>The quiet detail in every scale.</i></div></div>
-  </div>
+    <div class="fan" id="fan">
+      <span class="tag t1" id="tag1"><s></s>7 days free</span>
+      <span class="tag t2" id="tag2"><s></s>Live</span>
+      <span class="tag t3" id="tag3"><s></s>Auto-saved</span>
 
-  <div class="ep-feature reverse">
-    <div class="ep-feature-visual"><div class="ep-timeline-card"><div class="ep-timeline-track"><div class="ep-timeline-fill"></div><i></i><i></i><i></i><i></i></div><div class="ep-timeline-labels"><span>Enter</span><span>Hold</span><span>Reveal</span><span>Settle</span></div></div></div>
-    <div class="ep-feature-text"><span class="ep-eyebrow">02 — MOTION</span><h3>Motion with intent.</h3><p>Scroll-driven transitions reveal content the way a reader naturally moves through a page — nothing arrives instantly, nothing lingers too long.</p></div>
-  </div>
+      <div class="card3d c-left" id="cL"><div class="app">
+        <div class="app-top"><s></s><s></s><s></s><u></u></div>
+        <div class="app-b"><div class="app-side"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="app-main"><div class="rows"><i></i><i></i><i></i></div><div class="chart"><i style="height:38%"></i><i style="height:66%"></i><i style="height:44%"></i><i style="height:82%"></i><i style="height:54%"></i></div></div></div>
+      </div></div>
 
-  <div class="ep-feature">
-    <div class="ep-feature-text"><span class="ep-eyebrow">03 — SYSTEM</span><h3>One system, every surface.</h3><p>Buttons, cards and inputs share the same tokens throughout, so light and dark sections feel like one considered product instead of two templates stitched together.</p></div>
-    <div class="ep-feature-visual"><div class="ep-swatch-grid"><div class="ep-swatch">Primary</div><div class="ep-swatch">Ink</div><div class="ep-swatch">Muted</div><div class="ep-swatch">Card</div><div class="ep-swatch">Card</div><div class="ep-swatch">Card</div></div></div>
-  </div>
-</section>
+      <div class="card3d c-mid" id="cM"><div class="app">
+        <div class="app-top"><s></s><s></s><s></s><u></u></div>
+        <div class="app-b"><div class="app-side"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="app-main">
+            <div class="kpis"><div><u></u><b></b></div><div><u></u><b></b></div><div><u></u><b></b></div><div><u></u><b></b></div></div>
+            <div class="chart"><i style="height:34%"></i><i style="height:58%"></i><i style="height:42%"></i><i style="height:76%"></i><i style="height:50%"></i><i style="height:92%"></i><i style="height:64%"></i><i style="height:80%"></i></div>
+            <div class="rows"><i></i><i></i><i></i></div>
+          </div></div>
+      </div></div>
 
-<section class="ep-pin-wrap" id="epPinWrap">
-  <div class="ep-pin-head"><span class="ep-eyebrow">A CLOSER LOOK</span><h2>One page, four stages.</h2></div>
-  <div class="ep-pin-stage" id="epPinStage">
-    <div class="ep-pin-frame">
-      <div class="ep-stage-panel sp-1 active" data-stage="1"><div class="sp-bar"><span></span><span></span><span></span></div><div class="sp-body"><div class="sp-empty"></div></div></div>
-      <div class="ep-stage-panel sp-2" data-stage="2"><div class="sp-bar"><span></span><span></span><span></span></div><div class="sp-body"><i></i><i></i><i></i></div></div>
-      <div class="ep-stage-panel sp-3" data-stage="3"><div class="sp-bar"><span></span><span></span><span></span></div><div class="sp-body"><div class="device d1"></div><div class="device d2"></div><div class="device d3"></div></div></div>
-      <div class="ep-stage-panel sp-4" data-stage="4"><div class="sp-bar"><span></span><span></span><span></span></div><div class="sp-body"><div class="sp-check">✓</div><b>Published</b></div></div>
+      <div class="card3d c-right" id="cR"><div class="app">
+        <div class="app-top"><s></s><s></s><s></s><u></u></div>
+        <div class="app-b"><div class="app-side"><i></i><i class="on"></i><i></i><i></i><i></i><i></i></div>
+          <div class="app-main"><div class="kpis" style="grid-template-columns:1fr 1fr"><div><u></u><b></b></div><div><u></u><b></b></div></div><div class="rows"><i></i><i></i><i></i><i></i></div></div></div>
+      </div></div>
+
+      <span class="fan-cap">Dashboard</span>
     </div>
-    <div class="ep-pin-caption">
-      <p class="ep-cap active" data-cap="1">Start from a blank canvas.</p>
-      <p class="ep-cap" data-cap="2">Drop in real components.</p>
-      <p class="ep-cap" data-cap="3">Preview it responsively.</p>
-      <p class="ep-cap" data-cap="4">Ship with confidence.</p>
+  </div>
+</section>
+
+<section class="uc">
+  <div class="wrap">
+    <div class="eb rv">Use Cases</div>
+    <h2 class="rv">Who is this built for?</h2>
+    <div class="uc-grid">
+      <div class="uc-card rv">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 7h16M4 12h10M4 17h7"/></svg></div>
+        <h3>Indie builders</h3>
+        <p>Ship a credible landing page the same weekend you ship the product, without hiring a designer first.</p>
+      </div>
+      <div class="uc-card rv">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></div>
+        <h3>Product teams</h3>
+        <p>Keep marketing pages on the same tokens as the app, so a rebrand is a variable change and not a rewrite.</p>
+      </div>
+      <div class="uc-card rv">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 21h8M12 18v3"/></svg></div>
+        <h3>Studios &amp; agencies</h3>
+        <p>Start every client engagement from a finished system instead of a blank canvas and a deadline.</p>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="ep-dark" id="epDark">
-  <div class="ep-dark-glow"></div>
-  <h2 class="ep-dark-h2">Made to move<br>at your speed.</h2>
-  <p class="ep-dark-lead">Every interaction responds immediately — nothing waits, nothing stutters.</p>
-  <div class="ep-dark-stage">
-    <div class="ep-dark-main" id="epDarkMain">
-      <div class="sp-bar"><span></span><span></span><span></span></div>
-      <div class="sp-body"><div class="ep-dm-chart"><i style="height:40%"></i><i style="height:65%"></i><i style="height:48%"></i><i style="height:82%"></i><i style="height:58%"></i><i style="height:94%"></i><i style="height:70%"></i></div><div class="ep-dm-side"><i></i><i></i><i></i></div></div>
+<section class="wf">
+  <div class="wrap">
+    <div class="eb rv">Your Workflow</div>
+    <h2 class="rv">From first idea to shipped page</h2>
+    <p class="lead rv">One continuous flow — no exporting to three tools, no re-typing the same content, no design drift between preview and production.</p>
+
+    <div class="wf-grid">
+      <div class="wf-card rv">
+        <div class="shot">
+          <div class="shot-h"><span>Section #1847 · Preview</span><em>ready</em></div>
+          <div class="li"><span>Hero — editorial, centered</span><span>1 of 6</span></div>
+          <div class="li"><span>Feature grid — 2 column</span><span>2 of 6</span></div>
+          <div class="li"><span>Pricing — 3 tier</span><span>3 of 6</span></div>
+          <div class="li tot"><span>Total sections</span><span>6</span></div>
+        </div>
+        <h3>Compose the page</h3>
+        <p>Pick sections that already share a type scale and spacing rhythm, so the page reads as one design instead of six pasted blocks.</p>
+      </div>
+
+      <div class="wf-card rv">
+        <div class="ok"><div class="cr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg></div><div><b>Tokens applied</b><small>Colour, radius and type synced automatically</small></div></div>
+        <h3>Keep it consistent</h3>
+        <p>Every surface reads from the same variables. Change the accent once and the hero, cards and dark sections all follow.</p>
+      </div>
+
+      <div class="wf-card rv">
+        <div class="stack">
+          <div class="srow"><u></u>Desktop — 1440px<small>pass</small></div>
+          <div class="srow"><u></u>Tablet — 900px<small>pass</small></div>
+          <div class="srow"><u></u>Mobile — 390px<small>pass</small></div>
+        </div>
+        <h3>Check every width</h3>
+        <p>Layouts are authored per breakpoint rather than scaled down, so the phone view is designed and not merely survivable.</p>
+      </div>
+
+      <div class="wf-card rv">
+        <div class="bars"><i style="height:36%"></i><i style="height:54%"></i><i class="hi" style="height:72%"></i><i style="height:46%"></i><i class="hi" style="height:88%"></i><i style="height:60%"></i><i style="height:40%"></i></div>
+        <h3>Ship and measure</h3>
+        <p>Export production HTML, CSS and JS with no build step required — then watch what the page actually does.</p>
+      </div>
     </div>
-    <div class="ep-float ep-float-1" id="epFloat1">Published ✓</div>
-    <div class="ep-float ep-float-2" id="epFloat2">+238 creators today</div>
-    <div class="ep-float ep-float-3" id="epFloat3">98% uptime</div>
   </div>
 </section>
 
-<section class="ep-stats">
-  <div class="ep-stat"><b data-count="12" data-suffix="K+">0</b><span>Creators</span></div>
-  <div class="ep-stat"><b data-count="240" data-suffix="+">0</b><span>Products</span></div>
-  <div class="ep-stat"><b data-count="98" data-suffix="%">0</b><span>Satisfaction</span></div>
-  <div class="ep-stat"><b data-count="0" data-static="24/7">24/7</b><span>Access</span></div>
+<section class="flow" id="flow">
+  <div class="stars"></div>
+  <div class="wrap"><div class="flow-grid">
+    <div>
+      <div class="eb rv">Under the hood</div>
+      <h2 class="rv">Everything connected,<br>nothing duplicated.</h2>
+      <p class="lead rv">Content, components and exports run through one pipeline, so a change at the start reaches the end without anyone copying anything by hand.</p>
+      <div class="checks rv">
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg>Semantic HTML, no framework lock-in</div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg>Reduced-motion respected everywhere</div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg>Commercial licence included</div>
+      </div>
+      <button class="btn btn-pur rv">Try it now <i>→</i></button>
+    </div>
+
+    <div class="pipe" id="pipe">
+      <div class="inputs">
+        <span class="node rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>Prompt</span>
+        <span class="node rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-6 6"/></svg>Figma</span>
+        <span class="node rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>Markdown</span>
+      </div>
+      <svg class="conn" viewBox="0 0 300 42" preserveAspectRatio="none"><path d="M58 2 C58 24, 150 18, 150 40"/><path d="M150 2 L150 40"/><path d="M242 2 C242 24, 150 18, 150 40"/></svg>
+      <span class="node big rv"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="vertical-align:-2px;margin-right:7px"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>Section composer</span><small>TOKENS APPLIED</small></span>
+      <svg class="conn" viewBox="0 0 300 42" preserveAspectRatio="none"><path d="M150 2 L150 40"/></svg>
+      <span class="node big rv"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="vertical-align:-2px;margin-right:7px"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>Responsive preview</span><small>320PX TO DESKTOP</small></span>
+      <svg class="conn" viewBox="0 0 300 42" preserveAspectRatio="none"><path d="M150 2 L150 40"/></svg>
+      <span class="node big rv"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="vertical-align:-2px;margin-right:7px"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Production export</span><small>HTML · CSS · JS</small></span>
+    </div>
+  </div></div>
 </section>
 
-<section class="ep-final">
-  <div class="ep-final-glow"></div>
-  <h2>Turn your next idea<br>into something real.</h2>
-  <p>Join thousands of teams building with CodeFusion's premium components and templates.</p>
-  <div class="ep-cta-row"><button class="ep-btn ep-btn-light">Get Started <i>→</i></button><button class="ep-btn ep-btn-ghost-dark">Explore Products</button></div>
+<section class="fin">
+  <div class="blob g1"></div>
+  <div class="wrap">
+    <h2 class="rv">Turn your next idea<br>into something real.</h2>
+    <p class="rv">Join thousands of teams building with CodeFusion's premium components and templates.</p>
+    <div class="cta rv">
+      <button class="btn btn-dark">Get Started <i>→</i></button>
+      <button class="btn btn-white">Explore Products</button>
+    </div>
+  </div>
 </section>
 
-<footer class="ep-footer">
-  <div class="ep-footer-top">
-    <div class="ep-footer-brand"><b>Code<span>Fusion</span></b><p>Original interfaces, thoughtful interactions and ready-to-use code for modern web products.</p></div>
-    <div class="ep-footer-cols">
+<footer class="ft"><div class="wrap">
+  <div class="ft-top">
+    <div class="ft-brand">
+      <div class="brand"><span class="mk">C</span><span>Code<em>Fusion</em></span></div>
+      <p>Original interfaces, thoughtful interactions and ready-to-use code for modern web products.</p>
+    </div>
+    <div class="ft-cols">
       <div><b>Products</b><a>Landing Pages</a><a>Components</a><a>Boilerplates</a></div>
       <div><b>Collections</b><a>New</a><a>Trending</a><a>Free</a></div>
       <div><b>Resources</b><a>Getting started</a><a>Documentation</a><a>Changelog</a></div>
       <div><b>Company</b><a>About</a><a>Support</a><a>Contact</a></div>
     </div>
   </div>
-  <div class="ep-footer-bottom">
-    <span>© 2026 CodeFusion. All rights reserved.</span>
-    <div class="ep-social">
-      <a aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.2 8.2L23 22h-6.9l-5.4-7-6.2 7H1.3l7.7-8.8L1 2h7l4.9 6.4L18.9 2z"/></svg></a>
-      <a aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.16 19.5c.5.1.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.03a9.6 9.6 0 0 1 5 0c1.9-1.3 2.75-1.03 2.75-1.03.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.35 4.68-4.58 4.93.36.31.68.92.68 1.85v2.75c0 .26.18.58.69.48A10 10 0 0 0 12 2z"/></svg></a>
-      <a aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3V9zm7 0h3.8v1.7h.05c.53-1 1.83-2 3.76-2 4 0 4.7 2.6 4.7 6v6.3h-4v-5.6c0-1.34-.02-3.06-1.87-3.06-1.87 0-2.16 1.46-2.16 2.96V21h-4V9z"/></svg></a>
-    </div>
-  </div>
-</footer>
+  <div class="ft-bot"><span>© 2026 CodeFusion. All rights reserved.</span><span>Privacy · Terms · Licence</span></div>
+</div></footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
 (function(){
-  var nav = document.getElementById("epNav");
+  var nav = document.getElementById("nav");
   document.addEventListener("scroll", function(){
-    if (window.scrollY > 12) nav.classList.add("scrolled");
-    else nav.classList.remove("scrolled");
+    nav.classList.toggle("on", window.scrollY > 14);
   }, { passive: true });
 
-  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Marquee loops by duplicating its own children, so the -50% keyframe lands seamlessly.
+  var track = document.getElementById("marq");
+  track.innerHTML += track.innerHTML;
 
-  function animateStats(){
-    var stats = document.querySelectorAll(".ep-stat b[data-count]");
-    stats.forEach(function(el){
-      var target = parseInt(el.getAttribute("data-count"), 10) || 0;
-      var suffix = el.getAttribute("data-suffix") || "";
-      var staticText = el.getAttribute("data-static");
-      if (staticText){ el.textContent = staticText; return; }
-      if (reduced){ el.textContent = target + suffix; return; }
-      var start = null, duration = 1100;
-      function step(ts){
-        if (!start) start = ts;
-        var p = Math.min((ts - start) / duration, 1);
-        var eased = 1 - Math.pow(1 - p, 3);
-        el.textContent = Math.round(target * eased) + suffix;
-        if (p < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
-    });
-  }
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var phone = window.matchMedia("(max-width: 680px)").matches;
 
   if (!window.gsap || !window.ScrollTrigger || reduced) {
-    document.querySelectorAll(".ep-feature-visual,.ep-feature-text,.ep-hero-visual,.ep-stat,.ep-dark-main,.ep-float").forEach(function(el){
+    document.querySelectorAll(".rv").forEach(function(el){
       el.style.opacity = 1;
       el.style.transform = "none";
     });
-    var statsFallback = document.querySelector(".ep-stats");
-    if (statsFallback && "IntersectionObserver" in window) {
-      new IntersectionObserver(function(entries, obs){
-        entries.forEach(function(entry){
-          if (entry.isIntersecting){ animateStats(); obs.disconnect(); }
-        });
-      }, { threshold: .4 }).observe(statsFallback);
-    } else {
-      animateStats();
-    }
     return;
   }
 
   gsap.registerPlugin(ScrollTrigger);
 
-  // Hero visual: rises, scales and settles as the hero scrolls past.
-  gsap.fromTo("#epHeroVisual",
-    { y: 100, scale: .88, rotate: -2, opacity: .8 },
-    { y: 0, scale: 1, rotate: 0, opacity: 1, ease: "none",
-      scrollTrigger: { trigger: ".ep-hero", start: "top top", end: "bottom top", scrub: true } }
-  );
+  // Hero copy: staggered rise, once, on load.
+  gsap.to(".hero .rv", { opacity: 1, y: 0, duration: .85, stagger: .085, ease: "power3.out" });
 
-  // Feature blocks: staggered reveal on entry, once.
-  document.querySelectorAll(".ep-feature").forEach(function(feature){
-    var text = feature.querySelector(".ep-feature-text");
-    var visual = feature.querySelector(".ep-feature-visual");
-    gsap.timeline({ scrollTrigger: { trigger: feature, start: "top 78%", toggleActions: "play none none reverse" } })
-      .to(text, { opacity: 1, y: 0, duration: .8, ease: "power3.out" })
-      .to(visual, { opacity: 1, y: 0, scale: 1, duration: .9, ease: "power3.out" }, "-=0.55");
+  // Everything else reveals as it enters.
+  document.querySelectorAll("section .rv, .flow .rv").forEach(function(el){
+    gsap.to(el, {
+      opacity: 1, y: 0, duration: .8, ease: "power3.out",
+      scrollTrigger: { trigger: el, start: "top 88%", once: true }
+    });
   });
 
-  // Pinned showcase: four stages crossfade while the section stays pinned.
-  ScrollTrigger.matchMedia({
-    "(min-width: 681px)": function(){
-      var panels = document.querySelectorAll(".ep-stage-panel");
-      var caps = document.querySelectorAll(".ep-cap");
-      var tl = gsap.timeline({
-        scrollTrigger: { trigger: "#epPinWrap", start: "top top", end: "+=280%", scrub: 1, pin: "#epPinStage", anticipatePin: 1 }
-      });
-      for (var i = 0; i < panels.length - 1; i++) {
-        tl.to(panels[i], { opacity: 0, y: -20, scale: .97, duration: 1 }, i)
-          .to(caps[i], { opacity: 0, duration: .5 }, i)
-          .fromTo(panels[i + 1], { opacity: 0, y: 20, scale: .97 }, { opacity: 1, y: 0, scale: 1, duration: 1 }, i + .3)
-          .to(caps[i + 1], { opacity: 1, duration: .5 }, i + .6);
-      }
-    }
-  });
+  if (!phone) {
+    // The fanned cards start folded inward and open out as the section scrolls through.
+    // Negative translateZ is what puts the side cards behind the centre one: inside a
+    // preserve-3d parent the browser sorts by computed depth and ignores z-index.
+    gsap.set("#cM", { y: 60, scale: .94, opacity: 0 });
+    gsap.set("#cL", { xPercent: 26, y: 100, rotationY: 46, z: -300, scale: .9, opacity: 0 });
+    gsap.set("#cR", { xPercent: -26, y: 100, rotationY: -46, z: -300, scale: .9, opacity: 0 });
+    gsap.set([".tag", ".fan-cap"], { opacity: 0, y: 14 });
 
-  // Dark section: main UI + floating cards enter, then drift at different parallax speeds.
-  gsap.fromTo("#epDarkMain",
-    { y: 90, scale: .92, opacity: 0 },
-    { y: 0, scale: 1, opacity: 1, duration: 1, ease: "power3.out",
-      scrollTrigger: { trigger: "#epDark", start: "top 70%" } }
-  );
-  gsap.fromTo(["#epFloat1", "#epFloat2", "#epFloat3"],
-    { y: 24, opacity: 0 },
-    { y: 0, opacity: 1, duration: .8, stagger: .12, ease: "power2.out",
-      scrollTrigger: { trigger: "#epDark", start: "top 60%" } }
-  );
-  gsap.to("#epDarkMain", { yPercent: -6, ease: "none",
-    scrollTrigger: { trigger: "#epDark", start: "top bottom", end: "bottom top", scrub: true } });
-  gsap.to("#epFloat1", { yPercent: -16, ease: "none",
-    scrollTrigger: { trigger: "#epDark", start: "top bottom", end: "bottom top", scrub: true } });
-  gsap.to("#epFloat2", { yPercent: -22, ease: "none",
-    scrollTrigger: { trigger: "#epDark", start: "top bottom", end: "bottom top", scrub: true } });
-  gsap.to("#epFloat3", { yPercent: -10, ease: "none",
-    scrollTrigger: { trigger: "#epDark", start: "top bottom", end: "bottom top", scrub: true } });
+    gsap.timeline({ scrollTrigger: { trigger: "#shows", start: "top 62%", once: true } })
+      .to("#cM", { y: 0, scale: 1, opacity: 1, duration: 1, ease: "power3.out" })
+      .to("#cL", { xPercent: 0, y: 34, rotationY: 28, z: -190, scale: 1, opacity: 1, duration: 1.1, ease: "power3.out" }, "-=0.75")
+      .to("#cR", { xPercent: 0, y: 34, rotationY: -28, z: -190, scale: 1, opacity: 1, duration: 1.1, ease: "power3.out" }, "<")
+      .to([".tag", ".fan-cap"], { opacity: 1, y: 0, duration: .55, stagger: .09, ease: "power2.out" }, "-=0.5");
 
-  // Stats: reveal + count up once.
-  gsap.timeline({ scrollTrigger: { trigger: ".ep-stats", start: "top 80%", once: true } })
-    .to(".ep-stat", { opacity: 1, y: 0, duration: .7, stagger: .1, ease: "power2.out", onStart: animateStats });
+    // Continuous scrub drifts the three planes at different speeds. It deliberately
+    // animates only yPercent — touching rotationY here would fight the entrance above,
+    // which tweens the same property from a different starting value.
+    var drift = { trigger: "#shows", start: "top bottom", end: "bottom top", scrub: true };
+    gsap.to("#cM", { yPercent: -7, ease: "none", scrollTrigger: drift });
+    gsap.to("#cL", { yPercent: -13, ease: "none", scrollTrigger: drift });
+    gsap.to("#cR", { yPercent: -13, ease: "none", scrollTrigger: drift });
+    gsap.to("#tag1", { yPercent: -50, ease: "none", scrollTrigger: drift });
+    gsap.to("#tag2", { yPercent: -80, ease: "none", scrollTrigger: drift });
+    gsap.to("#tag3", { yPercent: -34, ease: "none", scrollTrigger: drift });
 
-  // Final CTA: gentle reveal.
-  gsap.fromTo(".ep-final", { opacity: 0, y: 30 }, {
-    opacity: 1, y: 0, duration: .9, ease: "power3.out",
-    scrollTrigger: { trigger: ".ep-final", start: "top 82%" }
+    // Hero blobs drift slower than the page for depth.
+    gsap.to(".b1", { yPercent: 34, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
+    gsap.to(".b2", { yPercent: 52, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
+  }
+
+  // Pipeline connectors draw themselves as the flow section arrives.
+  document.querySelectorAll(".conn path").forEach(function(path){
+    var len = path.getTotalLength();
+    gsap.fromTo(path,
+      { strokeDasharray: len, strokeDashoffset: len },
+      { strokeDashoffset: 0, duration: 1, ease: "power2.inOut",
+        scrollTrigger: { trigger: path, start: "top 92%", once: true },
+        onComplete: function(){ path.style.strokeDasharray = "5 5"; } }
+    );
   });
 
   window.addEventListener("load", function(){ ScrollTrigger.refresh(); });
