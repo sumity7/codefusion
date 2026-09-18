@@ -1564,7 +1564,7 @@ header b{color:#f7f5fb;font-size:13px}
 .palette div:hover{background:#17131f;color:var(--lav)}
 </style></head>
 <body data-cf-keep-dark><header><b>CodeFusion</b><div class="search" id="open">Search… ⌘K</div></header>
-<div class="overlay" id="overlay"><div class="palette"><input placeholder="Type a command…" autofocus>
+<div class="overlay" id="overlay"><div class="palette"><input placeholder="Type a command…">
 <div>Go to Dashboard</div><div>Create new component</div><div>Toggle theme</div><div>View documentation</div></div></div>
 <script>
 const open=document.getElementById("open"),overlay=document.getElementById("overlay");
