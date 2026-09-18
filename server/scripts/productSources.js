@@ -5016,7 +5016,7 @@ h1{font-size:clamp(38px,6.4vw,70px);line-height:1.04;color:#fff;text-shadow:0 2p
 </body></html>`,
   "enterprise-delivery-landing-page": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Enterprise Delivery Landing Page</title><style>
-:root{--blue:#2146f7;--blue-d:#1736d8;--ink:#0c0f16;--mut:#6b7280;--dark:#010101;--card:#0d041a;--line:#e8eaf1;--lined:rgba(255,255,255,.08)}
+:root{--blue:#2146f7;--blue-d:#1736d8;--ink:#0c0f16;--mut:#6b7280;--dark:#010101;--card:#0d041a;--line:#e8eaf1;--lined:rgba(255,255,255,.08);--wash:#f3f0fb}
 *{box-sizing:border-box}
 body{margin:0;background:var(--dark);color:#fff;font-family:Inter,ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 h1,h2,h3{font-family:"Space Grotesk",Inter,ui-sans-serif,sans-serif;margin:0;font-weight:500;letter-spacing:-.03em}
@@ -5070,46 +5070,67 @@ h1{font-size:clamp(32px,5.2vw,60px);line-height:1.12}
 .c-card:before{content:"";position:absolute;inset:0;border-radius:18px;padding:1px;background:linear-gradient(160deg,rgba(140,110,255,.55),transparent 45%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.8;pointer-events:none}
 .c-card:hover{transform:translateY(-8px);border-color:rgba(160,130,255,.5);box-shadow:0 30px 60px -22px rgba(120,80,255,.5)}
 .c-tag{position:absolute;top:18px;left:18px;display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);font-size:12.5px;font-weight:500}
-.c-tag u{width:11px;height:11px;border-radius:50%;border:2px solid #a78bfa;text-decoration:none;flex:none}
+.c-tag svg{width:13px;height:13px;color:#a78bfa;flex:none}
 .c-card h3{font-size:21px;line-height:1.26;margin-bottom:16px}
 .c-card ul{list-style:none;margin:0;padding:0}
 .c-card li{display:flex;gap:9px;font-size:13px;line-height:1.5;color:rgba(255,255,255,.66);margin-bottom:9px}
 .c-card li:before{content:"";width:12px;height:12px;border-radius:50%;border:2px solid #a78bfa;flex:none;margin-top:3px}
-.c-card .btn{margin-top:14px}
+/* Collapsed by default; .active (set by the auto-cycling spotlight, or :hover) grows
+   it open. Height is measured in JS rather than transitioning to a fixed px value,
+   since the button's own height varies slightly with font rendering. */
+.c-cta{height:0;overflow:hidden;opacity:0;transition:height .45s cubic-bezier(.2,.8,.2,1),opacity .3s;margin-top:14px}
+.c-cta .btn{width:100%}
+.c-card.active .c-cta{opacity:1}
 
 /* ---------- light comparison ---------- */
 .cmp{background:#fff;color:var(--ink);padding:96px 0 110px}
 .cmp h2{text-align:center;font-size:clamp(28px,4vw,46px);line-height:1.12;margin-bottom:12px}
 .cmp .lead{text-align:center;max-width:56ch;margin:0 auto 54px;font-size:15.5px;line-height:1.7;color:var(--mut)}
 .cmp-grid{display:grid;grid-template-columns:1fr .86fr 1fr;gap:30px;align-items:center}
+.cmp-pill{display:flex;justify-content:center;margin-bottom:20px}
+.cmp-pill span{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:999px;background:var(--wash);color:var(--mut);font-size:13px;font-weight:500}
+.cmp-pill svg{width:14px;height:14px;color:#c026a3}
 .col{display:flex;flex-direction:column;gap:12px}
-.row{display:flex;gap:12px;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:14px;line-height:1.5;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s,border-color .3s}
+.row{display:flex;align-items:flex-start;gap:12px;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:14px;line-height:1.5;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s,border-color .3s}
 .row:hover{transform:translateY(-3px);box-shadow:0 16px 34px -14px rgba(12,15,22,.18);border-color:#d5d9e6}
-.row svg{width:15px;height:15px;flex:none;margin-top:2px}
+.row i{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;flex:none}
+.row svg{width:13px;height:13px}
+.col.bad i{background:#eef0f4;color:#8b93a1}
 .col.bad .row{color:var(--mut)}
-.col.bad svg{color:#9aa1ae}
-.col.good svg{color:var(--blue)}
+.col.good i{background:var(--ink);color:#fff}
 .col.good .row:hover{border-color:#b9c6ff}
 /* gradient orb */
 .orb{position:relative;aspect-ratio:1;display:grid;place-items:center}
 .orb-glow{position:absolute;inset:-4%;border-radius:50%;background:radial-gradient(circle at 50% 50%,#fff 14%,rgba(233,225,255,.95) 30%,rgba(196,170,253,.72) 52%,rgba(251,186,140,.55) 74%,transparent 88%);filter:blur(10px)}
 .orb-ring{position:relative;width:78%;aspect-ratio:1;border-radius:50%;border:3px solid transparent;background:linear-gradient(#fff,#fff) padding-box,conic-gradient(from 210deg,#4a9eff,#8b5cf6,#e879a8,#f59e5b,#fbbf24,#4a9eff) border-box;animation:orbspin 18s linear infinite}
+.orb-dot{position:absolute;width:6px;height:6px;border-radius:50%;background:#8b5cf6;box-shadow:0 0 0 3px rgba(139,92,246,.15)}
 @keyframes orbspin{to{transform:rotate(360deg)}}
 .orb-mesh{position:absolute;inset:11%;border-radius:50%;opacity:.5;
   background:repeating-linear-gradient(0deg,rgba(140,110,220,.22) 0 1px,transparent 1px 13px),repeating-linear-gradient(90deg,rgba(140,110,220,.22) 0 1px,transparent 1px 13px)}
 .orb-core{position:absolute;width:24%;aspect-ratio:1;border-radius:50%;background:#fff;box-shadow:0 0 46px 22px rgba(255,255,255,.98)}
 
 /* ---------- flow / phases ---------- */
-.flow{position:relative;background:#fff;color:var(--ink);padding:20px 0 120px;overflow:hidden}
+.flow{position:relative;background:#fff;color:var(--ink);padding:96px 0 160px;overflow:hidden}
+.flow-head{text-align:center;max-width:640px;margin:0 auto 90px}
+.flow-head .cmp-pill{margin-bottom:20px}
+.flow-head h2{font-size:clamp(28px,3.9vw,46px);line-height:1.14}
+.flow-head p{margin-top:16px;font-size:15.5px;line-height:1.7;color:var(--mut)}
 .ph-grid{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+/* Columns ascend left to right — Scopes sits lowest, Activates highest — tracing the
+   wave's rise beneath them, rather than sitting in a flat row. */
+.ph-grid{align-items:start}
 .ph{padding-left:2px}
+.ph:nth-child(1){margin-top:96px}
+.ph:nth-child(2){margin-top:64px}
+.ph:nth-child(3){margin-top:32px}
+.ph:nth-child(4){margin-top:0}
 .ph b{display:flex;align-items:center;gap:9px;font-size:16px;font-weight:600;margin-bottom:16px}
-.ph b u{width:13px;height:13px;border-radius:50%;border:2px solid #a78bfa;text-decoration:none;flex:none}
+.ph b svg{width:14px;height:14px;color:#a78bfa;flex:none}
 .ph div{position:relative;padding:9px 0 9px 22px;font-size:14px;color:var(--mut);transition:color .25s,transform .25s}
 .ph div:hover{color:var(--ink);transform:translateX(3px)}
 .ph-line{position:absolute;left:5px;top:0;bottom:0;width:2px;border-radius:2px;background:linear-gradient(180deg,#8b5cf6,#f59e5b)}
 .ph-items{position:relative}
-.waves{position:absolute;left:0;right:0;bottom:-10px;height:300px;z-index:1;pointer-events:none}
+.waves{position:absolute;left:0;right:0;bottom:-10px;height:340px;z-index:1;pointer-events:none}
 .waves svg{width:100%;height:100%}
 .waves path{fill:none;stroke-width:1}
 
@@ -5138,6 +5159,7 @@ h1{font-size:clamp(32px,5.2vw,60px);line-height:1.12}
   .cmp-grid{grid-template-columns:1fr}
   .orb{max-width:340px;margin:8px auto}
   .ph-grid{grid-template-columns:1fr 1fr}
+  .ph:nth-child(1),.ph:nth-child(2),.ph:nth-child(3),.ph:nth-child(4){margin-top:0}
 }
 @media(max-width:620px){
   .wrap{padding:0 18px}
@@ -5172,42 +5194,46 @@ h1{font-size:clamp(32px,5.2vw,60px);line-height:1.12}
 
 <section class="cards">
   <div class="wrap"><div class="c-grid">
-    <article class="c-card rv">
-      <span class="c-tag"><u></u>Planning</span>
+    <article class="c-card rv" data-card="0">
+      <span class="c-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>Planning</span>
       <h3>Turn new programs into structured plans without the noise.</h3>
       <ul><li>Embedded program leads</li><li>Decision-ready roadmaps</li></ul>
+      <div class="c-cta"><button class="btn b-grad">Learn more <i>&rarr;</i></button></div>
     </article>
-    <article class="c-card rv">
-      <span class="c-tag"><u></u>Procurement</span>
+    <article class="c-card rv" data-card="1">
+      <span class="c-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 3v5l4-2"/></svg>Procurement</span>
       <h3>Source and qualify vendors with far less friction.</h3>
       <ul><li>Cross-org scope alignment</li><li>End-to-end accountability</li></ul>
+      <div class="c-cta"><button class="btn b-grad">Learn more <i>&rarr;</i></button></div>
     </article>
-    <article class="c-card rv">
-      <span class="c-tag"><u></u>Logistics</span>
+    <article class="c-card rv" data-card="2">
+      <span class="c-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.6" fill="currentColor" stroke="none"/></svg>Logistics</span>
       <h3>Move the right materials on time without surprises.</h3>
       <ul><li>Spec and fit validations</li><li>Change order ownership</li></ul>
+      <div class="c-cta"><button class="btn b-grad">Learn more <i>&rarr;</i></button></div>
     </article>
-    <article class="c-card rv">
-      <span class="c-tag"><u></u>Commissioning</span>
+    <article class="c-card rv" data-card="3">
+      <span class="c-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 13a8 8 0 0 1 16 0"/><rect x="2" y="13" width="4" height="6" rx="1.5"/><rect x="18" y="13" width="4" height="6" rx="1.5"/></svg>Commissioning</span>
       <h3>Activate systems with complete context, not guesswork.</h3>
       <ul><li>Uninterrupted workflows</li><li>Verified clean handoffs</li></ul>
-      <button class="btn b-grad">Learn more <i>&rarr;</i></button>
+      <div class="c-cta"><button class="btn b-grad">Learn more <i>&rarr;</i></button></div>
     </article>
   </div></div>
 </section>
 
 <section class="cmp">
   <div class="wrap">
-    <h2 class="rv">Replace the guesswork.<br><span class="grad">Run with confidence.</span></h2>
+    <div class="cmp-pill rv"><span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7-4.35-9.5-8.8C.9 8.6 2.6 5 6 5c2 0 3.4 1.1 4 2.3C10.6 6.1 12 5 14 5c3.4 0 5.1 3.6 3.5 7.2C19 16.65 12 21 12 21z"/></svg>Control</span></div>
+    <h2 class="rv">Stop absorbing the chaos.<br><span class="grad">Run with confidence.</span></h2>
     <p class="lead rv">The same program, seen from both sides — before the operating model changes, and after.</p>
 
     <div class="cmp-grid">
       <div class="col bad">
-        <div class="row rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6 6 18M6 6l12 12"/></svg>Reactive firefighting when foundational issues surface too late</div>
-        <div class="row rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6 6 18M6 6l12 12"/></svg>Bloated coordination overhead drains bandwidth from core teams</div>
-        <div class="row rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6 6 18M6 6l12 12"/></svg>Constant re-verification because source data can't be trusted</div>
-        <div class="row rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6 6 18M6 6l12 12"/></svg>Fragmented vendor relations produce mismatched deliverables</div>
-        <div class="row rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6 6 18M6 6l12 12"/></svg>Scattered specs and decisions buried across siloed systems</div>
+        <div class="row rv"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6 6 18M6 6l12 12"/></svg></i>Reactive firefighting when foundational issues surface too late</div>
+        <div class="row rv"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6 6 18M6 6l12 12"/></svg></i>Bloated coordination overhead drains bandwidth from core teams</div>
+        <div class="row rv"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6 6 18M6 6l12 12"/></svg></i>Constant re-verification because source data can't be trusted</div>
+        <div class="row rv"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6 6 18M6 6l12 12"/></svg></i>Fragmented vendor relations produce mismatched deliverables</div>
+        <div class="row rv"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6 6 18M6 6l12 12"/></svg></i>Scattered specs and decisions buried across siloed systems</div>
       </div>
 
       <div class="orb rv">
@@ -5215,27 +5241,40 @@ h1{font-size:clamp(32px,5.2vw,60px);line-height:1.12}
         <div class="orb-ring"></div>
         <div class="orb-mesh"></div>
         <div class="orb-core"></div>
+        <span class="orb-dot" style="left:18%;top:32%"></span>
+        <span class="orb-dot" style="left:30%;top:16%"></span>
+        <span class="orb-dot" style="left:76%;top:22%"></span>
+        <span class="orb-dot" style="left:82%;top:54%"></span>
+        <span class="orb-dot" style="left:60%;top:80%"></span>
+        <span class="orb-dot" style="left:24%;top:70%"></span>
       </div>
 
       <div class="col good">
-        <div class="row rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Layered dependency maps eliminate costly surprises at every phase</div>
-        <div class="row rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Streamlined team handoffs deliver production-ready outcomes fast</div>
-        <div class="row rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Live validation loops keep requirements locked across all stages</div>
-        <div class="row rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Unified vendor management through a single accountable contact</div>
-        <div class="row rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Centralized context and clear records accelerate every decision</div>
+        <div class="row rv"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg></i>Layered dependency maps eliminate costly surprises at every phase</div>
+        <div class="row rv"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg></i>Streamlined team handoffs deliver production-ready outcomes fast</div>
+        <div class="row rv"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg></i>Live validation loops keep requirements locked across all stages</div>
+        <div class="row rv"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg></i>Unified vendor management through a single accountable contact</div>
+        <div class="row rv"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg></i>Centralized context and clear records accelerate every decision</div>
       </div>
     </div>
   </div>
 </section>
 
 <section class="flow">
-  <div class="wrap"><div class="ph-grid">
-    <div class="ph rv"><b><u></u>Scopes</b><div class="ph-items"><span class="ph-line"></span><div>conditions</div><div>capacity</div><div>specs</div><div>timelines</div></div></div>
-    <div class="ph rv"><b><u></u>Integrates</b><div class="ph-items"><span class="ph-line"></span><div>civil</div><div>mechanical</div><div>electrical</div><div>controls</div></div></div>
-    <div class="ph rv"><b><u></u>Certifies</b><div class="ph-items"><span class="ph-line"></span><div>redundancy</div><div>testing</div><div>compliance</div><div>sign-offs</div></div></div>
-    <div class="ph rv"><b><u></u>Activates</b><div class="ph-items"><span class="ph-line"></span><div>cutover</div><div>runbooks</div><div>handoff</div><div>SLAs</div></div></div>
-  </div></div>
-  <div class="waves" id="waves"><svg viewBox="0 0 1200 300" preserveAspectRatio="none" id="wsvg"></svg></div>
+  <div class="wrap">
+    <div class="flow-head">
+      <div class="cmp-pill rv"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>Structured Delivery</span></div>
+      <h2 class="rv">One integrated, end-to-end system.<br><span class="grad">Compounding operational value.</span></h2>
+      <p class="rv">NexaCore teams capture, align, validate and deliver exactly what keeps your programs on track.</p>
+    </div>
+    <div class="ph-grid">
+    <div class="ph rv"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.6" fill="currentColor" stroke="none"/></svg>Scopes</b><div class="ph-items"><span class="ph-line"></span><div>conditions</div><div>capacity</div><div>specs</div><div>timelines</div></div></div>
+    <div class="ph rv"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.6" fill="currentColor" stroke="none"/></svg>Integrates</b><div class="ph-items"><span class="ph-line"></span><div>civil</div><div>mechanical</div><div>electrical</div><div>controls</div></div></div>
+    <div class="ph rv"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.6" fill="currentColor" stroke="none"/></svg>Certifies</b><div class="ph-items"><span class="ph-line"></span><div>redundancy</div><div>testing</div><div>compliance</div><div>sign-offs</div></div></div>
+    <div class="ph rv"><b><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.6" fill="currentColor" stroke="none"/></svg>Activates</b><div class="ph-items"><span class="ph-line"></span><div>cutover</div><div>runbooks</div><div>handoff</div><div>SLAs</div></div></div>
+    </div>
+  </div>
+  <div class="waves" id="waves"><svg viewBox="0 0 1200 340" preserveAspectRatio="none" id="wsvg"></svg></div>
 </section>
 
 <section class="fin">
@@ -5271,11 +5310,14 @@ h1{font-size:clamp(32px,5.2vw,60px);line-height:1.12}
   var lines = 26;
   for (var i = 0; i < lines; i++) {
     var t = i / (lines - 1);
-    var amp = 52 - t * 16;
-    var base = 150 + t * 80;
+    var amp = 58 - t * 18;
+    var base = 170 + t * 90;
     var d = "M0 " + base;
-    for (var x = 0; x <= 1200; x += 40) {
-      var y = base - Math.sin((x / 1200) * Math.PI * 2.1 + t * 0.55) * amp;
+    // The +x*0.09 term is an overall upward drift, not just periodic motion — it is
+    // what makes the ribbon read as rising toward the right, under the columns that
+    // are staggered to climb the same way, rather than a flat oscillation.
+    for (var x = 0; x <= 1200; x += 30) {
+      var y = base - Math.sin((x / 1200) * Math.PI * 2.6 + t * 0.55) * amp - x * 0.09;
       d += " L" + x + " " + y.toFixed(1);
     }
     var p = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -5291,6 +5333,42 @@ h1{font-size:clamp(32px,5.2vw,60px);line-height:1.12}
   svg.insertBefore(defs, svg.firstChild);
 
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Auto-cycling spotlight: highlights one capability card at a time and ping-pongs
+  // through the row (0,1,2,3,2,1,0,…) on its own, independent of the pointer — real
+  // hover still jumps the spotlight to that card and pauses the cycle while it stays.
+  // Height transitions to a measured px value rather than "auto", which CSS cannot
+  // animate.
+  (function(){
+    var cards = [].slice.call(document.querySelectorAll(".c-card"));
+    if (!cards.length) return;
+    var ctas = cards.map(function(c){ return c.querySelector(".c-cta"); });
+    var idx = 0, dir = 1, hoverLock = false, timer;
+
+    function setActive(i){
+      cards.forEach(function(c, ci){
+        var on = ci === i;
+        c.classList.toggle("active", on);
+        ctas[ci].style.height = on ? ctas[ci].scrollHeight + "px" : "0px";
+      });
+    }
+    setActive(0);
+
+    if (!reduced) {
+      timer = setInterval(function(){
+        if (hoverLock) return;
+        idx += dir;
+        if (idx >= cards.length - 1) dir = -1;
+        if (idx <= 0) dir = 1;
+        setActive(idx);
+      }, 1400);
+    }
+
+    cards.forEach(function(c, ci){
+      c.addEventListener("mouseenter", function(){ hoverLock = true; idx = ci; setActive(ci); });
+      c.addEventListener("mouseleave", function(){ hoverLock = false; });
+    });
+  })();
 
   if (!window.gsap || !window.ScrollTrigger || reduced) {
     document.querySelectorAll(".rv").forEach(function(el){
