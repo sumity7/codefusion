@@ -471,37 +471,62 @@ nav b{font:700 14px "Space Grotesk",sans-serif}
 
   "multi-step-form": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Multi-Step Form</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:16px;place-items:center;padding:40px}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.wrap{position:relative;width:min(320px,90vw);border:1px solid var(--line);border-radius:18px;background:#0d0d12;padding:26px;box-shadow:0 20px 50px -20px rgba(0,0,0,.6)}
-.dots{display:flex;gap:6px;margin-bottom:20px}
-.dots i{flex:1;height:4px;border-radius:2px;background:#242130;overflow:hidden;position:relative}
-.dots i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#d7d0ff,#9b8aff);transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
-.dots i.active::after{transform:scaleX(1)}
-.step{display:none}
-.step.active{display:block;animation:stepIn .4s cubic-bezier(.2,.8,.2,1)}
-@keyframes stepIn{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
-h3{margin:0 0 12px;font:700 18px "Space Grotesk",sans-serif;color:#f7f5fb}
-input{width:100%;padding:12px;margin-bottom:10px;border:1px solid var(--line);border-radius:9px;background:#111017;color:#fff;outline:0;font-size:12px;transition:border-color .25s,box-shadow .25s}
-input:focus{border-color:#6d5f93;box-shadow:0 0 0 3px rgba(196,181,253,.25)}
-.actions{display:flex;justify-content:space-between;margin-top:8px}
-button{border:0;border-radius:10px;padding:11px 18px;font-size:10px;font-weight:800;cursor:pointer;background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
-button:active{transform:scale(.92)}
-button.ghost{background:transparent;color:#847e8f;box-shadow:none}
+:root{--bg:#f5f6fb;--ink:#191b29;--mut:#6b7086;--indigo:#4338ca;--line:#e2e4f0;--card:#fff;--green:#16a34a}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:340px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:0 24px 50px -24px rgba(25,27,41,.18)}
+.steps{display:flex;align-items:center;margin-bottom:22px}
+.step{width:26px;height:26px;border-radius:50%;background:var(--line);color:var(--mut);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;transition:background .3s,color .3s}
+.step.on{background:var(--indigo);color:#fff}
+.step.done{background:var(--green);color:#fff}
+.step-line{flex:1;height:2px;background:var(--line);margin:0 6px;position:relative}
+.step-line i{position:absolute;inset:0;background:var(--green);width:0;transition:width .4s}
+.panel{display:none}
+.panel.on{display:block}
+label{display:block;font-size:11.5px;color:var(--mut);margin-bottom:6px;font-weight:600}
+input,select{width:100%;padding:11px 13px;border-radius:10px;border:1.5px solid var(--line);font-size:13px;font-family:inherit;margin-bottom:14px;outline:none;transition:border-color .2s;color:var(--ink)}
+input:focus,select:focus{border-color:var(--indigo)}
+.row{display:flex;gap:14px;margin-top:18px}
+button{flex:1;padding:12px;border-radius:10px;border:0;font-size:13px;font-weight:700;cursor:pointer}
+.next{background:var(--indigo);color:#fff}
+.back{background:var(--bg);color:var(--ink);border:1px solid var(--line)!important}
+.done-panel{text-align:center;padding:20px 0}
+.done-panel svg{width:44px;height:44px;color:var(--green);margin-bottom:10px}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">STEP THROUGH THE FLOW</span>
-<div class="wrap">
-<div class="dots"><i class="active"></i><i></i><i></i></div>
-<div class="step active" data-step="1"><h3>Your details</h3><input placeholder="Full name"><div class="actions"><span></span><button onclick="go(2)">Next</button></div></div>
-<div class="step" data-step="2"><h3>Company</h3><input placeholder="Company name"><div class="actions"><button class="ghost" onclick="go(1)">Back</button><button onclick="go(3)">Next</button></div></div>
-<div class="step" data-step="3"><h3>All set ✓</h3><p style="color:#847e8f;font-size:10px">Your account is ready to go.</p><div class="actions"><button class="ghost" onclick="go(2)">Back</button><span></span></div></div>
-</div></div>
+<body>
+<div class="card">
+  <div class="steps" id="steps"></div>
+  <form id="form">
+    <div class="panel on" data-step="0"><label>Full name</label><input type="text" placeholder="Asha Kessler"><label>Email</label><input type="email" placeholder="asha@company.com"><div class="row"><button type="button" class="next" id="n0">Continue</button></div></div>
+    <div class="panel" data-step="1"><label>Company</label><input type="text" placeholder="Acme Inc."><label>Team size</label><select><option>1–10</option><option>11–50</option><option>50+</option></select><div class="row"><button type="button" class="back" id="b1">Back</button><button type="button" class="next" id="n1">Continue</button></div></div>
+    <div class="panel" data-step="2"><label>Plan</label><select><option>Starter</option><option>Pro</option><option>Enterprise</option></select><div class="row"><button type="button" class="back" id="b2">Back</button><button type="submit" class="next">Finish setup</button></div></div>
+    <div class="panel done-panel" data-step="3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><div style="font-weight:700;color:var(--ink)">You're all set!</div><div style="font-size:12.5px;color:var(--mut);margin-top:4px">Welcome aboard.</div></div>
+  </form>
+</div>
 <script>
-function go(n){document.querySelectorAll(".step").forEach(function(s){s.classList.toggle("active",s.dataset.step==n)});document.querySelectorAll(".dots i").forEach(function(d,i){d.classList.toggle("active",i<n)})}
+var cur=0, total=3;
+var stepsEl=document.getElementById("steps");
+function buildSteps(){
+  stepsEl.innerHTML="";
+  for(var i=0;i<total;i++){
+    var s=document.createElement("div"); s.className="step"+(i===cur?" on":i<cur?" done":""); s.textContent=i+1;
+    stepsEl.appendChild(s);
+    if(i<total-1){ var line=document.createElement("div"); line.className="step-line"; line.innerHTML='<i style="width:'+(i<cur?"100%":"0")+'"></i>'; stepsEl.appendChild(line); }
+  }
+}
+function goTo(step){
+  document.querySelectorAll(".panel").forEach(function(p){ p.classList.toggle("on", +p.dataset.step===step); });
+  cur=step; if(step<total) buildSteps();
+}
+document.getElementById("n0").addEventListener("click",function(){ goTo(1); });
+document.getElementById("n1").addEventListener("click",function(){ goTo(2); });
+document.getElementById("b1").addEventListener("click",function(){ goTo(0); });
+document.getElementById("b2").addEventListener("click",function(){ goTo(1); });
+document.getElementById("form").addEventListener("submit",function(e){ e.preventDefault(); goTo(3); });
+buildSteps();
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "masonry-portfolio-grid": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Masonry Portfolio Grid</title><style>
@@ -1353,49 +1378,103 @@ document.querySelectorAll(".head").forEach(function(h){h.addEventListener("click
 
   "floating-label-form": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Floating Label Form</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:16px;place-items:center;padding:40px}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-form{width:min(300px,90vw);display:grid;gap:16px;border:1px solid var(--line);border-radius:18px;background:#0d0d12;padding:26px;box-shadow:0 20px 50px -20px rgba(0,0,0,.6)}
-.field{position:relative}
-.field input{width:100%;padding:16px 12px 8px;border:1px solid var(--line);border-radius:10px;background:#111017;color:#fff;outline:0;font-size:12px;transition:border-color .25s,box-shadow .25s}
-.field input:focus{border-color:#6d5f93;box-shadow:0 0 0 3px rgba(196,181,253,.25)}
-.field label{position:absolute;left:12px;top:14px;font-size:11px;color:#77737f;pointer-events:none;transition:transform .2s cubic-bezier(.2,.8,.2,1),font-size .2s ease,color .2s}
-.field input:focus+label,.field input:not(:placeholder-shown)+label{transform:translateY(-9px);font-size:8px;color:var(--lav)}
-.btn-wrap{position:relative}
-.btn-wrap::after{content:"";position:absolute;inset:-10px;border-radius:18px;background:radial-gradient(circle,rgba(196,181,253,.35),transparent 70%);filter:blur(12px);opacity:0;transition:opacity .3s}
-.btn-wrap:hover::after{opacity:1}
-button{position:relative;width:100%;border:0;border-radius:10px;padding:13px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;font-weight:800;font-size:11px;cursor:pointer;transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
-button:active{transform:scale(.96)}
+:root{--bg:#f5f6fb;--ink:#191b29;--mut:#6b7086;--indigo:#4338ca;--line:#e2e4f0;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:320px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:28px;box-shadow:0 24px 50px -24px rgba(25,27,41,.18)}
+.card h3{margin:0 0 20px;font-size:16px;color:var(--ink)}
+.field{position:relative;margin-bottom:22px}
+.field input{width:100%;padding:15px 14px 6px;border-radius:10px;border:1.5px solid var(--line);font-size:13.5px;font-family:inherit;outline:none;transition:border-color .2s;background:transparent;color:var(--ink)}
+.field input:focus{border-color:var(--indigo)}
+.field label{position:absolute;left:14px;top:14px;font-size:13.5px;color:var(--mut);pointer-events:none;transition:transform .2s cubic-bezier(.2,.8,.2,1),font-size .2s,top .2s,color .2s}
+.field input:focus + label,.field input.filled + label{transform:translateY(-8px);font-size:10px;top:14px;color:var(--indigo);font-weight:600}
+button{width:100%;padding:13px;border-radius:10px;border:0;background:var(--indigo);color:#fff;font-size:13.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.spinner{width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:spin .7s linear infinite;display:none}
+button.loading .spinner{display:block}
+button.loading .lbl{display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">TYPE TO SEE LABELS FLOAT</span>
-<form id="f"><div class="field"><input id="n" placeholder=" "><label for="n">Full name</label></div><div class="field"><input id="e" type="email" placeholder=" "><label for="e">Email address</label></div><div class="btn-wrap"><button>Create account</button></div></form></div>
-<script>document.getElementById("f").addEventListener("submit",function(e){e.preventDefault();e.target.innerHTML='<p style="margin:0;color:#a9e6b4;font-size:11px">Account created ✓</p>'});</script>
-</body></html>`,
+<body>
+<div class="card">
+  <h3>Create your account</h3>
+  <div class="field"><input type="text" id="i1"><label>Full name</label></div>
+  <div class="field"><input type="email" id="i2"><label>Email address</label></div>
+  <div class="field"><input type="password" id="i3"><label>Password</label></div>
+  <button id="btn"><span class="lbl">Create account</span><span class="spinner"></span></button>
+</div>
+<script>
+document.querySelectorAll(".field input").forEach(function(inp){
+  inp.addEventListener("input",function(){ inp.classList.toggle("filled", inp.value.length>0); });
+});
+document.getElementById("btn").addEventListener("click",function(){
+  var btn=this; btn.classList.add("loading");
+  setTimeout(function(){ btn.classList.remove("loading"); btn.querySelector(".lbl").textContent="Account created ✓"; },1400);
+});
+</script>
+</body></html>
+`,
 
   "inline-validation-form": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Inline Validation Form</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd;--ok:#9fd6ad;--bad:#efb8c2}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:16px;place-items:center;padding:40px}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-form{width:min(300px,90vw);display:grid;gap:14px;border:1px solid var(--line);border-radius:18px;background:#0d0d12;padding:26px;box-shadow:0 20px 50px -20px rgba(0,0,0,.6)}
-label{display:grid;gap:8px;font-size:9px;color:#85818d;letter-spacing:.5px}
-input{padding:12px;border:1px solid var(--line);border-radius:9px;background:#111017;color:#fff;outline:0;font-size:12px;transition:border-color .25s,box-shadow .25s}
-input:focus{border-color:#6d5f93;box-shadow:0 0 0 3px rgba(196,181,253,.25)}
-input.ok{border-color:#3d6b48;box-shadow:0 0 0 3px rgba(159,214,173,.18)}
-input.bad{border-color:#6b3d47;box-shadow:0 0 0 3px rgba(239,184,194,.18)}
-.msg{font-size:9px;min-height:12px;transition:opacity .2s,color .2s;color:#77737f}
-.msg.ok{color:var(--ok)}.msg.bad{color:var(--bad)}
+:root{--bg:#f5f6fb;--ink:#191b29;--mut:#6b7086;--indigo:#4338ca;--line:#e2e4f0;--card:#fff;--green:#16a34a;--red:#dc2626}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:320px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:28px;box-shadow:0 24px 50px -24px rgba(25,27,41,.18)}
+.card h3{margin:0 0 20px;font-size:16px;color:var(--ink)}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:11.5px;color:var(--mut);margin-bottom:6px;font-weight:600}
+.input-wrap{position:relative}
+input{width:100%;padding:11px 36px 11px 13px;border-radius:10px;border:1.5px solid var(--line);font-size:13px;font-family:inherit;outline:none;transition:border-color .2s;color:var(--ink)}
+input:focus{border-color:var(--indigo)}
+.field.valid input{border-color:var(--green)}
+.field.invalid input{border-color:var(--red)}
+.status-ic{position:absolute;right:11px;top:50%;transform:translateY(-50%);width:16px;height:16px;opacity:0;transition:opacity .2s}
+.field.valid .status-ic.ok,.field.invalid .status-ic.bad{opacity:1}
+.status-ic svg{width:100%;height:100%}
+.ok svg{color:var(--green)}
+.bad svg{color:var(--red)}
+.msg{font-size:11px;margin-top:5px;color:var(--red);min-height:14px}
+.strength{display:flex;gap:4px;margin-top:6px}
+.strength i{flex:1;height:4px;border-radius:3px;background:var(--line);transition:background .2s}
+button{width:100%;padding:12px;border-radius:10px;border:0;background:var(--indigo);color:#fff;font-size:13px;font-weight:700;cursor:pointer;margin-top:6px;opacity:.5;pointer-events:none;transition:opacity .2s}
+button.ready{opacity:1;pointer-events:auto}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">TYPE TO SEE VALIDATION</span>
-<form><label>Email<input id="e" type="email" placeholder="you@company.com"><span class="msg" id="m">Type to validate live</span></label></form></div>
+<body>
+<div class="card">
+  <h3>Sign up</h3>
+  <div class="field" id="emailField"><label>Email</label><div class="input-wrap"><input type="email" id="email" placeholder="you@company.com"><span class="status-ic ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span><span class="status-ic bad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6 6 18M6 6l12 12"/></svg></span></div><div class="msg" id="emailMsg"></div></div>
+  <div class="field" id="pwField"><label>Password</label><div class="input-wrap"><input type="password" id="pw" placeholder="At least 8 characters"><span class="status-ic ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span></div><div class="strength" id="strength"><i></i><i></i><i></i></div></div>
+  <button id="submit">Create account</button>
+</div>
 <script>
-const e=document.getElementById("e"),m=document.getElementById("m");
-e.addEventListener("input",function(){const v=e.value;const good=/^[^@\\s]+@[^@\\s]+\\.[a-z]{2,}$/i.test(v);e.className=v?(good?"ok":"bad"):"";m.className="msg "+(v?(good?"ok":"bad"):"");m.textContent=!v?"Type to validate live":good?"Looks good ✓":"That doesn't look like an email yet"});
+var email=document.getElementById("email"), emailField=document.getElementById("emailField"), emailMsg=document.getElementById("emailMsg");
+var pw=document.getElementById("pw"), pwField=document.getElementById("pwField"), bars=document.querySelectorAll("#strength i");
+var submit=document.getElementById("submit");
+function checkEmail(){
+  var v=email.value, ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  emailField.classList.toggle("valid", ok && v.length>0);
+  emailField.classList.toggle("invalid", !ok && v.length>3);
+  emailMsg.textContent = (!ok && v.length>3) ? "Enter a valid email address" : "";
+  checkReady();
+}
+function checkPw(){
+  var v=pw.value, score=0;
+  if(v.length>=8) score++;
+  if(/[A-Z]/.test(v)) score++;
+  if(/[0-9]/.test(v)) score++;
+  var colors=["#e2e4f0","#dc2626","#f59e0b","#16a34a"];
+  bars.forEach(function(b,i){ b.style.background = i<score ? colors[score] : "#e2e4f0"; });
+  pwField.classList.toggle("valid", score===3);
+  checkReady();
+}
+function checkReady(){
+  submit.classList.toggle("ready", /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value) && pw.value.length>=8);
+}
+email.addEventListener("input",checkEmail);
+pw.addEventListener("input",checkPw);
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "split-image-hero": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Split Image Hero</title><style>
@@ -3248,59 +3327,103 @@ place(buttons[0]);
 </body></html>`,
 
   "drag-drop-upload-form": `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Drag & Drop Upload</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:14px;padding:40px;width:min(340px,86vw)}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.drop{position:relative;border:2px dashed var(--line);border-radius:14px;padding:34px 18px;text-align:center;color:#817d8a;font-size:12px;overflow:hidden;transition:border-color .25s,background .25s,box-shadow .25s}
-.drop::before{content:"";position:absolute;inset:-40%;background:radial-gradient(circle,rgba(196,181,253,.25),transparent 70%);opacity:0;transition:opacity .3s}
-.drop.over{border-color:var(--lav);background:#141020;color:#c9c4d6;box-shadow:0 0 0 4px rgba(196,181,253,.12)}
-.drop.over::before{opacity:1}
-.drop b{position:relative;display:block;color:#eee9f8;font-size:13px;margin-bottom:6px}
-.drop>*{position:relative}
-.bar{height:6px;border-radius:4px;background:#1c1a24;margin-top:14px;overflow:hidden;display:none}
-.bar.show{display:block}
-.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#9b8aff,#c4b5fd);box-shadow:0 0 8px rgba(196,181,253,.6);transition:width .25s;font-style:normal}
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Drag &amp; Drop Upload Form</title><style>
+:root{--bg:#f5f6fb;--ink:#191b29;--mut:#6b7086;--indigo:#4338ca;--line:#e2e4f0;--card:#fff;--green:#16a34a}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:320px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 24px 50px -24px rgba(25,27,41,.18)}
+.card h3{margin:0 0 16px;font-size:16px;color:var(--ink)}
+.dz{border:1.5px dashed var(--line);border-radius:14px;padding:30px 20px;text-align:center;transition:border-color .2s,background .2s;cursor:pointer}
+.dz.over{border-color:var(--indigo);background:#f6f5fe}
+.dz svg{width:30px;height:30px;color:var(--indigo);margin-bottom:10px}
+.dz b{display:block;font-size:12.5px;color:var(--ink)}
+.dz span{font-size:11px;color:var(--mut)}
+.files{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.file{display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:10px;padding:9px 12px;opacity:0;transform:translateY(6px)}
+.file .ic{width:28px;height:28px;border-radius:8px;background:#eeecfd;color:var(--indigo);display:flex;align-items:center;justify-content:center;flex:none}
+.file .ic svg{width:14px;height:14px}
+.file .info{flex:1;min-width:0}
+.file b{display:block;font-size:11.5px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file .bar{height:3px;background:var(--line);border-radius:3px;margin-top:4px;overflow:hidden}
+.file .bar i{display:block;height:100%;background:var(--green);width:0;transition:width 1s}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">DROP A FILE OR CLICK TO SIMULATE</span>
-<div class="drop" id="drop"><b>Drag & drop your file here</b>or click to browse<div class="bar" id="bar"><i id="fill"></i></div></div></div>
+<body>
+<div class="card">
+  <h3>Upload files</h3>
+  <div class="dz" id="dz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 21h14"/></svg><b>Drop files or click to browse</b><span>PDF, PNG, JPG up to 10MB</span></div>
+  <div class="files" id="files"></div>
+</div>
 <script>
-const drop=document.getElementById("drop"),bar=document.getElementById("bar"),fill=document.getElementById("fill");
-function simulate(){bar.classList.add("show");fill.style.width="0%";let p=0;const t=setInterval(function(){p+=Math.random()*20;fill.style.width=Math.min(100,p)+"%";if(p>=100)clearInterval(t)},180)}
-drop.addEventListener("click",simulate);
-["dragover","dragenter"].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.classList.add("over")})});
-["dragleave","drop"].forEach(function(ev){drop.addEventListener(ev,function(e){e.preventDefault();drop.classList.remove("over");if(ev==="drop")simulate()})});
+var dz=document.getElementById("dz"), files=document.getElementById("files");
+var demo=[["brand-guidelines.pdf","2.4 MB"],["hero-mockup.png","840 KB"]];
+dz.addEventListener("dragover",function(e){ e.preventDefault(); dz.classList.add("over"); });
+dz.addEventListener("dragleave",function(){ dz.classList.remove("over"); });
+dz.addEventListener("drop",function(e){ e.preventDefault(); dz.classList.remove("over"); addFile(); });
+dz.addEventListener("click",addFile);
+function addFile(){
+  if(!demo.length) return;
+  var d=demo.shift();
+  var el=document.createElement("div"); el.className="file";
+  el.innerHTML='<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg></div><div class="info"><b>'+d[0]+'</b><div class="bar"><i></i></div></div>';
+  files.appendChild(el);
+  requestAnimationFrame(function(){ el.style.transition="opacity .3s,transform .3s"; el.style.opacity=1; el.style.transform="translateY(0)"; });
+  setTimeout(function(){ el.querySelector(".bar i").style.width="100%"; },150);
+}
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "otp-input-form": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>OTP Input Form</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:16px;place-items:center;padding:40px}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.otp{display:flex;gap:9px}
-.otp input{width:42px;height:52px;text-align:center;font-size:19px;font-weight:800;color:#f7f5fb;background:#111017;border:1px solid var(--line);border-radius:10px;outline:0;box-shadow:0 10px 24px -16px rgba(0,0,0,.6);transition:border-color .2s,box-shadow .2s,transform .2s cubic-bezier(.34,1.56,.64,1)}
-.otp input:focus{border-color:var(--lav);box-shadow:0 0 0 3px rgba(196,181,253,.25);transform:translateY(-2px)}
-.otp.done input{border-color:#3f6e52;color:#bdf0d1}
-.status{font-size:11px;color:#5fd4a1;height:14px;text-shadow:0 0 8px rgba(95,212,161,.4)}
+:root{--bg:#f5f6fb;--ink:#191b29;--mut:#6b7086;--indigo:#4338ca;--line:#e2e4f0;--card:#fff;--green:#16a34a}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:300px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:28px;box-shadow:0 24px 50px -24px rgba(25,27,41,.18);text-align:center}
+.card h3{margin:0 0 4px;font-size:16px;color:var(--ink)}
+.card p{margin:0 0 20px;font-size:12px;color:var(--mut)}
+.otp{display:flex;gap:8px;justify-content:center;margin-bottom:18px}
+.otp input{width:38px;height:46px;text-align:center;font-size:18px;font-weight:700;border-radius:10px;border:1.5px solid var(--line);outline:none;transition:border-color .2s,transform .15s;font-family:inherit;color:var(--ink)}
+.otp input:focus{border-color:var(--indigo);transform:translateY(-2px)}
+.otp input.filled{border-color:var(--indigo)}
+button{width:100%;padding:12px;border-radius:10px;border:0;background:var(--indigo);color:#fff;font-size:13px;font-weight:700;cursor:pointer;opacity:.5;pointer-events:none;transition:opacity .2s,background .3s}
+button.ready{opacity:1;pointer-events:auto}
+button.verified{background:var(--green)}
+.resend{margin-top:14px;font-size:11.5px;color:var(--mut)}
+.resend b{color:var(--indigo);cursor:pointer}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">ENTER THE 6-DIGIT CODE</span>
-<div class="otp" id="otp"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"></div>
-<div class="status" id="status"></div></div>
+<body>
+<div class="card">
+  <h3>Enter verification code</h3>
+  <p>We sent a 6-digit code to your phone</p>
+  <div class="otp" id="otp">
+    <input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric"><input maxlength="1" inputmode="numeric">
+  </div>
+  <button id="submit">Verify code</button>
+  <div class="resend">Didn't get it? <b>Resend code</b></div>
+</div>
 <script>
-const otp=document.getElementById("otp"),inputs=[...document.querySelectorAll("#otp input")],status=document.getElementById("status");
+var inputs=document.querySelectorAll(".otp input"), submit=document.getElementById("submit");
 inputs.forEach(function(inp,i){
   inp.addEventListener("input",function(){
     inp.value=inp.value.replace(/[^0-9]/g,"");
-    if(inp.value&&inputs[i+1])inputs[i+1].focus();
-    if(inputs.every(function(x){return x.value})){status.textContent="Code verified ✓";otp.classList.add("done")}
+    inp.classList.toggle("filled", inp.value.length>0);
+    if(inp.value && inputs[i+1]) inputs[i+1].focus();
+    checkReady();
   });
-  inp.addEventListener("keydown",function(e){if(e.key==="Backspace"&&!inp.value&&inputs[i-1])inputs[i-1].focus()});
+  inp.addEventListener("keydown",function(e){
+    if(e.key==="Backspace" && !inp.value && inputs[i-1]) inputs[i-1].focus();
+  });
+});
+function checkReady(){
+  var all=[...inputs].every(function(i){return i.value.length===1});
+  submit.classList.toggle("ready", all);
+}
+submit.addEventListener("click",function(){
+  submit.classList.add("verified"); submit.textContent="Verified ✓";
 });
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "filter-chip-project-grid": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Filterable Project Grid</title><style>
@@ -5491,125 +5614,220 @@ buttons.forEach(function(b){b.addEventListener("click",function(){buttons.forEac
 
   "rating-feedback-form": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Rating Feedback Form</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:280px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
-.card b{display:block;color:#eee9f8;font-size:13px;margin-bottom:12px}
-.stars{display:flex;gap:6px;font-size:24px}
-.stars span{color:#2a2833;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),color .2s}
-.stars span.on{color:#e8b563;text-shadow:0 0 10px rgba(232,181,99,.5)}
-.stars span:hover{transform:scale(1.2)}
-.note{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.2,.8,.2,1)}
-.note.open{max-height:100px;margin-top:12px}
-.note textarea{width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:#111017;color:#fff;font-size:11px;resize:none;height:60px;outline:0;transition:border-color .25s,box-shadow .25s}
-.note textarea:focus{border-color:#6d5f93;box-shadow:0 0 0 3px rgba(196,181,253,.2)}
+:root{--bg:#f5f6fb;--ink:#191b29;--mut:#6b7086;--indigo:#4338ca;--line:#e2e4f0;--card:#fff;--gold:#f5a524;--green:#16a34a}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:320px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:28px;box-shadow:0 24px 50px -24px rgba(25,27,41,.18);text-align:center}
+.card h3{margin:0 0 4px;font-size:16px;color:var(--ink)}
+.card p{margin:0 0 18px;font-size:12.5px;color:var(--mut)}
+.stars{display:flex;justify-content:center;gap:6px;margin-bottom:18px}
+.stars svg{width:32px;height:32px;color:var(--line);cursor:pointer;transition:transform .15s,color .15s}
+.stars svg.on{color:var(--gold)}
+.stars svg:hover{transform:scale(1.15)}
+textarea{width:100%;min-height:72px;padding:12px;border-radius:10px;border:1.5px solid var(--line);font-family:inherit;font-size:12.5px;resize:none;outline:none;transition:border-color .2s;margin-bottom:14px;text-align:left}
+textarea:focus{border-color:var(--indigo)}
+button{width:100%;padding:12px;border-radius:10px;border:0;background:var(--indigo);color:#fff;font-size:13px;font-weight:700;cursor:pointer}
+.thanks{display:none;padding:14px 0}
+.thanks svg{width:40px;height:40px;color:var(--green);margin-bottom:8px}
+.thanks b{display:block;color:var(--ink);font-size:14px}
 </style></head>
-<body data-cf-keep-dark><div class="card"><b>How was your experience?</b>
-<div class="stars" id="stars"><span data-v="1">★</span><span data-v="2">★</span><span data-v="3">★</span><span data-v="4">★</span><span data-v="5">★</span></div>
-<div class="note" id="note"><textarea placeholder="Tell us more (optional)"></textarea></div></div>
+<body>
+<div class="card" id="card">
+  <div id="form">
+    <h3>How was your experience?</h3>
+    <p>Your feedback helps us improve.</p>
+    <div class="stars" id="stars">
+      <svg viewBox="0 0 24 24" fill="currentColor" data-v="1"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21.1 7 14.2 2 9.3l6.9-1z"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor" data-v="2"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21.1 7 14.2 2 9.3l6.9-1z"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor" data-v="3"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21.1 7 14.2 2 9.3l6.9-1z"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor" data-v="4"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21.1 7 14.2 2 9.3l6.9-1z"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor" data-v="5"><path d="M12 2l3.1 6.3 6.9 1-5 4.9 1.2 6.9L12 17.8 5.8 21.1 7 14.2 2 9.3l6.9-1z"/></svg>
+    </div>
+    <textarea placeholder="Tell us more (optional)"></textarea>
+    <button id="submit">Submit feedback</button>
+  </div>
+  <div class="thanks" id="thanks"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><b>Thanks for the feedback!</b></div>
+</div>
 <script>
-const stars=[...document.querySelectorAll("#stars span")],note=document.getElementById("note");
-stars.forEach(function(s){s.addEventListener("click",function(){const v=Number(s.dataset.v);stars.forEach(function(x){x.classList.toggle("on",Number(x.dataset.v)<=v)});note.classList.add("open")})});
+var stars=document.querySelectorAll(".stars svg"), val=0;
+stars.forEach(function(s){
+  s.addEventListener("mouseenter",function(){ paint(+s.dataset.v); });
+  s.addEventListener("click",function(){ val=+s.dataset.v; paint(val); });
+});
+document.getElementById("stars").addEventListener("mouseleave",function(){ paint(val); });
+function paint(n){ stars.forEach(function(s){ s.classList.toggle("on", +s.dataset.v<=n); }); }
+document.getElementById("submit").addEventListener("click",function(){
+  document.getElementById("form").style.display="none";
+  document.getElementById("thanks").style.display="block";
+});
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "range-slider-form": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Range Slider Form</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:270px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
-.card b{display:block;color:#817d8a;font-size:11px;margin-bottom:14px}
-.range-wrap{position:relative;height:4px;background:#1c1a24;border-radius:2px;margin:20px 6px}
-.range-fill{position:absolute;height:100%;background:linear-gradient(90deg,#9b8aff,#d7d0ff);border-radius:2px;box-shadow:0 0 10px rgba(196,181,253,.5)}
-input[type=range]{position:absolute;top:-8px;width:100%;background:transparent;pointer-events:none;-webkit-appearance:none;margin:0}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:16px;height:16px;border-radius:50%;background:#f7f5fb;cursor:pointer;box-shadow:0 0 0 4px rgba(196,181,253,.2),0 4px 10px rgba(0,0,0,.4);transition:box-shadow .2s}
-input[type=range]:active::-webkit-slider-thumb{box-shadow:0 0 0 7px rgba(196,181,253,.3),0 4px 10px rgba(0,0,0,.4)}
-.values{display:flex;justify-content:space-between;color:#eee9f8;font-size:12px;font-weight:700}
+:root{--bg:#f5f6fb;--ink:#191b29;--mut:#6b7086;--indigo:#4338ca;--line:#e2e4f0;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:320px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:28px;box-shadow:0 24px 50px -24px rgba(25,27,41,.18)}
+.card h3{margin:0 0 20px;font-size:16px;color:var(--ink)}
+.field{margin-bottom:22px}
+.field label{display:flex;justify-content:space-between;font-size:12.5px;color:var(--mut);margin-bottom:10px;font-weight:600}
+.field label b{color:var(--indigo);font-size:14px}
+input[type=range]{width:100%;appearance:none;height:5px;background:var(--line);border-radius:4px;outline:none}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:var(--indigo);cursor:pointer;box-shadow:0 0 0 5px rgba(67,56,202,.15)}
+.ticks{display:flex;justify-content:space-between;font-size:10px;color:var(--mut);margin-top:6px}
+button{width:100%;padding:12px;border-radius:10px;border:0;background:var(--indigo);color:#fff;font-size:13px;font-weight:700;cursor:pointer;margin-top:6px}
 </style></head>
-<body data-cf-keep-dark><div class="card"><b>MONTHLY BUDGET RANGE</b>
-<div class="values"><span id="minv">$20</span><span id="maxv">$80</span></div>
-<div class="range-wrap"><div class="range-fill" id="fill"></div><input type="range" id="min" min="0" max="100" value="20"><input type="range" id="max" min="0" max="100" value="80"></div></div>
+<body>
+<div class="card">
+  <h3>Project budget</h3>
+  <div class="field"><label>Monthly budget <b id="v1">$5,000</b></label><input type="range" min="500" max="20000" step="500" value="5000" id="s1"><div class="ticks"><span>$500</span><span>$20,000</span></div></div>
+  <div class="field"><label>Team experience <b id="v2">Mid-level</b></label><input type="range" min="0" max="2" step="1" value="1" id="s2"><div class="ticks"><span>Junior</span><span>Senior</span></div></div>
+  <button>Get matched with a team</button>
+</div>
 <script>
-const min=document.getElementById("min"),max=document.getElementById("max"),fill=document.getElementById("fill"),minv=document.getElementById("minv"),maxv=document.getElementById("maxv");
-function render(){let a=Number(min.value),b=Number(max.value);if(a>b){const t=a;a=b;b=t}fill.style.left=a+"%";fill.style.width=(b-a)+"%";minv.textContent="$"+a;maxv.textContent="$"+b}
-min.addEventListener("input",render);max.addEventListener("input",render);render();
+var s1=document.getElementById("s1"), v1=document.getElementById("v1");
+s1.addEventListener("input",function(){ v1.textContent="$"+(+s1.value).toLocaleString("en-US"); });
+var s2=document.getElementById("s2"), v2=document.getElementById("v2"), labels=["Junior","Mid-level","Senior"];
+s2.addEventListener("input",function(){ v2.textContent=labels[+s2.value]; });
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "tag-input-form": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Tag Input Form</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.field{width:270px}
-.field b{display:block;color:#85818d;font-size:9px;margin-bottom:6px}
-.tag-box{display:flex;flex-wrap:wrap;gap:6px;padding:9px;border:1px solid var(--line);border-radius:10px;background:#111017;min-height:44px;box-shadow:0 16px 40px -22px rgba(0,0,0,.6);transition:border-color .25s,box-shadow .25s}
-.tag-box:focus-within{border-color:#6d5f93;box-shadow:0 0 0 3px rgba(196,181,253,.2)}
-.tag{display:flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;background:linear-gradient(135deg,#241c3d,#1c1730);color:#c4b5fd;font-size:10px;animation:pop .25s cubic-bezier(.34,1.56,.64,1);box-shadow:inset 0 0 0 1px rgba(196,181,253,.15)}
-.tag button{border:0;background:none;color:#8f7fc9;cursor:pointer;font-size:10px;transition:color .2s}
-.tag button:hover{color:#fff}
-.tag-box input{flex:1;min-width:80px;border:0;background:transparent;color:#fff;font-size:11px;outline:0}
-@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+:root{--bg:#f5f6fb;--ink:#191b29;--mut:#6b7086;--indigo:#4338ca;--line:#e2e4f0;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:320px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:0 24px 50px -24px rgba(25,27,41,.18)}
+.card h3{margin:0 0 4px;font-size:16px;color:var(--ink)}
+.card p{margin:0 0 16px;font-size:12px;color:var(--mut)}
+.tagbox{display:flex;flex-wrap:wrap;gap:7px;padding:10px;border:1.5px solid var(--line);border-radius:10px;min-height:46px;transition:border-color .2s}
+.tagbox.focus{border-color:var(--indigo)}
+.tag{display:flex;align-items:center;gap:6px;background:#eeecfd;color:var(--indigo);font-size:12px;font-weight:600;padding:5px 6px 5px 10px;border-radius:8px;animation:pop .2s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.tag button{border:0;background:rgba(67,56,202,.15);color:var(--indigo);width:16px;height:16px;border-radius:50%;cursor:pointer;font-size:11px;line-height:1;display:flex;align-items:center;justify-content:center}
+.tagbox input{border:0;outline:none;font-size:12.5px;font-family:inherit;flex:1;min-width:80px;padding:4px}
+.hint{font-size:10.5px;color:var(--mut);margin-top:8px}
 </style></head>
-<body data-cf-keep-dark><div class="field"><b>SKILLS (PRESS ENTER)</b>
-<div class="tag-box" id="box"><span class="tag">React<button data-t="React">×</button></span><span class="tag">Node<button data-t="Node">×</button></span><input id="input" placeholder="Add a skill…"></div></div>
+<body>
+<div class="card">
+  <h3>Skills</h3>
+  <p>Type a skill and press Enter</p>
+  <div class="tagbox" id="box"><span class="tag">React<button data-i="0">×</button></span><span class="tag">TypeScript<button data-i="1">×</button></span><input type="text" id="inp" placeholder="Add a skill…"></div>
+  <div class="hint">Press Enter to add, Backspace to remove the last</div>
+</div>
 <script>
-const box=document.getElementById("box"),input=document.getElementById("input");
-function addTag(t){if(!t.trim())return;const tag=document.createElement("span");tag.className="tag";tag.innerHTML=t+'<button data-t="'+t+'">×</button>';box.insertBefore(tag,input)}
-input.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===","){e.preventDefault();addTag(input.value);input.value=""}});
-box.addEventListener("click",function(e){if(e.target.tagName==="BUTTON")e.target.parentElement.remove()});
+var box=document.getElementById("box"), inp=document.getElementById("inp"), tags=["React","TypeScript"];
+inp.addEventListener("focus",function(){ box.classList.add("focus"); });
+inp.addEventListener("blur",function(){ box.classList.remove("focus"); });
+function render(){
+  box.querySelectorAll(".tag").forEach(function(t){t.remove()});
+  tags.forEach(function(t,i){
+    var el=document.createElement("span"); el.className="tag";
+    el.innerHTML=t+'<button data-i="'+i+'">×</button>';
+    box.insertBefore(el, inp);
+  });
+  box.querySelectorAll(".tag button").forEach(function(b){
+    b.addEventListener("click",function(){ tags.splice(+b.dataset.i,1); render(); });
+  });
+}
+inp.addEventListener("keydown",function(e){
+  if(e.key==="Enter" && inp.value.trim()){ tags.push(inp.value.trim()); inp.value=""; render(); e.preventDefault(); }
+  else if(e.key==="Backspace" && !inp.value){ tags.pop(); render(); }
+});
+render();
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "signature-pad-form": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Signature Pad Form</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.field{width:280px}
-.field b{display:block;color:#85818d;font-size:9px;margin-bottom:6px}
-.pad-wrap{position:relative;border-radius:12px;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
-canvas{display:block;width:100%;height:130px;border:1px dashed var(--line);border-radius:12px;background:#111017;touch-action:none;transition:border-color .25s}
-.pad-wrap:focus-within canvas{border-color:#6d5f93}
-.actions{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
-.actions button{padding:7px 11px;border:1px solid var(--line);border-radius:8px;background:#0d0d12;color:#817d8a;font-size:10px;cursor:pointer;transition:border-color .2s,color .2s}
-.actions button:hover{border-color:#544c67;color:#eee9f8}
+:root{--bg:#f5f6fb;--ink:#191b29;--mut:#6b7086;--indigo:#4338ca;--line:#e2e4f0;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:340px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 24px 50px -24px rgba(25,27,41,.18)}
+.card h3{margin:0 0 4px;font-size:16px;color:var(--ink)}
+.card p{margin:0 0 14px;font-size:12px;color:var(--mut)}
+.pad-wrap{border:1.5px dashed var(--line);border-radius:12px;position:relative;background:#fafafd}
+canvas{display:block;width:100%;height:150px;cursor:crosshair;border-radius:12px}
+.placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:12px;pointer-events:none}
+.row{display:flex;gap:10px;margin-top:14px}
+button{flex:1;padding:11px;border-radius:10px;border:0;font-size:12.5px;font-weight:700;cursor:pointer}
+.clear{background:var(--bg);color:var(--ink);border:1px solid var(--line)!important}
+.save{background:var(--indigo);color:#fff}
 </style></head>
-<body data-cf-keep-dark><div class="field"><b>SIGN BELOW</b><div class="pad-wrap"><canvas id="pad" width="280" height="130"></canvas></div>
-<div class="actions"><button id="clear">Clear</button></div></div>
+<body>
+<div class="card">
+  <h3>Sign to confirm</h3>
+  <p>Draw your signature below</p>
+  <div class="pad-wrap"><canvas id="pad" width="292" height="150"></canvas><div class="placeholder" id="ph">Sign here</div></div>
+  <div class="row"><button class="clear" id="clear">Clear</button><button class="save" id="save">Confirm signature</button></div>
+</div>
 <script>
-const pad=document.getElementById("pad"),ctx=pad.getContext("2d");ctx.strokeStyle="#c4b5fd";ctx.lineWidth=2.4;ctx.lineCap="round";ctx.shadowColor="rgba(196,181,253,.6)";ctx.shadowBlur=4;
-let drawing=false;
-function pos(e){const r=pad.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return{x:(t.clientX-r.left)*(pad.width/r.width),y:(t.clientY-r.top)*(pad.height/r.height)}}
-function start(e){drawing=true;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y)}
-function move(e){if(!drawing)return;const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke()}
-function end(){drawing=false}
-pad.addEventListener("pointerdown",start);pad.addEventListener("pointermove",move);pad.addEventListener("pointerup",end);pad.addEventListener("pointerleave",end);
-document.getElementById("clear").addEventListener("click",function(){ctx.clearRect(0,0,pad.width,pad.height)});
+var canvas=document.getElementById("pad"), ctx=canvas.getContext("2d"), ph=document.getElementById("ph");
+var drawing=false, hasDrawn=false;
+ctx.strokeStyle="#4338ca"; ctx.lineWidth=2.4; ctx.lineCap="round"; ctx.lineJoin="round";
+function pos(e){
+  var r=canvas.getBoundingClientRect();
+  var cx=(e.touches?e.touches[0].clientX:e.clientX)-r.left;
+  var cy=(e.touches?e.touches[0].clientY:e.clientY)-r.top;
+  return {x:cx*(canvas.width/r.width), y:cy*(canvas.height/r.height)};
+}
+function start(e){ drawing=true; hasDrawn=true; ph.style.display="none"; var p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); e.preventDefault(); }
+function move(e){ if(!drawing)return; var p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); e.preventDefault(); }
+function end(){ drawing=false; }
+canvas.addEventListener("mousedown",start); canvas.addEventListener("mousemove",move); window.addEventListener("mouseup",end);
+canvas.addEventListener("touchstart",start); canvas.addEventListener("touchmove",move); canvas.addEventListener("touchend",end);
+document.getElementById("clear").addEventListener("click",function(){ ctx.clearRect(0,0,canvas.width,canvas.height); ph.style.display="flex"; hasDrawn=false; });
+document.getElementById("save").addEventListener("click",function(){ if(hasDrawn) this.textContent="Signature saved ✓"; });
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "conditional-fields-form": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Conditional Fields Form</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:270px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
-.switch{position:relative;display:flex;border:1px solid var(--line);border-radius:999px;padding:3px;margin-bottom:14px;background:#0d0d12}
-.pill{position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);border-radius:999px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
-.switch.on .pill{transform:translateX(100%)}
-.switch button{position:relative;z-index:1;flex:1;border:0;background:none;padding:8px 0;border-radius:999px;font-size:11px;color:#817d8a;cursor:pointer;transition:color .3s}
-.switch button.active{color:#0a090f}
+:root{--bg:#f5f6fb;--ink:#191b29;--mut:#6b7086;--indigo:#4338ca;--line:#e2e4f0;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:320px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;box-shadow:0 24px 50px -24px rgba(25,27,41,.18)}
+.card h3{margin:0 0 18px;font-size:16px;color:var(--ink)}
+.opts{display:flex;flex-direction:column;gap:10px;margin-bottom:6px}
+.opt{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1.5px solid var(--line);border-radius:11px;cursor:pointer;transition:border-color .2s,background .2s}
+.opt.on{border-color:var(--indigo);background:#f6f5fe}
+.radio{width:17px;height:17px;border-radius:50%;border:1.5px solid var(--line);position:relative;flex:none}
+.opt.on .radio{border-color:var(--indigo)}
+.opt.on .radio:after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--indigo)}
+.opt b{font-size:13px;color:var(--ink)}
 .extra{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.2,.8,.2,1)}
-.extra.open{max-height:120px}
-input{width:100%;padding:10px;margin-top:8px;border:1px solid var(--line);border-radius:8px;background:#111017;color:#fff;font-size:11px;outline:0;transition:border-color .25s,box-shadow .25s}
-input:focus{border-color:#6d5f93;box-shadow:0 0 0 3px rgba(196,181,253,.2)}
+.extra.open{max-height:180px;margin-top:14px}
+.extra-in label{display:block;font-size:11px;color:var(--mut);margin-bottom:5px;font-weight:600}
+.extra-in input{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:9px;font-size:12.5px;font-family:inherit;outline:none;margin-bottom:10px}
+.extra-in input:focus{border-color:var(--indigo)}
+button{width:100%;padding:12px;border-radius:10px;border:0;background:var(--indigo);color:#fff;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px}
 </style></head>
-<body data-cf-keep-dark><div class="card"><div class="switch" id="switch"><div class="pill"></div><button class="active" data-v="personal">Personal</button><button data-v="business">Business</button></div>
-<input placeholder="Full name">
-<div class="extra" id="extra"><input placeholder="Company name"><input placeholder="Tax ID"></div></div>
+<body>
+<div class="card">
+  <h3>How will you use this?</h3>
+  <div class="opts">
+    <div class="opt on" data-v="personal"><div class="radio"></div><b>Personal project</b></div>
+    <div class="opt" data-v="team"><div class="radio"></div><b>With my team</b></div>
+  </div>
+  <div class="extra" id="extraTeam"><div class="extra-in"><label>Team name</label><input type="text" placeholder="Design Team"><label>Invite emails</label><input type="text" placeholder="teammate@company.com"></div></div>
+  <button>Continue</button>
+</div>
 <script>
-const switchEl=document.getElementById("switch"),buttons=[...switchEl.querySelectorAll("button")],extra=document.getElementById("extra");
-buttons.forEach(function(b){b.addEventListener("click",function(){buttons.forEach(function(x){x.classList.remove("active")});b.classList.add("active");switchEl.classList.toggle("on",b.dataset.v==="business");extra.classList.toggle("open",b.dataset.v==="business")})});
+var opts=document.querySelectorAll(".opt"), extra=document.getElementById("extraTeam");
+opts.forEach(function(o){
+  o.addEventListener("click",function(){
+    opts.forEach(function(x){x.classList.remove("on")}); o.classList.add("on");
+    extra.classList.toggle("open", o.dataset.v==="team");
+  });
+});
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "case-study-scroll-reveal": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Case Study Scroll Reveal</title><style>
