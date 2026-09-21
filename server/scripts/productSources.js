@@ -3901,6 +3901,96 @@ body{margin:0;min-height:100vh;background:#eef0f3;font-family:Inter,ui-sans-seri
 </body></html>
 `,
 
+  "spotlight-nav": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Spotlight Nav</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#fff;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center}
+.bar{position:relative;display:flex;align-items:center;gap:6px;padding:10px;border-radius:100px;background:#f4f4f5;overflow:hidden}
+.item{position:relative;z-index:2;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:#a1a1aa;cursor:pointer;transition:color .25s ease}
+.item svg{width:18px;height:18px}
+.item.active{color:#111114}
+.beam{position:absolute;top:-40px;z-index:1;width:70px;height:120px;margin-left:-35px;background:linear-gradient(180deg,rgba(10,10,14,.9),rgba(10,10,14,0) 75%);clip-path:polygon(40% 0%,60% 0%,100% 100%,0% 100%);opacity:0;transition:left .3s cubic-bezier(.2,.8,.2,1),opacity .2s ease;pointer-events:none}
+.bar:hover .beam{opacity:1}
+.cap{position:absolute;top:6px;z-index:1;width:26px;height:4px;margin-left:-13px;border-radius:3px;background:#0a0a0a;opacity:0;transition:left .3s cubic-bezier(.2,.8,.2,1),opacity .2s ease}
+.bar:hover .cap{opacity:1}
+</style></head>
+<body>
+<div class="bar" id="bar">
+  <div class="beam" id="beam"></div>
+  <div class="cap" id="cap"></div>
+  <div class="item active" data-i="0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
+  <div class="item" data-i="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21 12 16l-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></div>
+  <div class="item" data-i="2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg></div>
+  <div class="item" data-i="3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21a8 8 0 1 0-16 0"/><circle cx="12" cy="7" r="4"/></svg></div>
+  <div class="item" data-i="4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6m11-11h-6M7 12H1m17.36-6.36-4.24 4.24m-8.24 0L1.64 5.64M18.36 18.36l-4.24-4.24m-8.24 0-4.24 4.24"/></svg></div>
+</div>
+<script>
+var bar = document.getElementById("bar"), beam = document.getElementById("beam"), cap = document.getElementById("cap");
+var items = bar.querySelectorAll(".item");
+function place(el) {
+  var center = el.offsetLeft + el.offsetWidth / 2;
+  beam.style.left = center + "px";
+  cap.style.left = center + "px";
+}
+items.forEach(function (item) {
+  item.addEventListener("mouseenter", function () {
+    items.forEach(function (i) { i.classList.remove("active"); });
+    item.classList.add("active");
+    place(item);
+  });
+});
+place(bar.querySelector(".active"));
+</script>
+</body></html>
+`,
+
+  "mascot-nav": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Mascot Nav</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#0a0a0c;background-image:radial-gradient(circle,#1c1c22 1px,transparent 1.2px);background-size:22px 22px;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center}
+.bar{position:relative;display:flex;align-items:center;gap:4px;padding:8px;border-radius:100px;background:#111114;border:1px solid #232328}
+.item{position:relative;z-index:2;padding:9px 18px;border-radius:100px;color:#8a8a92;font-size:12.5px;font-weight:600;cursor:pointer;transition:color .2s ease,background .2s ease}
+.item.active{color:#fff;background:#1e1e24}
+.mascot{position:absolute;bottom:calc(100% + 6px);z-index:5;width:52px;height:48px;margin-left:-26px;opacity:0;transform:translateY(6px) scale(.8);transition:left .35s cubic-bezier(.34,1.2,.4,1),opacity .2s ease,transform .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+.bar:hover .mascot{opacity:1;transform:translateY(0) scale(1)}
+.mascot .body{width:52px;height:44px;border-radius:50% 50% 46% 46%/60% 60% 40% 40%;background:#fff;position:relative;box-shadow:0 6px 16px -4px rgba(0,0,0,.4)}
+.mascot .body::after{content:"";position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);border-left:9px solid transparent;border-right:9px solid transparent;border-top:9px solid #fff}
+.eye{position:absolute;width:5px;height:5px;border-radius:50%;background:#18181b;top:18px}
+.eye.l{left:15px}.eye.r{right:15px}
+.cheek{position:absolute;width:8px;height:5px;border-radius:50%;background:#ffb3c7;bottom:11px;opacity:.85}
+.cheek.l{left:9px}.cheek.r{right:9px}
+.spark{position:absolute;color:#facc15;font-size:11px;animation:tw 1.4s ease-in-out infinite}
+.spark.a{top:-4px;right:2px;animation-delay:.2s}
+.spark.b{top:6px;right:-8px;animation-delay:.6s}
+@keyframes tw{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1.1)}}
+</style></head>
+<body data-cf-keep-dark>
+<div class="bar" id="bar">
+  <div class="mascot" id="mascot">
+    <div class="body"><div class="eye l"></div><div class="eye r"></div><div class="cheek l"></div><div class="cheek r"></div></div>
+    <span class="spark a">✦</span><span class="spark b">✧</span>
+  </div>
+  <div class="item active" data-i="0">Home</div>
+  <div class="item" data-i="1">Convert</div>
+  <div class="item" data-i="2">Pricing</div>
+  <div class="item" data-i="3">About</div>
+</div>
+<script>
+var bar = document.getElementById("bar"), mascot = document.getElementById("mascot");
+var items = bar.querySelectorAll(".item");
+function place(el) { mascot.style.left = (el.offsetLeft + el.offsetWidth / 2) + "px"; }
+items.forEach(function (item) {
+  item.addEventListener("mouseenter", function () {
+    items.forEach(function (i) { i.classList.remove("active"); });
+    item.classList.add("active");
+    place(item);
+  });
+});
+place(bar.querySelector(".active"));
+</script>
+</body></html>
+`,
+
   "drag-drop-upload-form": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Drag &amp; Drop Upload Form</title><style>
 :root{--bg:#f5f6fb;--ink:#191b29;--mut:#6b7086;--indigo:#4338ca;--line:#e2e4f0;--card:#fff;--green:#16a34a}
