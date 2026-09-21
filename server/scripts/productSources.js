@@ -596,29 +596,38 @@ buildSteps();
 
   "masonry-portfolio-grid": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Masonry Portfolio Grid</title><style>
-:root{--bg:#050507}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.kicker{display:block;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;padding:18px 20px 0}
-.masonry{columns:3 160px;column-gap:10px;padding:14px 20px 24px}
-.tile{break-inside:avoid;margin-bottom:10px;border-radius:12px;position:relative;overflow:hidden;color:#fff}
-.tile{transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
-.tile:hover{transform:translateY(-5px);box-shadow:0 20px 40px -18px rgba(155,138,255,.35)}
-.tile span{position:absolute;left:10px;bottom:10px;font:700 10px "Space Grotesk",sans-serif;opacity:0;transition:opacity .25s}
-.tile:hover span{opacity:1}
-.tile:hover:before{opacity:1}
-.tile:before{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.7),transparent 55%);opacity:0;transition:opacity .25s}
-.tile:nth-child(1){height:180px;background:radial-gradient(circle at 30% 20%,rgba(155,138,255,.3),transparent 60%),#141018}
-.tile:nth-child(2){height:120px;background:radial-gradient(circle at 60% 40%,rgba(120,170,255,.3),transparent 60%),#101219}
-.tile:nth-child(3){height:150px;background:radial-gradient(circle at 50% 60%,rgba(220,150,255,.28),transparent 60%),#181022}
-.tile:nth-child(4){height:100px;background:radial-gradient(circle at 40% 40%,rgba(155,220,200,.25),transparent 60%),#0f1614}
-.tile:nth-child(5){height:160px;background:radial-gradient(circle at 60% 60%,rgba(255,180,150,.25),transparent 60%),#181210}
-.tile:nth-child(6){height:130px;background:radial-gradient(circle at 50% 50%,rgba(180,190,255,.25),transparent 60%),#111319}
+:root{--bg:#0e0e10;--ink:#f2f2f0;--mut:#8a8a86;--lime:#d4ff3f}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.head{max-width:640px;margin:0 auto 26px}
+.eb{display:inline-flex;gap:8px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--lime);margin-bottom:10px}
+h2{margin:0;font-size:24px;color:var(--ink);font-weight:700}
+.grid{max-width:640px;margin:0 auto;columns:3 160px;column-gap:12px}
+.item{break-inside:avoid;margin-bottom:12px;border-radius:12px;overflow:hidden;position:relative;cursor:pointer;opacity:0;transform:translateY(14px)}
+.item img{display:block;width:100%;height:auto}
+.item .ph{width:100%;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.item:hover .ph{transform:scale(1.06)}
+.item .overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.75),transparent 50%);opacity:0;transition:opacity .3s;display:flex;align-items:flex-end;padding:12px}
+.item:hover .overlay{opacity:1}
+.item .overlay b{color:#fff;font-size:12px;font-weight:600}
 </style></head>
-<body data-cf-keep-dark><span class="kicker">MASONRY LAYOUT</span>
-<div class="masonry">
-<div class="tile"><span>Project Alpha</span></div><div class="tile"><span>Project Beta</span></div><div class="tile"><span>Project Gamma</span></div><div class="tile"><span>Project Delta</span></div><div class="tile"><span>Project Epsilon</span></div><div class="tile"><span>Project Zeta</span></div>
+<body data-cf-keep-dark>
+<div class="head"><span class="eb">Selected work</span><h2>A grid built to hold odd-sized things.</h2></div>
+<div class="grid" id="grid">
+  <div class="item" style="height:190px"><div class="ph" style="height:190px;background:linear-gradient(155deg,#d4ff3f,#7a9e1f)"></div><div class="overlay"><b>Aperture — Brand identity</b></div></div>
+  <div class="item" style="height:130px"><div class="ph" style="height:130px;background:linear-gradient(155deg,#f2f2f0,#8a8a86)"></div><div class="overlay"><b>Northwind — Web design</b></div></div>
+  <div class="item" style="height:150px"><div class="ph" style="height:150px;background:linear-gradient(155deg,#8a8a86,#2a2a28)"></div><div class="overlay"><b>Vellum — Packaging</b></div></div>
+  <div class="item" style="height:210px"><div class="ph" style="height:210px;background:linear-gradient(155deg,#d4ff3f,#3a4a10)"></div><div class="overlay"><b>Cascade — Art direction</b></div></div>
+  <div class="item" style="height:160px"><div class="ph" style="height:160px;background:linear-gradient(155deg,#f2f2f0,#4a4a48)"></div><div class="overlay"><b>Ampersand — Motion</b></div></div>
+  <div class="item" style="height:130px"><div class="ph" style="height:130px;background:linear-gradient(155deg,#7a9e1f,#1a1a18)"></div><div class="overlay"><b>Origin Co — Identity</b></div></div>
 </div>
-</body></html>`,
+<script>
+document.querySelectorAll(".item").forEach(function(el,i){
+  setTimeout(function(){ el.style.transition="opacity .5s ease,transform .5s cubic-bezier(.2,.8,.2,1)"; el.style.opacity=1; el.style.transform="translateY(0)"; }, 100+i*90);
+});
+</script>
+</body></html>
+`,
 
   "tabbed-features": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Tabbed Features</title><style>
@@ -2544,50 +2553,56 @@ document.querySelectorAll(".item").forEach(function(it){
 
   "hover-zoom-gallery": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Hover Zoom Gallery</title><style>
-:root{--bg:#050507;--line:#272632}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#fff;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:24px}
-.gal{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:520px}
-.cell{position:relative;aspect-ratio:1;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
-.cell i{position:absolute;inset:0;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
-.cell:hover i{transform:scale(1.14)}
-.cell b{position:absolute;left:10px;bottom:8px;font:700 10px "Space Grotesk",sans-serif;opacity:0;transform:translateY(6px);transition:.3s;z-index:2}
-.cell:hover b{opacity:1;transform:none}
-.cell:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.75),transparent 55%);opacity:0;transition:opacity .3s}
-.cell:hover:after{opacity:1}
-.c1 i{background:radial-gradient(circle at 35% 25%,rgba(155,138,255,.4),transparent 60%),#141018}
-.c2 i{background:radial-gradient(circle at 60% 40%,rgba(110,170,255,.4),transparent 60%),#101219}
-.c3 i{background:radial-gradient(circle at 50% 60%,rgba(225,150,255,.36),transparent 60%),#181022}
-.c4 i{background:radial-gradient(circle at 40% 40%,rgba(150,225,200,.32),transparent 60%),#0f1614}
-.c5 i{background:radial-gradient(circle at 60% 60%,rgba(255,180,150,.32),transparent 60%),#181210}
-.c6 i{background:radial-gradient(circle at 45% 35%,rgba(180,190,255,.34),transparent 60%),#111319}
-@media(max-width:520px){.gal{grid-template-columns:1fr 1fr}}
+:root{--bg:#0e0e10;--ink:#f2f2f0;--mut:#8a8a86;--lime:#d4ff3f}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif;padding:40px;display:grid;place-items:center}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:min(500px,90vw)}
+.cell{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;cursor:pointer}
+.cell .ph{position:absolute;inset:0;transition:transform .55s cubic-bezier(.2,.8,.2,1),filter .55s}
+.cell:hover .ph{transform:scale(1.15);filter:brightness(.7)}
+.cell .lbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s}
+.cell:hover .lbl{opacity:1}
+.cell .lbl span{color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border:1px solid #fff;padding:6px 12px;border-radius:20px}
 </style></head>
-<body data-cf-keep-dark><div class="gal">
-<div class="cell c1"><i></i><b>Alpha</b></div><div class="cell c2"><i></i><b>Beta</b></div><div class="cell c3"><i></i><b>Gamma</b></div>
-<div class="cell c4"><i></i><b>Delta</b></div><div class="cell c5"><i></i><b>Epsilon</b></div><div class="cell c6"><i></i><b>Zeta</b></div>
+<body data-cf-keep-dark>
+<div class="grid">
+  <div class="cell"><div class="ph" style="background:linear-gradient(155deg,#d4ff3f,#4a5a10)"></div><div class="lbl"><span>Aperture</span></div></div>
+  <div class="cell"><div class="ph" style="background:linear-gradient(155deg,#f2f2f0,#4a4a48)"></div><div class="lbl"><span>Northwind</span></div></div>
+  <div class="cell"><div class="ph" style="background:linear-gradient(155deg,#8a8a86,#2a2a28)"></div><div class="lbl"><span>Vellum</span></div></div>
+  <div class="cell"><div class="ph" style="background:linear-gradient(155deg,#d4ff3f,#7a9e1f)"></div><div class="lbl"><span>Cascade</span></div></div>
+  <div class="cell"><div class="ph" style="background:linear-gradient(155deg,#4a4a48,#1a1a18)"></div><div class="lbl"><span>Ampersand</span></div></div>
+  <div class="cell"><div class="ph" style="background:linear-gradient(155deg,#f2f2f0,#8a8a86)"></div><div class="lbl"><span>Origin Co</span></div></div>
 </div>
-</body></html>`,
+</body></html>
+`,
 
   "project-list-hover": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Project List Hover</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:24px}
-.list{width:min(440px,92vw)}
-.row{position:relative;display:flex;justify-content:space-between;align-items:center;padding:16px 4px;border-bottom:1px solid var(--line);cursor:pointer;overflow:hidden}
-.row h3{margin:0;font:700 17px "Space Grotesk",sans-serif;letter-spacing:-.03em;transition:transform .35s cubic-bezier(.2,.8,.2,1),color .3s}
-.row small{color:#66626f;font-size:8px;transition:transform .35s}
-.row:hover h3{transform:translateX(10px);color:var(--lav)}
-.row:hover small{transform:translateX(-6px)}
-.row:before{content:"";position:absolute;left:0;bottom:-1px;height:1px;width:100%;background:var(--lav);transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
-.row:hover:before{transform:scaleX(1)}
+:root{--bg:#0e0e10;--ink:#f2f2f0;--mut:#8a8a86;--lime:#d4ff3f;--line:rgba(255,255,255,.1)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif;padding:50px;display:grid;place-items:center}
+.list{width:min(420px,92vw)}
+.row{display:flex;align-items:center;justify-content:space-between;padding:18px 4px;border-bottom:1px solid var(--line);cursor:pointer;transition:padding-left .3s cubic-bezier(.2,.8,.2,1)}
+.row:first-child{border-top:1px solid var(--line)}
+.row:hover{padding-left:14px}
+.row .l{display:flex;flex-direction:column}
+.row b{font-size:16px;color:var(--ink);font-weight:600;transition:color .3s}
+.row:hover b{color:var(--lime)}
+.row span{font-size:11.5px;color:var(--mut);margin-top:3px}
+.row .num{font-size:11px;color:var(--mut);font-family:ui-monospace,monospace}
+.row svg{width:16px;height:16px;color:var(--mut);opacity:0;transform:translateX(-6px);transition:opacity .3s,transform .3s}
+.row:hover svg{opacity:1;transform:translateX(0);color:var(--lime)}
+.r-right{display:flex;align-items:center;gap:10px}
 </style></head>
-<body data-cf-keep-dark><div class="list">
-<div class="row"><h3>Northstar</h3><small>2026 · BRAND</small></div>
-<div class="row"><h3>Atelier</h3><small>2025 · WEB</small></div>
-<div class="row"><h3>Halo</h3><small>2025 · PRODUCT</small></div>
-<div class="row"><h3>Orbit</h3><small>2024 · IDENTITY</small></div>
+<body data-cf-keep-dark>
+<div class="list">
+  <div class="row"><div class="l"><b>Aperture</b><span>Brand identity, 2025</span></div><div class="r-right"><span class="num">01</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></div></div>
+  <div class="row"><div class="l"><b>Northwind</b><span>Web design, 2025</span></div><div class="r-right"><span class="num">02</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></div></div>
+  <div class="row"><div class="l"><b>Vellum</b><span>Packaging, 2024</span></div><div class="r-right"><span class="num">03</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></div></div>
+  <div class="row"><div class="l"><b>Cascade</b><span>Art direction, 2024</span></div><div class="r-right"><span class="num">04</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></div></div>
 </div>
-</body></html>`,
+</body></html>
+`,
 
   "single-plan-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Single Plan Card</title><style>
@@ -3583,53 +3598,90 @@ submit.addEventListener("click",function(){
 
   "filter-chip-project-grid": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Filterable Project Grid</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center}
-.stage{display:grid;gap:16px;padding:30px;width:min(420px,90vw)}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.chips{display:flex;gap:8px;flex-wrap:wrap}
-.chips span{padding:7px 13px;border:1px solid var(--line);border-radius:999px;font-size:11px;color:#a49dbc;cursor:pointer;transition:background .25s,color .25s,border-color .25s}
-.chips span.active{background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;border-color:transparent;box-shadow:0 8px 20px -10px rgba(155,138,255,.6)}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.grid div{padding:22px 14px;border:1px solid var(--line);border-radius:12px;background:#0d0d12;color:#c9c4d6;font-size:11px;text-align:center;box-shadow:0 14px 34px -22px rgba(0,0,0,.7);transition:opacity .3s cubic-bezier(.2,.8,.2,1),transform .3s cubic-bezier(.2,.8,.2,1)}
-.grid div.hide{opacity:0;transform:scale(.9);position:absolute;pointer-events:none}
+:root{--bg:#0e0e10;--ink:#f2f2f0;--mut:#8a8a86;--lime:#d4ff3f;--line:rgba(255,255,255,.1)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif;padding:40px;display:grid;place-items:center}
+.wrap{width:min(460px,92vw)}
+.chips{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.chip{font-size:12px;color:var(--mut);border:1px solid var(--line);padding:7px 14px;border-radius:20px;cursor:pointer;transition:background .2s,color .2s,border-color .2s}
+.chip.on{background:var(--lime);color:#0e0e10;border-color:var(--lime)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.card{border-radius:12px;overflow:hidden;transition:opacity .3s,transform .3s}
+.card.hide{display:none}
+.card .ph{height:100px}
+.card .meta{padding:10px 2px}
+.card b{font-size:12.5px;color:var(--ink);display:block}
+.card span{font-size:10.5px;color:var(--mut)}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">FILTER BY CATEGORY</span>
-<div class="chips" id="chips"><span class="active" data-f="all">All</span><span data-f="web">Web</span><span data-f="brand">Brand</span><span data-f="app">App</span></div>
-<div class="grid" id="grid">
-<div data-c="web">Nova Website</div><div data-c="brand">Atlas Rebrand</div><div data-c="app">Finora App</div>
-<div data-c="web">Travelora Landing</div><div data-c="app">LearnFlow Mobile</div><div data-c="brand">Socially Identity</div>
-</div></div>
+<body data-cf-keep-dark>
+<div class="wrap">
+  <div class="chips" id="chips">
+    <div class="chip on" data-f="all">All</div>
+    <div class="chip" data-f="web">Web</div>
+    <div class="chip" data-f="brand">Brand</div>
+    <div class="chip" data-f="motion">Motion</div>
+  </div>
+  <div class="grid" id="grid">
+    <div class="card" data-c="web"><div class="ph" style="background:linear-gradient(155deg,#d4ff3f,#4a5a10)"></div><div class="meta"><b>Northwind</b><span>Web</span></div></div>
+    <div class="card" data-c="brand"><div class="ph" style="background:linear-gradient(155deg,#f2f2f0,#4a4a48)"></div><div class="meta"><b>Aperture</b><span>Brand</span></div></div>
+    <div class="card" data-c="motion"><div class="ph" style="background:linear-gradient(155deg,#8a8a86,#2a2a28)"></div><div class="meta"><b>Ampersand</b><span>Motion</span></div></div>
+    <div class="card" data-c="web"><div class="ph" style="background:linear-gradient(155deg,#d4ff3f,#7a9e1f)"></div><div class="meta"><b>Vellum</b><span>Web</span></div></div>
+    <div class="card" data-c="brand"><div class="ph" style="background:linear-gradient(155deg,#4a4a48,#1a1a18)"></div><div class="meta"><b>Cascade</b><span>Brand</span></div></div>
+    <div class="card" data-c="motion"><div class="ph" style="background:linear-gradient(155deg,#f2f2f0,#8a8a86)"></div><div class="meta"><b>Origin Co</b><span>Motion</span></div></div>
+  </div>
+</div>
 <script>
-const chips=[...document.querySelectorAll("#chips span")],items=[...document.querySelectorAll("#grid div")];
-chips.forEach(function(c){c.addEventListener("click",function(){
-  chips.forEach(function(x){x.classList.remove("active")});c.classList.add("active");
-  const f=c.dataset.f;
-  items.forEach(function(i){i.classList.toggle("hide",f!=="all"&&i.dataset.c!==f)});
-})});
+var chips=document.querySelectorAll(".chip"), cards=document.querySelectorAll(".card");
+chips.forEach(function(c){
+  c.addEventListener("click",function(){
+    chips.forEach(function(x){x.classList.remove("on")}); c.classList.add("on");
+    var f=c.dataset.f;
+    cards.forEach(function(card){ card.classList.toggle("hide", f!=="all" && card.dataset.c!==f); });
+  });
+});
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "drag-scroll-project-strip": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Drag Scroll Project Strip</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;display:block;text-align:center;margin-bottom:14px}
-.strip{display:flex;gap:12px;overflow-x:auto;padding:20px;width:min(480px,92vw);cursor:grab;scrollbar-width:none}
+:root{--bg:#0e0e10;--ink:#f2f2f0;--mut:#8a8a86;--lime:#d4ff3f}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif;padding:40px 0;display:flex;flex-direction:column;justify-content:center}
+.head{padding:0 40px;margin-bottom:20px}
+.eb{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--lime);margin-bottom:8px}
+h2{margin:0;font-size:22px;color:var(--ink);font-weight:700}
+.hint{font-size:11.5px;color:var(--mut);margin-top:6px}
+.strip{display:flex;gap:16px;overflow-x:auto;padding:0 40px 10px;cursor:grab;scrollbar-width:none}
 .strip::-webkit-scrollbar{display:none}
-.strip.grabbing{cursor:grabbing}
-.strip div{flex:none;width:150px;height:100px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(135deg,#191527,#1c1a24);display:grid;place-items:center;color:#c9c4d6;font-size:11px;user-select:none;box-shadow:0 16px 40px -20px rgba(0,0,0,.7);transition:border-color .2s,box-shadow .2s}
-.strip div:hover{border-color:#544c67;box-shadow:0 20px 44px -16px rgba(155,138,255,.3)}
+.strip.dragging{cursor:grabbing}
+.card{flex:none;width:220px;border-radius:14px;overflow:hidden;user-select:none}
+.card .ph{height:150px;pointer-events:none}
+.card .meta{padding:12px 2px}
+.card b{font-size:13px;color:var(--ink);display:block}
+.card span{font-size:11px;color:var(--mut)}
 </style></head>
-<body data-cf-keep-dark><div><span class="kicker">DRAG TO SCROLL</span>
-<div class="strip" id="strip"><div>Nova SaaS</div><div>Atlas Agency</div><div>CommerceX</div><div>Finora</div><div>Medora</div><div>Travelora</div></div></div>
+<body data-cf-keep-dark>
+<div class="head"><span class="eb">Archive</span><h2>Drag to browse the full archive.</h2><div class="hint">Click and drag horizontally →</div></div>
+<div class="strip" id="strip">
+  <div class="card"><div class="ph" style="background:linear-gradient(155deg,#d4ff3f,#4a5a10)"></div><div class="meta"><b>Aperture</b><span>2025</span></div></div>
+  <div class="card"><div class="ph" style="background:linear-gradient(155deg,#f2f2f0,#4a4a48)"></div><div class="meta"><b>Northwind</b><span>2025</span></div></div>
+  <div class="card"><div class="ph" style="background:linear-gradient(155deg,#8a8a86,#2a2a28)"></div><div class="meta"><b>Vellum</b><span>2024</span></div></div>
+  <div class="card"><div class="ph" style="background:linear-gradient(155deg,#d4ff3f,#7a9e1f)"></div><div class="meta"><b>Cascade</b><span>2024</span></div></div>
+  <div class="card"><div class="ph" style="background:linear-gradient(155deg,#4a4a48,#1a1a18)"></div><div class="meta"><b>Ampersand</b><span>2023</span></div></div>
+</div>
 <script>
-const strip=document.getElementById("strip");let down=false,startX,scrollLeft;
-strip.addEventListener("pointerdown",function(e){down=true;strip.classList.add("grabbing");startX=e.pageX;scrollLeft=strip.scrollLeft});
-window.addEventListener("pointerup",function(){down=false;strip.classList.remove("grabbing")});
-strip.addEventListener("pointermove",function(e){if(!down)return;strip.scrollLeft=scrollLeft-(e.pageX-startX)});
+var strip=document.getElementById("strip"), down=false, startX, scrollLeft;
+strip.addEventListener("mousedown",function(e){ down=true; strip.classList.add("dragging"); startX=e.pageX-strip.offsetLeft; scrollLeft=strip.scrollLeft; });
+window.addEventListener("mouseup",function(){ down=false; strip.classList.remove("dragging"); });
+strip.addEventListener("mousemove",function(e){
+  if(!down)return; e.preventDefault();
+  var x=e.pageX-strip.offsetLeft, walk=(x-startX)*1.2;
+  strip.scrollLeft=scrollLeft-walk;
+});
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "before-after-feature-toggle": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Before/After Feature Toggle</title><style>
@@ -6279,104 +6331,152 @@ opts.forEach(function(o){
 
   "case-study-scroll-reveal": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Case Study Scroll Reveal</title><style>
-:root{--bg:#050507;--line:#272632}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.list{padding:30px 24px;display:grid;gap:60px}
-.item{opacity:0;transform:translateY(30px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}
-.item.visible{opacity:1;transform:none}
-.cover{position:relative;height:140px;border-radius:14px;background:radial-gradient(circle at 30% 20%,rgba(155,138,255,.25),transparent 60%),linear-gradient(135deg,#191527,#0d0d12);border:1px solid var(--line);box-shadow:0 20px 50px -22px rgba(0,0,0,.7)}
-.item h3{color:#f7f5fb;font-size:15px;margin:12px 0 4px}
-.item span{color:#817d8a;font-size:10px}
+:root{--bg:#0e0e10;--ink:#f2f2f0;--mut:#8a8a86;--lime:#d4ff3f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif}
+.sec{min-height:100vh;display:flex;align-items:center;padding:40px;gap:40px}
+.sec .num{font-family:ui-monospace,monospace;font-size:13px;color:var(--lime);margin-bottom:14px;opacity:0;transform:translateY(16px)}
+.sec h3{margin:0;font-size:clamp(26px,4vw,42px);color:var(--ink);font-weight:700;opacity:0;transform:translateY(16px)}
+.sec p{margin:16px 0 0;font-size:14px;color:var(--mut);max-width:340px;opacity:0;transform:translateY(16px)}
+.vis{flex:none;width:220px;height:220px;border-radius:16px;opacity:0;transform:translateY(16px) scale(.94)}
+.hint{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);font-size:10.5px;color:var(--mut);letter-spacing:.06em;text-transform:uppercase}
 </style></head>
-<body data-cf-keep-dark><div class="list" id="list">
-<div class="item"><div class="cover"></div><h3>Nova SaaS redesign</h3><span>Product · 2026</span></div>
-<div class="item"><div class="cover"></div><h3>Finora onboarding</h3><span>Fintech · 2026</span></div>
-<div class="item"><div class="cover"></div><h3>Travelora campaign</h3><span>Travel · 2025</span></div>
-</div>
+<body data-cf-keep-dark>
+<section class="sec" data-i="0"><div><div class="num">01 / Aperture</div><h3>A brand system built for motion.</h3><p>Complete identity redesign for a camera-gear startup, from wordmark to packaging.</p></div><div class="vis" style="background:linear-gradient(155deg,#d4ff3f,#4a5a10)"></div></section>
+<section class="sec" data-i="1"><div><div class="num">02 / Northwind</div><h3>An interface that gets out of the way.</h3><p>Full web redesign focused on speed — 40% faster time-to-first-booking.</p></div><div class="vis" style="background:linear-gradient(155deg,#f2f2f0,#4a4a48)"></div></section>
+<section class="sec" data-i="2"><div><div class="num">03 / Vellum</div><h3>Packaging that survives the unboxing video.</h3><p>Structural and print design for a stationery brand's flagship line.</p></div><div class="vis" style="background:linear-gradient(155deg,#8a8a86,#2a2a28)"></div></section>
+<div class="hint">Scroll to reveal each case study</div>
 <script>
-const io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)e.target.classList.add("visible")})},{threshold:.2});
-document.querySelectorAll(".item").forEach(function(i){io.observe(i)});
+function onScroll(){
+  document.querySelectorAll(".sec").forEach(function(sec){
+    var r=sec.getBoundingClientRect();
+    var visible = r.top < window.innerHeight*.7 && r.bottom > window.innerHeight*.3;
+    sec.querySelectorAll(".num,h3,p,.vis").forEach(function(el,i){
+      if(visible){
+        el.style.transition="opacity .6s ease "+(i*.08)+"s,transform .6s cubic-bezier(.2,.8,.2,1) "+(i*.08)+"s";
+        el.style.opacity=1;
+        el.style.transform = el.classList.contains("vis") ? "translateY(0) scale(1)" : "translateY(0)";
+      }
+    });
+  });
+}
+window.addEventListener("scroll",onScroll);
+onScroll();
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "cursor-preview-portfolio-list": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Cursor Preview Portfolio List</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:30px}
-.row{display:flex;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--line);color:#eee9f8;font-size:16px;font-weight:700;cursor:pointer;transition:color .2s}
-.row:hover{color:var(--lav)}
-.row span{color:#5f5c68;font-size:11px;font-weight:400}
-.preview{position:fixed;width:130px;height:90px;border-radius:10px;background:radial-gradient(circle at 30% 20%,rgba(155,138,255,.3),transparent 60%),linear-gradient(135deg,#191527,#0d0d12);border:1px solid var(--line);box-shadow:0 30px 60px -20px rgba(0,0,0,.7);pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.9) rotate(-3deg);transition:opacity .25s,transform .25s;z-index:9}
-.preview.show{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}
+:root{--bg:#0e0e10;--ink:#f2f2f0;--mut:#8a8a86;--lime:#d4ff3f;--line:rgba(255,255,255,.1)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif;padding:50px;display:grid;place-items:center;cursor:default}
+.list{width:min(420px,92vw);position:relative}
+.row{display:flex;align-items:center;justify-content:space-between;padding:20px 4px;border-bottom:1px solid var(--line)}
+.row:first-child{border-top:1px solid var(--line)}
+.row b{font-size:18px;color:var(--mut);font-weight:600;transition:color .25s}
+.row.hot b{color:var(--ink)}
+.row span{font-size:11px;color:var(--mut);font-family:ui-monospace,monospace}
+.preview{position:fixed;top:0;left:0;width:160px;height:110px;border-radius:12px;overflow:hidden;pointer-events:none;opacity:0;transform:scale(.9);transition:opacity .25s,transform .25s;z-index:5}
+.preview.show{opacity:1;transform:scale(1)}
+.preview .ph{width:100%;height:100%}
 </style></head>
 <body data-cf-keep-dark>
-<div class="row">Atlas Agency <span>Branding</span></div>
-<div class="row">CommerceX <span>Ecommerce</span></div>
-<div class="row">DevDock <span>Docs</span></div>
-<div class="preview" id="prev"></div>
+<div class="list" id="list">
+  <div class="row" data-c="linear-gradient(155deg,#d4ff3f,#4a5a10)"><b>Aperture</b><span>2025</span></div>
+  <div class="row" data-c="linear-gradient(155deg,#f2f2f0,#4a4a48)"><b>Northwind</b><span>2025</span></div>
+  <div class="row" data-c="linear-gradient(155deg,#8a8a86,#2a2a28)"><b>Vellum</b><span>2024</span></div>
+  <div class="row" data-c="linear-gradient(155deg,#d4ff3f,#7a9e1f)"><b>Cascade</b><span>2024</span></div>
+</div>
+<div class="preview" id="preview"><div class="ph" id="previewPh"></div></div>
 <script>
-const prev=document.getElementById("prev");
-document.querySelectorAll(".row").forEach(function(r){
-  r.addEventListener("pointerenter",function(){prev.classList.add("show")});
-  r.addEventListener("pointerleave",function(){prev.classList.remove("show")});
-  r.addEventListener("pointermove",function(e){prev.style.left=e.clientX+"px";prev.style.top=e.clientY-70+"px"});
+var rows=document.querySelectorAll(".row"), preview=document.getElementById("preview"), ph=document.getElementById("previewPh");
+rows.forEach(function(r){
+  r.addEventListener("mouseenter",function(){
+    rows.forEach(function(x){x.classList.remove("hot")}); r.classList.add("hot");
+    ph.style.background=r.dataset.c;
+    preview.classList.add("show");
+  });
+  r.addEventListener("mouseleave",function(){ r.classList.remove("hot"); preview.classList.remove("show"); });
+});
+document.addEventListener("mousemove",function(e){
+  preview.style.transform="translate("+(e.clientX+20)+"px,"+(e.clientY-55)+"px)"+(preview.classList.contains("show")?" scale(1)":" scale(.9)");
 });
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "split-screen-portfolio": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Split Screen Portfolio</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;height:100vh;display:flex;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.list{width:180px;border-right:1px solid var(--line);padding:20px 0;display:grid;align-content:start}
-.list div{padding:12px 20px;color:#817d8a;font-size:12px;cursor:pointer;border-left:2px solid transparent;transition:color .25s,background .25s,border-color .25s}
-.list div.active{color:#f7f5fb;background:linear-gradient(90deg,#141020,transparent);border-left-color:var(--lav)}
-.preview{flex:1;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,rgba(155,138,255,.14),transparent 45%)}
-.preview div{width:200px;height:130px;border-radius:14px;background:radial-gradient(circle at 30% 20%,rgba(155,138,255,.28),transparent 60%),linear-gradient(135deg,#191527,#0d0d12);border:1px solid var(--line);box-shadow:0 30px 70px -24px rgba(0,0,0,.7);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+:root{--bg:#0e0e10;--ink:#f2f2f0;--mut:#8a8a86;--lime:#d4ff3f}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;grid-template-columns:1fr 1fr;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif}
+.txt{padding:60px;display:flex;flex-direction:column;justify-content:center}
+.eb{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--lime);margin-bottom:14px}
+h2{margin:0;font-size:clamp(28px,3.4vw,42px);color:var(--ink);font-weight:700;line-height:1.1}
+p{margin:16px 0 24px;font-size:14px;color:var(--mut);max-width:340px}
+.tags{display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:11px;color:var(--ink);border:1px solid rgba(255,255,255,.15);padding:5px 12px;border-radius:20px}
+.vis{position:relative;overflow:hidden}
+.vis .ph{position:absolute;inset:0;background:linear-gradient(155deg,#d4ff3f,#4a5a10);transition:transform 8s ease}
+.vis:hover .ph{transform:scale(1.1)}
+@media(max-width:900px){body{grid-template-columns:1fr}.vis{height:320px}}
 </style></head>
-<body data-cf-keep-dark><div class="list" id="list"><div class="active">Medora</div><div>LearnFlow</div><div>Socially</div></div>
-<div class="preview"><div></div></div>
-<script>
-document.querySelectorAll("#list div").forEach(function(d){d.addEventListener("click",function(){document.querySelectorAll("#list div").forEach(function(x){x.classList.remove("active")});d.classList.add("active")})});
-</script>
-</body></html>`,
+<body data-cf-keep-dark>
+<div class="txt"><span class="eb">Featured project</span><h2>Aperture — a brand for people who notice light.</h2><p>Full identity system: wordmark, packaging, and a site that loads in under a second on 3G.</p><div class="tags"><span class="tag">Branding</span><span class="tag">Web</span><span class="tag">Packaging</span></div></div>
+<div class="vis"><div class="ph"></div></div>
+</body></html>
+`,
 
   "client-logo-showcase-grid": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Client Logo Showcase Grid</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:320px}
-.logo{padding:20px 10px;border:1px solid var(--line);border-radius:12px;display:grid;place-items:center;color:#3a3546;font-weight:800;font-size:12px;letter-spacing:1px;transition:color .25s,border-color .25s,background .25s,transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s;position:relative}
-.logo:hover{color:#eee9f8;border-color:#544c67;background:#111017;transform:translateY(-4px);box-shadow:0 16px 34px -18px rgba(155,138,255,.35)}
-.logo small{position:absolute;bottom:-16px;color:var(--lav);font-size:8px;opacity:0;transition:opacity .25s}
-.logo:hover small{opacity:1}
+:root{--bg:#0e0e10;--ink:#f2f2f0;--mut:#8a8a86;--lime:#d4ff3f;--line:rgba(255,255,255,.1)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif;padding:40px;display:grid;place-items:center}
+.wrap{width:min(460px,92vw)}
+.eb{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--lime);text-align:center;display:block;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.cell{aspect-ratio:1.6;display:flex;align-items:center;justify-content:center;border-right:1px solid var(--line);border-bottom:1px solid var(--line);font-family:Georgia,serif;font-style:italic;font-weight:700;font-size:15px;color:var(--mut);cursor:pointer;transition:background .25s,color .25s}
+.cell:nth-child(3n){border-right:0}
+.cell:nth-last-child(-n+3){border-bottom:0}
+.cell:hover{background:var(--lime);color:#0e0e10}
 </style></head>
-<body data-cf-keep-dark><div class="grid">
-<div class="logo">ORBIT<small>Since 2023</small></div><div class="logo">NORTHSTAR<small>Since 2022</small></div><div class="logo">FLUENT<small>Since 2024</small></div>
-<div class="logo">ATLAS<small>Since 2021</small></div><div class="logo">MEDORA<small>Since 2023</small></div><div class="logo">FINORA<small>Since 2022</small></div>
+<body data-cf-keep-dark>
+<div class="wrap">
+  <span class="eb">Trusted by</span>
+  <div class="grid">
+    <div class="cell">Northwind</div><div class="cell">Vellum</div><div class="cell">Cascade</div>
+    <div class="cell">Fenwick</div><div class="cell">Argus</div><div class="cell">Portside</div>
+    <div class="cell">Origin Co.</div><div class="cell">Haven</div><div class="cell">Ledgerline</div>
+  </div>
 </div>
-</body></html>`,
+</body></html>
+`,
 
   "resume-timeline-portfolio": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Resume Timeline Portfolio</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:30px}
-.timeline{position:relative;max-width:320px;margin:auto;padding-left:20px}
-.timeline::before{content:"";position:absolute;left:4px;top:4px;bottom:4px;width:1px;background:linear-gradient(180deg,#9b8aff,var(--line))}
-.entry{position:relative;padding-bottom:26px}
-.entry:last-child{padding-bottom:0}
-.entry::before{content:"";position:absolute;left:-20px;top:3px;width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 0 10px rgba(196,181,253,.5)}
-.entry:first-child::before{box-shadow:0 0 0 4px rgba(196,181,253,.2),0 0 10px rgba(196,181,253,.5)}
-.entry b{display:block;color:#f7f5fb;font-size:12px}
-.entry span{display:block;color:#5f5c68;font-size:9px;margin:2px 0 4px}
-.entry p{margin:0;color:#a49dbc;font-size:10px;line-height:1.6}
+:root{--bg:#0e0e10;--ink:#f2f2f0;--mut:#8a8a86;--lime:#d4ff3f;--line:rgba(255,255,255,.12)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif;padding:50px;display:grid;place-items:center}
+.tl{width:min(420px,92vw);position:relative;padding-left:26px}
+.tl:before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1.5px;background:var(--line)}
+.item{position:relative;padding-bottom:30px}
+.item:last-child{padding-bottom:0}
+.item .dot{position:absolute;left:-26px;top:3px;width:11px;height:11px;border-radius:50%;background:var(--bg);border:2px solid var(--mut)}
+.item.cur .dot{border-color:var(--lime);background:var(--lime);box-shadow:0 0 0 4px rgba(212,255,63,.15)}
+.item .yr{font-size:11px;color:var(--mut);font-family:ui-monospace,monospace;margin-bottom:4px}
+.item b{display:block;font-size:15px;color:var(--ink);font-weight:700}
+.item span{font-size:12.5px;color:var(--mut)}
+.item p{margin:8px 0 0;font-size:12.5px;color:var(--mut);line-height:1.6}
 </style></head>
-<body data-cf-keep-dark><div class="timeline">
-<div class="entry"><b>Senior Product Designer</b><span>Orbit Labs · 2024—Now</span><p>Led the design system rebuild across 4 product lines.</p></div>
-<div class="entry"><b>Product Designer</b><span>Northstar · 2021—2024</span><p>Shipped the mobile onboarding redesign.</p></div>
-<div class="entry"><b>UI Designer</b><span>Freelance · 2019—2021</span><p>Worked with early-stage startups on launch identities.</p></div>
+<body data-cf-keep-dark>
+<div class="tl">
+  <div class="item cur"><div class="dot"></div><div class="yr">2024 — Present</div><b>Senior Product Designer</b><span>Cascade Labs</span><p>Leading design for the core platform, from research through shipped feature.</p></div>
+  <div class="item"><div class="dot"></div><div class="yr">2021 — 2024</div><b>Product Designer</b><span>Northwind</span><p>Owned the onboarding and billing surfaces across web and mobile.</p></div>
+  <div class="item"><div class="dot"></div><div class="yr">2019 — 2021</div><b>UI Designer</b><span>Studio Vellum</span><p>Freelance brand and web work for early-stage startups.</p></div>
 </div>
-</body></html>`,
+</body></html>
+`,
 
   "hover-reveal-feature-cards": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Hover Reveal Feature Cards</title><style>
