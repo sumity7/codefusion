@@ -35,50 +35,72 @@ document.addEventListener("pointermove",function(e){
 
   "reveal-on-scroll": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Reveal On Scroll</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.stack{display:grid;gap:14px;padding:40px 30px}
-.reveal-card{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1);padding:22px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;box-shadow:0 20px 50px -24px rgba(0,0,0,.7)}
-.reveal-card.visible{opacity:1;transform:none}
-.reveal-card h3{margin:0 0 6px;font:700 16px "Space Grotesk",sans-serif}
-.reveal-card p{margin:0;color:#847e8f;font-size:10px}
+:root{--bg:#120e0a;--ink:#f5efe6;--mut:#9c8f7f;--amber:#f5a623}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif}
+.spacer{height:60vh;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.row{display:flex;flex-direction:column;gap:20px;padding:0 40px 60vh;max-width:400px;margin:0 auto}
+.card{background:#1c1712;border:1px solid #2c2419;border-radius:14px;padding:22px;opacity:0;transform:translateY(30px)}
+.card b{display:block;color:var(--ink);font-size:15px;margin-bottom:6px}
+.card span{color:var(--mut);font-size:12.5px}
 </style></head>
-<body data-cf-keep-dark><div class="stack"><span class="kicker">SCROLL DOWN INSIDE THIS PREVIEW</span>
-<div class="reveal-card"><h3>Step one</h3><p>Cards fade and slide in as they enter the viewport.</p></div>
-<div class="reveal-card"><h3>Step two</h3><p>Powered by IntersectionObserver, no scroll-jank.</p></div>
-<div class="reveal-card"><h3>Step three</h3><p>Drop it into any section that needs a reveal.</p></div>
-<div class="reveal-card"><h3>Step four</h3><p>Respects prefers-reduced-motion automatically.</p></div>
+<body data-cf-keep-dark>
+<div class="spacer">↓ Scroll down</div>
+<div class="row" id="row">
+  <div class="card"><b>Step one</b><span>Fades and rises into place as it enters view.</span></div>
+  <div class="card"><b>Step two</b><span>Each card reveals independently, not all at once.</span></div>
+  <div class="card"><b>Step three</b><span>A simple IntersectionObserver drives it all.</span></div>
 </div>
 <script>
-const cards=document.querySelectorAll(".reveal-card");
-const io=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting)entry.target.classList.add("visible")})},{threshold:.2});
-cards.forEach(function(c){io.observe(c)});
+var cards=document.querySelectorAll(".card");
+var io=new IntersectionObserver(function(entries){
+  entries.forEach(function(en){
+    if(en.isIntersecting){
+      en.target.style.transition="opacity .6s ease,transform .6s cubic-bezier(.2,.8,.2,1)";
+      en.target.style.opacity=1; en.target.style.transform="translateY(0)";
+    }
+  });
+},{threshold:.3});
+cards.forEach(function(c){ io.observe(c); });
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "parallax-scroll-panels": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Parallax Scroll Panels</title><style>
-:root{--bg:#050507;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;overflow-x:hidden}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;padding:16px 24px 0;display:block}
-.px-wrap{height:340px;position:relative;overflow:hidden;border-radius:16px;margin:16px;box-shadow:0 30px 70px -24px rgba(0,0,0,.7)}
-.px-layer{position:absolute;inset:0;display:grid;place-items:center;will-change:transform}
-.px-back{background:radial-gradient(circle at 50% 40%,rgba(155,138,255,.22),transparent 55%),#0a0a0f}
-.px-mid span{font:700 clamp(40px,9vw,90px) "Space Grotesk",sans-serif;color:#1c1a24}
-.px-front{color:#eee9f8;text-align:center}
-.px-front h2{margin:0 0 6px;font:700 20px "Space Grotesk",sans-serif}
-.px-front p{margin:0;color:#a49dae;font-size:10px}
+:root{--bg:#120e0a;--ink:#f5efe6;--mut:#9c8f7f;--amber:#f5a623}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif;overflow-x:hidden}
+.hero{height:70vh;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.stage{position:relative;height:120vh;overflow:hidden}
+.layer{position:absolute;left:50%;border-radius:50%;filter:blur(1px)}
+.l1{width:200px;height:200px;background:radial-gradient(circle,#f5a623,#7a4e0f);top:10%;transform:translateX(-220px)}
+.l2{width:140px;height:140px;background:radial-gradient(circle,#f5efe6,#5c5347);top:40%;transform:translateX(60px)}
+.l3{width:90px;height:90px;border:2px solid #f5a623;top:65%;transform:translateX(-90px)}
+.spacer2{height:40vh}
 </style></head>
-<body data-cf-keep-dark><span class="kicker">SCROLL THE PREVIEW</span>
-<div class="px-wrap" id="wrap"><div class="px-layer px-back" data-speed="0.2"></div><div class="px-layer px-mid" data-speed="0.5"><span>DEPTH</span></div><div class="px-layer px-front" data-speed="0.8"><div><h2>Layered scroll motion</h2><p>Each layer moves at its own speed.</p></div></div></div>
-<div style="height:900px"></div>
+<body data-cf-keep-dark>
+<div class="hero">↓ Scroll to see the depth</div>
+<div class="stage" id="stage">
+  <div class="layer l1" id="l1"></div>
+  <div class="layer l2" id="l2"></div>
+  <div class="layer l3" id="l3"></div>
+</div>
+<div class="spacer2"></div>
 <script>
-const wrap=document.getElementById("wrap");
-function onScroll(){const r=wrap.getBoundingClientRect(),progress=(window.innerHeight-r.top);wrap.querySelectorAll(".px-layer").forEach(layer=>{const speed=parseFloat(layer.dataset.speed);layer.style.transform=\`translateY(\${progress*speed*-0.06}px)\`})}
-document.addEventListener("scroll",onScroll,{passive:true});onScroll();
+var stage=document.getElementById("stage"), l1=document.getElementById("l1"), l2=document.getElementById("l2"), l3=document.getElementById("l3");
+function onScroll(){
+  var r=stage.getBoundingClientRect();
+  var p=(window.innerHeight-r.top)/(window.innerHeight+r.height);
+  l1.style.transform="translate(-220px,"+(p*-120)+"px)";
+  l2.style.transform="translate(60px,"+(p*80)+"px)";
+  l3.style.transform="translate(-90px,"+(p*-60)+"px)";
+}
+window.addEventListener("scroll",onScroll);
+onScroll();
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "orbit-loader": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Orbit Loader</title><style>
@@ -137,181 +159,277 @@ tick();
 
   "sticky-scroll-stack": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Sticky Scroll Stack</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.kicker{display:block;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;padding:16px 24px 0}
-.stack{padding:10px 24px 40px;display:grid;gap:0}
-.stack-card{position:sticky;top:16px;padding:26px;border:1px solid var(--line);border-radius:16px;margin-bottom:16px;box-shadow:0 20px 45px rgba(0,0,0,.35)}
-.stack-card h3{margin:0 0 6px;font:700 18px "Space Grotesk",sans-serif}
-.stack-card p{margin:0;color:#847e8f;font-size:10px}
-.stack-card:nth-child(1){background:#12101c}
-.stack-card:nth-child(2){background:#15111f}
-.stack-card:nth-child(3){background:#181322}
-.stack-card:nth-child(4){background:#1b1425}
-.spacer{height:260px}
+:root{--bg:#120e0a;--ink:#f5efe6;--mut:#9c8f7f;--amber:#f5a623}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif}
+.spacer{height:50vh;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.card{position:sticky;top:60px;height:220px;margin:0 auto 20px;width:min(360px,86vw);border-radius:18px;padding:26px;display:flex;flex-direction:column;justify-content:flex-end;box-shadow:0 30px 60px -20px rgba(0,0,0,.6)}
+.card h4{margin:0 0 6px;font-size:18px;color:#fff}
+.card p{margin:0;font-size:12.5px;color:rgba(255,255,255,.7)}
+.c1{background:linear-gradient(155deg,#f5a623,#a85f0d);top:60px}
+.c2{background:linear-gradient(155deg,#3a2f22,#1c1712);top:90px}
+.c3{background:linear-gradient(155deg,#7a5230,#3a2410);top:120px}
+.tail{height:40vh}
 </style></head>
-<body data-cf-keep-dark><span class="kicker">SCROLL TO STACK</span>
-<div class="stack">
-<div class="stack-card"><h3>01 — Discover</h3><p>Cards pin in place as the next one slides over it.</p></div>
-<div class="stack-card"><h3>02 — Design</h3><p>Built with position:sticky, no scroll libraries needed.</p></div>
-<div class="stack-card"><h3>03 — Build</h3><p>Each card offsets slightly to keep the stack visible.</p></div>
-<div class="stack-card"><h3>04 — Ship</h3><p>Works on any section length.</p></div>
-</div>
-<div class="spacer"></div>
-</body></html>`,
+<body data-cf-keep-dark>
+<div class="spacer">↓ Scroll to stack the cards</div>
+<div class="card c1"><h4>01 — Plan</h4><p>Cards stack in place as you scroll, each pinned above the last.</p></div>
+<div class="card c2"><h4>02 — Build</h4><p>Pure CSS position:sticky with staggered offsets, no JS math.</p></div>
+<div class="card c3"><h4>03 — Ship</h4><p>Works in any modern browser, no library required.</p></div>
+<div class="tail"></div>
+</body></html>
+`,
 
   "horizontal-scroll-gallery": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Horizontal Scroll Gallery</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.kicker{display:block;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;padding:20px 24px 12px}
-.track{display:flex;gap:14px;overflow-x:auto;padding:0 24px 30px;scroll-snap-type:x mandatory}
-.track::-webkit-scrollbar{height:6px}
-.track::-webkit-scrollbar-thumb{background:#2c2a35;border-radius:3px}
-.tile{flex:0 0 220px;height:260px;border-radius:16px;scroll-snap-align:start;display:flex;align-items:end;padding:16px;border:1px solid var(--line);font:700 14px "Space Grotesk",sans-serif;box-shadow:0 24px 50px -24px rgba(0,0,0,.7);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
-.tile:hover{transform:translateY(-6px)}
-.tile:nth-child(1){background:radial-gradient(circle at 30% 20%,rgba(155,138,255,.3),transparent 60%),#121018}
-.tile:nth-child(2){background:radial-gradient(circle at 70% 30%,rgba(120,170,255,.28),transparent 60%),#101219}
-.tile:nth-child(3){background:radial-gradient(circle at 50% 70%,rgba(200,150,255,.25),transparent 60%),#141018}
-.tile:nth-child(4){background:radial-gradient(circle at 40% 40%,rgba(155,220,200,.22),transparent 60%),#0f1614}
-.tile:nth-child(5){background:radial-gradient(circle at 60% 60%,rgba(255,180,150,.22),transparent 60%),#181210}
+:root{--bg:#120e0a;--ink:#f5efe6;--mut:#9c8f7f;--amber:#f5a623}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif}
+.spacer{height:40vh;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.pin{height:100vh;position:sticky;top:0;display:flex;align-items:center;overflow:hidden}
+.track{display:flex;gap:20px;padding:0 40px;will-change:transform}
+.card{flex:none;width:220px;height:280px;border-radius:16px;padding:20px;display:flex;flex-direction:column;justify-content:flex-end}
+.card h4{margin:0 0 6px;color:#fff;font-size:15px}
+.card span{color:rgba(255,255,255,.65);font-size:11.5px}
+.tail{height:150vh}
 </style></head>
-<body data-cf-keep-dark><span class="kicker">DRAG OR SCROLL SIDEWAYS</span>
-<div class="track">
-<div class="tile">Frame 01</div><div class="tile">Frame 02</div><div class="tile">Frame 03</div><div class="tile">Frame 04</div><div class="tile">Frame 05</div>
-</div>
-</body></html>`,
+<body data-cf-keep-dark>
+<div class="spacer">↓ Scroll down — the gallery moves sideways</div>
+<div class="pin" id="pin"><div class="track" id="track">
+  <div class="card" style="background:linear-gradient(155deg,#f5a623,#a85f0d)"><h4>Frame 01</h4><span>Editorial</span></div>
+  <div class="card" style="background:linear-gradient(155deg,#3a2f22,#1c1712)"><h4>Frame 02</h4><span>Portrait</span></div>
+  <div class="card" style="background:linear-gradient(155deg,#7a5230,#3a2410)"><h4>Frame 03</h4><span>Landscape</span></div>
+  <div class="card" style="background:linear-gradient(155deg,#f5efe6,#9c8f7f)"><h4>Frame 04</h4><span>Detail</span></div>
+  <div class="card" style="background:linear-gradient(155deg,#f5a623,#7a4e0f)"><h4>Frame 05</h4><span>Wide</span></div>
+</div></div>
+<div class="tail"></div>
+<script>
+var pin=document.getElementById("pin"), track=document.getElementById("track"), tail=document.querySelector(".tail");
+// offsetTop on a position:sticky element reports its live "stuck" offset once
+// scrolling begins, not its original flow position — so the start/end markers
+// for the scroll-progress math have to be captured once, before any scrolling
+// happens, and reused as fixed reference points from then on.
+var pinStart = pin.getBoundingClientRect().top + window.scrollY;
+var tailStart = tail.getBoundingClientRect().top + window.scrollY;
+function onScroll(){
+  var total=track.scrollWidth-window.innerWidth+80;
+  var max=tailStart - pinStart - window.innerHeight;
+  var p=Math.min(1,Math.max(0,(window.scrollY-pinStart)/Math.max(1,max)));
+  track.style.transform="translateX(-"+(p*total)+"px)";
+}
+window.addEventListener("scroll",onScroll);
+onScroll();
+</script>
+</body></html>
+`,
 
   "text-scramble-reveal": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Text Scramble Reveal</title><style>
-:root{--bg:#050507;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.kicker{display:block;margin-bottom:16px;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-h1{font:700 clamp(28px,5vw,48px) "Space Grotesk",sans-serif;color:#eee9f8;letter-spacing:-.03em;text-shadow:0 0 30px rgba(196,181,253,.2)}
-button{margin-top:20px;border:1px solid #363243;border-radius:9px;padding:10px 16px;background:#121019;color:#d8d2df;font-size:10px;cursor:pointer;transition:border-color .2s,transform .15s cubic-bezier(.34,1.56,.64,1)}
-button:hover{border-color:#544c67}
-button:active{transform:scale(.95)}
+:root{--bg:#120e0a;--ink:#f5efe6;--mut:#9c8f7f;--amber:#f5a623}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif}
+.spacer{height:60vh;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.wrap{min-height:50vh;display:flex;align-items:center;justify-content:center;padding:40px}
+h2{font-size:clamp(24px,4vw,38px);color:var(--ink);text-align:center;font-family:ui-monospace,monospace;max-width:460px}
+.tail{height:40vh}
 </style></head>
-<body data-cf-keep-dark><span class="kicker">CLICK TO SCRAMBLE</span>
-<div style="text-align:center"><h1 id="txt">DECODE THIS</h1><button id="run">Scramble again</button></div>
+<body data-cf-keep-dark>
+<div class="spacer">↓ Scroll to trigger the scramble</div>
+<div class="wrap"><h2 id="target" data-text="THE SIGNAL FINDS YOU EVENTUALLY."></h2></div>
+<div class="tail"></div>
 <script>
-const el=document.getElementById("txt"),final="DECODE THIS",chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-function scramble(){let frame=0;const total=18;const timer=setInterval(()=>{el.textContent=final.split("").map((c,i)=>{if(c===" ")return " ";if(i<frame/1.6)return final[i];return chars[Math.floor(Math.random()*chars.length)]}).join("");frame++;if(frame>total*1.6){clearInterval(timer);el.textContent=final}},35)}
-document.getElementById("run").addEventListener("click",scramble);
-scramble();
+var el=document.getElementById("target"), chars="!<>-_\\/[]{}—=+*^?#0123456789", done=false;
+function scramble(){
+  if(done)return; done=true;
+  var text=el.dataset.text, iterations=0;
+  var iv=setInterval(function(){
+    el.textContent=text.split("").map(function(c,i){
+      if(c===" ")return " ";
+      if(i<iterations)return text[i];
+      return chars[Math.floor(Math.random()*chars.length)];
+    }).join("");
+    if(iterations>=text.length) clearInterval(iv);
+    iterations+=1/2;
+  },30);
+}
+var io=new IntersectionObserver(function(e){ if(e[0].isIntersecting) scramble(); },{threshold:.5});
+io.observe(el);
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "scroll-progress-bar": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Scroll Progress Bar</title><style>
-:root{--bg:#050507;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.kicker{display:block;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;padding:20px 24px}
-#bar{position:sticky;top:0;height:4px;width:0%;background:linear-gradient(90deg,#9b8aff,#c4b5fd);box-shadow:0 0 10px rgba(196,181,253,.6);z-index:5}
-.content{padding:10px 24px 40px;display:grid;gap:14px}
-.content p{color:#847e8f;font-size:11px;line-height:1.8;max-width:520px;margin:0}
-.block{height:220px;border-radius:14px;border:1px solid #272632;background:radial-gradient(circle at 30% 20%,rgba(155,138,255,.1),transparent 60%),#0d0d12;box-shadow:0 20px 50px -24px rgba(0,0,0,.7)}
+:root{--bg:#120e0a;--ink:#f5efe6;--mut:#9c8f7f;--amber:#f5a623}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif}
+.bar-track{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(245,166,35,.15);z-index:10}
+.bar-fill{height:100%;width:0;background:linear-gradient(90deg,#f5a623,#ffcf7a)}
+.pct{position:fixed;top:14px;right:20px;font-family:ui-monospace,monospace;font-size:11px;color:var(--amber);background:#1c1712;border:1px solid #2c2419;padding:5px 9px;border-radius:6px;z-index:10}
+.sec{min-height:60vh;display:flex;align-items:center;justify-content:center;color:var(--ink);font-size:14px;border-bottom:1px solid #2c2419}
+.sec span{color:var(--mut);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
 </style></head>
-<body data-cf-keep-dark><div id="bar"></div><span class="kicker">SCROLL DOWN</span>
-<div class="content"><p>The bar at the top fills based on how far you've scrolled through this preview.</p><div class="block"></div><p>Great for long-form articles, docs and case studies.</p><div class="block"></div><div class="block"></div></div>
+<body data-cf-keep-dark>
+<div class="bar-track"><div class="bar-fill" id="fill"></div></div>
+<div class="pct" id="pct">0%</div>
+<div class="sec"><span>↓ Scroll to fill the bar</span></div>
+<div class="sec"><span>Section two</span></div>
+<div class="sec"><span>Section three</span></div>
+<div class="sec"><span>End of page</span></div>
 <script>
-function update(){const h=document.documentElement,pct=(h.scrollTop)/(h.scrollHeight-h.clientHeight)*100;document.getElementById("bar").style.width=pct+"%"}
-document.addEventListener("scroll",update,{passive:true});update();
+var fill=document.getElementById("fill"), pct=document.getElementById("pct");
+function onScroll(){
+  var max=document.body.scrollHeight-window.innerHeight;
+  var p=max>0?window.scrollY/max:0;
+  fill.style.width=(p*100)+"%";
+  pct.textContent=Math.round(p*100)+"%";
+}
+window.addEventListener("scroll",onScroll);
+onScroll();
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "fade-slide-carousel": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Fade Slide Carousel</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.kicker{display:block;margin-bottom:16px;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.carousel{width:min(560px,90%);height:280px;position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 70px -24px rgba(0,0,0,.7)}
-.slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font:700 22px "Space Grotesk",sans-serif;opacity:0;transition:opacity .6s cubic-bezier(.2,.8,.2,1);color:#eee9f8}
-.slide.active{opacity:1}
-.slide:nth-child(1){background:radial-gradient(circle at 40% 30%,rgba(155,138,255,.28),transparent 55%),#111018}
-.slide:nth-child(2){background:radial-gradient(circle at 60% 60%,rgba(120,170,255,.25),transparent 55%),#101219}
-.slide:nth-child(3){background:radial-gradient(circle at 50% 50%,rgba(220,150,255,.25),transparent 55%),#141018}
-.dots{position:absolute;bottom:14px;left:0;right:0;display:flex;justify-content:center;gap:6px}
-.dots i{width:7px;height:7px;border-radius:50%;background:#34303e;transition:background .3s,box-shadow .3s,transform .3s cubic-bezier(.34,1.56,.64,1)}
-.dots i.active{background:var(--lav);box-shadow:0 0 8px rgba(196,181,253,.6);transform:scale(1.2)}
+:root{--bg:#120e0a;--ink:#f5efe6;--mut:#9c8f7f;--amber:#f5a623}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif}
+.card{width:320px;height:220px;border-radius:16px;position:relative;overflow:hidden;box-shadow:0 30px 60px -20px rgba(0,0,0,.6)}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:22px;opacity:0;transform:translateX(30px);transition:opacity .5s ease,transform .5s cubic-bezier(.2,.8,.2,1)}
+.slide.on{opacity:1;transform:translateX(0)}
+.slide h4{margin:0 0 6px;color:#fff;font-size:16px}
+.slide span{color:rgba(255,255,255,.65);font-size:12px}
+.dots{position:absolute;bottom:14px;right:16px;display:flex;gap:6px}
+.dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3)}
+.dots i.on{background:var(--amber)}
 </style></head>
-<body data-cf-keep-dark><span class="kicker">AUTO-ADVANCING EVERY 2.5S</span>
-<div class="carousel" id="car">
-<div class="slide active">Slide one</div><div class="slide">Slide two</div><div class="slide">Slide three</div>
-<div class="dots"><i class="active"></i><i></i><i></i></div>
+<body data-cf-keep-dark>
+<div class="card" id="card">
+  <div class="slide on" style="background:linear-gradient(155deg,#f5a623,#a85f0d)"><h4>Editorial</h4><span>01 / 03</span></div>
+  <div class="slide" style="background:linear-gradient(155deg,#3a2f22,#1c1712)"><h4>Portrait</h4><span>02 / 03</span></div>
+  <div class="slide" style="background:linear-gradient(155deg,#7a5230,#3a2410)"><h4>Landscape</h4><span>03 / 03</span></div>
+  <div class="dots"><i class="on"></i><i></i><i></i></div>
 </div>
 <script>
-const slides=document.querySelectorAll(".slide"),dots=document.querySelectorAll(".dots i");let i=0;
-setInterval(function(){slides[i].classList.remove("active");dots[i].classList.remove("active");i=(i+1)%slides.length;slides[i].classList.add("active");dots[i].classList.add("active")},2500);
+var slides=document.querySelectorAll(".slide"), dots=document.querySelectorAll(".dots i"), cur=0;
+setInterval(function(){
+  slides[cur].classList.remove("on"); dots[cur].classList.remove("on");
+  cur=(cur+1)%slides.length;
+  slides[cur].classList.add("on"); dots[cur].classList.add("on");
+},2600);
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "counter-on-scroll": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Counter On Scroll</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.kicker{display:block;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;padding:20px 24px}
-.spacer{height:200px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 24px 40px}
-.stats div{padding:20px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;text-align:center;box-shadow:0 20px 50px -24px rgba(0,0,0,.7);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
-.stats div:hover{transform:translateY(-4px)}
-.stats strong{display:block;font:700 34px "Space Grotesk",sans-serif;background:linear-gradient(135deg,#f7f5fb,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}
-.stats small{color:#77737f;font-size:8px}
+:root{--bg:#120e0a;--ink:#f5efe6;--mut:#9c8f7f;--amber:#f5a623}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif}
+.spacer{height:60vh;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.grid{display:flex;gap:30px;justify-content:center;padding:0 20px 60vh;flex-wrap:wrap}
+.stat{text-align:center}
+.stat b{display:block;font-size:40px;color:var(--amber);font-weight:800}
+.stat span{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
 </style></head>
-<body data-cf-keep-dark><span class="kicker">SCROLL DOWN TO TRIGGER</span><div class="spacer"></div>
-<div class="stats"><div><strong data-to="240">0</strong><small>PROJECTS SHIPPED</small></div><div><strong data-to="98">0</strong><small>SATISFACTION %</small></div><div><strong data-to="12">0</strong><small>YEARS ACTIVE</small></div></div>
+<body data-cf-keep-dark>
+<div class="spacer">↓ Scroll to trigger the count</div>
+<div class="grid">
+  <div class="stat"><b data-target="248000" data-suffix="+">0</b><span>Users</span></div>
+  <div class="stat"><b data-target="99" data-suffix=".9%">0</b><span>Uptime</span></div>
+  <div class="stat"><b data-target="4" data-suffix=".9★">0</b><span>Rating</span></div>
+</div>
 <script>
-const nums=document.querySelectorAll(".stats strong");
-const io=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(!entry.isIntersecting)return;const el=entry.target,to=parseInt(el.dataset.to,10);let cur=0;const step=Math.max(1,Math.round(to/40));const timer=setInterval(function(){cur=Math.min(to,cur+step);el.textContent=cur;if(cur>=to)clearInterval(timer)},25);io.unobserve(el)})},{threshold:.6});
-nums.forEach(function(n){io.observe(n)});
+function fmt(n,suffix){
+  var v=Math.round(n);
+  var s=v>=1000?(v/1000).toFixed(1).replace(/\.0$/,"")+"K":String(v);
+  return s+(suffix||"");
+}
+var stats=document.querySelectorAll(".stat b"), done=false;
+var io=new IntersectionObserver(function(entries){
+  if(done)return;
+  if(entries[0].isIntersecting){
+    done=true;
+    stats.forEach(function(el){
+      var target=+el.dataset.target, suffix=el.dataset.suffix, o={v:0}, start=null;
+      function step(ts){ if(!start)start=ts; var p=Math.min(1,(ts-start)/1400); el.textContent=fmt(target*p,suffix); if(p<1)requestAnimationFrame(step); }
+      requestAnimationFrame(step);
+    });
+  }
+},{threshold:.4});
+io.observe(document.querySelector(".grid"));
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "sticky-shrink-navbar": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Sticky Shrink Navbar</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
-nav{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:22px 24px;background:#0a0a0f;border-bottom:1px solid transparent;box-shadow:0 0 0 rgba(0,0,0,0);transition:padding .3s cubic-bezier(.2,.8,.2,1),background .3s ease,border-color .3s ease,box-shadow .3s ease}
-nav.shrink{padding:12px 24px;background:#08080dee;backdrop-filter:blur(10px);border-color:var(--line);box-shadow:0 12px 30px -18px rgba(0,0,0,.6)}
-nav b{font:700 14px "Space Grotesk",sans-serif}
-nav span{color:#77737f;font-size:9px}
-.content{padding:20px 24px 400px;color:#847e8f;font-size:11px;line-height:1.9;max-width:500px}
+:root{--bg:#120e0a;--ink:#f5efe6;--mut:#9c8f7f;--amber:#f5a623}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif}
+nav{position:sticky;top:0;padding:26px 32px;display:flex;align-items:center;justify-content:space-between;transition:padding .3s cubic-bezier(.2,.8,.2,1),background .3s;z-index:5}
+nav.shrink{padding:12px 32px;background:rgba(18,14,10,.9);backdrop-filter:blur(12px);border-bottom:1px solid #2c2419}
+.brand{color:#fff;font-weight:700;font-size:18px;transition:font-size .3s}
+nav.shrink .brand{font-size:15px}
+.cta{background:var(--amber);color:#1a1006;padding:10px 18px;border-radius:8px;font-size:12.5px;font-weight:700;transition:padding .3s}
+nav.shrink .cta{padding:7px 14px}
+.sec{min-height:70vh;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:12px;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid #2c2419}
 </style></head>
 <body data-cf-keep-dark>
-<nav id="nav"><b>STUDIO.</b><span>Scroll down to shrink the bar</span></nav>
-<div class="content"><p>This navbar reduces its padding and gains a background once you scroll past it — a common pattern for marketing sites.</p></div>
+<nav id="nav"><span class="brand">Cascade</span><span class="cta">Get started</span></nav>
+<div class="sec">↓ Scroll — the nav shrinks</div>
+<div class="sec">Section two</div>
+<div class="sec">Section three</div>
 <script>
-const nav=document.getElementById("nav");
-document.addEventListener("scroll",function(){nav.classList.toggle("shrink",window.scrollY>40)},{passive:true});
+var nav=document.getElementById("nav");
+window.addEventListener("scroll",function(){ nav.classList.toggle("shrink", window.scrollY>40); });
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "scroll-timeline": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Scroll Timeline</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.kicker{display:block;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;padding:20px 24px}
-.timeline{position:relative;padding:10px 24px 40px 44px}
-.timeline:before{content:"";position:absolute;left:29px;top:10px;bottom:40px;width:1px;background:var(--line)}
-.item{position:relative;opacity:0;transform:translateX(-14px);transition:opacity .5s ease,transform .5s ease;margin-bottom:26px}
-.item.visible{opacity:1;transform:none}
-.item:before{content:"";position:absolute;left:-24px;top:4px;width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 0 12px rgba(196,181,253,.6)}
-.item h3{margin:0 0 4px;font:700 14px "Space Grotesk",sans-serif}
-.item p{margin:0;color:#847e8f;font-size:10px}
+:root{--bg:#120e0a;--ink:#f5efe6;--mut:#9c8f7f;--amber:#f5a623}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif}
+.spacer{height:40vh;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.tl{position:relative;max-width:380px;margin:0 auto;padding:0 20px 40vh 46px}
+.tl:before{content:"";position:absolute;left:26px;top:6px;bottom:40vh;width:2px;background:#2c2419}
+.tl-fill{position:absolute;left:26px;top:6px;width:2px;background:var(--amber);height:0;transition:height .2s}
+.item{position:relative;padding-bottom:60px;opacity:.3;transition:opacity .4s}
+.item.on{opacity:1}
+.item .dot{position:absolute;left:-26px;top:2px;width:11px;height:11px;border-radius:50%;background:#2c2419;transition:background .3s}
+.item.on .dot{background:var(--amber);box-shadow:0 0 0 5px rgba(245,166,35,.15)}
+.item b{display:block;color:var(--ink);font-size:14px;margin-bottom:4px}
+.item span{color:var(--mut);font-size:12px}
 </style></head>
-<body data-cf-keep-dark><span class="kicker">SCROLL TO REVEAL</span>
-<div class="timeline">
-<div class="item"><h3>2023 — Founded</h3><p>Started as a small internal tool.</p></div>
-<div class="item"><h3>2024 — Public launch</h3><p>Opened up to the first cohort of builders.</p></div>
-<div class="item"><h3>2025 — Scale</h3><p>Crossed ten thousand active workspaces.</p></div>
-<div class="item"><h3>2026 — Today</h3><p>Continuing to refine the core experience.</p></div>
+<body data-cf-keep-dark>
+<div class="spacer">↓ Scroll to travel the timeline</div>
+<div class="tl">
+  <div class="tl-fill" id="tlFill"></div>
+  <div class="item" data-i="0"><div class="dot"></div><b>2021 — Founded</b><span>Two people, one laptop, zero customers.</span></div>
+  <div class="item" data-i="1"><div class="dot"></div><b>2022 — First 1,000 users</b><span>Grew entirely through word of mouth.</span></div>
+  <div class="item" data-i="2"><div class="dot"></div><b>2023 — Series A</b><span>Raised to build out the platform team.</span></div>
+  <div class="item" data-i="3"><div class="dot"></div><b>2025 — 250K users</b><span>Still two founders. Slightly more laptops.</span></div>
 </div>
 <script>
-const items=document.querySelectorAll(".item");
-const io=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add("visible")})},{threshold:.3});
-items.forEach(function(i){io.observe(i)});
+var items=document.querySelectorAll(".item"), fill=document.getElementById("tlFill"), tl=document.querySelector(".tl");
+function onScroll(){
+  var r=tl.getBoundingClientRect();
+  var mid=window.innerHeight*.5;
+  var passed=mid-r.top;
+  fill.style.height=Math.max(0,Math.min(r.height,passed))+"px";
+  items.forEach(function(it){
+    var ir=it.getBoundingClientRect();
+    it.classList.toggle("on", ir.top < mid);
+  });
+}
+window.addEventListener("scroll",onScroll);
+onScroll();
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "ripple-click-button": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Ripple Click Button</title><style>
