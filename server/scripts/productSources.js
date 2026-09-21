@@ -2,27 +2,24 @@ export const productSources = {
 
   "magnetic-cta-button": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Magnetic CTA Button</title><style>
-@property --angle{syntax:"<angle>";inherits:true;initial-value:0deg}
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;overflow:hidden}
+:root{--bg:#0a0a10;--line:#24242e;--blue:#4f5bff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
 .stage{position:relative;display:grid;gap:22px;place-items:center;padding:70px}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.halo{position:absolute;top:50%;left:50%;width:220px;height:220px;margin:-110px 0 0 -110px;border-radius:50%;background:radial-gradient(circle,rgba(196,181,253,.35),transparent 70%);filter:blur(10px);opacity:0;transition:opacity .3s;pointer-events:none}
-.magnetic-wrap{position:relative}
-.magnetic-wrap::before{content:"";position:absolute;inset:-2px;border-radius:999px;background:conic-gradient(from var(--angle),#9b8aff,#4c3f80,#d7d0ff,#4c3f80,#9b8aff);opacity:0;transition:opacity .3s;animation:spin 4s linear infinite;z-index:0}
-.magnetic-wrap:hover::before{opacity:1}
-.magnetic{position:relative;z-index:1;padding:18px 34px;border:1px solid var(--line);border-radius:999px;font-size:12px;font-weight:700;color:#eee9f8;cursor:pointer;background:#111017;transition:transform .15s ease-out,background .25s,color .25s}
-.magnetic-wrap:hover .magnetic{background:#17131f;color:#fff}
-@keyframes spin{to{--angle:360deg}}
+.kicker{color:#7a7d96;font-size:10px;letter-spacing:2px;font-weight:700}
+.halo{position:absolute;top:50%;left:50%;width:220px;height:220px;margin:-110px 0 0 -110px;border-radius:50%;background:radial-gradient(circle,rgba(79,91,255,.35),transparent 70%);filter:blur(10px);opacity:0;transition:opacity .3s;pointer-events:none}
+.wrap{position:relative}
+.btn{position:relative;padding:18px 34px;border:0;border-radius:999px;font-size:13px;font-weight:700;color:#fff;cursor:pointer;background:linear-gradient(135deg,#4f5bff,#2f37c9);transition:transform .15s ease-out,box-shadow .25s}
+.wrap:hover .btn{box-shadow:0 14px 34px -10px rgba(79,91,255,.6)}
 </style></head>
 <body data-cf-keep-dark><div class="stage"><span class="kicker">MOVE YOUR CURSOR NEAR IT</span>
 <div class="halo" id="halo"></div>
-<div class="magnetic-wrap" id="wrap"><button class="magnetic" id="btn">Join the waitlist</button></div>
+<div class="wrap" id="wrap"><button class="btn" id="btn">Join the waitlist</button></div>
 </div>
 <script>
-const wrap=document.getElementById("wrap"),btn=document.getElementById("btn"),halo=document.getElementById("halo");
+var wrap=document.getElementById("wrap"),btn=document.getElementById("btn"),halo=document.getElementById("halo");
 document.addEventListener("pointermove",function(e){
-  const r=btn.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,dist=Math.hypot(dx,dy);
+  var r=btn.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,dist=Math.hypot(dx,dy);
   if(dist<160){
     btn.style.transform="translate("+(dx*.25)+"px, "+(dy*.25)+"px)";
     halo.style.opacity="1";
@@ -33,7 +30,8 @@ document.addEventListener("pointermove",function(e){
   }
 });
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "reveal-on-scroll": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Reveal On Scroll</title><style>
@@ -304,26 +302,33 @@ items.forEach(function(i){io.observe(i)});
 
   "ripple-click-button": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Ripple Click Button</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:18px;place-items:center;padding:40px}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.ripple-btn{position:relative;overflow:hidden;padding:16px 34px;border:0;border-radius:14px;font-size:12px;font-weight:800;color:#0a090f;cursor:pointer;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 8px 30px -8px rgba(155,138,255,.55);transition:transform .15s cubic-bezier(.34,1.56,.64,1),box-shadow .25s}
-.ripple-btn:active{transform:scale(.94);box-shadow:0 4px 16px -6px rgba(155,138,255,.5)}
-.ripple{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.85),rgba(255,255,255,0) 70%);transform:scale(0);animation:ripple .7s ease-out;pointer-events:none;mix-blend-mode:overlay}
-@keyframes ripple{to{transform:scale(3.2);opacity:0}}
+:root{--bg:#0a0a10;--line:#24242e;--blue:#4f5bff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.kicker{color:#7a7d96;font-size:10px;letter-spacing:2px;font-weight:700;text-align:center;margin-bottom:22px}
+.btn{position:relative;overflow:hidden;padding:16px 32px;border:0;border-radius:12px;font-size:13px;font-weight:700;color:#fff;cursor:pointer;background:#14141d;border:1px solid var(--line)}
+.btn:hover{border-color:var(--blue)}
+.ripple{position:absolute;border-radius:50%;background:rgba(79,91,255,.5);transform:scale(0);animation:ripple .6s ease-out forwards;pointer-events:none}
+@keyframes ripple{to{transform:scale(1);opacity:0}}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">CLICK ANYWHERE ON THE BUTTON</span><button class="ripple-btn" id="btn">Click me</button></div>
+<body data-cf-keep-dark>
+<div><div class="kicker">CLICK ANYWHERE ON THE BUTTON</div><button class="btn" id="btn">Add to cart</button></div>
 <script>
-document.getElementById("btn").addEventListener("click",function(e){
-  const r=this.getBoundingClientRect();const d=Math.max(r.width,r.height)*1.4;
-  const span=document.createElement("span");span.className="ripple";
-  span.style.width=span.style.height=d+"px";
-  span.style.left=(e.clientX-r.left-d/2)+"px";span.style.top=(e.clientY-r.top-d/2)+"px";
-  this.appendChild(span);setTimeout(function(){span.remove()},700);
+var btn=document.getElementById("btn");
+btn.addEventListener("click",function(e){
+  var r=btn.getBoundingClientRect();
+  var size=Math.max(r.width,r.height)*2;
+  var rip=document.createElement("span");
+  rip.className="ripple";
+  rip.style.width=rip.style.height=size+"px";
+  rip.style.left=(e.clientX-r.left-size/2)+"px";
+  rip.style.top=(e.clientY-r.top-size/2)+"px";
+  btn.appendChild(rip);
+  setTimeout(function(){ rip.remove(); },600);
 });
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "flip-card-3d": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>3D Flip Card</title><style>
@@ -2938,70 +2943,60 @@ document.getElementById("go").addEventListener("click",e=>{e.target.textContent=
 
   "morph-loading-button": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Morphing Loading Button</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:22px;place-items:center;padding:40px}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.morph-btn{position:relative;width:190px;height:50px;border:0;border-radius:25px;font-size:13px;font-weight:800;color:#0a090f;cursor:pointer;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 10px 30px -10px rgba(155,138,255,.6);transition:width .35s cubic-bezier(.2,.8,.2,1),border-radius .35s,background .35s,box-shadow .35s}
-.morph-btn.loading{width:50px;border-radius:50%;background:#17131f;box-shadow:0 0 0 6px rgba(196,181,253,.15)}
-.morph-btn.done{width:190px;border-radius:25px;background:linear-gradient(135deg,#7fe0ac,#41b878);box-shadow:0 10px 30px -10px rgba(65,184,120,.6)}
-.morph-btn .row{position:relative;z-index:1;display:flex;align-items:center;gap:8px;justify-content:center;height:100%}
-.spinner{display:none;width:16px;height:16px;border:2px solid #3a3546;border-top-color:#c4b5fd;border-radius:50%;animation:spin .7s linear infinite}
-.check{display:none;width:16px;height:16px}
-.check path{stroke:#0a090f;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:20;stroke-dashoffset:20;animation:draw .4s ease forwards}
-.morph-btn.loading .label{display:none}.morph-btn.loading .spinner{display:block}
-.morph-btn.done .check{display:block}
+:root{--bg:#0a0a10;--line:#24242e;--blue:#4f5bff;--green:#2fd47a}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.kicker{color:#7a7d96;font-size:10px;letter-spacing:2px;font-weight:700;text-align:center;margin-bottom:22px}
+.btn{position:relative;width:150px;height:48px;border:0;border-radius:999px;font-size:13px;font-weight:700;color:#fff;cursor:pointer;background:var(--blue);transition:width .3s cubic-bezier(.2,.8,.2,1),background .3s;display:flex;align-items:center;justify-content:center}
+.btn.loading{width:48px;background:#1c1c28}
+.btn.done{width:48px;background:var(--green)}
+.txt{transition:opacity .15s}
+.btn.loading .txt,.btn.done .txt{opacity:0;position:absolute}
+.spinner{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;display:none;animation:spin .7s linear infinite}
+.btn.loading .spinner{display:block}
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes draw{to{stroke-dashoffset:0}}
+.check{width:18px;height:18px;display:none}
+.btn.done .check{display:block}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">CLICK TO SUBMIT</span>
-<button class="morph-btn" id="btn"><span class="row"><span class="spinner"></span><svg class="check" viewBox="0 0 24 24"><path d="M4 12l6 6L20 6"/></svg><span class="label">Create account</span></span></button></div>
+<body data-cf-keep-dark>
+<div><div class="kicker">CLICK TO SUBMIT</div><button class="btn" id="btn"><span class="txt">Submit form</span><span class="spinner"></span><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></button></div>
 <script>
-const btn=document.getElementById("btn"),label=btn.querySelector(".label");
+var btn=document.getElementById("btn");
 btn.addEventListener("click",function(){
   if(btn.classList.contains("loading")||btn.classList.contains("done"))return;
   btn.classList.add("loading");
-  setTimeout(function(){btn.classList.remove("loading");btn.classList.add("done");label.textContent="Account created ✓"},1400);
-  setTimeout(function(){btn.classList.remove("done");label.textContent="Create account"},3200);
+  setTimeout(function(){
+    btn.classList.remove("loading"); btn.classList.add("done");
+    setTimeout(function(){ btn.classList.remove("done"); },1800);
+  },1400);
 });
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "command-trigger-button": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Command Trigger Button</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:22px;place-items:center;padding:40px;position:relative}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.cmd-btn{display:flex;align-items:center;gap:10px;padding:13px 18px;border:1px solid var(--line);border-radius:12px;background:#0d0d12;color:#c9c4d6;font-size:12px;cursor:pointer;box-shadow:0 8px 24px -14px rgba(0,0,0,.7);transition:border-color .25s,box-shadow .25s}
-.cmd-btn:hover{border-color:#544c67;box-shadow:0 10px 30px -12px rgba(155,138,255,.35)}
-.cmd-btn kbd{padding:2px 6px;border:1px solid #3a3546;border-radius:5px;background:#1a1723;font-size:10px;color:#9d94b0;transition:color .25s,border-color .25s}
-.cmd-btn:hover kbd{color:var(--lav);border-color:#5a4f78}
-.cmd-menu{position:absolute;top:78px;width:270px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;box-shadow:0 20px 60px rgba(0,0,0,.55);opacity:0;pointer-events:none;transform:translateY(-8px) scale(.98);transition:opacity .2s,transform .2s;overflow:hidden}
-.cmd-menu.open{opacity:1;pointer-events:auto;transform:none}
-.cmd-item{display:flex;align-items:center;gap:10px;padding:11px 14px;font-size:12px;color:#eee9f8;border-bottom:1px solid var(--line);cursor:pointer;opacity:0;transform:translateY(4px)}
-.cmd-menu.open .cmd-item{animation:fadeIn .3s ease forwards}
-.cmd-item:nth-child(1){animation-delay:.03s}.cmd-item:nth-child(2){animation-delay:.08s}.cmd-item:nth-child(3){animation-delay:.13s}.cmd-item:nth-child(4){animation-delay:.18s}
-.cmd-item:last-child{border-bottom:0}.cmd-item:hover{background:#17131f;color:var(--lav)}
-.cmd-item i{opacity:.6;font-style:normal}
-@keyframes fadeIn{to{opacity:1;transform:none}}
+:root{--bg:#0a0a10;--line:#24242e;--blue:#4f5bff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.kicker{color:#7a7d96;font-size:10px;letter-spacing:2px;font-weight:700;text-align:center;margin-bottom:22px}
+.btn{position:relative;display:flex;align-items:center;gap:12px;padding:13px 16px;border:1px solid var(--line);border-radius:11px;font-size:13px;color:#9a9db0;cursor:pointer;background:#101018;transition:border-color .25s,color .25s}
+.btn:hover{border-color:var(--blue);color:#fff}
+.btn svg{width:15px;height:15px;flex:none}
+.kbd{margin-left:auto;display:flex;gap:4px}
+.kbd span{background:#1c1c28;border:1px solid var(--line);border-radius:5px;padding:2px 7px;font-size:10.5px;font-family:ui-monospace,monospace;color:#9a9db0;transition:border-color .25s,color .25s}
+.btn:hover .kbd span{border-color:var(--blue);color:#fff}
+.pulse{position:absolute;inset:0;border-radius:11px;border:1px solid var(--blue);opacity:0;pointer-events:none}
+.btn:active .pulse{animation:pulse .5s ease-out}
+@keyframes pulse{from{transform:scale(1);opacity:.8}to{transform:scale(1.06);opacity:0}}
+.wrap{position:relative}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">CLICK OR PRESS ⌘K</span>
-<button class="cmd-btn" id="btn">Search actions… <kbd>⌘K</kbd></button>
-<div class="cmd-menu" id="menu">
-<div class="cmd-item"><i>+</i>New project</div>
-<div class="cmd-item"><i>@</i>Invite teammate</div>
-<div class="cmd-item"><i>#</i>Open settings</div>
-<div class="cmd-item"><i>*</i>View documentation</div>
-</div></div>
-<script>
-const btn=document.getElementById("btn"),menu=document.getElementById("menu");
-function toggle(){menu.classList.toggle("open")}
-btn.addEventListener("click",toggle);
-document.addEventListener("keydown",function(e){if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();toggle()}});
-document.addEventListener("click",function(e){if(!menu.contains(e.target)&&e.target!==btn)menu.classList.remove("open")});
-</script>
-</body></html>`,
+<body data-cf-keep-dark>
+<div><div class="kicker">CLICK TO SEE THE PULSE</div>
+<div class="wrap"><button class="btn" style="width:220px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Search commands<span class="kbd"><span>⌘</span><span>K</span></span><span class="pulse"></span></button></div>
+</div>
+</body></html>
+`,
 
   "progress-ring-loader": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Progress Ring Loader</title><style>
@@ -4541,150 +4536,158 @@ footer{border-top:1px solid var(--line);padding:60px 0 30px}
 
   "elastic-press-button": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Elastic Press Button</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:22px;place-items:center;padding:40px}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.elastic-wrap{position:relative}
-.elastic-wrap::after{content:"";position:absolute;inset:-14px;border-radius:26px;background:radial-gradient(circle,rgba(196,181,253,.35),transparent 70%);filter:blur(14px);opacity:0;transition:opacity .3s}
-.elastic-wrap:hover::after{opacity:1}
-.elastic-btn{position:relative;overflow:hidden;padding:16px 32px;border:0;border-radius:14px;font-size:13px;font-weight:800;color:#0a090f;cursor:pointer;background:linear-gradient(135deg,#d7d0ff,#9b8aff);transition:transform .12s cubic-bezier(.34,1.56,.64,1)}
-.elastic-btn::before{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(115deg,transparent,rgba(255,255,255,.6),transparent);transform:skewX(-20deg);transition:left .5s ease}
-.elastic-wrap:hover .elastic-btn::before{left:130%}
-.elastic-btn:active{transform:scale(.88)}
-.elastic-btn.pop{animation:pop .45s cubic-bezier(.34,1.56,.64,1)}
-@keyframes pop{0%{transform:scale(.88)}60%{transform:scale(1.08)}100%{transform:scale(1)}}
+:root{--bg:#0a0a10;--line:#24242e;--blue:#4f5bff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.kicker{color:#7a7d96;font-size:10px;letter-spacing:2px;font-weight:700;text-align:center;margin-bottom:22px}
+.btn{padding:17px 36px;border:0;border-radius:999px;font-size:13.5px;font-weight:700;color:#fff;cursor:pointer;background:linear-gradient(135deg,#4f5bff,#2f37c9);transition:transform .12s}
+.btn.press{transform:scale(.9)}
+.btn.pop{animation:pop .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.08)}100%{transform:scale(1)}}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">PRESS AND RELEASE</span>
-<div class="elastic-wrap"><button class="elastic-btn" id="btn">Add to cart</button></div></div>
+<body data-cf-keep-dark>
+<div><div class="kicker">PRESS AND HOLD, THEN RELEASE</div><button class="btn" id="btn">Download now</button></div>
 <script>
-const btn=document.getElementById("btn");
-btn.addEventListener("pointerup",function(){btn.classList.remove("pop");void btn.offsetWidth;btn.classList.add("pop")});
+var btn=document.getElementById("btn");
+btn.addEventListener("mousedown",function(){ btn.classList.remove("pop"); btn.classList.add("press"); });
+function release(){
+  if(btn.classList.contains("press")){ btn.classList.remove("press"); btn.classList.add("pop"); setTimeout(function(){ btn.classList.remove("pop"); },500); }
+}
+btn.addEventListener("mouseup",release);
+btn.addEventListener("mouseleave",release);
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "split-hover-button": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Split Hover Button</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:22px;place-items:center;padding:40px}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.split-btn{position:relative;width:200px;height:54px;border:1px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;background:#0d0d12;box-shadow:0 10px 30px -12px rgba(0,0,0,.6);transition:box-shadow .3s}
-.split-btn:hover{box-shadow:0 14px 40px -10px rgba(155,138,255,.35)}
-.split-half{position:absolute;top:0;bottom:0;width:50%;display:grid;place-items:center;font-size:12px;font-weight:800;color:#eee9f8;transition:transform .35s cubic-bezier(.2,.8,.2,1),background .35s}
-.split-left{left:0;background:linear-gradient(135deg,#1c1726,#141019);transform-origin:left}
-.split-right{right:0;background:linear-gradient(135deg,#191424,#1f1a2c);transform-origin:right}
-.split-btn:hover .split-left{transform:skewX(-10deg) translateX(-10px);background:linear-gradient(135deg,#221b30,#171220)}
-.split-btn:hover .split-right{transform:skewX(-10deg) translateX(10px);background:linear-gradient(135deg,#241d33,#1b1626)}
-.split-icon{position:absolute;inset:0;display:grid;place-items:center;color:var(--lav);font-size:18px;opacity:0;transform:translateY(6px) scale(.7);transition:opacity .3s,transform .35s cubic-bezier(.34,1.56,.64,1)}
-.split-btn:hover .split-icon{opacity:1;transform:translateY(0) scale(1)}
+:root{--bg:#0a0a10;--line:#24242e;--blue:#4f5bff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.kicker{color:#7a7d96;font-size:10px;letter-spacing:2px;font-weight:700;text-align:center;margin-bottom:22px}
+.btn{position:relative;padding:17px 40px;border:1px solid var(--line);border-radius:12px;font-size:13.5px;font-weight:700;color:#fff;cursor:pointer;background:#14141d;overflow:hidden}
+.btn .txt{position:relative;z-index:1;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.btn:hover .txt{transform:translateX(-8px)}
+.btn .ic{position:absolute;right:20px;top:50%;transform:translate(20px,-50%);width:15px;height:15px;opacity:0;transition:transform .3s cubic-bezier(.2,.8,.2,1),opacity .3s;z-index:1}
+.btn:hover .ic{transform:translate(0,-50%);opacity:1}
+.split{position:absolute;top:0;bottom:0;width:50%;background:var(--blue);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.split.l{left:0;transform:translateX(-100%)}
+.split.r{right:0;transform:translateX(100%)}
+.btn:hover .split{transform:translateX(0)}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">HOVER TO PEEL</span>
-<div class="split-btn"><div class="split-half split-left">Down</div><div class="split-half split-right">load</div><div class="split-icon">↓</div></div></div>
-</body></html>`,
+<body data-cf-keep-dark>
+<div><div class="kicker">HOVER TO REVEAL THE ARROW</div><button class="btn" id="btn"><span class="split l"></span><span class="split r"></span><span class="txt">Get started</span><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M7 17 17 7M7 7h10v10"/></svg></button></div>
+</body></html>
+`,
 
   "long-press-confirm-button": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Long Press Confirm Button</title><style>
-:root{--bg:#050507;--line:#272632}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:22px;place-items:center;padding:40px}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.hold-wrap{position:relative}
-.hold-wrap::before{content:"";position:absolute;inset:-12px;border-radius:22px;background:radial-gradient(circle,rgba(214,68,92,.35),transparent 70%);filter:blur(12px);opacity:0;transition:opacity .3s}
-.hold-wrap.active::before{opacity:1;animation:pulse 1s ease-in-out infinite}
-.hold-btn{position:relative;width:190px;height:50px;border:1px solid #5e3540;border-radius:14px;overflow:hidden;background:#180f12;color:#efb8c2;font-size:12px;font-weight:800;cursor:pointer;box-shadow:0 8px 24px -10px rgba(0,0,0,.6)}
-.hold-fill{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,#7a2f3d,#c04b60)}
-.hold-label{position:relative;z-index:2;display:grid;place-items:center;height:100%;gap:2px}
-.hold-btn.done{border-color:#3f6e52;color:#bdf0d1}
-@keyframes pulse{0%,100%{opacity:.4}50%{opacity:.9}}
-@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
-.hold-btn.done{animation:shake .4s ease}
+:root{--bg:#0a0a10;--line:#24242e;--blue:#4f5bff;--red:#ff5a5a}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.kicker{color:#7a7d96;font-size:10px;letter-spacing:2px;font-weight:700;text-align:center;margin-bottom:22px}
+.btn{position:relative;padding:16px 30px;border:1px solid var(--line);border-radius:12px;font-size:13px;font-weight:700;color:#fff;cursor:pointer;background:#14141d;overflow:hidden;user-select:none}
+.fill{position:absolute;inset:0;background:var(--red);width:0;transition:none}
+.fill.animating{transition:width 1.1s linear}
+.txt{position:relative;z-index:1;display:flex;align-items:center;gap:8px}
+.txt svg{width:14px;height:14px}
+.done{color:#8fffa8}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">PRESS AND HOLD TO DELETE</span>
-<div class="hold-wrap" id="wrap"><button class="hold-btn" id="btn"><div class="hold-fill" id="fill"></div><span class="hold-label" id="label">Hold to delete</span></button></div></div>
+<body data-cf-keep-dark>
+<div><div class="kicker">PRESS AND HOLD TO DELETE</div><button class="btn" id="btn"><span class="fill" id="fill"></span><span class="txt" id="txt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg>Hold to delete</span></button></div>
 <script>
-const wrap=document.getElementById("wrap"),btn=document.getElementById("btn"),fill=document.getElementById("fill"),label=document.getElementById("label");
-let raf,start;
-function step(ts){
-  if(!start)start=ts;const p=Math.min(1,(ts-start)/900);fill.style.width=(p*100)+"%";
-  if(p>=1){label.textContent="Deleted ✓";btn.classList.add("done");wrap.classList.remove("active");cancelAnimationFrame(raf);return}
-  raf=requestAnimationFrame(step);
+var btn=document.getElementById("btn"), fill=document.getElementById("fill"), txt=document.getElementById("txt"), timer=null;
+function start(){
+  fill.classList.add("animating");
+  fill.style.width="100%";
+  timer=setTimeout(function(){
+    txt.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>Deleted';
+    txt.classList.add("done");
+  },1100);
 }
-function begin(){if(btn.classList.contains("done"))return;start=null;wrap.classList.add("active");raf=requestAnimationFrame(step)}
-function cancel(){cancelAnimationFrame(raf);wrap.classList.remove("active");fill.style.width="0%";if(!btn.classList.contains("done"))label.textContent="Hold to delete"}
-btn.addEventListener("pointerdown",begin);
-btn.addEventListener("pointerup",cancel);
-btn.addEventListener("pointerleave",cancel);
+function cancel(){
+  clearTimeout(timer);
+  fill.classList.remove("animating");
+  fill.style.width="0";
+}
+btn.addEventListener("mousedown",start);
+btn.addEventListener("mouseup",cancel);
+btn.addEventListener("mouseleave",cancel);
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "cursor-follow-glow-button": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Cursor Follow Glow Button</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:22px;place-items:center;padding:40px}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.glow-cursor-btn{position:relative;padding:17px 36px;border:1px solid var(--line);border-radius:14px;font-size:12px;font-weight:800;color:#eee9f8;cursor:pointer;background:#0d0d12;overflow:hidden;box-shadow:0 8px 24px -12px rgba(0,0,0,.7)}
-.glow-cursor-btn::before{content:"";position:absolute;width:180px;height:180px;left:var(--x,50%);top:var(--y,50%);transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(196,181,253,.35),transparent 70%);opacity:0;transition:opacity .3s}
-.glow-cursor-btn::after{content:"";position:absolute;width:60px;height:60px;left:var(--x,50%);top:var(--y,50%);transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,255,255,.5),transparent 70%);opacity:0;transition:opacity .2s;mix-blend-mode:overlay}
-.glow-cursor-btn:hover::before,.glow-cursor-btn:hover::after{opacity:1}
-.glow-cursor-btn span{position:relative;z-index:1;background:linear-gradient(90deg,#eee9f8,#c4b5fd,#eee9f8);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;transition:background-position .6s}
-.glow-cursor-btn:hover span{background-position:100% 0}
+:root{--bg:#0a0a10;--line:#24242e;--blue:#4f5bff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.kicker{color:#7a7d96;font-size:10px;letter-spacing:2px;font-weight:700;text-align:center;margin-bottom:22px}
+.btn{position:relative;padding:17px 36px;border:1px solid var(--line);border-radius:12px;font-size:13.5px;font-weight:700;color:#fff;cursor:pointer;background:#101018;overflow:hidden}
+.glow{position:absolute;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(79,91,255,.5),transparent 70%);pointer-events:none;opacity:0;transition:opacity .25s;transform:translate(-50%,-50%)}
+.btn:hover .glow{opacity:1}
+.btn span{position:relative;z-index:1}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">MOVE OVER THE BUTTON</span>
-<button class="glow-cursor-btn" id="btn"><span>Explore plans</span></button></div>
+<body data-cf-keep-dark>
+<div><div class="kicker">MOVE YOUR CURSOR WITHIN THE BUTTON</div><button class="btn" id="btn"><span class="glow" id="glow"></span><span>Explore features</span></button></div>
 <script>
-const btn=document.getElementById("btn");
-btn.addEventListener("pointermove",function(e){const r=btn.getBoundingClientRect();btn.style.setProperty("--x",(e.clientX-r.left)+"px");btn.style.setProperty("--y",(e.clientY-r.top)+"px")});
+var btn=document.getElementById("btn"), glow=document.getElementById("glow");
+btn.addEventListener("mousemove",function(e){
+  var r=btn.getBoundingClientRect();
+  glow.style.left=(e.clientX-r.left)+"px";
+  glow.style.top=(e.clientY-r.top)+"px";
+});
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "toggle-icon-morph-button": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Toggle Icon Morph Button</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:22px;place-items:center;padding:40px}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.morph-wrap{position:relative}
-.morph-wrap::before{content:"";position:absolute;inset:-10px;border-radius:50%;background:radial-gradient(circle,rgba(196,181,253,.4),transparent 70%);filter:blur(10px);opacity:0;transition:opacity .3s}
-.morph-wrap:hover::before{opacity:1}
-.morph-icon-btn{position:relative;width:56px;height:56px;border:1px solid var(--line);border-radius:50%;background:#111017;cursor:pointer;display:grid;place-items:center;color:var(--lav);transition:background .3s,transform .3s cubic-bezier(.34,1.56,.64,1)}
-.morph-icon-btn:active{transform:scale(.9)}
-.morph-icon-btn.on{background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f}
-.morph-icon-btn svg{width:20px;height:20px}
-.bar{transform-origin:center;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .2s}
-.morph-icon-btn.on .bar1{transform:rotate(45deg) translateY(0)}
-.morph-icon-btn.on .bar2{opacity:0}
-.morph-icon-btn.on .bar3{transform:rotate(-45deg) translateY(0)}
+:root{--bg:#0a0a10;--line:#24242e;--red:#ff4d6d}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.kicker{color:#7a7d96;font-size:10px;letter-spacing:2px;font-weight:700;text-align:center;margin-bottom:22px}
+.btn{display:flex;align-items:center;gap:9px;padding:14px 24px;border:1px solid var(--line);border-radius:999px;font-size:13px;font-weight:600;color:#fff;cursor:pointer;background:#14141d}
+.ic{width:19px;height:19px;position:relative}
+.ic svg{position:absolute;inset:0;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .3s}
+.outline{color:#7a7d96}
+.filled{color:var(--red);opacity:0;transform:scale(.5)}
+.btn.on .outline{opacity:0;transform:scale(.5)}
+.btn.on .filled{opacity:1;transform:scale(1)}
+.label span{transition:opacity .2s}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">CLICK TO MORPH MENU → CLOSE</span>
-<div class="morph-wrap"><button class="morph-icon-btn" id="btn">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-<line class="bar bar1" x1="4" y1="7" x2="20" y2="7"/>
-<line class="bar bar2" x1="4" y1="12" x2="20" y2="12"/>
-<line class="bar bar3" x1="4" y1="17" x2="20" y2="17"/>
-</svg>
-</button></div></div>
-<script>document.getElementById("btn").addEventListener("click",function(e){e.currentTarget.classList.toggle("on")});</script>
-</body></html>`,
+<body data-cf-keep-dark>
+<div><div class="kicker">CLICK TO LIKE</div><button class="btn" id="btn">
+  <span class="ic"><svg class="outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg><svg class="filled" viewBox="0 0 24 24" fill="currentColor"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></span>
+  <span class="label" id="label">Like</span>
+</button></div>
+<script>
+var btn=document.getElementById("btn"), label=document.getElementById("label"), on=false;
+btn.addEventListener("click",function(){
+  on=!on; btn.classList.toggle("on",on);
+  label.textContent = on ? "Liked" : "Like";
+});
+</script>
+</body></html>
+`,
 
   "stacked-3d-button": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Stacked 3D Button</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:22px;place-items:center;padding:60px}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.key-btn{position:relative;padding:0;border:0;background:none;cursor:pointer;filter:drop-shadow(0 14px 24px rgba(0,0,0,.5))}
-.key-face{position:relative;display:block;padding:16px 32px;border-radius:14px;background:linear-gradient(160deg,#e7e2ff,#9b8aff 60%,#7a67d9);color:#0a090f;font-size:12px;font-weight:800;transform:translateY(-7px);transition:transform .12s;overflow:hidden}
-.key-face::before{content:"";position:absolute;top:0;left:0;right:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0));border-radius:14px 14px 40% 40%/14px 14px 100% 100%}
-.key-side{position:absolute;left:2px;right:2px;bottom:0;height:7px;border-radius:0 0 12px 12px;background:linear-gradient(180deg,#6c5cc4,#4c3f8f)}
-.key-btn:active .key-face{transform:translateY(-1px)}
-.key-btn:hover .key-face{transform:translateY(-8px)}
-.key-btn:hover:active .key-face{transform:translateY(-1px)}
+:root{--bg:#0a0a10;--blue:#4f5bff;--blue-d:#2f37c9}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.kicker{color:#7a7d96;font-size:10px;letter-spacing:2px;font-weight:700;text-align:center;margin-bottom:22px}
+.stage{position:relative;padding-bottom:8px}
+.shadow-layer{position:absolute;inset:0;top:8px;background:var(--blue-d);border-radius:12px}
+.btn{position:relative;padding:16px 32px;border:0;border-radius:12px;font-size:13px;font-weight:700;color:#fff;cursor:pointer;background:var(--blue);transform:translateY(0);transition:transform .12s}
+.btn:active{transform:translateY(6px)}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">PRESS THE KEY</span>
-<button class="key-btn"><span class="key-face">Confirm order</span><span class="key-side"></span></button></div>
-</body></html>`,
+<body data-cf-keep-dark>
+<div><div class="kicker">PRESS DOWN</div>
+<div class="stage"><div class="shadow-layer"></div><button class="btn">Buy now — $29</button></div>
+</div>
+</body></html>
+`,
 
   "magnetic-cursor-dot": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Magnetic Cursor Dot</title><style>
