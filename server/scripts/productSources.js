@@ -4961,7 +4961,7 @@ loadingBtn.addEventListener("click",function(){
   "gradient-accent-button-set": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Gradient Accent Button Set</title><style>
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:#fff;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:flex;align-items:center;justify-content:center;padding:40px 20px}
+body{margin:0;min-height:100vh;background:#fff;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center;padding:40px 20px}
 .wrap{width:min(320px,100%)}
 .kicker{color:#a1a1aa;font-size:10px;letter-spacing:2px;font-weight:700;margin-bottom:18px;text-align:center}
 .stack{display:flex;flex-direction:column;gap:12px}
@@ -4991,7 +4991,7 @@ body{margin:0;min-height:100vh;background:#fff;font-family:Inter,ui-sans-serif,A
 .icon-btn:hover{transform:translateY(-3px) scale(1.08);border-color:#4f46e5;color:#4f46e5;background:#eef0ff}
 .icon-btn.danger:hover{border-color:#ef4444;color:#ef4444;background:#fef2f2}
 </style></head>
-<body>
+<body data-cf-keep-dark>
 <div class="wrap">
   <div class="kicker">HOVER TO PREVIEW</div>
   <div class="stack">
@@ -5013,7 +5013,7 @@ body{margin:0;min-height:100vh;background:#fff;font-family:Inter,ui-sans-serif,A
   "labeled-action-buttons": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Labeled Action Buttons</title><style>
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:#fff;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:flex;align-items:center;justify-content:center;padding:40px 20px}
+body{margin:0;min-height:100vh;background:#fff;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center;padding:40px 20px}
 .wrap{width:min(420px,100%)}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .btn{position:relative;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;border:1px solid transparent;cursor:pointer;text-align:left;transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease,background .2s ease,border-color .2s ease}
@@ -5042,7 +5042,7 @@ body{margin:0;min-height:100vh;background:#fff;font-family:Inter,ui-sans-serif,A
 
 .caption{margin-top:20px;color:#8a8a92;font-size:10.5px;line-height:1.7;text-align:center}
 </style></head>
-<body>
+<body data-cf-keep-dark>
 <div class="wrap">
   <div class="grid">
     <button class="btn dark">
@@ -5075,7 +5075,7 @@ body{margin:0;min-height:100vh;background:#fff;font-family:Inter,ui-sans-serif,A
   "store-download-badges": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Store Download Badges</title><style>
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:#fff;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:flex;align-items:center;justify-content:center;padding:40px 20px}
+body{margin:0;min-height:100vh;background:#fff;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center;padding:40px 20px}
 .wrap{display:flex;flex-direction:column;gap:16px;align-items:center}
 .badge{display:flex;align-items:center;gap:10px;height:52px;padding:0 18px;border-radius:11px;background:#0a0a0a;color:#fff;cursor:pointer;transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease,background .25s ease}
 .badge:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,.28)}
@@ -5086,7 +5086,7 @@ body{margin:0;min-height:100vh;background:#fff;font-family:Inter,ui-sans-serif,A
 .badge.play:hover{background:#0a0a0a;box-shadow:0 14px 30px rgba(16,163,74,.25)}
 .badge.play svg{width:24px;height:24px}
 </style></head>
-<body>
+<body data-cf-keep-dark>
 <div class="wrap">
   <button class="badge apple">
     <svg viewBox="0 0 384 512" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141 4 184.8 4 273.9q0 39.9 14.6 82.4c13 37.7 60 130.2 109 128.6 25.7-.6 43.8-18.2 77.2-18.2 32.4 0 49.1 18.2 77.8 18.2 49.4-.7 91.8-85 104.2-122.8-66.4-31.3-68.1-91.8-68.1-93.4zM255.1 71.8c27.7-32.8 25.2-62.6 24.4-73.3-24.5 1.4-52.8 16.9-69 36-18 20.4-28.6 45.6-26.3 73.1 26.9 2.1 51.4-11.4 70.9-35.8z"/></svg>
@@ -5104,7 +5104,7 @@ body{margin:0;min-height:100vh;background:#fff;font-family:Inter,ui-sans-serif,A
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Halftone Glow CTA</title><style>
 :root{--glow:#3b5bff}
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:#fff;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:flex;align-items:center;justify-content:center;padding:40px 20px}
+body{margin:0;min-height:100vh;background:#fff;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center;padding:40px 20px}
 .cta{position:relative;height:58px;padding:0 34px;border:none;border-radius:100px;background:#0a0a12;color:#fff;font:600 14px/1 Inter,sans-serif;cursor:pointer;overflow:hidden;isolation:isolate;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .3s ease}
 .cta:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 16px 40px rgba(59,91,255,.35)}
 .cta .label{position:relative;z-index:2}
@@ -5113,12 +5113,216 @@ body{margin:0;min-height:100vh;background:#fff;font-family:Inter,ui-sans-serif,A
 .cta .dots{position:absolute;inset:0;z-index:1;background-image:radial-gradient(rgba(255,255,255,.55) 1px,transparent 1.3px);background-size:7px 7px;-webkit-mask-image:radial-gradient(circle at 82% 50%,#000 0%,transparent 55%);mask-image:radial-gradient(circle at 82% 50%,#000 0%,transparent 55%);opacity:.7;transition:opacity .35s ease}
 .cta:hover .dots{opacity:1}
 </style></head>
-<body>
+<body data-cf-keep-dark>
 <button class="cta">
   <span class="glow"></span>
   <span class="dots"></span>
   <span class="label">Get unlimited access</span>
 </button>
+</body></html>
+`,
+
+  "liquid-glass-button": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Liquid Glass Button</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#f3f2f5;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center;padding:40px 20px}
+.btn{position:relative;width:min(260px,88%);height:76px;border-radius:100px;background:rgba(255,255,255,.55);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border:1px solid rgba(255,255,255,.7);box-shadow:0 20px 45px -18px rgba(30,20,60,.28),inset 0 1px 0 rgba(255,255,255,.8);overflow:hidden;cursor:pointer}
+.btn canvas{position:absolute;inset:0;width:100%;height:100%;filter:blur(14px) saturate(160%);opacity:.85}
+.btn .label{position:relative;z-index:2;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;color:#1c1a24;pointer-events:none}
+</style></head>
+<body>
+<button class="btn" id="btn"><canvas id="cv"></canvas><span class="label">Liquid Glass</span></button>
+<script>
+var btn = document.getElementById("btn"), cv = document.getElementById("cv");
+var ctx = cv.getContext("2d");
+var dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+function size() {
+  var r = btn.getBoundingClientRect();
+  cv.width = r.width * dpr;
+  cv.height = r.height * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+size();
+window.addEventListener("resize", size);
+
+var points = [];
+var fading = false;
+var fadeRaf = null;
+
+function draw() {
+  var r = btn.getBoundingClientRect();
+  ctx.clearRect(0, 0, r.width, r.height);
+  ctx.globalCompositeOperation = "source-over";
+  for (var i = 0; i < points.length; i++) {
+    var p = points[i];
+    var age = i / points.length;
+    ctx.beginPath();
+    var grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 26);
+    grad.addColorStop(0, "rgba(59,91,255," + (0.55 * age) + ")");
+    grad.addColorStop(1, "rgba(59,91,255,0)");
+    ctx.fillStyle = grad;
+    ctx.arc(p.x, p.y, 26, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+btn.addEventListener("mousemove", function (e) {
+  var r = btn.getBoundingClientRect();
+  points.push({ x: e.clientX - r.left, y: e.clientY - r.top });
+  if (points.length > 40) points.shift();
+  draw();
+});
+
+btn.addEventListener("mouseleave", function () {
+  fading = true;
+  function fadeStep() {
+    if (points.length === 0) { fading = false; return; }
+    points.shift();
+    draw();
+    fadeRaf = requestAnimationFrame(fadeStep);
+  }
+  fadeStep();
+});
+</script>
+</body></html>
+`,
+
+  "delete-button": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Delete Button</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#fff;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center;padding:40px 20px}
+.btn{position:relative;display:flex;align-items:center;gap:9px;height:46px;padding:0 22px;border:none;border-radius:10px;background:linear-gradient(180deg,#f2273f,#e0102b);color:#fff;font:600 14px/1 Inter,sans-serif;cursor:pointer;box-shadow:0 8px 20px rgba(224,16,43,.3);transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease,background .2s ease}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(224,16,43,.42);background:linear-gradient(180deg,#ff3a52,#ea1830)}
+.btn:active{transform:translateY(0) scale(.97)}
+.btn svg{width:16px;height:16px}
+.btn .lid{transform-origin:6px 6px;transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+.btn:hover .lid{transform:rotate(-18deg) translateY(-1px)}
+.btn.confirming{background:linear-gradient(180deg,#2fbf6c,#1fa85a);box-shadow:0 8px 20px rgba(31,168,90,.32)}
+</style></head>
+<body data-cf-keep-dark>
+<button class="btn" id="btn">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path class="lid" d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/>
+    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+    <path d="M10 11v6M14 11v6"/>
+  </svg>
+  <span id="label">Delete</span>
+</button>
+<script>
+var btn = document.getElementById("btn"), label = document.getElementById("label");
+var busy = false;
+btn.addEventListener("click", function () {
+  if (busy) return;
+  busy = true;
+  var original = label.textContent;
+  btn.classList.add("confirming");
+  label.textContent = "Deleted";
+  setTimeout(function () {
+    btn.classList.remove("confirming");
+    label.textContent = original;
+    busy = false;
+  }, 1400);
+});
+</script>
+</body></html>
+`,
+
+  "neon-outline-button": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Neon Outline Button</title><style>
+:root{--neon:#2dd9c8}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#0a0e12;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center;padding:40px 20px}
+.btn{position:relative;height:52px;padding:0 30px;border-radius:100px;background:rgba(45,217,200,.06);border:1.5px solid var(--neon);color:var(--neon);font:700 13px/1 "Space Grotesk",Inter,sans-serif;letter-spacing:2px;cursor:pointer;text-shadow:0 0 10px rgba(45,217,200,.75);box-shadow:0 0 14px rgba(45,217,200,.35),inset 0 0 14px rgba(45,217,200,.12);animation:pulse 2.6s ease-in-out infinite;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .3s ease,background .3s ease}
+.btn:hover{transform:translateY(-2px) scale(1.03);background:rgba(45,217,200,.14);box-shadow:0 0 28px rgba(45,217,200,.65),inset 0 0 20px rgba(45,217,200,.2)}
+.btn:active{transform:translateY(0) scale(.98)}
+@keyframes pulse{0%,100%{box-shadow:0 0 14px rgba(45,217,200,.35),inset 0 0 14px rgba(45,217,200,.12)}50%{box-shadow:0 0 22px rgba(45,217,200,.55),inset 0 0 18px rgba(45,217,200,.18)}}
+@media(prefers-reduced-motion:reduce){.btn{animation:none}}
+</style></head>
+<body data-cf-keep-dark>
+<button class="btn">VALENCE CORE</button>
+</body></html>
+`,
+
+  "shiny-border-button": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Shiny Border Button</title><style>
+@property --angle{syntax:'<angle>';inherits:false;initial-value:0deg}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#0b0c10;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center;padding:40px 20px}
+.wrap{position:relative;width:min(220px,92%);height:64px;border-radius:16px;padding:2px;background:conic-gradient(from var(--angle),transparent 0%,#22c55e 12%,transparent 26%);animation:spin 3.2s linear infinite;box-shadow:0 0 34px rgba(34,197,94,.22);transition:box-shadow .3s ease}
+.wrap:hover{box-shadow:0 0 55px rgba(34,197,94,.4);animation-duration:1.6s}
+.btn{width:100%;height:100%;border:none;border-radius:14px;background:#111318;color:#f4f5f7;font:600 14px/1 Inter,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .25s ease}
+.wrap:hover .btn{background:#161a20}
+@keyframes spin{to{--angle:360deg}}
+@media(prefers-reduced-motion:reduce){.wrap{animation:none}}
+</style></head>
+<body data-cf-keep-dark>
+<div class="wrap"><button class="btn">See Projects</button></div>
+</body></html>
+`,
+
+  "stardust-button": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Stardust Button</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#eef1f6;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center;padding:40px 20px}
+.btn{position:relative;display:flex;align-items:center;gap:9px;height:52px;padding:0 26px;border:none;border-radius:100px;background:linear-gradient(180deg,#1d4d63 0%,#0d2a38 100%);color:#eaf6fb;font:600 14px/1 Inter,sans-serif;cursor:pointer;overflow:hidden;box-shadow:0 14px 30px -10px rgba(13,42,56,.55),inset 0 1px 0 rgba(255,255,255,.18),inset 0 -8px 14px rgba(0,0,0,.25);transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .3s ease}
+.btn:hover{transform:translateY(-2px);box-shadow:0 20px 40px -10px rgba(13,42,56,.65),inset 0 1px 0 rgba(255,255,255,.24),inset 0 -8px 14px rgba(0,0,0,.25)}
+.btn::before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 20%,rgba(255,255,255,.22) 38%,transparent 56%);transform:translateX(-130%);transition:transform .7s ease}
+.btn:hover::before{transform:translateX(130%)}
+.btn svg{width:16px;height:16px;position:relative;z-index:2;animation:twinkle 2.2s ease-in-out infinite}
+.btn span{position:relative;z-index:2}
+.dust{position:absolute;border-radius:50%;background:#fff;opacity:0;pointer-events:none}
+@keyframes twinkle{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(.85)}}
+@keyframes rise{0%{opacity:0;transform:translateY(0) scale(.4)}20%{opacity:1}100%{opacity:0;transform:translateY(-38px) scale(1)}}
+</style></head>
+<body data-cf-keep-dark>
+<button class="btn" id="btn">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.9 5.7L20 9l-6.1 1.3L12 16l-1.9-5.7L4 9l6.1-1.3z"/></svg>
+  <span>Launching Soon</span>
+</button>
+<script>
+var btn = document.getElementById("btn");
+btn.addEventListener("mouseenter", function () {
+  for (var i = 0; i < 6; i++) {
+    setTimeout(function () {
+      var d = document.createElement("i");
+      d.className = "dust";
+      var size = 2 + Math.random() * 3;
+      d.style.width = size + "px";
+      d.style.height = size + "px";
+      d.style.left = 10 + Math.random() * 80 + "%";
+      d.style.bottom = "6px";
+      d.style.animation = "rise " + (0.9 + Math.random() * 0.6) + "s ease-out forwards";
+      btn.appendChild(d);
+      setTimeout(function () { d.remove(); }, 1600);
+    }, i * 90);
+  }
+});
+</script>
+</body></html>
+`,
+
+  "segmented-button-group": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Segmented Button Group</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#0e0f13;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center;padding:40px 20px}
+.group{display:flex;align-items:stretch;border-radius:12px;overflow:hidden;background:#1a1c22;box-shadow:0 10px 26px rgba(0,0,0,.4)}
+.seg{display:flex;align-items:center;gap:4px;padding:0 11px;height:40px;border:none;background:transparent;color:#c9cbd3;font:600 11px/1 Inter,sans-serif;cursor:pointer;transition:background .2s ease,color .2s ease}
+.seg svg{width:11px;height:11px}
+.seg:not(:last-child){border-right:1px solid #2a2c34}
+.seg:hover{background:#23252c;color:#fff}
+.seg.run{color:#eaeaea}
+.seg.run:hover{background:#2a2d35}
+.seg.danger{color:#ff8a93}
+.seg.danger:hover{background:#e0344a;color:#fff}
+.seg.run.active svg{color:#7ce38b}
+</style></head>
+<body data-cf-keep-dark>
+<div class="group">
+  <button class="seg run"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Run</button>
+  <button class="seg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg>Rules</button>
+  <button class="seg danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9"/><path d="M3 4v6h6"/></svg>Reset</button>
+</div>
 </body></html>
 `,
 

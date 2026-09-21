@@ -288,7 +288,14 @@ function buildPreviewSource(
         body {
           width: 100% !important;
           min-width: 0 !important;
-          min-height: 100% !important;
+          /* Not min-height: 100% — that resolves against html's own height,
+             which this block never sets, so it silently no-ops and any
+             product centering itself with "body{min-height:100vh}" (a
+             common, otherwise-correct pattern) collapses to its content's
+             own height instead of filling the card, pinning it to the top
+             instead of centering it. 100vh has no such dependency: inside
+             an iframe it refers to the iframe's own viewport directly. */
+          min-height: 100vh !important;
           margin: 0 !important;
           padding: 0 !important;
           overflow-x: hidden !important;
