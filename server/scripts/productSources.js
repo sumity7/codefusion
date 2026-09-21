@@ -1765,25 +1765,449 @@ footer{border-top:1px solid var(--line);padding:60px 0 30px}
 `,
 
   "logo-cloud-marquee": `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Logo Cloud Marquee</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;overflow:hidden}
-.wrap{width:100%;text-align:center}
-.wrap small{font-size:9px;letter-spacing:2px;color:#77737f;font-weight:700}
-.marquee{margin-top:18px;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
-.track{display:flex;gap:34px;width:max-content;animation:slide 16s linear infinite}
-.track:hover{animation-play-state:paused}
-.track b{font:700 18px "Space Grotesk",sans-serif;color:#4d4956;letter-spacing:-.03em;transition:color .3s,text-shadow .3s}
-.track b:hover{color:var(--lav);text-shadow:0 0 16px rgba(196,181,253,.5)}
-@keyframes slide{to{transform:translateX(-50%)}}
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Runtime Landing Page</title><style>
+:root{--bg:#0a0a0c;--panel:#111114;--panel2:#17171b;--line:rgba(255,255,255,.09);--ink:#e7e7ea;--mut:#87878f;--amber:#ffb454;--cyan:#5ee6d0;--pink:#ff6b9d}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3{font-family:"JetBrains Mono",monospace;margin:0;font-weight:700;letter-spacing:-.02em;color:#fff}
+p{margin:0;color:var(--mut);font-family:Inter,ui-sans-serif,sans-serif}
+button{font-family:inherit;cursor:pointer;border:0}
+.wrap{max-width:1160px;margin:0 auto;padding:0 32px}
+.rv{opacity:0;transform:translateY(26px)}
+.eb{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--amber);margin-bottom:16px}
+.eb:before{content:"$";color:var(--mut)}
+
+/* ---------- buttons ---------- */
+.btn{position:relative;display:inline-flex;align-items:center;gap:9px;border-radius:8px;padding:13px 22px;font-size:14px;font-weight:600;transition:transform .25s,box-shadow .25s,border-color .25s,background .25s}
+.btn svg{width:15px;height:15px;flex:none;transition:transform .3s}
+.btn:hover svg{transform:translateX(3px)}
+.btn-amber{background:var(--amber);color:#1a1206}
+.btn-amber:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(255,180,84,.3)}
+.btn-line{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn-line:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.04)}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:60;border-bottom:1px solid transparent;transition:background .4s,border-color .4s}
+.nav-in{max-width:1160px;margin:0 auto;padding:20px 32px;display:flex;align-items:center;gap:34px}
+.nav.on{background:rgba(10,10,12,.86);backdrop-filter:blur(16px);border-bottom-color:var(--line)}
+.brand{display:flex;align-items:center;gap:9px;font-size:17px;font-weight:700;color:#fff}
+.brand .car{color:var(--amber)}
+.nav-links{display:flex;gap:28px;margin:0 auto;font-size:13.5px;color:var(--mut)}
+.nav-links a{position:relative;cursor:pointer}
+.nav-links a:after{content:"";position:absolute;left:0;bottom:-5px;width:100%;height:1px;background:var(--amber);transform:scaleX(0);transform-origin:right;transition:transform .3s}
+.nav-links a:hover{color:#fff}
+.nav-links a:hover:after{transform:scaleX(1);transform-origin:left}
+.nav-right{display:flex;align-items:center;gap:16px}
+.nav-right .lg{font-size:13.5px;color:var(--mut)}
+.nav-right .btn{padding:9px 16px;font-size:13px}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding:90px 0 50px}
+.hero-grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:56px;align-items:center}
+.hero h1{font-size:clamp(32px,3.6vw,48px);line-height:1.18}
+.hero h1 .amb{color:var(--amber)}
+.hero p.lead{margin-top:20px;font-size:16px;line-height:1.7;max-width:460px}
+.hero .cta{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap}
+.install-row{margin-top:26px;display:inline-flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:11px 16px;font-size:13px}
+.install-row button{background:none;color:var(--mut);display:flex}
+.install-row button:hover{color:var(--amber)}
+.install-row svg{width:14px;height:14px}
+
+/* terminal mockup */
+.term{position:relative;background:#0d0d10;border:1px solid var(--line);border-radius:14px;box-shadow:0 40px 90px rgba(0,0,0,.55);overflow:hidden}
+.term-bar{display:flex;align-items:center;gap:8px;padding:13px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+.term-bar i{width:11px;height:11px;border-radius:50%}
+.term-bar i:nth-child(1){background:#ff5f56}
+.term-bar i:nth-child(2){background:#ffbd2e}
+.term-bar i:nth-child(3){background:#27c93f}
+.term-bar span{margin-left:10px;font-size:12px;color:var(--mut)}
+.term-body{padding:20px 22px;font-size:13.5px;line-height:1.9;min-height:280px}
+.term-line{color:var(--mut)}
+.term-line .prompt{color:var(--cyan)}
+.term-line .out{color:var(--ink)}
+.term-line .key{color:var(--pink)}
+.term-line .str{color:var(--amber)}
+.cursor-blink{display:inline-block;width:7px;height:15px;background:var(--amber);vertical-align:middle;margin-left:2px;animation:blink 1s step-end infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* ---------- logos ---------- */
+.logos{padding:44px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.logos .lbl{text-align:center;font-size:12px;color:var(--mut);margin-bottom:24px}
+.logo-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:28px;opacity:.5}
+.logo-row div{font-weight:700;font-size:17px;color:#fff}
+
+/* ---------- features ---------- */
+.feats{padding:120px 0}
+.feats-head{max-width:600px;margin:0 auto 56px;text-align:center}
+.feats-head h2{font-size:clamp(26px,3.2vw,38px)}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.fcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:26px;transition:transform .3s,border-color .3s}
+.fcard:hover{transform:translateY(-5px);border-color:rgba(255,180,84,.35)}
+.fcard .tag{display:inline-block;font-size:11px;color:var(--cyan);border:1px solid rgba(94,230,208,.3);border-radius:5px;padding:2px 7px;margin-bottom:14px}
+.fcard h3{font-size:16.5px;margin-bottom:9px;font-family:Inter,sans-serif}
+.fcard p{font-size:13.5px;line-height:1.65}
+.fcard code{display:block;margin-top:14px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--cyan)}
+
+/* ---------- endpoint demo (pinned) ---------- */
+.demo-sec{position:relative}
+.demo-head{text-align:center;padding:120px 0 0;max-width:600px;margin:0 auto}
+.demo-head h2{font-size:clamp(26px,3.2vw,38px)}
+.demo-pin{height:100vh;display:flex;align-items:center;justify-content:center}
+.demo-panels{width:min(920px,90vw);display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.demo-panel{background:#0d0d10;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.demo-panel .bar{padding:11px 16px;border-bottom:1px solid var(--line);font-size:12px;color:var(--mut);display:flex;justify-content:space-between}
+.demo-panel .body{padding:16px;font-size:12.5px;line-height:1.8;min-height:220px}
+.method{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:4px;background:rgba(94,230,208,.15);color:var(--cyan)}
+.status-pill{font-size:11px;padding:2px 8px;border-radius:20px;background:rgba(39,201,63,.15);color:#4ade80}
+.json-line{opacity:0}
+.json-key{color:var(--pink)}
+.json-str{color:var(--amber)}
+.json-num{color:var(--cyan)}
+
+/* ---------- stats ---------- */
+.stats{padding:0 0 120px;text-align:center}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.stat b{display:block;font-size:clamp(30px,3.6vw,44px);color:#fff}
+.stat span{display:block;margin-top:8px;font-size:12.5px;color:var(--mut);font-family:Inter,sans-serif}
+
+/* ---------- testimonials ---------- */
+.testi{padding:0 0 130px}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.tcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;transition:transform .3s,border-color .3s}
+.tcard:hover{transform:translateY(-5px);border-color:rgba(255,180,84,.3)}
+.tcard p{font-size:13.5px;line-height:1.7;color:var(--ink)}
+.tcard .who{margin-top:16px;font-size:12px;color:var(--mut)}
+.tcard .who b{color:#fff}
+
+/* ---------- pricing ---------- */
+.pricing{padding:0 0 130px}
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.pcard{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:30px 26px;transition:transform .3s,border-color .3s}
+.pcard:hover{transform:translateY(-6px);border-color:rgba(255,180,84,.3)}
+.pcard.feat{background:linear-gradient(160deg,#1a1509,var(--panel) 60%);border-color:rgba(255,180,84,.35)}
+.pcard .tier{font-size:12.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
+.pcard .amt{font-size:32px;color:#fff;margin:12px 0;font-weight:700}
+.pcard .amt span{font-size:13px;color:var(--mut)}
+.pcard p{font-size:13px;line-height:1.6}
+.pcard ul{list-style:none;padding:0;margin:20px 0;display:flex;flex-direction:column;gap:10px}
+.pcard li{font-size:13px;color:var(--ink);display:flex;gap:8px}
+.pcard li:before{content:"›";color:var(--amber)}
+.pcard .btn{width:100%;justify-content:center}
+
+/* ---------- final cta ---------- */
+.final{padding:0 0 120px}
+.final-box{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:80px 40px;text-align:center;overflow:hidden}
+.final-box:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,180,84,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,180,84,.04) 1px,transparent 1px);background-size:40px 40px;mask-image:radial-gradient(ellipse 60% 60% at 50% 50%,#000,transparent)}
+.final-box h2{position:relative;font-size:clamp(28px,4vw,44px)}
+.final-box p{position:relative;margin:16px auto 0;max-width:440px;font-size:14.5px}
+.final-box .cta{position:relative;justify-content:center;margin-top:30px;display:flex;gap:12px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:56px 0 28px}
+.foot-top{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;padding-bottom:36px;border-bottom:1px solid var(--line)}
+.foot-brand p{max-width:280px;margin-top:12px;font-size:13px;line-height:1.6;font-family:Inter,sans-serif}
+.foot-cols{display:flex;gap:56px}
+.foot-col h6{font-size:11.5px;text-transform:uppercase;color:var(--mut);margin-bottom:14px}
+.foot-col a{display:block;font-size:13px;color:var(--ink);margin-bottom:9px;text-decoration:none;opacity:.75}
+.foot-col a:hover{opacity:1;color:var(--amber)}
+.foot-bottom{display:flex;justify-content:space-between;padding-top:24px;font-size:12px;color:var(--mut)}
+
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr}
+  .feat-grid{grid-template-columns:1fr}
+  .demo-panels{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:26px}
+  .testi-grid{grid-template-columns:1fr}
+  .price-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+}
+@media(max-width:600px){
+  .foot-top{flex-direction:column;gap:28px}
+  .foot-cols{gap:30px;flex-wrap:wrap}
+}
+@media(prefers-reduced-motion:reduce){
+  .rv{opacity:1!important;transform:none!important}
+}
 </style></head>
-<body data-cf-keep-dark><div class="wrap"><small>TRUSTED BY TEAMS AT</small><div class="marquee"><div class="track" id="t"></div></div></div>
+<body data-cf-keep-dark>
+
+<nav class="nav" id="nav">
+  <div class="nav-in">
+    <div class="brand"><span class="car">&gt;_</span>runtime</div>
+    <div class="nav-links"><a>Docs</a><a>API</a><a>Pricing</a><a>Changelog</a></div>
+    <div class="nav-right"><span class="lg">Sign in</span><button class="btn btn-amber">Get API key <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></button></div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eb rv">shipping since 2019</span>
+      <h1 class="rv">One API for every <span class="amb">background job</span> you'll ever run.</h1>
+      <p class="lead rv">Queues, cron, webhooks and retries — Runtime handles the infrastructure so your endpoint just does the work.</p>
+      <div class="cta rv">
+        <button class="btn btn-amber">Get API key <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></button>
+        <button class="btn btn-line">Read the docs</button>
+      </div>
+      <div class="install-row rv"><span>npm install runtime-sdk</span><button aria-label="copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg></button></div>
+    </div>
+    <div class="term rv" id="term">
+      <div class="term-bar"><i></i><i></i><i></i><span>zsh — runtime</span></div>
+      <div class="term-body" id="termBody"></div>
+    </div>
+  </div>
+</section>
+
+<section class="logos">
+  <div class="wrap">
+    <div class="lbl">// integrated at</div>
+    <div class="logo-row"><div>Basecamp&nbsp;Labs</div><div>Fenwick</div><div>Argus</div><div>Northbeam</div><div>Ledgerline</div></div>
+  </div>
+</section>
+
+<section class="feats">
+  <div class="wrap">
+    <div class="feats-head">
+      <span class="eb rv" style="justify-content:center">Platform</span>
+      <h2 class="rv">Infrastructure you don't have to think about.</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="fcard rv2"><span class="tag">QUEUES</span><h3>Durable job queues</h3><p>At-least-once delivery with automatic backoff, dead-letter queues included.</p><code>runtime.enqueue("send-email", payload)</code></div>
+      <div class="fcard rv2"><span class="tag">CRON</span><h3>Scheduled functions</h3><p>Define a cron expression once, Runtime handles timezone drift and missed runs.</p><code>runtime.schedule("0 9 * * 1", job)</code></div>
+      <div class="fcard rv2"><span class="tag">WEBHOOKS</span><h3>Verified webhooks</h3><p>Signature verification and replay protection built into every inbound hook.</p><code>runtime.verify(req.headers, secret)</code></div>
+    </div>
+  </div>
+</section>
+
+<section class="demo-sec">
+  <div class="demo-head">
+    <span class="eb rv" style="justify-content:center">Live request</span>
+    <h2 class="rv">Watch a request become a response.</h2>
+  </div>
+  <div class="demo-pin" id="demoPin">
+    <div class="demo-panels">
+      <div class="demo-panel">
+        <div class="bar"><span><span class="method">POST</span> /v1/jobs</span><span>request</span></div>
+        <div class="body" id="reqBody">
+          <div class="json-line">{</div>
+          <div class="json-line">&nbsp;&nbsp;<span class="json-key">"task"</span>: <span class="json-str">"send-email"</span>,</div>
+          <div class="json-line">&nbsp;&nbsp;<span class="json-key">"payload"</span>: {</div>
+          <div class="json-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"to"</span>: <span class="json-str">"user@acme.dev"</span>,</div>
+          <div class="json-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="json-key">"template"</span>: <span class="json-str">"welcome"</span></div>
+          <div class="json-line">&nbsp;&nbsp;},</div>
+          <div class="json-line">&nbsp;&nbsp;<span class="json-key">"retries"</span>: <span class="json-num">3</span></div>
+          <div class="json-line">}</div>
+        </div>
+      </div>
+      <div class="demo-panel">
+        <div class="bar"><span class="status-pill">200 OK</span><span id="latencyLbl">— ms</span></div>
+        <div class="body" id="resBody">
+          <div class="json-line">{</div>
+          <div class="json-line">&nbsp;&nbsp;<span class="json-key">"id"</span>: <span class="json-str">"job_8f2k91"</span>,</div>
+          <div class="json-line">&nbsp;&nbsp;<span class="json-key">"status"</span>: <span class="json-str">"queued"</span>,</div>
+          <div class="json-line">&nbsp;&nbsp;<span class="json-key">"attempt"</span>: <span class="json-num">1</span>,</div>
+          <div class="json-line">&nbsp;&nbsp;<span class="json-key">"eta"</span>: <span class="json-str">"2026-09-21T09:00:03Z"</span></div>
+          <div class="json-line">}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="wrap stats-grid">
+    <div class="stat"><b data-count="2400000000" data-suffix="+">0</b><span>Jobs processed monthly</span></div>
+    <div class="stat"><b data-count="99" data-suffix=".98%">0</b><span>Queue uptime</span></div>
+    <div class="stat"><b data-count="40" data-suffix="ms">0</b><span>P50 enqueue latency</span></div>
+    <div class="stat"><b data-count="18000">0</b><span>Developers building</span></div>
+  </div>
+</section>
+
+<section class="testi">
+  <div class="wrap">
+    <div class="feats-head" style="margin-bottom:44px">
+      <span class="eb rv" style="justify-content:center">Developers</span>
+      <h2 class="rv">Ship the endpoint, not the queue.</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="tcard rv2"><p>"We ripped out a hand-rolled Redis queue in an afternoon. Retries alone were worth it."</p><div class="who"><b>Kabir Malhotra</b> — Staff Eng, Argus</div></div>
+      <div class="tcard rv2"><p>"The dead-letter queue caught a bug that would've silently dropped payments for a week."</p><div class="who"><b>Yuki Tanaka</b> — CTO, Fenwick</div></div>
+      <div class="tcard rv2"><p>"Cron drift used to be a running joke on our team. Hasn't come up since we switched."</p><div class="who"><b>Ola Adeyemi</b> — Platform Lead, Ledgerline</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing">
+  <div class="wrap">
+    <div class="feats-head">
+      <span class="eb rv" style="justify-content:center">Pricing</span>
+      <h2 class="rv">Free to build. Pay for scale.</h2>
+    </div>
+    <div class="price-grid">
+      <div class="pcard rv2">
+        <div class="tier">Hobby</div>
+        <div class="amt">$0<span>/mo</span></div>
+        <p>100K jobs/month, community support.</p>
+        <ul><li>1 queue</li><li>7-day retention</li><li>Community Discord</li></ul>
+        <button class="btn btn-line">Start building</button>
+      </div>
+      <div class="pcard feat rv2">
+        <div class="tier">Team</div>
+        <div class="amt">$49<span>/mo</span></div>
+        <p>10M jobs/month, priority routing.</p>
+        <ul><li>Unlimited queues</li><li>30-day retention</li><li>Priority support</li></ul>
+        <button class="btn btn-amber">Start free trial</button>
+      </div>
+      <div class="pcard rv2">
+        <div class="tier">Enterprise</div>
+        <div class="amt">Custom</div>
+        <p>Dedicated infra, custom SLAs.</p>
+        <ul><li>VPC peering</li><li>Custom retention</li><li>Dedicated Slack</li></ul>
+        <button class="btn btn-line">Talk to us</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <div class="final-box rv">
+      <h2>runtime.enqueue(<span style="color:var(--amber)">"ship_it"</span>)</h2>
+      <p>Free API key, no credit card. First 100K jobs are on us.</p>
+      <div class="cta"><button class="btn btn-amber">Get API key <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></button><button class="btn btn-line">Read the docs</button></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <div class="brand"><span class="car">&gt;_</span>runtime</div>
+        <p>Background jobs, cron and webhooks — one API, zero infrastructure.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h6>Product</h6><a>Queues</a><a>Cron</a><a>Webhooks</a></div>
+        <div class="foot-col"><h6>Developers</h6><a>Docs</a><a>API reference</a><a>Status</a></div>
+        <div class="foot-col"><h6>Company</h6><a>About</a><a>Blog</a><a>Careers</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 Runtime Inc.</span><span>Privacy · Terms</span></div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
-const names=["NORTHSTAR","ATELIER","VANTA","ORBIT","HALO","ECHO"];
-const t=document.getElementById("t");
-[...names,...names].forEach(function(n){const b=document.createElement("b");b.textContent=n;t.appendChild(b)});
+(function(){
+  var nav = document.getElementById("nav");
+  document.addEventListener("scroll", function(){ nav.classList.toggle("on", window.scrollY > 14); }, { passive: true });
+
+  function fmt(n, suffix){
+    var v = Math.round(n);
+    var s = v >= 1000000000 ? (v/1000000000).toFixed(1).replace(/\.0$/,"") + "B" :
+            v >= 1000000 ? (v/1000000).toFixed(1).replace(/\.0$/,"") + "M" :
+            v >= 1000 ? (v/1000).toFixed(1).replace(/\.0$/,"") + "K" : String(v);
+    return s + (suffix || "");
+  }
+
+  // Terminal type-on effect: a small scripted session, looping.
+  var termLines = [
+    { p: "$ ", c: "runtime deploy", cls: "prompt" },
+    { p: "", c: "→ Building job graph...", cls: "out" },
+    { p: "", c: "→ 3 queues, 1 cron, 2 webhooks detected", cls: "out" },
+    { p: "", c: "→ Deployed to prod in 1.8s", cls: "out" },
+    { p: "$ ", c: "runtime logs --follow", cls: "prompt" },
+    { p: "", c: 'job_8f2k91 send-email  status=done  312ms', cls: "out" }
+  ];
+  var termBody = document.getElementById("termBody");
+
+  function typeTerminal(){
+    termBody.innerHTML = "";
+    var li = 0;
+    function nextLine(){
+      if (li >= termLines.length) {
+        gsap.delayedCall(1.6, typeTerminal);
+        return;
+      }
+      var row = document.createElement("div");
+      row.className = "term-line";
+      var promptSpan = document.createElement("span");
+      promptSpan.className = "prompt";
+      promptSpan.textContent = termLines[li].p;
+      row.appendChild(promptSpan);
+      var textSpan = document.createElement("span");
+      textSpan.className = termLines[li].cls;
+      row.appendChild(textSpan);
+      var cursor = document.createElement("span");
+      cursor.className = "cursor-blink";
+      row.appendChild(cursor);
+      termBody.appendChild(row);
+      var text = termLines[li].c, ci = 0;
+      var iv = setInterval(function(){
+        textSpan.textContent += text[ci];
+        ci++;
+        if (ci >= text.length) {
+          clearInterval(iv);
+          cursor.remove();
+          li++;
+          setTimeout(nextLine, 260);
+        }
+      }, 22);
+    }
+    nextLine();
+  }
+
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!window.gsap || !window.ScrollTrigger || reduced) {
+    document.querySelectorAll(".rv,.rv2").forEach(function(el){ el.style.opacity = 1; el.style.transform = "none"; });
+    document.querySelectorAll(".stat b[data-count]").forEach(function(el){ el.textContent = fmt(+el.dataset.count, el.dataset.suffix); });
+    document.querySelectorAll(".json-line").forEach(function(el){ el.style.opacity = 1; });
+    document.getElementById("latencyLbl").textContent = "38ms";
+    termBody.innerHTML = '<div class="term-line"><span class="prompt">$ </span><span class="out">runtime deploy — done</span></div>';
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  var tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+  tl.to(".hero .rv", { opacity: 1, y: 0, duration: .75, stagger: .08 })
+    .fromTo("#term", { opacity: 0, y: 40, scale: .97 }, { opacity: 1, y: 0, scale: 1, duration: .9 }, "-=.5")
+    .add(typeTerminal, "-=.2");
+
+  document.querySelectorAll(".rv2").forEach(function(el){
+    gsap.from(el, { opacity: 0, y: 26, duration: .7, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 88%" } });
+  });
+
+  gsap.from(".logo-row div", { opacity: 0, y: 10, stagger: .05, duration: .5, scrollTrigger: { trigger: ".logo-row", start: "top 90%" } });
+
+  // Pinned request/response demo: JSON lines type in on the left, then the
+  // response reveals with a latency counter, all scrubbed to scroll.
+  gsap.set("#reqBody .json-line", { opacity: 0, x: -8 });
+  gsap.set("#resBody .json-line", { opacity: 0, x: 8 });
+  var demoTl = gsap.timeline({
+    scrollTrigger: { trigger: "#demoPin", start: "top top", end: "+=160%", pin: true, scrub: .5 }
+  });
+  demoTl.to("#reqBody .json-line", { opacity: 1, x: 0, duration: .3, stagger: .15 })
+    .to("#latencyLbl", { duration: .1, onStart: function(){ document.getElementById("latencyLbl").textContent = "38ms"; } }, "+=.1")
+    .to("#resBody .json-line", { opacity: 1, x: 0, duration: .3, stagger: .15 }, "-=.1");
+
+  ScrollTrigger.create({
+    trigger: ".stats", start: "top 80%", once: true,
+    onEnter: function(){
+      document.querySelectorAll(".stat b[data-count]").forEach(function(el){
+        var target = +el.dataset.count, suffix = el.dataset.suffix || "", o = { v: 0 };
+        gsap.to(o, { v: target, duration: 1.8, ease: "power2.out", onUpdate: function(){ el.textContent = fmt(o.v, suffix); } });
+      });
+    }
+  });
+
+  window.addEventListener("load", function(){ ScrollTrigger.refresh(); });
+})();
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "sidebar-nav-collapse": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Collapsible Sidebar Nav</title><style>
