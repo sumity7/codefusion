@@ -327,25 +327,38 @@ document.getElementById("btn").addEventListener("click",function(e){
 
   "flip-card-3d": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>3D Flip Card</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.kicker{display:block;margin-bottom:16px;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;text-align:center}
-.scene{position:relative;width:260px;height:340px;perspective:1200px}
-.scene::after{content:"";position:absolute;left:10%;right:10%;bottom:-24px;height:30px;border-radius:50%;background:radial-gradient(closest-side,rgba(155,138,255,.35),transparent 75%);filter:blur(6px);opacity:.5;transition:opacity .4s}
-.scene:hover::after{opacity:.9}
-.card{position:relative;width:100%;height:100%;transition:transform .7s cubic-bezier(.2,.8,.2,1);transform-style:preserve-3d;cursor:pointer}
-.scene:hover .card{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;padding:24px;display:flex;flex-direction:column;justify-content:flex-end;border:1px solid #2e2a3a;overflow:hidden;box-shadow:0 20px 50px -20px rgba(0,0,0,.6)}
-.face::before{content:"";position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(180deg,rgba(255,255,255,.06),transparent)}
-.front{background:radial-gradient(circle at 30% 20%,rgba(155,138,255,.3),transparent 55%),#111018}
-.back{background:radial-gradient(circle at 70% 80%,rgba(155,138,255,.25),transparent 55%),#161221;transform:rotateY(180deg);justify-content:center;text-align:center}
-.face h3{margin:0 0 6px;font:700 20px "Space Grotesk",sans-serif;color:#f7f5fb}
-.face p{margin:0;color:#a49dbc;font-size:10px}
-.badge{position:absolute;top:20px;left:20px;width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#d7d0ff,#9b8aff)}
+:root{--bg:#eef1f8;--ink:#161a2b;--mut:#666f8a;--cobalt:#3b5bdb;--line:#dfe3ef}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.kicker{color:var(--mut);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;text-align:center;margin-bottom:14px;display:block}
+.scene{width:260px;height:340px;perspective:1400px}
+.card3d{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.8,.2,1);cursor:pointer}
+.scene:hover .card3d{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:20px;overflow:hidden;box-shadow:0 24px 50px -20px rgba(20,25,50,.25)}
+.front{background:linear-gradient(155deg,#4f6bef,#3b5bdb);display:flex;flex-direction:column;justify-content:flex-end;padding:24px;color:#fff}
+.front .glow{position:absolute;top:-40px;right:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.15);filter:blur(10px)}
+.front h3{margin:0 0 6px;font-size:20px;font-weight:700}
+.front p{margin:0;font-size:12.5px;color:rgba(255,255,255,.75)}
+.back{background:#fff;border:1px solid var(--line);transform:rotateY(180deg);padding:24px;display:flex;flex-direction:column}
+.back h4{margin:0 0 12px;font-size:14px;color:var(--ink)}
+.back ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;flex:1}
+.back li{font-size:12.5px;color:var(--mut);display:flex;gap:8px;align-items:center}
+.back li svg{width:14px;height:14px;color:var(--cobalt);flex:none}
+.back button{margin-top:auto;background:var(--cobalt);color:#fff;border:0;padding:11px;border-radius:10px;font-size:12.5px;font-weight:600;cursor:pointer}
 </style></head>
-<body data-cf-keep-dark><span class="kicker">HOVER THE CARD</span>
-<div class="scene"><div class="card"><div class="face front"><div class="badge"></div><h3>Front side</h3><p>Hover to flip.</p></div><div class="face back"><h3>Back side</h3><p>A full 3D rotation, pure CSS.</p></div></div></div>
-</body></html>`,
+<body>
+<div><span class="kicker">Hover to flip</span>
+<div class="scene"><div class="card3d">
+  <div class="face front"><div class="glow"></div><h3>Pro Plan</h3><p>Everything you need to scale, in one workspace.</p></div>
+  <div class="face back"><h4>What's included</h4><ul>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Unlimited projects</li>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Priority support</li>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Team collaboration</li>
+  </ul><button>Choose plan</button></div>
+</div></div>
+</div>
+</body></html>
+`,
 
   "toggle-pricing-switch": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Toggle Pricing Switch</title><style>
@@ -1102,44 +1115,74 @@ footer{border-top:1px solid var(--line);padding:60px 0 30px}
 
   "card-hover-tilt": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Hover Tilt Card</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;perspective:1000px}
-.tilt{position:relative;width:260px;padding:26px;border:1px solid var(--line);border-radius:18px;background:radial-gradient(circle at 30% 15%,rgba(155,138,255,.22),transparent 60%),#0e0d14;box-shadow:0 24px 60px rgba(0,0,0,.45);transition:transform .15s ease-out,box-shadow .3s;overflow:hidden}
-.tilt::before{content:"";position:absolute;width:220px;height:220px;left:var(--gx,50%);top:var(--gy,50%);transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(255,255,255,.16),transparent 70%);opacity:0;transition:opacity .3s;pointer-events:none}
-.tilt:hover::before{opacity:1}
-.tilt:hover{box-shadow:0 34px 80px rgba(0,0,0,.55),0 0 60px rgba(155,138,255,.18)}
-.tilt span{position:relative;font-size:9px;letter-spacing:2px;color:#9d94b0;font-weight:700}
-.tilt h3{position:relative;margin:12px 0 6px;font:700 20px "Space Grotesk",sans-serif}
-.tilt p{position:relative;margin:0;color:#847e8f;font-size:10px;line-height:1.7}
+:root{--bg:#eef1f8;--ink:#161a2b;--mut:#666f8a;--cobalt:#3b5bdb;--line:#dfe3ef}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.kicker{color:var(--mut);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;text-align:center;margin-bottom:14px;display:block}
+.stage{perspective:1000px}
+.card{width:280px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:26px;box-shadow:0 24px 50px -22px rgba(20,25,50,.2);transition:transform .12s ease-out;position:relative;overflow:hidden}
+.card .glare{position:absolute;inset:0;background:radial-gradient(circle at var(--gx,50%) var(--gy,50%),rgba(255,255,255,.55),transparent 55%);opacity:0;transition:opacity .2s;pointer-events:none}
+.card:hover .glare{opacity:1}
+.ic{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,#4f6bef,#3b5bdb);display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.ic svg{width:20px;height:20px;color:#fff}
+.card h3{margin:0 0 8px;font-size:17px;color:var(--ink)}
+.card p{margin:0;font-size:13px;color:var(--mut);line-height:1.6}
+.tag{display:inline-flex;gap:6px;margin-top:16px;font-size:12px;color:var(--cobalt);font-weight:600}
 </style></head>
-<body data-cf-keep-dark><article class="tilt" id="card"><span>INTERACTIVE</span><h3>Tilt on hover</h3><p>The card tracks your pointer and tilts in 3D with a soft glare.</p></article>
+<body>
+<div><span class="kicker">Move your cursor over the card</span>
+<div class="stage"><div class="card" id="card"><div class="glare" id="glare"></div>
+  <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h8l-1 8 10-12h-8z"/></svg></div>
+  <h3>Instant deploys</h3>
+  <p>Push to main and watch it ship — zero-downtime, every time, with automatic rollback.</p>
+  <span class="tag">Learn more →</span>
+</div></div>
+</div>
 <script>
-const card=document.getElementById("card");
-card.addEventListener("pointermove",function(e){
-  const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
-  card.style.transform="rotateY("+(x*14)+"deg) rotateX("+(y*-14)+"deg) translateY(-4px)";
-  card.style.setProperty("--gx",(e.clientX-r.left)+"px");
-  card.style.setProperty("--gy",(e.clientY-r.top)+"px");
+var card=document.getElementById("card");
+card.addEventListener("mousemove",function(e){
+  var r=card.getBoundingClientRect(), x=(e.clientX-r.left)/r.width, y=(e.clientY-r.top)/r.height;
+  var rx=(y-.5)*-14, ry=(x-.5)*14;
+  card.style.transform="rotateX("+rx+"deg) rotateY("+ry+"deg) scale(1.02)";
+  card.style.setProperty("--gx",(x*100)+"%");
+  card.style.setProperty("--gy",(y*100)+"%");
 });
-card.addEventListener("pointerleave",function(){card.style.transform=""});
+card.addEventListener("mouseleave",function(){ card.style.transform="rotateX(0) rotateY(0) scale(1)"; });
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "glass-stat-card": `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Glass Stat Card</title><style>
-:root{--bg:#050507;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:radial-gradient(circle at 30% 20%,rgba(155,138,255,.25),transparent 45%),radial-gradient(circle at 75% 70%,rgba(90,160,255,.2),transparent 45%),var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.glass{display:flex;gap:12px}
-.stat{position:relative;width:120px;padding:18px;border:1px solid rgba(255,255,255,.14);border-radius:16px;background:rgba(255,255,255,.06);backdrop-filter:blur(14px);overflow:hidden;transition:transform .3s cubic-bezier(.2,.8,.2,1),background .3s,box-shadow .3s}
-.stat::before{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(115deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);transition:left .6s ease}
-.stat:hover::before{left:130%}
-.stat:hover{transform:translateY(-7px);background:rgba(255,255,255,.11);box-shadow:0 20px 40px -18px rgba(155,138,255,.4)}
-.stat small{position:relative;display:block;font-size:7px;letter-spacing:1.5px;color:#c3bdd0}
-.stat strong{position:relative;display:block;margin-top:8px;font:700 26px "Space Grotesk",sans-serif}
-.stat em{position:relative;font-style:normal;font-size:8px;color:#a9e6b4}
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Glass Stat Cards</title><style>
+:root{--ink:#161a2b;--mut:#5b6280;--cobalt:#3b5bdb}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:linear-gradient(155deg,#5a72f0,#2f3fb0 60%,#1e2a80);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.row{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;max-width:600px}
+.card{width:170px;background:rgba(255,255,255,.14);backdrop-filter:blur(16px) saturate(1.4);border:1px solid rgba(255,255,255,.25);border-radius:18px;padding:20px;opacity:0;transform:translateY(16px)}
+.card span{font-size:11px;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.05em}
+.card b{display:block;font-size:26px;color:#fff;margin:8px 0 4px;font-weight:800}
+.card i{font-style:normal;font-size:12px;color:#c8f7d4;display:flex;align-items:center;gap:4px}
+.card i.down{color:#ffc9c9}
 </style></head>
-<body data-cf-keep-dark><div class="glass"><div class="stat"><small>REVENUE</small><strong>$48K</strong><em>+12.4%</em></div><div class="stat"><small>USERS</small><strong>3.2K</strong><em>+8.1%</em></div><div class="stat"><small>UPTIME</small><strong>99.9%</strong><em>stable</em></div></div>
-</body></html>`,
+<body>
+<div class="row" id="row">
+  <div class="card"><span>Active users</span><b data-c="12480">0</b><i>▲ 8.2%</i></div>
+  <div class="card"><span>Revenue</span><b data-c="84200" data-p="$">0</b><i>▲ 14.1%</i></div>
+  <div class="card"><span>Churn</span><b data-c="2" data-s=".4%">0</b><i class="down">▼ 0.6%</i></div>
+</div>
+<script>
+document.querySelectorAll(".card").forEach(function(c,i){
+  setTimeout(function(){ c.style.transition="opacity .5s ease,transform .5s cubic-bezier(.2,.8,.2,1)"; c.style.opacity=1; c.style.transform="translateY(0)"; }, 120+i*110);
+});
+document.querySelectorAll(".card b").forEach(function(el){
+  var target=+el.dataset.c, prefix=el.dataset.p||"", suffix=el.dataset.s||"";
+  var start=null;
+  function step(ts){ if(!start)start=ts; var p=Math.min(1,(ts-start)/1200); el.textContent=prefix+Math.round(target*p).toLocaleString("en-US")+suffix; if(p<1)requestAnimationFrame(step); }
+  setTimeout(function(){ requestAnimationFrame(step); },300);
+});
+</script>
+</body></html>
+`,
 
   "live-chart-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Live Chart Card</title><style>
@@ -2769,56 +2812,94 @@ grid.addEventListener("pointermove",function(e){const r=grid.getBoundingClientRe
 
   "expandable-detail-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Expandable Detail Card</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:16px;padding:40px;width:min(360px,86vw)}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.exp-card{position:relative;border:1px solid var(--line);border-radius:16px;background:#0d0d12;overflow:hidden;cursor:pointer;transition:border-color .3s,box-shadow .3s}
-.exp-card.open{border-color:#544c67;box-shadow:0 20px 50px -20px rgba(155,138,255,.35)}
-.exp-head{display:flex;justify-content:space-between;align-items:center;padding:18px 20px}
-.exp-head b{color:#f7f5fb;font-size:13px}
-.chev{width:22px;height:22px;border-radius:50%;background:#17131f;display:grid;place-items:center;color:var(--lav);transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .3s}
-.exp-card.open .chev{transform:rotate(180deg);background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f}
-.exp-body{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.2,.8,.2,1)}
-.exp-card.open .exp-body{max-height:140px}
-.exp-body p{margin:0;padding:0 20px 20px;color:#a49dbc;font-size:12px;line-height:1.6;opacity:0;transform:translateY(6px);transition:opacity .3s .1s,transform .3s .1s}
-.exp-card.open .exp-body p{opacity:1;transform:none}
+:root{--bg:#eef1f8;--ink:#161a2b;--mut:#666f8a;--cobalt:#3b5bdb;--line:#dfe3ef}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:320px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 24px 50px -22px rgba(20,25,50,.2);cursor:pointer}
+.top{display:flex;justify-content:space-between;align-items:center}
+.top .l{display:flex;gap:12px;align-items:center}
+.ic{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#4f6bef,#3b5bdb);display:flex;align-items:center;justify-content:center;flex:none}
+.ic svg{width:18px;height:18px;color:#fff}
+.top b{font-size:14px;color:var(--ink)}
+.top span{font-size:11.5px;color:var(--mut);display:block}
+.chev{color:var(--mut);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.chev svg{width:16px;height:16px}
+.card.open .chev{transform:rotate(180deg)}
+.detail{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.2,.8,.2,1)}
+.card.open .detail{max-height:140px}
+.detail-in{padding-top:16px;margin-top:14px;border-top:1px solid var(--line)}
+.detail-in p{margin:0 0 12px;font-size:12.5px;color:var(--mut);line-height:1.6}
+.bar{height:6px;background:#eef1f8;border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--cobalt);border-radius:4px;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.detail-foot{display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--mut)}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">CLICK TO EXPAND</span>
-<div class="exp-card" id="card"><div class="exp-head"><b>What's included in Pro?</b><span class="chev">⌄</span></div>
-<div class="exp-body"><p>Unlimited projects, priority support, advanced analytics and early access to every new component we ship.</p></div></div></div>
-<script>document.getElementById("card").addEventListener("click",function(e){e.currentTarget.classList.toggle("open")});</script>
-</body></html>`,
+<body>
+<div class="card" id="card">
+  <div class="top"><div class="l"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div><b>Storage usage</b><span>128GB of 500GB used</span></div></div><div class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></div></div>
+  <div class="detail"><div class="detail-in">
+    <p>You're on the Pro plan. Upgrade to Business for 2TB of pooled storage across your team.</p>
+    <div class="bar"><i id="bar"></i></div>
+    <div class="detail-foot"><span>128GB used</span><span>500GB total</span></div>
+  </div></div>
+</div>
+<script>
+var card=document.getElementById("card"), bar=document.getElementById("bar");
+card.addEventListener("click",function(){
+  card.classList.toggle("open");
+  if(card.classList.contains("open")) setTimeout(function(){ bar.style.width="26%"; },80);
+  else bar.style.width="0";
+});
+</script>
+</body></html>
+`,
 
   "before-after-compare-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Before/After Compare Card</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:16px;place-items:center;padding:40px}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.compare{position:relative;width:320px;height:200px;border:1px solid var(--line);border-radius:14px;overflow:hidden;user-select:none;box-shadow:0 20px 50px -20px rgba(0,0,0,.6)}
-.pane{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-weight:800}
-.before{background:linear-gradient(135deg,#1a1723,#0d0d12);color:#817d8a}
-.after{background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f}
-.after-wrap{position:absolute;inset:0;width:50%;overflow:hidden}
-.handle{position:absolute;top:0;bottom:0;left:50%;width:2px;background:linear-gradient(180deg,transparent,#f7f5fb,transparent);cursor:ew-resize}
-.handle::after{content:"↔";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;background:#f7f5fb;color:#0a090f;display:grid;place-items:center;font-size:13px;box-shadow:0 0 0 6px rgba(196,181,253,.18),0 8px 20px -6px rgba(0,0,0,.5)}
+:root{--bg:#eef1f8;--ink:#161a2b;--mut:#666f8a;--cobalt:#3b5bdb;--line:#dfe3ef}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.kicker{color:var(--mut);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;text-align:center;margin-bottom:14px;display:block}
+.card{width:320px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 24px 50px -22px rgba(20,25,50,.2)}
+.comp{position:relative;height:220px;border-radius:12px;overflow:hidden;cursor:ew-resize}
+.pane{position:absolute;inset:0;background:linear-gradient(155deg,#c7cff5,#3b5bdb)}
+.pane.before{background:linear-gradient(155deg,#dfe3ef,#a7adc4)}
+.pane.after{clip-path:inset(0 0 0 50%)}
+.label{position:absolute;top:10px;font-size:10px;font-weight:700;color:#fff;background:rgba(0,0,0,.35);padding:3px 9px;border-radius:20px;letter-spacing:.04em;text-transform:uppercase}
+.label.l{left:10px}
+.label.r{right:10px}
+.handle{position:absolute;top:0;bottom:0;left:50%;width:3px;background:#fff;transform:translateX(-50%);box-shadow:0 0 0 3px rgba(255,255,255,.4)}
+.handle .grip{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,0,0,.25)}
+.grip svg{width:14px;height:14px;color:var(--cobalt)}
+.caption{padding:12px 6px 4px;text-align:center;font-size:12px;color:var(--mut)}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">DRAG THE HANDLE</span>
-<div class="compare" id="compare"><div class="pane before">BEFORE</div><div class="after-wrap" id="afterWrap"><div class="pane after" style="width:320px">AFTER</div></div><div class="handle" id="handle"></div></div></div>
+<body>
+<div><span class="kicker">Drag to compare</span>
+<div class="card">
+  <div class="comp" id="comp">
+    <div class="pane before"></div>
+    <div class="pane after" id="afterPane"></div>
+    <span class="label l">Before</span><span class="label r">After</span>
+    <div class="handle" id="handle"><div class="grip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 6-6 6 6 6M15 6l6 6-6 6"/></svg></div></div>
+  </div>
+  <div class="caption">Redesigned dashboard — conversion up 34%</div>
+</div>
+</div>
 <script>
-const compare=document.getElementById("compare"),afterWrap=document.getElementById("afterWrap"),handle=document.getElementById("handle");
-let dragging=false;
-handle.addEventListener("pointerdown",function(){dragging=true});
-window.addEventListener("pointerup",function(){dragging=false});
-window.addEventListener("pointermove",function(e){
-  if(!dragging)return;
-  const r=compare.getBoundingClientRect();
-  let pct=Math.max(0,Math.min(100,((e.clientX-r.left)/r.width)*100));
-  afterWrap.style.width=pct+"%";handle.style.left=pct+"%";
-});
+var comp=document.getElementById("comp"), after=document.getElementById("afterPane"), handle=document.getElementById("handle"), dragging=false;
+function setPos(x){
+  var r=comp.getBoundingClientRect();
+  var pct=Math.min(100,Math.max(0,((x-r.left)/r.width)*100));
+  after.style.clipPath="inset(0 0 0 "+pct+"%)";
+  handle.style.left=pct+"%";
+}
+comp.addEventListener("mousedown",function(e){ dragging=true; setPos(e.clientX); });
+window.addEventListener("mousemove",function(e){ if(dragging) setPos(e.clientX); });
+window.addEventListener("mouseup",function(){ dragging=false; });
+comp.addEventListener("touchstart",function(e){ setPos(e.touches[0].clientX); });
+comp.addEventListener("touchmove",function(e){ setPos(e.touches[0].clientX); });
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "usage-slider-pricing": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Usage-Based Pricing Slider</title><style>
@@ -4240,122 +4321,206 @@ const t=setInterval(function(){v=Math.min(100,v+Math.random()*7);pct.textContent
 
   "stacked-card-deck": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Stacked Card Deck</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.deck{position:relative;width:220px;height:150px}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;display:block;text-align:center;margin-bottom:16px}
-.card{position:absolute;inset:0;border:1px solid var(--line);border-radius:16px;background:linear-gradient(135deg,#1c1930,#0d0d12);display:grid;place-items:center;color:#eee9f8;font-size:12px;font-weight:700;cursor:grab;box-shadow:0 20px 40px -16px rgba(0,0,0,.6);transition:transform .3s ease,opacity .3s ease}
-.card:last-child{background:linear-gradient(135deg,#221f38,#141019);box-shadow:0 24px 50px -14px rgba(155,138,255,.3)}
+:root{--bg:#eef1f8;--ink:#161a2b;--mut:#666f8a;--cobalt:#3b5bdb;--line:#dfe3ef}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.kicker{color:var(--mut);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;text-align:center;margin-bottom:14px;display:block}
+.deck{position:relative;width:240px;height:300px}
+.card{position:absolute;inset:0;background:#fff;border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 24px 50px -22px rgba(20,25,50,.22);transition:transform .4s cubic-bezier(.2,.8,.2,1),opacity .4s;display:flex;flex-direction:column}
+.card .av{width:40px;height:40px;border-radius:50%;margin-bottom:14px}
+.card h4{margin:0 0 6px;font-size:15px;color:var(--ink)}
+.card p{margin:0;font-size:12.5px;color:var(--mut);line-height:1.6;flex:1}
+.card .actions{display:flex;gap:10px;margin-top:14px}
+.card .actions button{flex:1;padding:10px;border-radius:10px;border:0;font-size:12px;font-weight:600;cursor:pointer}
+.pass{background:#f3f0ff;color:#7c5cff}
+.pass:hover{background:#e8e2ff}
+.like{background:var(--cobalt);color:#fff}
 </style></head>
-<body data-cf-keep-dark><div><span class="kicker">DRAG THE TOP CARD AWAY</span><div class="deck" id="deck">
-<div class="card" style="transform:translateY(10px) scale(.95)">Card 3</div>
-<div class="card" style="transform:translateY(5px) scale(.98)">Card 2</div>
-<div class="card" id="top">Card 1 — drag me</div>
-</div></div>
+<body>
+<div><span class="kicker">Choose an action</span>
+<div class="deck" id="deck"></div>
+</div>
 <script>
-const deck=document.getElementById("deck");
-function attach(){
-  const top=deck.querySelector(".card:last-child");
-  let down=false,sx=0,dx=0;
-  top.addEventListener("pointerdown",function(e){down=true;sx=e.clientX;top.style.transition="none"});
-  window.addEventListener("pointermove",function(e){if(!down)return;dx=e.clientX-sx;top.style.transform="translateX("+dx+"px) rotate("+(dx/12)+"deg)"});
-  window.addEventListener("pointerup",function(){
-    if(!down)return;down=false;top.style.transition="transform .3s ease, opacity .3s ease";
-    if(Math.abs(dx)>90){top.style.transform="translateX("+(dx*4)+"px) rotate("+(dx/6)+"deg)";top.style.opacity="0";setTimeout(function(){top.remove();if(deck.children.length)attach()},280)}
-    else{top.style.transform="translateX(0) rotate(0)"}
+var data=[
+  {av:"#4f6bef",name:"Maya Kessler",role:"Product Designer",bio:"Looking to collaborate on design-system work across early-stage startups."},
+  {av:"#7c5cff",name:"Daniel Reyes",role:"Frontend Engineer",bio:"Five years building performant React apps, open to fractional roles."},
+  {av:"#22c58b",name:"Priya Nair",role:"Growth Marketer",bio:"Helped three SaaS teams hit their first $1M ARR through content."}
+];
+var deck=document.getElementById("deck");
+function render(){
+  deck.innerHTML="";
+  data.slice(0,3).forEach(function(d,i){
+    var c=document.createElement("div"); c.className="card";
+    c.style.transform="translateY("+(i*8)+"px) scale("+(1-i*.04)+")";
+    c.style.zIndex=10-i; c.style.opacity=i===0?1:(1-i*.25);
+    c.innerHTML='<div class="av" style="background:'+d.av+'"></div><h4>'+d.name+'</h4><p><b style="color:#3b5bdb">'+d.role+'</b><br>'+d.bio+'</p>'+(i===0?'<div class="actions"><button class="pass" id="passBtn">Pass</button><button class="like" id="likeBtn">Connect</button></div>':'');
+    deck.appendChild(c);
   });
+  var pass=document.getElementById("passBtn"), like=document.getElementById("likeBtn");
+  if(pass) pass.addEventListener("click",function(){ advance(-1); });
+  if(like) like.addEventListener("click",function(){ advance(1); });
 }
-attach();
+function advance(dir){
+  var top=deck.firstElementChild;
+  top.style.transform="translate("+(dir*260)+"px,-20px) rotate("+(dir*14)+"deg)";
+  top.style.opacity=0;
+  data.push(data.shift());
+  setTimeout(render,260);
+}
+render();
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "notification-toast-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Notification Toast Card</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.toast{position:relative;width:300px;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:#111017;overflow:hidden;box-shadow:0 20px 50px -20px rgba(0,0,0,.6);display:flex;gap:12px;align-items:flex-start;animation:slideIn .4s cubic-bezier(.2,.8,.2,1)}
-.toast-icon{width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);display:grid;place-items:center;color:#0a090f;font-weight:800;font-size:13px;flex:none}
-.toast-body{flex:1;min-width:0}
-.toast-row{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.toast-row b{color:#f7f5fb;font-size:12px}
-.toast-row button{border:0;background:none;color:var(--lav);font-size:11px;font-weight:700;cursor:pointer}
-.toast p{margin:4px 0 10px;color:#a49dbc;font-size:11px}
-.toast-bar-track{height:3px;border-radius:3px;background:#1e1c27;overflow:hidden}
-.toast-bar{height:100%;background:linear-gradient(90deg,#d7d0ff,#9b8aff);width:100%;animation:drain 4s linear forwards}
-@keyframes drain{to{width:0%}}
-@keyframes slideIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+:root{--bg:#eef1f8;--ink:#161a2b;--mut:#666f8a;--cobalt:#3b5bdb;--line:#dfe3ef;--green:#22c58b;--red:#f0524a}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.stage{display:flex;flex-direction:column;gap:18px;align-items:center}
+.kicker{color:var(--mut);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+.buttons{display:flex;gap:10px}
+.buttons button{border:1px solid var(--line);background:#fff;padding:9px 16px;border-radius:9px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--ink)}
+.buttons button:hover{border-color:var(--cobalt);color:var(--cobalt)}
+.toasts{position:fixed;bottom:28px;right:28px;display:flex;flex-direction:column;gap:10px;z-index:10}
+.toast{width:290px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:0 20px 44px -18px rgba(20,25,50,.3);display:flex;gap:11px;align-items:flex-start;transform:translateX(120%);opacity:0;position:relative;overflow:hidden}
+.toast.show{transform:translateX(0);opacity:1;transition:transform .4s cubic-bezier(.2,.8,.2,1),opacity .4s}
+.toast .ic{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex:none}
+.toast .ic svg{width:13px;height:13px;color:#fff}
+.toast.success .ic{background:var(--green)}
+.toast.error .ic{background:var(--red)}
+.toast b{display:block;font-size:12.5px;color:var(--ink)}
+.toast span{font-size:11.5px;color:var(--mut)}
+.bar{position:absolute;bottom:0;left:0;height:2.5px;background:var(--cobalt);width:100%;transform-origin:left}
+.toast.success .bar{background:var(--green)}
+.toast.error .bar{background:var(--red)}
 </style></head>
-<body data-cf-keep-dark><div class="toast"><div class="toast-icon">✕</div><div class="toast-body"><div class="toast-row"><b>File deleted</b><button id="undo">Undo</button></div><p>project-plan.pdf was moved to trash.</p><div class="toast-bar-track"><div class="toast-bar" id="bar"></div></div></div></div>
-<script>document.getElementById("undo").addEventListener("click",function(){const bar=document.getElementById("bar");bar.style.animation="none";bar.style.width="100%"});</script>
-</body></html>`,
+<body>
+<div class="stage">
+  <span class="kicker">Trigger a toast</span>
+  <div class="buttons"><button id="okBtn">Success toast</button><button id="errBtn">Error toast</button></div>
+</div>
+<div class="toasts" id="toasts"></div>
+<script>
+function toast(type,title,msg){
+  var wrap=document.getElementById("toasts");
+  var t=document.createElement("div"); t.className="toast "+type;
+  var icon=type==="success"?'<path d="M20 6 9 17l-5-5"/>':'<path d="M18 6 6 18M6 6l12 12"/>';
+  t.innerHTML='<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6">'+icon+'</svg></div><div><b>'+title+'</b><span>'+msg+'</span></div><div class="bar"></div>';
+  wrap.appendChild(t);
+  requestAnimationFrame(function(){ t.classList.add("show"); });
+  var bar=t.querySelector(".bar");
+  requestAnimationFrame(function(){ bar.style.transition="transform 3.2s linear"; bar.style.transform="scaleX(0)"; });
+  setTimeout(function(){ t.style.transform="translateX(120%)"; t.style.opacity=0; setTimeout(function(){ t.remove(); },400); },3200);
+}
+document.getElementById("okBtn").addEventListener("click",function(){ toast("success","Changes saved","Your profile was updated successfully."); });
+document.getElementById("errBtn").addEventListener("click",function(){ toast("error","Upload failed","File exceeds the 10MB size limit."); });
+setTimeout(function(){ toast("success","Welcome back","You have 3 new notifications."); },500);
+</script>
+</body></html>
+`,
 
   "pinned-metric-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Pinned Metric Card</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{position:relative;width:230px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;overflow:hidden;box-shadow:0 20px 50px -20px rgba(0,0,0,.6)}
-.card::before{content:"";position:absolute;top:-40%;right:-30%;width:200px;height:200px;background:radial-gradient(circle,rgba(155,138,255,.18),transparent 70%)}
-.card b{position:relative;display:block;color:#817d8a;font-size:10px;letter-spacing:1px}
-.card strong{position:relative;display:block;font-size:30px;color:#f7f5fb;margin:8px 0}
-svg{position:relative;display:block}
-polyline{fill:none;stroke:#c4b5fd;stroke-width:2;stroke-dasharray:220;stroke-dashoffset:220;animation:draw 1.4s ease .2s forwards}
+:root{--bg:#eef1f8;--ink:#161a2b;--mut:#666f8a;--cobalt:#3b5bdb;--line:#dfe3ef;--green:#22c58b}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:260px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 24px 50px -22px rgba(20,25,50,.2);position:relative}
+.pin{position:absolute;top:16px;right:16px;color:var(--cobalt);cursor:pointer}
+.pin svg{width:16px;height:16px;transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.pin.on svg{fill:var(--cobalt);transform:scale(1.15)}
+.top span{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
+.amt{font-size:28px;font-weight:800;color:var(--ink);margin:8px 0 4px}
+.delta{font-size:12px;color:var(--green);font-weight:600}
+.spark{margin-top:16px;height:44px}
+.spark svg{width:100%;height:100%}
+.spark path{fill:none;stroke:var(--cobalt);stroke-width:2;stroke-linecap:round;stroke-dasharray:200;stroke-dashoffset:200;animation:draw 1.1s .3s cubic-bezier(.2,.8,.2,1) forwards}
 @keyframes draw{to{stroke-dashoffset:0}}
 </style></head>
-<body data-cf-keep-dark><div class="card"><b>WEEKLY ACTIVE USERS</b><strong id="num">0</strong>
-<svg width="190" height="40" viewBox="0 0 190 40"><defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c4b5fd" stop-opacity=".35"/><stop offset="100%" stop-color="#c4b5fd" stop-opacity="0"/></linearGradient></defs>
-<polygon points="0,30 25,24 50,28 75,14 100,18 125,8 150,12 175,3 175,40 0,40" fill="url(#area)"/>
-<polyline points="0,30 25,24 50,28 75,14 100,18 125,8 150,12 175,3"/></svg></div>
+<body>
+<div class="card">
+  <div class="pin" id="pin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6z"/></svg></div>
+  <div class="top"><span>Avg. Session Duration</span></div>
+  <div class="amt">4m 32s</div>
+  <div class="delta">▲ 18% this week</div>
+  <div class="spark"><svg viewBox="0 0 200 44" preserveAspectRatio="none"><path d="M0,34 L20,30 L40,32 L60,20 L80,24 L100,12 L120,18 L140,8 L160,14 L180,4 L200,6"/></svg></div>
+</div>
 <script>
-let v=0;const num=document.getElementById("num");
-const t=setInterval(function(){v+=310;num.textContent=v.toLocaleString();if(v>=18400){v=18400;num.textContent=v.toLocaleString();clearInterval(t)}},25);
+var pin=document.getElementById("pin");
+pin.addEventListener("click",function(){ pin.classList.toggle("on"); });
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "credit-card-3d": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Credit Card 3D</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:"Space Grotesk",Inter,sans-serif;perspective:900px}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;display:block;text-align:center;margin-bottom:16px}
-.card3d{position:relative;width:280px;height:175px;cursor:pointer;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 20px 40px rgba(0,0,0,.5))}
-.card3d.flip{transform:rotateY(180deg)}
-.face{position:absolute;inset:0;border-radius:16px;backface-visibility:hidden;padding:20px;color:#fff;overflow:hidden}
-.face::before{content:"";position:absolute;top:-60%;left:-20%;width:140%;height:140%;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.16) 50%,transparent 60%);transform:rotate(8deg)}
-.front{background:linear-gradient(135deg,#4a3f80,#171325);display:flex;flex-direction:column;justify-content:space-between}
-.chip{width:34px;height:24px;border-radius:5px;background:linear-gradient(135deg,#e7d9a8,#b89a4f)}
-.front b{font-size:15px;letter-spacing:2px}
-.front span{font-size:9px;color:#a49dbc}
-.back{background:linear-gradient(135deg,#171325,#4a3f80);transform:rotateY(180deg)}
-.stripe{height:34px;background:#0a090f;margin-top:16px}
-.cvv{margin:16px;padding:8px 10px;background:#fff;color:#111;font-size:11px;border-radius:4px;text-align:right}
+:root{--bg:#eef1f8;--mut:#666f8a}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.kicker{color:var(--mut);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;text-align:center;margin-bottom:14px;display:block}
+.scene{width:300px;height:184px;perspective:1200px}
+.card3d{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.8,.2,1);cursor:pointer}
+.scene:hover .card3d{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:18px;padding:22px;color:#fff;box-shadow:0 30px 60px -24px rgba(20,25,50,.35)}
+.front{background:linear-gradient(135deg,#2c2f6b,#3b5bdb 55%,#5f7dff);display:flex;flex-direction:column;justify-content:space-between}
+.chip{width:38px;height:28px;border-radius:6px;background:linear-gradient(135deg,#e8c76b,#c69a3a)}
+.num{font-size:17px;letter-spacing:3px;font-family:ui-monospace,monospace}
+.row{display:flex;justify-content:space-between;align-items:flex-end}
+.row span{display:block;font-size:9px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.05em}
+.row b{font-size:13px;font-weight:600}
+.brand{font-style:italic;font-weight:800;font-size:16px;text-align:right}
+.back{background:linear-gradient(135deg,#2c2f6b,#3b5bdb);transform:rotateY(180deg)}
+.stripe{background:#0e1030;height:38px;margin:18px -22px 0}
+.cvv-row{margin-top:24px;background:rgba(255,255,255,.9);border-radius:6px;padding:8px 12px;text-align:right;color:#161a2b;font-family:ui-monospace,monospace;font-size:13px}
 </style></head>
-<body data-cf-keep-dark><div><span class="kicker">CLICK THE CARD TO FLIP</span>
-<div class="card3d" id="card"><div class="face front"><div class="chip"></div><div><b>•••• •••• •••• 4821</b><br><span>VALID THRU 09/28</span></div></div><div class="face back"><div class="stripe"></div><div class="cvv">CVV 042</div></div></div></div>
-<script>document.getElementById("card").addEventListener("click",function(e){e.currentTarget.classList.toggle("flip")});</script>
-</body></html>`,
+<body>
+<div><span class="kicker">Hover to flip</span>
+<div class="scene"><div class="card3d">
+  <div class="face front">
+    <div class="row"><div class="chip"></div><div class="brand">Nova</div></div>
+    <div class="num">4482&nbsp;&nbsp;1190&nbsp;&nbsp;7743&nbsp;&nbsp;0012</div>
+    <div class="row"><div><span>Card holder</span><b>A. Kessler</b></div><div><span>Expires</span><b>09/29</b></div></div>
+  </div>
+  <div class="face back"><div class="stripe"></div><div class="cvv-row">CVV &nbsp;074</div></div>
+</div></div>
+</div>
+</body></html>
+`,
 
   "timeline-milestone-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Timeline Milestone Card</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:260px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;box-shadow:0 20px 50px -20px rgba(0,0,0,.6)}
-.card b{display:block;color:#f7f5fb;font-size:13px;margin-bottom:14px}
-.step{display:flex;gap:10px;align-items:flex-start;position:relative;padding-bottom:16px}
-.step:last-child{padding-bottom:0}
-.step::before{content:"";position:absolute;left:8px;top:20px;bottom:-4px;width:1px;background:var(--line)}
-.step.done::before{background:linear-gradient(180deg,#5fd4a1,var(--line))}
-.step:last-child::before{display:none}
-.dot{width:17px;height:17px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;flex:none;font-size:9px;color:#050507;background:#1c1a24;transition:background .3s}
-.step.done .dot{background:linear-gradient(135deg,#7fe0ac,#41b878);color:#0a090f}
-.step.active .dot{background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;box-shadow:0 0 0 5px rgba(196,181,253,.2);animation:pulse 1.6s ease-in-out infinite}
-.step span{font-size:11px;color:#c9c4d6;padding-top:1px}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 5px rgba(196,181,253,.2)}50%{box-shadow:0 0 0 9px rgba(196,181,253,.08)}}
+:root{--bg:#eef1f8;--ink:#161a2b;--mut:#666f8a;--cobalt:#3b5bdb;--line:#dfe3ef;--green:#22c58b}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:320px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 24px 50px -22px rgba(20,25,50,.2)}
+.card h3{margin:0 0 18px;font-size:15px;color:var(--ink)}
+.tl{position:relative;padding-left:22px}
+.tl:before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1.5px;background:var(--line)}
+.item{position:relative;padding-bottom:20px;opacity:0;transform:translateX(-6px)}
+.item:last-child{padding-bottom:0}
+.item .dot{position:absolute;left:-22px;top:2px;width:11px;height:11px;border-radius:50%;background:#fff;border:2px solid var(--line)}
+.item.done .dot{background:var(--green);border-color:var(--green)}
+.item.active .dot{background:var(--cobalt);border-color:var(--cobalt);box-shadow:0 0 0 4px rgba(59,91,219,.15)}
+.item b{display:block;font-size:13px;color:var(--ink)}
+.item span{font-size:11.5px;color:var(--mut)}
 </style></head>
-<body data-cf-keep-dark><div class="card"><b>Onboarding progress</b>
-<div class="step done"><div class="dot">✓</div><span>Account created</span></div>
-<div class="step done"><div class="dot">✓</div><span>Workspace connected</span></div>
-<div class="step active"><div class="dot">3</div><span>Invite your team</span></div>
+<body>
+<div class="card">
+  <h3>Project Milestones</h3>
+  <div class="tl" id="tl">
+    <div class="item done"><div class="dot"></div><b>Kickoff &amp; discovery</b><span>Completed Aug 3</span></div>
+    <div class="item done"><div class="dot"></div><b>Design system finalized</b><span>Completed Aug 21</span></div>
+    <div class="item active"><div class="dot"></div><b>Beta launch</b><span>In progress — 68% complete</span></div>
+    <div class="item"><div class="dot"></div><b>Public release</b><span>Scheduled Oct 14</span></div>
+  </div>
 </div>
-</body></html>`,
+<script>
+document.querySelectorAll(".item").forEach(function(el,i){
+  setTimeout(function(){ el.style.transition="opacity .4s ease,transform .4s cubic-bezier(.2,.8,.2,1)"; el.style.opacity=1; el.style.transform="translateX(0)"; }, 120+i*110);
+});
+</script>
+</body></html>
+`,
 
   "sliding-price-ladder": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Sliding Price Ladder</title><style>
