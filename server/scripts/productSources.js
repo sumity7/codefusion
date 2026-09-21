@@ -631,31 +631,42 @@ document.querySelectorAll(".item").forEach(function(el,i){
 
   "tabbed-features": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Tabbed Features</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:16px;padding:40px;width:min(520px,90%)}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.tabs{display:flex;gap:6px}
-.tabs button{position:relative;padding:9px 15px;border:1px solid var(--line);border-radius:999px;background:#0d0d12;color:#847e8f;font-size:9px;font-weight:700;cursor:pointer;transition:color .3s,border-color .3s,transform .3s cubic-bezier(.34,1.56,.64,1)}
-.tabs button.active{color:#0a090f;border-color:transparent;background:linear-gradient(135deg,#d7d0ff,#9b8aff);transform:translateY(-2px);box-shadow:0 10px 24px -10px rgba(155,138,255,.55)}
-.panel-wrap{position:relative}
-.panel-wrap::before{content:"";position:absolute;inset:-16px;border-radius:26px;background:radial-gradient(circle,rgba(196,181,253,.22),transparent 70%);filter:blur(18px);opacity:.7;pointer-events:none}
-.panel{position:relative;display:none;padding:26px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;min-height:150px;box-shadow:0 20px 50px -20px rgba(0,0,0,.6);animation:fade .35s cubic-bezier(.2,.8,.2,1)}
-.panel.active{display:block}
-.panel h3{margin:0 0 8px;font:700 18px "Space Grotesk",sans-serif;background:linear-gradient(90deg,#f7f5fb,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}
-.panel p{margin:0;color:#a49dbc;font-size:10px;line-height:1.7}
-@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+:root{--bg:#f4faf9;--ink:#0f2622;--mut:#5b7570;--teal:#0d9488;--line:#dcece8;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:380px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 24px 50px -24px rgba(15,38,34,.15)}
+.tabs{display:flex;gap:6px;margin-bottom:18px;background:var(--bg);border-radius:11px;padding:4px}
+.tabs button{flex:1;background:none;border:0;padding:9px;border-radius:8px;font-size:12px;font-weight:600;color:var(--mut);cursor:pointer;font-family:inherit}
+.tabs button.on{background:#fff;color:var(--teal);box-shadow:0 4px 10px -4px rgba(15,38,34,.2)}
+.panel{display:none}
+.panel.on{display:block;animation:fade .3s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.vis{height:130px;border-radius:12px;margin-bottom:14px}
+.panel h4{margin:0 0 6px;font-size:14.5px;color:var(--ink)}
+.panel p{margin:0;font-size:12.5px;color:var(--mut);line-height:1.6}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">CLICK A TAB</span>
-<div class="tabs"><button class="active" data-tab="1">Speed</button><button data-tab="2">Security</button><button data-tab="3">Scale</button></div>
-<div class="panel-wrap"><div class="panel active" data-panel="1"><h3>Built for speed</h3><p>Every interaction responds in under 100ms.</p></div>
-<div class="panel" data-panel="2"><h3>Secure by default</h3><p>Encrypted at rest and in transit, always.</p></div>
-<div class="panel" data-panel="3"><h3>Scales with you</h3><p>From one user to one million, no re-architecture.</p></div></div>
+<body>
+<div class="card">
+  <div class="tabs" id="tabs">
+    <button class="on" data-i="0">Automate</button>
+    <button data-i="1">Analyze</button>
+    <button data-i="2">Collaborate</button>
+  </div>
+  <div class="panel on" data-i="0"><div class="vis" style="background:linear-gradient(155deg,#ccf1ea,#0d9488)"></div><h4>Automate the busywork</h4><p>Rules-based workflows that run themselves once you set them up.</p></div>
+  <div class="panel" data-i="1"><div class="vis" style="background:linear-gradient(155deg,#a7e8dc,#0f766e)"></div><h4>See what's actually working</h4><p>Real-time dashboards, not weekly exports nobody reads.</p></div>
+  <div class="panel" data-i="2"><div class="vis" style="background:linear-gradient(155deg,#ddf2ee,#5bab9e)"></div><h4>Built for teams, not solo users</h4><p>Comments, mentions and shared views, right where the work happens.</p></div>
 </div>
 <script>
-document.querySelectorAll(".tabs button").forEach(btn=>btn.addEventListener("click",function(){document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));btn.classList.add("active");document.querySelector('[data-panel="'+btn.dataset.tab+'"]').classList.add("active")}));
+var tabs=document.querySelectorAll(".tabs button"), panels=document.querySelectorAll(".panel");
+tabs.forEach(function(t){
+  t.addEventListener("click",function(){
+    tabs.forEach(function(x){x.classList.remove("on")}); t.classList.add("on");
+    panels.forEach(function(p){ p.classList.toggle("on", p.dataset.i===t.dataset.i); });
+  });
+});
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "sticky-cta-banner": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>FlowState Landing Page</title><style>
@@ -1404,52 +1415,71 @@ tabs.forEach(function(t){ t.addEventListener("click",function(){ tabs.forEach(fu
 
   "icon-feature-grid": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Icon Feature Grid</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:24px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:520px}
-.f{position:relative;padding:18px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;overflow:hidden;box-shadow:0 16px 40px -22px rgba(0,0,0,.7);transition:transform .3s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .3s}
-.f::before{content:"";position:absolute;inset:-40% -40% auto auto;width:120px;height:120px;background:radial-gradient(circle,rgba(196,181,253,.28),transparent 70%);opacity:0;transition:opacity .3s}
-.f:hover{transform:translateY(-6px);border-color:#544c67;box-shadow:0 24px 50px -20px rgba(155,138,255,.25)}
-.f:hover::before{opacity:1}
-.ico{position:relative;width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:linear-gradient(135deg,#221d33,#181425);color:var(--lav);font-size:15px;box-shadow:inset 0 0 0 1px rgba(196,181,253,.15);transition:transform .3s cubic-bezier(.34,1.56,.64,1),background .3s,color .3s}
-.f:hover .ico{transform:rotate(-8deg) scale(1.1);background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f}
-.f h4{position:relative;margin:12px 0 4px;font:700 12px "Space Grotesk",sans-serif}
-.f p{position:relative;margin:0;font-size:8px;color:#847e8f;line-height:1.6}
-@media(max-width:520px){.grid{grid-template-columns:1fr 1fr}}
+:root{--bg:#f4faf9;--ink:#0f2622;--mut:#5b7570;--teal:#0d9488;--line:#dcece8;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;width:min(460px,92vw)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 16px;opacity:0;transform:translateY(14px);transition:transform .3s,box-shadow .3s}
+.card:hover{transform:translateY(-4px);box-shadow:0 16px 30px -16px rgba(15,38,34,.25)}
+.ic{width:38px;height:38px;border-radius:10px;background:#e5f6f2;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.ic svg{width:18px;height:18px;color:var(--teal)}
+.card b{display:block;font-size:12.5px;color:var(--ink);margin-bottom:4px}
+.card span{font-size:11px;color:var(--mut);line-height:1.5;display:block}
 </style></head>
-<body data-cf-keep-dark><div class="grid">
-<div class="f"><div class="ico">⚡</div><h4>Fast</h4><p>Instant response on every action.</p></div>
-<div class="f"><div class="ico">🔒</div><h4>Secure</h4><p>Encrypted end to end by default.</p></div>
-<div class="f"><div class="ico">◇</div><h4>Composable</h4><p>Drop into any existing stack.</p></div>
-<div class="f"><div class="ico">↗</div><h4>Scalable</h4><p>From one seat to ten thousand.</p></div>
-<div class="f"><div class="ico">◎</div><h4>Precise</h4><p>Pixel-accurate on every screen.</p></div>
-<div class="f"><div class="ico">✦</div><h4>Polished</h4><p>Every state considered.</p></div>
+<body>
+<div class="grid" id="grid">
+  <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h8l-1 8 10-12h-8z"/></svg></div><b>Fast setup</b><span>Live in minutes</span></div>
+  <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6z"/></svg></div><b>Secure by default</b><span>SOC 2 Type II</span></div>
+  <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></div><b>Real-time sync</b><span>No refresh needed</span></div>
+  <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21a8 8 0 1 0-16 0"/><circle cx="12" cy="7" r="4"/></svg></div><b>Team roles</b><span>Granular access</span></div>
+  <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg></div><b>Custom dashboards</b><span>Build your own view</span></div>
+  <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20 21 3M8 21H3v-5"/></svg></div><b>API-first</b><span>Full REST + webhooks</span></div>
 </div>
-</body></html>`,
+<script>
+document.querySelectorAll(".card").forEach(function(c,i){
+  setTimeout(function(){ c.style.transition="opacity .45s ease,transform .45s cubic-bezier(.2,.8,.2,1)"; c.style.opacity=1; c.style.transform="translateY(0)"; }, 100+i*80);
+});
+</script>
+</body></html>
+`,
 
   "accordion-features": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Accordion Features</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:24px}
-.acc{width:min(420px,92vw)}
-.item{border:1px solid var(--line);border-radius:12px;margin-bottom:8px;overflow:hidden;background:#0d0d12;transition:border-color .3s,box-shadow .3s}
-.item.open{border-color:#544c67;box-shadow:0 16px 40px -20px rgba(155,138,255,.35)}
-.head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;cursor:pointer;font:700 12px "Space Grotesk",sans-serif}
-.head i{font-style:normal;width:20px;height:20px;border-radius:50%;background:#181425;color:var(--lav);display:grid;place-items:center;font-size:11px;transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .3s,color .3s}
-.item.open .head i{transform:rotate(45deg);background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f}
-.body{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.2,.8,.2,1)}
-.item.open .body{max-height:120px}
-.body p{margin:0;padding:0 16px 14px;font-size:9px;color:#847e8f;line-height:1.7}
+:root{--bg:#f4faf9;--ink:#0f2622;--mut:#5b7570;--teal:#0d9488;--line:#dcece8;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:360px;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.item{border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}
+.q{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;cursor:pointer}
+.q b{font-size:13.5px;color:var(--ink);font-weight:600}
+.q .plus{width:20px;height:20px;position:relative;flex:none}
+.q .plus:before,.q .plus:after{content:"";position:absolute;background:var(--teal);top:50%;left:50%;transform:translate(-50%,-50%)}
+.q .plus:before{width:12px;height:2px}
+.q .plus:after{width:2px;height:12px;transition:transform .3s}
+.item.open .plus:after{transform:translate(-50%,-50%) rotate(90deg) scale(0)}
+.a{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.2,.8,.2,1)}
+.item.open .a{max-height:120px}
+.a p{margin:0;padding:0 18px 18px;font-size:12.5px;color:var(--mut);line-height:1.65}
 </style></head>
-<body data-cf-keep-dark><div class="acc" id="acc">
-<div class="item open"><div class="head">Built for speed <i>+</i></div><div class="body"><p>Every interaction resolves in under 100ms, even on mid-range devices.</p></div></div>
-<div class="item"><div class="head">Secure by default <i>+</i></div><div class="body"><p>Encrypted at rest and in transit, with audited access controls.</p></div></div>
-<div class="item"><div class="head">Scales with you <i>+</i></div><div class="body"><p>From a single workspace to enterprise fleets, no re-architecture.</p></div></div>
+<body>
+<div class="card" id="acc">
+  <div class="item open"><div class="q"><b>Does it integrate with our existing stack?</b><span class="plus"></span></div><div class="a"><p>Yes — native integrations with Slack, Notion, GitHub and 40+ others, plus a full REST API.</p></div></div>
+  <div class="item"><div class="q"><b>Can I import data from another tool?</b><span class="plus"></span></div><div class="a"><p>One-click import from CSV, plus dedicated migration tools for the five most common competitors.</p></div></div>
+  <div class="item"><div class="q"><b>Is there a free plan?</b><span class="plus"></span></div><div class="a"><p>Yes, free forever for teams up to 5 people, no credit card required to start.</p></div></div>
+  <div class="item"><div class="q"><b>What happens if I cancel?</b><span class="plus"></span></div><div class="a"><p>Your data stays exportable for 90 days after cancellation — nothing is deleted immediately.</p></div></div>
 </div>
 <script>
-document.querySelectorAll(".head").forEach(function(h){h.addEventListener("click",function(){h.parentElement.classList.toggle("open")})});
+document.querySelectorAll(".q").forEach(function(q){
+  q.addEventListener("click",function(){
+    var item=q.parentElement, was=item.classList.contains("open");
+    document.querySelectorAll(".item").forEach(function(i){i.classList.remove("open")});
+    if(!was) item.classList.add("open");
+  });
+});
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "floating-label-form": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Floating Label Form</title><style>
@@ -3685,57 +3715,100 @@ strip.addEventListener("mousemove",function(e){
 
   "before-after-feature-toggle": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Before/After Feature Toggle</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:16px;place-items:center;padding:40px;width:min(340px,86vw)}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.switch{position:relative;display:flex;border:1px solid var(--line);border-radius:999px;padding:3px;width:fit-content;background:#0d0d12}
-.pill{position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);border-radius:999px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
-.switch.on .pill{transform:translateX(100%)}
-.switch button{position:relative;z-index:1;border:0;background:none;padding:7px 16px;border-radius:999px;font-size:11px;font-weight:700;color:#817d8a;cursor:pointer;transition:color .3s}
-.switch button.active{color:#0a090f}
-.panel{border:1px solid var(--line);border-radius:14px;background:#0d0d12;padding:20px;width:100%;color:#eee9f8;font-size:12px;line-height:1.6;box-shadow:0 20px 50px -22px rgba(0,0,0,.6);transition:box-shadow .3s,opacity .15s}
-.panel b{display:block;color:#f7f5fb;margin-bottom:6px;font-size:13px}
+:root{--bg:#f4faf9;--ink:#0f2622;--mut:#5b7570;--teal:#0d9488;--line:#dcece8;--card:#fff;--red:#dc6a5f}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:340px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+.switcher{display:flex;background:var(--bg);border-radius:11px;padding:4px;margin-bottom:18px}
+.switcher button{flex:1;background:none;border:0;padding:9px;border-radius:8px;font-size:12px;font-weight:700;color:var(--mut);cursor:pointer;font-family:inherit}
+.switcher button.on{background:#fff;box-shadow:0 4px 10px -4px rgba(15,38,34,.2)}
+.switcher button.on.before{color:var(--red)}
+.switcher button.on.after{color:var(--teal)}
+.rows{display:flex;flex-direction:column;gap:10px}
+.row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:var(--bg);font-size:12.5px;color:var(--ink)}
+.view{display:none}
+.view.on{display:flex;flex-direction:column;gap:10px;animation:fade .3s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.row svg{width:15px;height:15px;flex:none}
+.before-row svg{color:var(--red)}
+.after-row svg{color:var(--teal)}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">TOGGLE TO COMPARE</span>
-<div class="switch" id="switch"><div class="pill"></div><button class="active" data-v="before">Without CodeFusion</button><button data-v="after">With CodeFusion</button></div>
-<div class="panel" id="panel"><b>Manual, from-scratch builds</b>Weeks spent wiring up components, chasing pixel-perfect states and re-solving problems already solved elsewhere.</div></div>
+<body>
+<div class="card">
+  <div class="switcher"><button class="on before" id="btnBefore">Manual process</button><button class="after" id="btnAfter">With automation</button></div>
+  <div class="view on" id="viewBefore">
+    <div class="row before-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>4 hours/week on manual data entry</div>
+    <div class="row before-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6 6 18M6 6l12 12"/></svg>Reports built by hand in spreadsheets</div>
+    <div class="row before-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6 6 18M6 6l12 12"/></svg>Errors caught days later, if at all</div>
+  </div>
+  <div class="view" id="viewAfter">
+    <div class="row after-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Zero manual entry — synced automatically</div>
+    <div class="row after-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Reports generate themselves, hourly</div>
+    <div class="row after-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Anomalies flagged in real time</div>
+  </div>
+</div>
 <script>
-const switchEl=document.getElementById("switch"),buttons=[...switchEl.querySelectorAll("button")],panel=document.getElementById("panel");
-const content={before:"<b>Manual, from-scratch builds</b>Weeks spent wiring up components, chasing pixel-perfect states and re-solving problems already solved elsewhere.",
-after:"<b>Production-ready in hours</b>Copy a fully polished, interactive component and ship — every state, every breakpoint, already handled."};
-buttons.forEach(function(b){b.addEventListener("click",function(){buttons.forEach(function(x){x.classList.remove("active")});b.classList.add("active");switchEl.classList.toggle("on",b.dataset.v==="after");panel.style.opacity="0";setTimeout(function(){panel.innerHTML=content[b.dataset.v];panel.style.opacity="1"},150)})});
+var btnBefore=document.getElementById("btnBefore"), btnAfter=document.getElementById("btnAfter");
+var viewBefore=document.getElementById("viewBefore"), viewAfter=document.getElementById("viewAfter");
+btnBefore.addEventListener("click",function(){
+  btnBefore.classList.add("on"); btnAfter.classList.remove("on");
+  viewBefore.classList.add("on"); viewAfter.classList.remove("on");
+});
+btnAfter.addEventListener("click",function(){
+  btnAfter.classList.add("on"); btnBefore.classList.remove("on");
+  viewAfter.classList.add("on"); viewBefore.classList.remove("on");
+});
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "scrollspy-feature-list": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Scrollspy Feature List</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;display:flex}
-.nav{position:sticky;top:0;align-self:flex-start;padding:40px 18px;display:grid;gap:12px;min-width:130px}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;margin-bottom:6px}
-.nav a{position:relative;color:#817d8a;font-size:11px;text-decoration:none;padding-left:12px;border-left:2px solid var(--line);transition:color .3s,border-color .3s}
-.nav a.active{color:#f7f5fb;border-left-color:var(--lav)}
-.nav a.active::before{content:"";position:absolute;left:-2px;top:0;bottom:0;width:2px;background:var(--lav);box-shadow:0 0 8px var(--lav)}
-.content{padding:40px 24px;display:grid;gap:200px;flex:1}
-section{scroll-margin-top:20px}
-section h3{color:#f7f5fb;font-size:16px;margin:0 0 8px}
-section p{color:#a49dbc;font-size:12px;max-width:260px;line-height:1.6}
+:root{--bg:#f4faf9;--ink:#0f2622;--mut:#5b7570;--teal:#0d9488;--line:#dcece8;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.layout{display:grid;grid-template-columns:200px 1fr;max-width:640px;margin:0 auto;padding:60px 20px}
+.spy{position:sticky;top:60px;height:fit-content;display:flex;flex-direction:column;gap:4px}
+.spy a{font-size:13px;color:var(--mut);padding:9px 14px;border-radius:9px;border-left:2px solid transparent;transition:color .25s,border-color .25s,background .25s}
+.spy a.on{color:var(--teal);border-color:var(--teal);background:#e5f6f2;font-weight:600}
+.content{display:flex;flex-direction:column;gap:0}
+.sec{min-height:70vh;padding:20px;scroll-margin-top:60px}
+.sec h3{margin:0 0 10px;font-size:20px;color:var(--ink)}
+.sec p{margin:0;font-size:13.5px;color:var(--mut);line-height:1.7;max-width:340px}
+.vis{margin-top:20px;height:120px;border-radius:12px}
 </style></head>
-<body data-cf-keep-dark><nav class="nav"><span class="kicker">FEATURES</span><a href="#speed" class="active">Speed</a><a href="#security">Security</a><a href="#scale">Scale</a></nav>
-<div class="content">
-<section id="speed"><h3>Built for speed</h3><p>Every component ships pre-optimized, no extra tuning required.</p></section>
-<section id="security"><h3>Security first</h3><p>Sanitized, dependency-light source you can audit in minutes.</p></section>
-<section id="scale"><h3>Scales with you</h3><p>From a weekend project to a production platform, unchanged.</p></section>
+<body>
+<div class="layout">
+  <div class="spy" id="spy">
+    <a href="#s0" class="on" data-i="0">Automation</a>
+    <a href="#s1" data-i="1">Analytics</a>
+    <a href="#s2" data-i="2">Security</a>
+  </div>
+  <div class="content">
+    <div class="sec" id="s0"><h3>Automation</h3><p>Rules-based workflows that fire the moment a condition is met, no polling required.</p><div class="vis" style="background:linear-gradient(155deg,#ccf1ea,#0d9488)"></div></div>
+    <div class="sec" id="s1"><h3>Analytics</h3><p>Every metric your team actually checks, updated live, in one dashboard.</p><div class="vis" style="background:linear-gradient(155deg,#a7e8dc,#0f766e)"></div></div>
+    <div class="sec" id="s2"><h3>Security</h3><p>SOC 2 Type II, encrypted at rest, with granular role-based access.</p><div class="vis" style="background:linear-gradient(155deg,#ddf2ee,#5bab9e)"></div></div>
+  </div>
 </div>
 <script>
-const links=[...document.querySelectorAll(".nav a")],sections=[...document.querySelectorAll("section")];
-const io=new IntersectionObserver(function(entries){
-  entries.forEach(function(en){if(en.isIntersecting){links.forEach(function(l){l.classList.remove("active")});const match=links.find(function(l){return l.getAttribute("href")==="#"+en.target.id});if(match)match.classList.add("active")}});
-},{rootMargin:"-40% 0px -50% 0px"});
-sections.forEach(function(s){io.observe(s)});
+var links=document.querySelectorAll(".spy a"), secs=document.querySelectorAll(".sec");
+links.forEach(function(l){
+  l.addEventListener("click",function(e){
+    e.preventDefault();
+    document.getElementById(l.getAttribute("href").slice(1)).scrollIntoView({behavior:"smooth",block:"start"});
+  });
+});
+function onScroll(){
+  var mid=window.scrollY+150;
+  var idx=0;
+  secs.forEach(function(s,i){ if(s.offsetTop<=mid) idx=i; });
+  links.forEach(function(l,i){ l.classList.toggle("on", i===idx); });
+}
+window.addEventListener("scroll",onScroll);
+onScroll();
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "waitlist-capture-section": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Marginalia Landing Page</title><style>
@@ -6480,108 +6553,156 @@ body{margin:0;min-height:100vh;background:var(--bg);font-family:"Space Grotesk",
 
   "hover-reveal-feature-cards": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Hover Reveal Feature Cards</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:340px}
-.card{position:relative;height:110px;border:1px solid var(--line);border-radius:12px;background:#0d0d12;overflow:hidden;padding:14px;box-shadow:0 16px 40px -22px rgba(0,0,0,.7);transition:border-color .3s,box-shadow .3s}
-.card:hover{border-color:#544c67;box-shadow:0 20px 44px -16px rgba(155,138,255,.3)}
-.card b{color:#eee9f8;font-size:11px}
-.reveal{position:absolute;left:0;right:0;bottom:0;padding:10px 14px;background:linear-gradient(180deg,#1b1628,#141020);color:#c9c4d6;font-size:9px;line-height:1.5;transform:translateY(100%);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
-.card:hover .reveal{transform:translateY(0)}
+:root{--bg:#f4faf9;--ink:#0f2622;--mut:#5b7570;--teal:#0d9488;--line:#dcece8;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.grid{display:flex;gap:14px}
+.card{width:150px;height:220px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;position:relative;overflow:hidden;transition:width .4s cubic-bezier(.2,.8,.2,1)}
+.card:hover{width:230px}
+.ic{width:36px;height:36px;border-radius:10px;background:#e5f6f2;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.ic svg{width:17px;height:17px;color:var(--teal)}
+.card b{font-size:13px;color:var(--ink);display:block;white-space:nowrap}
+.card p{font-size:11.5px;color:var(--mut);margin:8px 0 0;line-height:1.6;opacity:0;transition:opacity .3s;transition-delay:.15s}
+.card:hover p{opacity:1}
 </style></head>
-<body data-cf-keep-dark><div class="grid">
-<div class="card"><b>Speed</b><div class="reveal">Sub-100ms interaction latency by default.</div></div>
-<div class="card"><b>Security</b><div class="reveal">Sanitized, dependency-light source code.</div></div>
-<div class="card"><b>Scale</b><div class="reveal">From prototype to production, unchanged.</div></div>
+<body>
+<div class="grid">
+  <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h8l-1 8 10-12h-8z"/></svg></div><b>Speed</b><p>Every action commits in under 100ms, even at scale.</p></div>
+  <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6z"/></svg></div><b>Security</b><p>Encrypted at rest and in transit, audited twice yearly.</p></div>
+  <div class="card"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21a8 8 0 1 0-16 0"/><circle cx="12" cy="7" r="4"/></svg></div><b>Teams</b><p>Roles, permissions and shared views built in from day one.</p></div>
 </div>
-</body></html>`,
+</body></html>
+`,
 
   "numbered-process-steps": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Numbered Process Steps</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.steps{display:flex;align-items:flex-start;width:360px}
-.step{flex:1;text-align:center;position:relative}
-.step b{display:flex;align-items:center;justify-content:center;width:30px;height:30px;margin:0 auto 10px;border-radius:50%;border:1px solid var(--lav);color:var(--lav);font-size:12px;background:#0d0d12;position:relative;z-index:1;box-shadow:0 0 0 4px rgba(196,181,253,.1);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
-.step:hover b{transform:scale(1.12);background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f}
-.step.done b{background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;border-color:transparent}
-.step span{color:#c9c4d6;font-size:10px}
-.connector{position:absolute;top:15px;left:50%;right:-50%;height:1px;background:var(--line);z-index:0;overflow:hidden}
-.connector::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#9b8aff,transparent);transform:scaleX(0);transform-origin:left;transition:transform .5s ease}
-.step.done .connector::after{transform:scaleX(1)}
-.step:last-child .connector{display:none}
+:root{--bg:#f4faf9;--ink:#0f2622;--mut:#5b7570;--teal:#0d9488;--line:#dcece8;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.wrap{width:min(380px,92vw)}
+.step{display:flex;gap:16px;position:relative;padding-bottom:30px}
+.step:last-child{padding-bottom:0}
+.step:not(:last-child):before{content:"";position:absolute;left:17px;top:38px;bottom:0;width:1.5px;background:var(--line)}
+.num{width:36px;height:36px;border-radius:50%;background:var(--card);border:1.5px solid var(--teal);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex:none}
+.step.done .num{background:var(--teal);color:#fff}
+.txt b{display:block;font-size:14px;color:var(--ink);margin-bottom:4px}
+.txt p{margin:0;font-size:12.5px;color:var(--mut);line-height:1.6}
 </style></head>
-<body data-cf-keep-dark><div class="steps">
-<div class="step done"><b>1</b><span>Pick a component</span><div class="connector"></div></div>
-<div class="step done"><b>2</b><span>Copy the code</span><div class="connector"></div></div>
-<div class="step"><b>3</b><span>Ship it</span></div>
+<body>
+<div class="wrap">
+  <div class="step done"><div class="num">✓</div><div class="txt"><b>Connect your data</b><p>Link your existing tools in a couple of clicks, no code required.</p></div></div>
+  <div class="step done"><div class="num">✓</div><div class="txt"><b>Set your rules</b><p>Define the automations that matter to your workflow.</p></div></div>
+  <div class="step"><div class="num">3</div><div class="txt"><b>Watch it run</b><p>Sit back — the system handles the rest automatically.</p></div></div>
 </div>
-</body></html>`,
+</body></html>
+`,
 
   "code-snippet-feature-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Code Snippet Feature Card</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{position:relative;width:300px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;overflow:hidden;box-shadow:0 24px 60px -24px rgba(0,0,0,.7)}
-.card::before{content:"";position:absolute;top:-40%;right:-20%;width:180px;height:180px;background:radial-gradient(circle,rgba(155,138,255,.14),transparent 70%)}
-.bar{position:relative;display:flex;gap:5px;padding:10px 12px;border-bottom:1px solid var(--line)}
-.bar i{width:7px;height:7px;border-radius:50%;background:#2f2d3a}
-.bar i:nth-child(1){background:#c0525f}.bar i:nth-child(2){background:#c79a3f}.bar i:nth-child(3){background:#3f9f5f}
-pre{position:relative;margin:0;padding:16px;font:11px/1.7 ui-monospace,Menlo,monospace;color:#a9e6b4;white-space:pre-wrap}
-.k{color:#c4b5fd}.s{color:#e8b563}
-.cursor{display:inline-block;width:6px;height:12px;background:var(--lav);box-shadow:0 0 6px var(--lav);margin-left:1px;animation:blink 1s step-end infinite;vertical-align:-2px}
-@keyframes blink{50%{opacity:0}}
+:root{--bg:#f4faf9;--ink:#0f2622;--mut:#5b7570;--teal:#0d9488;--line:#dcece8;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:340px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px}
+.eb{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
+h3{margin:0 0 8px;font-size:16px;color:var(--ink)}
+p{margin:0 0 18px;font-size:12.5px;color:var(--mut);line-height:1.6}
+.code{background:#0f2622;border-radius:12px;padding:16px 18px;font-family:ui-monospace,monospace;font-size:12px;line-height:1.8;color:#d6ede8;position:relative}
+.code .k{color:#7dd8c9}
+.code .s{color:#f5c97a}
+.code .c{color:#5b8078}
+.copy{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.1);border:0;color:#d6ede8;width:26px;height:26px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.copy svg{width:12px;height:12px}
 </style></head>
-<body data-cf-keep-dark><div class="card"><div class="bar"><i></i><i></i><i></i></div><pre id="pre"></pre></div>
+<body>
+<div class="card">
+  <span class="eb">Developer-first</span>
+  <h3>Three lines to your first webhook.</h3>
+  <p>No dashboards to click through — just a client library that gets out of your way.</p>
+  <div class="code" data-cf-keep-dark>
+    <button class="copy" id="copyBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg></button>
+    <span class="c">// register a webhook</span><br>
+    <span class="k">const</span> hook = <span class="k">await</span> core.<span class="k">webhooks</span>.create({<br>
+    &nbsp;&nbsp;url: <span class="s">"https://api.acme.dev/hook"</span><br>
+    });
+  </div>
+</div>
 <script>
-const code='<span class="k">import</span> { Button } <span class="k">from</span> <span class="s">"codefusion"</span>;\\n\\n<span class="k">export default function</span> App(){\\n  <span class="k">return</span> <Button>Ship it</Button>;\\n}';
-const pre=document.getElementById("pre");let i=0;
-function type(){if(i<=code.length){pre.innerHTML=code.slice(0,i)+'<span class="cursor"></span>';i+=3;setTimeout(type,20)}}
-type();
+document.getElementById("copyBtn").addEventListener("click",function(){
+  this.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>';
+});
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "comparison-checklist-features": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Comparison Checklist Features</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.table{width:300px;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
-.row{position:relative;display:grid;grid-template-columns:1fr 60px 60px;align-items:center;padding:11px 14px;border-bottom:1px solid var(--line);font-size:10px;color:#c9c4d6;transition:background .2s}
-.row:not(:first-child):hover{background:#111017}
-.row:first-child{background:linear-gradient(135deg,#181425,#111017);color:#817d8a;font-weight:700}
+:root{--bg:#f4faf9;--ink:#0f2622;--mut:#5b7570;--teal:#0d9488;--line:#dcece8;--card:#fff;--red:#dc6a5f}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:360px;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.head{display:grid;grid-template-columns:1.4fr 1fr 1fr;padding:16px 18px;border-bottom:1px solid var(--line)}
+.head span{font-size:11.5px;color:var(--mut);font-weight:700;text-align:center}
+.head span:first-child{text-align:left}
+.head .us{color:var(--teal)}
+.row{display:grid;grid-template-columns:1.4fr 1fr 1fr;padding:12px 18px;border-bottom:1px solid var(--line);align-items:center;opacity:0;transform:translateX(-8px)}
 .row:last-child{border-bottom:0}
-.row span{text-align:center}
-.row::after{content:"";position:absolute;top:0;bottom:0;left:calc(100% - 120px);width:60px;background:linear-gradient(180deg,rgba(196,181,253,.06),transparent);pointer-events:none}
-.yes{color:#5fd4a1;text-shadow:0 0 8px rgba(95,212,161,.5)}.no{color:#e88ba0}
+.row span:first-child{font-size:12.5px;color:var(--ink)}
+.row .c{display:flex;justify-content:center}
+.check{width:18px;height:18px;color:var(--teal)}
+.cross{width:14px;height:14px;color:var(--red)}
 </style></head>
-<body data-cf-keep-dark><div class="table">
-<div class="row"><span></span><span>Us</span><span>Them</span></div>
-<div class="row">Live interactive preview<span class="yes">✓</span><span class="no">✕</span></div>
-<div class="row">Copyable source<span class="yes">✓</span><span class="yes">✓</span></div>
-<div class="row">AI-ready prompts<span class="yes">✓</span><span class="no">✕</span></div>
+<body>
+<div class="card">
+  <div class="head"><span></span><span class="us">Us</span><span>Others</span></div>
+  <div id="rows">
+    <div class="row"><span>Real-time sync</span><div class="c"><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="c"><svg class="cross" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6 6 18M6 6l12 12"/></svg></div></div>
+    <div class="row"><span>Unlimited seats</span><div class="c"><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="c"><svg class="cross" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6 6 18M6 6l12 12"/></svg></div></div>
+    <div class="row"><span>SOC 2 compliant</span><div class="c"><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="c"><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div></div>
+    <div class="row"><span>Free migration</span><div class="c"><svg class="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="c"><svg class="cross" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6 6 18M6 6l12 12"/></svg></div></div>
+  </div>
 </div>
-</body></html>`,
+<script>
+document.querySelectorAll("#rows .row").forEach(function(r,i){
+  setTimeout(function(){ r.style.transition="opacity .4s ease,transform .4s cubic-bezier(.2,.8,.2,1)"; r.style.opacity=1; r.style.transform="translateX(0)"; }, 100+i*90);
+});
+</script>
+</body></html>
+`,
 
   "interactive-toggle-feature-demo": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Interactive Toggle Feature Demo</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:280px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;text-align:center;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
-.card b{display:block;color:#817d8a;font-size:11px;margin-bottom:14px}
-.swatch{height:70px;border-radius:12px;background:#f4f3fa;transition:background .4s ease,color .4s ease,box-shadow .4s;display:grid;place-items:center;color:#15131c;font-size:11px;font-weight:700;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)}
-.swatch.dark{background:#111017;color:#eee9f8;box-shadow:inset 0 0 0 1px rgba(196,181,253,.15),0 0 30px -10px rgba(155,138,255,.4)}
-.toggle-row{position:relative;display:flex;justify-content:center;gap:8px;margin-top:14px}
-.toggle-row button{padding:7px 12px;border:1px solid var(--line);border-radius:8px;background:#111017;color:#817d8a;font-size:10px;cursor:pointer;transition:color .3s,border-color .3s,transform .2s cubic-bezier(.34,1.56,.64,1)}
-.toggle-row button:active{transform:scale(.94)}
-.toggle-row button.active{color:#0a090f;border-color:transparent;background:linear-gradient(135deg,#d7d0ff,#9b8aff)}
+:root{--bg:#f4faf9;--ink:#0f2622;--mut:#5b7570;--teal:#0d9488;--line:#dcece8;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:320px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.top b{font-size:13.5px;color:var(--ink)}
+.sw{width:42px;height:24px;background:var(--line);border-radius:20px;position:relative;cursor:pointer;transition:background .25s}
+.sw.on{background:var(--teal)}
+.sw .knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+.sw.on .knob{transform:translateX(18px)}
+.demo{height:130px;border-radius:12px;background:#eef6f4;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.demo .label{font-size:12px;color:var(--mut);transition:opacity .3s}
+.dot{width:14px;height:14px;border-radius:50%;background:var(--teal);position:absolute;transition:left .5s cubic-bezier(.34,1.56,.64,1)}
 </style></head>
-<body data-cf-keep-dark><div class="card"><b>LIVE THEME PREVIEW</b><div class="swatch" id="swatch">Aa Preview text</div>
-<div class="toggle-row"><button class="active" data-t="light">Light</button><button data-t="dark">Dark</button></div></div>
+<body>
+<div class="card">
+  <div class="top"><b>Dark mode</b><div class="sw" id="sw"><div class="knob"></div></div></div>
+  <div class="demo"><span class="label" id="label">Toggle to preview</span><div class="dot" id="dot" style="left:20px;top:20px"></div></div>
+</div>
 <script>
-const buttons=[...document.querySelectorAll(".toggle-row button")],swatch=document.getElementById("swatch");
-buttons.forEach(function(b){b.addEventListener("click",function(){buttons.forEach(function(x){x.classList.remove("active")});b.classList.add("active");swatch.classList.toggle("dark",b.dataset.t==="dark")})});
+var sw=document.getElementById("sw"), demo=document.querySelector(".demo"), label=document.getElementById("label"), dot=document.getElementById("dot");
+var on=false;
+sw.addEventListener("click",function(){
+  on=!on; sw.classList.toggle("on",on);
+  demo.style.background = on ? "#0f2622" : "#eef6f4";
+  label.style.color = on ? "#8fc9bd" : "#5b7570";
+  label.textContent = on ? "Dark mode preview" : "Light mode preview";
+  dot.style.left = on ? "calc(100% - 34px)" : "20px";
+});
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "product-hunt-style-launch-banner": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Solstice Landing Page</title><style>
