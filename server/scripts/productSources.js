@@ -82,45 +82,58 @@ document.addEventListener("scroll",onScroll,{passive:true});onScroll();
 
   "orbit-loader": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Orbit Loader</title><style>
-@property --angle{syntax:"<angle>";inherits:true;initial-value:0deg}
-:root{--bg:#050507;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:flex;gap:46px;align-items:center;padding:40px}
-.kicker{display:block;margin-bottom:16px;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.loader{position:relative;width:56px;height:56px}
-.loader.ring{background:conic-gradient(from var(--angle),transparent,#d7d0ff,#9b8aff);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 4px));mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 4px));border-radius:50%;animation:spin .9s linear infinite;filter:drop-shadow(0 0 8px rgba(196,181,253,.4))}
-.loader.dots{display:flex;gap:6px;align-items:center;width:auto;height:auto}
-.loader.dots i{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 0 8px rgba(196,181,253,.5);animation:bounce 1s ease-in-out infinite}
-.loader.dots i:nth-child(2){animation-delay:.15s}
-.loader.dots i:nth-child(3){animation-delay:.3s}
-.loader.orbit{border:1px solid #2c2a35;border-radius:50%}
-.loader.orbit i{position:absolute;width:8px;height:8px;border-radius:50%;background:var(--lav);top:-4px;left:50%;margin-left:-4px;box-shadow:0 0 12px var(--lav);animation:orbit 1.2s linear infinite}
-@keyframes spin{to{--angle:360deg}}
-@keyframes bounce{0%,80%,100%{transform:translateY(0);opacity:.5}40%{transform:translateY(-9px);opacity:1}}
-@keyframes orbit{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+:root{--bg:#fafafa;--ink:#18181b;--mut:#8a8a93}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.kicker{color:var(--mut);font-size:10px;letter-spacing:2px;font-weight:700;text-align:center;margin-bottom:26px}
+.orbit{position:relative;width:60px;height:60px}
+.ring{position:absolute;inset:0;border-radius:50%;border:2px solid transparent}
+.ring:nth-child(1){border-top-color:#8b5cf6;animation:spin 1.1s linear infinite}
+.ring:nth-child(2){inset:8px;border-top-color:#ec4899;animation:spin 1.5s linear infinite reverse}
+.ring:nth-child(3){inset:16px;border-top-color:#06b6d4;animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style></head>
-<body data-cf-keep-dark><span class="kicker">THREE LOADER STYLES</span><div class="stage"><div class="loader ring"></div><div class="loader dots"><i></i><i></i><i></i></div><div class="loader orbit"><i></i></div></div>
-</body></html>`,
+<body>
+<div><div class="kicker">LOADING</div><div class="orbit"><div class="ring"></div><div class="ring"></div><div class="ring"></div></div></div>
+</body></html>
+`,
 
   "cursor-trail-effect": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Custom Cursor Trail</title><style>
-:root{--bg:#050507;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;cursor:none;overflow:hidden}
-.kicker{display:block;margin-bottom:16px;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.msg{color:#847e8f;font-size:11px}
-.dot{position:fixed;top:0;left:0;width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 0 10px rgba(196,181,253,.7);pointer-events:none;transform:translate(-50%,-50%)}
-.ring{position:fixed;top:0;left:0;width:34px;height:34px;border:1px solid rgba(196,181,253,.4);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);transition:transform .08s linear;box-shadow:0 0 20px rgba(196,181,253,.15)}
+:root{--bg:#fafafa;--ink:#18181b;--mut:#8a8a93}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;overflow:hidden;cursor:none}
+.kicker{color:var(--mut);font-size:10px;letter-spacing:2px;font-weight:700;text-align:center}
+.dot{position:fixed;width:8px;height:8px;border-radius:50%;background:#8b5cf6;pointer-events:none;top:0;left:0;transform:translate(-50%,-50%)}
 </style></head>
-<body data-cf-keep-dark><span class="kicker">MOVE YOUR CURSOR</span><p class="msg">A trailing dot follows the pointer with easing.</p>
-<div class="dot" id="dot"></div><div class="ring" id="ring"></div>
+<body>
+<div><div class="kicker">MOVE YOUR CURSOR</div></div>
 <script>
-const dot=document.getElementById("dot"),ring=document.getElementById("ring");
-let rx=0,ry=0;
-document.addEventListener("pointermove",function(e){dot.style.left=e.clientX+"px";dot.style.top=e.clientY+"px";rx=e.clientX;ry=e.clientY});
-function loop(){const cur=ring.getBoundingClientRect();const cx=cur.left+cur.width/2,cy=cur.top+cur.height/2;const nx=cx+(rx-cx)*.18,ny=cy+(ry-cy)*.18;ring.style.left=nx+"px";ring.style.top=ny+"px";requestAnimationFrame(loop)}
-loop();
+var N=16, dots=[];
+var colors=["#8b5cf6","#a78bfa","#c4b5fd","#ec4899","#f472b6","#06b6d4","#67e8f9"];
+for(var i=0;i<N;i++){
+  var d=document.createElement("div"); d.className="dot";
+  d.style.background=colors[i%colors.length];
+  d.style.opacity=1-(i/N)*.8;
+  d.style.width=d.style.height=(9-i*.3)+"px";
+  document.body.appendChild(d);
+  dots.push({el:d,x:0,y:0});
+}
+var mouse={x:window.innerWidth/2,y:window.innerHeight/2};
+document.addEventListener("mousemove",function(e){ mouse.x=e.clientX; mouse.y=e.clientY; });
+function tick(){
+  var x=mouse.x,y=mouse.y;
+  dots.forEach(function(d){
+    d.x+=(x-d.x)*.35; d.y+=(y-d.y)*.35;
+    d.el.style.transform="translate("+d.x+"px,"+d.y+"px) translate(-50%,-50%)";
+    x=d.x; y=d.y;
+  });
+  requestAnimationFrame(tick);
+}
+tick();
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "sticky-scroll-stack": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Sticky Scroll Stack</title><style>
@@ -3000,49 +3013,57 @@ body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--
 
   "progress-ring-loader": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Progress Ring Loader</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:18px;place-items:center;padding:40px}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.ring-wrap{position:relative;width:120px;height:120px;display:grid;place-items:center}
+:root{--bg:#fafafa;--ink:#18181b;--mut:#8a8a93}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.wrap{position:relative;width:110px;height:110px}
 svg{transform:rotate(-90deg)}
-circle{fill:none;stroke-width:8}
-.track{stroke:#1c1a24}
-.bar{stroke:url(#g);stroke-linecap:round;transition:stroke-dashoffset .3s linear}
-.pct{position:absolute;font-size:20px;font-weight:800;color:#f7f5fb}
-.bar{filter:drop-shadow(0 0 6px rgba(196,181,253,.6))}
+circle{fill:none;stroke-width:6}
+.track{stroke:#eceef0}
+.fill{stroke:#8b5cf6;stroke-linecap:round;stroke-dasharray:301;stroke-dashoffset:301;transition:stroke-dashoffset .3s}
+.lbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:800;color:var(--ink)}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">LOADING…</span>
-<div class="ring-wrap">
-<svg width="120" height="120"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#d7d0ff"/><stop offset="100%" stop-color="#9b8aff"/></linearGradient></defs>
-<circle class="track" cx="60" cy="60" r="52"/><circle class="bar" id="bar" cx="60" cy="60" r="52" stroke-dasharray="327" stroke-dashoffset="327"/></svg>
-<span class="pct" id="pct">0%</span></div></div>
+<body>
+<div class="wrap"><svg viewBox="0 0 110 110" width="110" height="110"><circle class="track" cx="55" cy="55" r="48"/><circle class="fill" id="fill" cx="55" cy="55" r="48"/></svg><div class="lbl" id="lbl">0%</div></div>
 <script>
-const bar=document.getElementById("bar"),pct=document.getElementById("pct"),C=327;let v=0;
-const t=setInterval(function(){v=Math.min(100,v+Math.random()*9);bar.style.strokeDashoffset=C-(C*v/100);pct.textContent=Math.round(v)+"%";if(v>=100)clearInterval(t)},220);
+var fill=document.getElementById("fill"), lbl=document.getElementById("lbl"), circ=301, v=0;
+function tick(){
+  v+=2;
+  if(v>100)v=100;
+  fill.style.strokeDashoffset=circ-(v/100)*circ;
+  lbl.textContent=v+"%";
+  if(v<100) requestAnimationFrame(function(){ setTimeout(tick,25); });
+}
+setTimeout(tick,300);
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "spotlight-cursor-grid": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Spotlight Cursor Grid</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;display:block;text-align:center;margin-bottom:16px}
-.grid{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:30px;max-width:480px}
-.grid::before{content:"";position:absolute;inset:0;border-radius:18px;pointer-events:none;background:radial-gradient(220px circle at var(--x,50%) var(--y,50%),rgba(196,181,253,.2),transparent 70%)}
-.tile{position:relative;padding:22px 16px;border:1px solid var(--line);border-radius:12px;background:#0d0d12;color:#c9c4d6;font-size:11px;text-align:center;box-shadow:0 16px 40px -24px rgba(0,0,0,.7);transition:border-color .3s}
-.grid:hover .tile{border-color:#2c2837}
+:root{--bg:#0e0e12;--ink:#f2f2f5;--mut:#8a8a93}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;overflow:hidden}
+.kicker{color:var(--mut);font-size:10px;letter-spacing:2px;font-weight:700;text-align:center;margin-bottom:18px}
+.stage{position:relative;width:280px;height:200px;border-radius:16px;overflow:hidden;border:1px solid #232329}
+.grid-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:20px 20px}
+.spot{position:absolute;inset:0;background:radial-gradient(circle 100px at var(--x,50%) var(--y,50%),rgba(139,92,246,.35),transparent 70%);transition:background .05s}
+.label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#3a3a44;font-size:12px;pointer-events:none}
 </style></head>
-<body data-cf-keep-dark><div><span class="kicker">MOVE YOUR CURSOR OVER THE GRID</span>
-<div class="grid" id="grid">
-<div class="tile">Speed</div><div class="tile">Security</div><div class="tile">Scale</div>
-<div class="tile">Uptime</div><div class="tile">Support</div><div class="tile">Insights</div>
-</div></div>
+<body data-cf-keep-dark>
+<div><div class="kicker">MOVE CURSOR OVER THE GRID</div>
+<div class="stage" id="stage"><div class="grid-bg"></div><div class="spot" id="spot"></div><div class="label">Hover to illuminate</div></div>
+</div>
 <script>
-const grid=document.getElementById("grid");
-grid.addEventListener("pointermove",function(e){const r=grid.getBoundingClientRect();grid.style.setProperty("--x",(e.clientX-r.left)+"px");grid.style.setProperty("--y",(e.clientY-r.top)+"px")});
+var stage=document.getElementById("stage"), spot=document.getElementById("spot");
+stage.addEventListener("mousemove",function(e){
+  var r=stage.getBoundingClientRect();
+  spot.style.setProperty("--x",((e.clientX-r.left)/r.width*100)+"%");
+  spot.style.setProperty("--y",((e.clientY-r.top)/r.height*100)+"%");
+});
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "expandable-detail-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Expandable Detail Card</title><style>
@@ -4691,105 +4712,154 @@ body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--
 
   "magnetic-cursor-dot": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Magnetic Cursor Dot</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center;cursor:none}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;display:block;text-align:center;margin-bottom:16px}
-.targets{display:flex;gap:14px}
-.targets button{padding:16px 22px;border:1px solid var(--line);border-radius:12px;background:#111017;color:#eee9f8;font-size:12px;cursor:none;box-shadow:0 16px 40px -22px rgba(0,0,0,.7);transition:border-color .2s}
-.dot{position:fixed;width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 0 12px rgba(196,181,253,.6);pointer-events:none;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s,border-radius .2s,box-shadow .2s;z-index:9}
-.dot.snap{box-shadow:0 0 0 6px rgba(196,181,253,.12)}
+:root{--bg:#fafafa;--ink:#18181b;--mut:#8a8a93}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;cursor:none}
+.kicker{color:var(--mut);font-size:10px;letter-spacing:2px;font-weight:700;text-align:center;margin-bottom:22px}
+.target{width:120px;height:120px;border-radius:50%;border:1.5px dashed #d4d4d8;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--mut)}
+.dot{position:fixed;width:16px;height:16px;border-radius:50%;background:#8b5cf6;pointer-events:none;top:0;left:0;transition:width .2s,height .2s;z-index:5}
 </style></head>
-<body data-cf-keep-dark><div><span class="kicker">MOVE OVER A BUTTON — THE DOT SNAPS</span>
-<div class="targets" id="targets"><button>Pricing</button><button>Docs</button><button>Sign in</button></div></div>
+<body>
+<div><div class="kicker">HOVER THE CIRCLE</div><div class="target" id="target">Hover me</div></div>
 <div class="dot" id="dot"></div>
 <script>
-const dot=document.getElementById("dot");let tx=0,ty=0,x=0,y=0,snap=false,sx=0,sy=0;
-document.addEventListener("pointermove",function(e){tx=e.clientX;ty=e.clientY});
-document.querySelectorAll(".targets button").forEach(function(b){
-  b.addEventListener("pointerenter",function(){const r=b.getBoundingClientRect();sx=r.left+r.width/2;sy=r.top+r.height/2;snap=true;dot.style.width="64px";dot.style.height="36px";dot.style.borderRadius="10px";dot.style.background="rgba(196,181,253,.2)";dot.classList.add("snap")});
-  b.addEventListener("pointerleave",function(){snap=false;dot.style.width="10px";dot.style.height="10px";dot.style.borderRadius="50%";dot.style.background="linear-gradient(135deg,#d7d0ff,#9b8aff)";dot.classList.remove("snap")});
-});
-function tick(){x+=((snap?sx:tx)-x)*.25;y+=((snap?sy:ty)-y)*.25;dot.style.left=x+"px";dot.style.top=y+"px";requestAnimationFrame(tick)}
+var dot=document.getElementById("dot"), target=document.getElementById("target"), x=0,y=0,tx=0,ty=0, magnet=false;
+document.addEventListener("mousemove",function(e){ tx=e.clientX; ty=e.clientY; });
+target.addEventListener("mouseenter",function(){ magnet=true; dot.style.width=dot.style.height="46px"; dot.style.background="rgba(139,92,246,.5)"; });
+target.addEventListener("mouseleave",function(){ magnet=false; dot.style.width=dot.style.height="16px"; dot.style.background="#8b5cf6"; });
+function tick(){
+  var targetX=tx, targetY=ty;
+  if(magnet){
+    var r=target.getBoundingClientRect(); targetX=r.left+r.width/2; targetY=r.top+r.height/2;
+  }
+  x+=(targetX-x)*.25; y+=(targetY-y)*.25;
+  dot.style.transform="translate("+x+"px,"+y+"px) translate(-50%,-50%)";
+  requestAnimationFrame(tick);
+}
 tick();
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "typing-dots-loader": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Typing Dots Loader</title><style>
-:root{--bg:#050507;--line:#272632}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.bubble{display:flex;gap:5px;padding:14px 18px;border:1px solid var(--line);border-radius:16px 16px 16px 4px;background:#111017;box-shadow:0 16px 40px -22px rgba(0,0,0,.7)}
-.bubble i{width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#d7d0ff,#9b8aff);animation:bounce 1.1s infinite ease-in-out}
-.bubble i:nth-child(2){animation-delay:.15s}
-.bubble i:nth-child(3){animation-delay:.3s}
-@keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-6px);opacity:1}}
+:root{--bg:#fafafa;--ink:#18181b;--mut:#8a8a93}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.kicker{color:var(--mut);font-size:10px;letter-spacing:2px;font-weight:700;text-align:center;margin-bottom:22px}
+.bubble{display:inline-flex;gap:5px;background:#fff;border:1px solid #e4e4e7;border-radius:20px;border-bottom-left-radius:5px;padding:14px 18px;box-shadow:0 10px 24px -14px rgba(0,0,0,.15)}
+.bubble span{width:8px;height:8px;border-radius:50%;background:#8b5cf6;animation:bounce 1.2s ease-in-out infinite}
+.bubble span:nth-child(2){animation-delay:.15s;background:#ec4899}
+.bubble span:nth-child(3){animation-delay:.3s;background:#06b6d4}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-7px)}}
 </style></head>
-<body data-cf-keep-dark><div class="bubble"><i></i><i></i><i></i></div>
-</body></html>`,
+<body>
+<div><div class="kicker">SOMEONE IS TYPING</div><div class="bubble"><span></span><span></span><span></span></div></div>
+</body></html>
+`,
 
   "gradient-bar-loader": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Gradient Bar Loader</title><style>
-:root{--bg:#050507;--line:#272632}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:14px;place-items:center;width:260px}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.bar-track{width:100%;height:5px;border-radius:4px;background:#1c1a24;overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,.5)}
-.bar-sweep{width:40%;height:100%;border-radius:4px;background:linear-gradient(90deg,transparent,#c4b5fd,#9b8aff,transparent);box-shadow:0 0 12px rgba(196,181,253,.5);animation:sweep 1.4s infinite ease-in-out}
-@keyframes sweep{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
+:root{--bg:#fafafa;--ink:#18181b;--mut:#8a8a93}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.kicker{color:var(--mut);font-size:10px;letter-spacing:2px;font-weight:700;text-align:center;margin-bottom:18px}
+.bar{width:220px;height:6px;background:#eceef0;border-radius:6px;overflow:hidden;position:relative}
+.bar i{position:absolute;inset:0;border-radius:6px;background:linear-gradient(90deg,#8b5cf6,#ec4899,#06b6d4,#8b5cf6);background-size:300% 100%;animation:flow 2s linear infinite}
+@keyframes flow{to{background-position:-300% 0}}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">FETCHING RESULTS…</span><div class="bar-track"><div class="bar-sweep"></div></div></div>
-</body></html>`,
+<body>
+<div><div class="kicker">PROCESSING</div><div class="bar"><i></i></div></div>
+</body></html>
+`,
 
   "crosshair-cursor": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Crosshair Cursor</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:ui-monospace,Menlo,monospace;cursor:none;overflow:hidden}
-.h-line,.v-line{position:fixed;background:linear-gradient(90deg,transparent,rgba(196,181,253,.45),transparent);pointer-events:none;z-index:9}
-.h-line{left:0;right:0;height:1px}
-.v-line{top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent,rgba(196,181,253,.45),transparent)}
-.coords{position:fixed;padding:4px 7px;border:1px solid var(--line);border-radius:6px;background:#111017;color:var(--lav);font-size:10px;pointer-events:none;z-index:10;transform:translate(12px,12px);box-shadow:0 8px 20px -10px rgba(0,0,0,.6),0 0 12px -4px rgba(196,181,253,.4)}
-.kicker{position:absolute;top:20px;left:20px;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
+:root{--bg:#fafafa;--ink:#18181b;--mut:#8a8a93}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;cursor:none;overflow:hidden}
+.kicker{color:var(--mut);font-size:10px;letter-spacing:2px;font-weight:700;text-align:center}
+.h,.v{position:fixed;background:rgba(139,92,246,.4);pointer-events:none;z-index:5}
+.h{height:1px;left:0;right:0}
+.v{width:1px;top:0;bottom:0}
+.center{position:fixed;width:14px;height:14px;border:1.5px solid #8b5cf6;border-radius:50%;pointer-events:none;transform:translate(-50%,-50%);z-index:6}
+.coord{position:fixed;font-family:ui-monospace,monospace;font-size:10.5px;color:#8b5cf6;background:#fff;border:1px solid #e4e4e7;padding:3px 7px;border-radius:6px;pointer-events:none;z-index:6}
 </style></head>
-<body data-cf-keep-dark><span class="kicker">MOVE AROUND THE CANVAS</span>
-<div class="h-line" id="h"></div><div class="v-line" id="v"></div><div class="coords" id="c">0, 0</div>
+<body>
+<div><div class="kicker">MOVE YOUR CURSOR</div></div>
+<div class="h" id="h"></div><div class="v" id="v"></div><div class="center" id="c"></div><div class="coord" id="coord"></div>
 <script>
-const h=document.getElementById("h"),v=document.getElementById("v"),c=document.getElementById("c");
-document.addEventListener("pointermove",function(e){h.style.top=e.clientY+"px";v.style.left=e.clientX+"px";c.style.left=e.clientX+"px";c.style.top=e.clientY+"px";c.textContent=Math.round(e.clientX)+", "+Math.round(e.clientY)});
+var h=document.getElementById("h"),v=document.getElementById("v"),c=document.getElementById("c"),coord=document.getElementById("coord");
+document.addEventListener("mousemove",function(e){
+  h.style.top=e.clientY+"px"; v.style.left=e.clientX+"px";
+  c.style.left=e.clientX+"px"; c.style.top=e.clientY+"px";
+  coord.style.left=(e.clientX+16)+"px"; coord.style.top=(e.clientY+14)+"px";
+  coord.textContent="X:"+e.clientX+" Y:"+e.clientY;
+});
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "content-placeholder-loader": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Content Placeholder Loader</title><style>
-:root{--bg:#050507;--line:#272632}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:280px;padding:18px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;display:flex;gap:12px;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
-.shimmer{background:linear-gradient(90deg,#151319 25%,#241f34 50%,#151319 75%);background-size:200% 100%;animation:shimmer 1.4s infinite linear;border-radius:6px}
-.avatar{width:38px;height:38px;border-radius:50%;flex:none}
-.lines{flex:1;display:grid;gap:8px;align-content:center}
-.line{height:8px}
-.line.short{width:60%}
-@keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+:root{--bg:#fafafa;--ink:#18181b;--mut:#8a8a93;--line:#e4e4e7}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.card{width:280px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px}
+.sk{background:linear-gradient(90deg,#eceef0 25%,#f6f6f8 37%,#eceef0 63%);background-size:400% 100%;animation:shimmer 1.4s ease infinite;border-radius:8px}
+@keyframes shimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
+.av{width:40px;height:40px;border-radius:50%;margin-bottom:14px}
+.line{height:11px;margin-bottom:9px}
+.l1{width:70%}
+.l2{width:100%}
+.l3{width:85%}
+.l4{width:50%;margin-top:14px;height:30px;border-radius:8px}
 </style></head>
-<body data-cf-keep-dark><div class="card"><div class="shimmer avatar"></div><div class="lines"><div class="shimmer line"></div><div class="shimmer line short"></div></div></div>
-</body></html>`,
+<body>
+<div class="card">
+  <div class="sk av"></div>
+  <div class="sk line l1"></div>
+  <div class="sk line l2"></div>
+  <div class="sk line l3"></div>
+  <div class="sk l4"></div>
+</div>
+</body></html>
+`,
 
   "loading-percentage-counter": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Loading Percentage Counter</title><style>
-:root{--bg:#050507}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:"Space Grotesk",Inter,sans-serif;position:relative;overflow:hidden}
-body::before{content:"";position:absolute;inset:-20%;background:radial-gradient(circle at 50% 50%,rgba(155,138,255,.14),transparent 60%);pointer-events:none}
-.wrap{position:relative;text-align:center}
-.pct{font-size:64px;font-weight:800;background:linear-gradient(135deg,#f7f5fb,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-.03em}
-.kicker{display:block;color:#817d8a;font-size:10px;letter-spacing:2px;margin-top:6px}
-.line-track{width:220px;height:2px;margin:22px auto 0;background:#1c1a24;overflow:hidden;border-radius:2px}
-.line-fill{height:100%;width:0;background:linear-gradient(90deg,#9b8aff,#d7d0ff);box-shadow:0 0 10px rgba(196,181,253,.6)}
+:root{--bg:#fafafa;--ink:#18181b;--mut:#8a8a93}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.wrap{text-align:center}
+.pct{font-size:56px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+.pct span{font-size:24px;color:#8b5cf6}
+.bar{width:220px;height:4px;background:#eceef0;border-radius:4px;margin:16px auto 0;overflow:hidden}
+.bar i{display:block;height:100%;background:#8b5cf6;width:0;border-radius:4px}
+.lbl{margin-top:12px;font-size:11px;color:var(--mut);letter-spacing:.05em;text-transform:uppercase}
 </style></head>
-<body data-cf-keep-dark><div class="wrap"><div class="pct" id="pct">0%</div><span class="kicker">LOADING EXPERIENCE</span><div class="line-track"><div class="line-fill" id="fill"></div></div></div>
+<body>
+<div class="wrap">
+  <div class="pct" id="pct">0<span>%</span></div>
+  <div class="bar"><i id="bar"></i></div>
+  <div class="lbl" id="lbl">Preparing assets…</div>
+</div>
 <script>
-let v=0;const pct=document.getElementById("pct"),fill=document.getElementById("fill");
-const t=setInterval(function(){v=Math.min(100,v+Math.random()*7);pct.textContent=Math.round(v)+"%";fill.style.width=v+"%";if(v>=100)clearInterval(t)},130);
+var pct=document.getElementById("pct"), bar=document.getElementById("bar"), lbl=document.getElementById("lbl");
+var labels=[[0,"Preparing assets…"],[30,"Optimizing images…"],[65,"Compiling styles…"],[90,"Almost there…"],[100,"Ready"]];
+var v=0;
+function tick(){
+  v+=Math.random()*4;
+  if(v>100)v=100;
+  pct.innerHTML=Math.round(v)+'<span>%</span>';
+  bar.style.width=v+"%";
+  labels.forEach(function(l){ if(v>=l[0]) lbl.textContent=l[1]; });
+  if(v<100) setTimeout(tick, 60+Math.random()*80);
+}
+setTimeout(tick,300);
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "stacked-card-deck": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Stacked Card Deck</title><style>
