@@ -3179,29 +3179,382 @@ sections.forEach(function(s){io.observe(s)});
 </body></html>`,
 
   "waitlist-capture-section": `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Waitlist Capture Section</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.wrap{position:relative;max-width:380px;padding:40px;text-align:center}
-.wrap::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(155,138,255,.14),transparent 60%);pointer-events:none}
-.kicker{position:relative;color:#c4b5fd;font-size:10px;letter-spacing:2px;font-weight:700}
-h2{position:relative;color:#f7f5fb;font-size:24px;margin:12px 0 6px}
-p{position:relative;color:#a49dbc;font-size:12px;margin:0 0 20px}
-form{position:relative;display:flex;gap:8px}
-input{flex:1;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:#111017;color:#f7f5fb;font-size:12px;outline:0;transition:border-color .25s,box-shadow .25s}
-input:focus{border-color:#6d5f93;box-shadow:0 0 0 3px rgba(196,181,253,.2)}
-button{padding:12px 18px;border:0;border-radius:10px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;font-weight:800;font-size:12px;cursor:pointer;white-space:nowrap;box-shadow:0 10px 24px -10px rgba(155,138,255,.6);transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
-button:active{transform:scale(.95)}
-.success{position:relative;display:none;color:#5fd4a1;font-size:12px;margin-top:12px;animation:fade .3s ease}
-@keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Marginalia Landing Page</title><style>
+:root{--bg:#faf9f6;--ink:#1c1a17;--mut:#8a8478;--card:#fff;--line:#e9e5dc;--iris:#6a5cff;--iris-d:#5245e0;--rose:#ff8fb3}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Newsreader","Georgia",serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3{font-family:"Newsreader",serif;margin:0;font-weight:500;letter-spacing:-.01em;color:var(--ink)}
+p{margin:0;color:var(--mut);font-family:Inter,ui-sans-serif,sans-serif}
+button{font-family:Inter,sans-serif;cursor:pointer;border:0}
+.wrap{max-width:1120px;margin:0 auto;padding:0 32px}
+.rv{opacity:0;transform:translateY(24px)}
+.eb{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--iris);margin-bottom:14px;font-family:Inter,sans-serif}
+
+/* ---------- buttons ---------- */
+.btn{position:relative;display:inline-flex;align-items:center;gap:9px;border-radius:10px;padding:14px 24px;font-size:14.5px;font-weight:600;font-family:Inter,sans-serif;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
+.btn svg{width:15px;height:15px;flex:none;transition:transform .3s}
+.btn:hover svg{transform:translateX(3px)}
+.btn-iris{background:var(--iris);color:#fff;box-shadow:0 12px 28px rgba(106,92,255,.3)}
+.btn-iris:hover{transform:translateY(-2px);box-shadow:0 18px 38px rgba(106,92,255,.4);background:var(--iris-d)}
+.btn-line{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn-line:hover{transform:translateY(-2px);border-color:var(--ink)}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:60;transition:background .4s,box-shadow .4s}
+.nav-in{max-width:1120px;margin:0 auto;padding:22px 32px;display:flex;align-items:center;gap:34px}
+.nav.on{background:rgba(250,249,246,.88);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--line)}
+.brand{font-family:"Newsreader",serif;font-style:italic;font-size:22px;font-weight:600}
+.nav-links{display:flex;gap:28px;margin:0 auto;font-size:14px;color:var(--mut);font-family:Inter,sans-serif}
+.nav-links a{position:relative;cursor:pointer}
+.nav-links a:after{content:"";position:absolute;left:0;bottom:-5px;width:100%;height:1.5px;background:var(--iris);transform:scaleX(0);transform-origin:right;transition:transform .3s}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a:hover:after{transform:scaleX(1);transform-origin:left}
+.nav-right{display:flex;align-items:center;gap:16px}
+.nav-right .lg{font-size:14px;color:var(--mut);font-family:Inter,sans-serif}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding:80px 0 50px}
+.hero-in{text-align:center;max-width:760px;margin:0 auto}
+.hero .eb{justify-content:center}
+.hero h1{font-size:clamp(36px,4.6vw,58px);line-height:1.15;font-style:italic}
+.hero p.lead{margin-top:20px;font-size:17px;line-height:1.7;max-width:520px;margin-left:auto;margin-right:auto;font-family:Inter,sans-serif}
+.hero .cta{display:flex;gap:14px;justify-content:center;margin-top:30px;flex-wrap:wrap}
+
+/* editor mockup */
+.editor-wrap{margin-top:56px}
+.editor{position:relative;background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:0 40px 90px rgba(28,26,23,.1);max-width:820px;margin:0 auto;overflow:hidden}
+.editor-top{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid var(--line);font-family:Inter,sans-serif}
+.editor-top .l{display:flex;gap:8px}
+.editor-top .l i{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.editor-top .r{font-size:12px;color:var(--mut);display:flex;align-items:center;gap:6px}
+.editor-top .r b{width:6px;height:6px;border-radius:50%;background:var(--iris);display:inline-block}
+.editor-body{padding:36px 40px;min-height:260px;font-size:18px;line-height:1.85}
+.editor-body .cursor{display:inline-block;width:2px;height:22px;background:var(--iris);vertical-align:middle;margin-left:1px;animation:blink 1s step-end infinite}
+@keyframes blink{50%{opacity:0}}
+.suggest-chip{display:inline-flex;align-items:center;gap:6px;background:#f0ecff;color:var(--iris-d);border-radius:7px;padding:3px 9px;font-size:13px;font-family:Inter,sans-serif;font-weight:600;margin:0 2px;opacity:0}
+.suggest-chip svg{width:12px;height:12px}
+
+/* ---------- logos ---------- */
+.press{padding:40px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.press .lbl{text-align:center;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:22px;font-family:Inter,sans-serif}
+.press-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:26px;opacity:.55}
+.press-row div{font-family:"Newsreader",serif;font-style:italic;font-weight:600;font-size:18px}
+
+/* ---------- feature story ---------- */
+.story{padding:120px 0}
+.story-row{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.story-row.rev .txt{order:2}
+.story-row.rev .vis{order:1}
+.story h2{font-size:clamp(28px,3.2vw,40px);font-style:italic}
+.story p.body{font-size:16px;line-height:1.8;max-width:420px;margin-top:16px;font-family:Inter,sans-serif}
+.vis{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:0 26px 56px rgba(28,26,23,.08);padding:28px}
+.tone-row{display:flex;gap:8px;margin-bottom:18px;font-family:Inter,sans-serif}
+.tone-chip{font-size:12px;padding:5px 12px;border-radius:16px;background:#f4f2ee;color:var(--mut)}
+.tone-chip.on{background:var(--iris);color:#fff}
+.sample-text{font-size:15px;line-height:1.75;color:var(--ink)}
+.diff-old{text-decoration:line-through;color:#c8938f;background:#fdf0ef;padding:0 3px;border-radius:3px}
+.diff-new{color:var(--iris-d);background:#f0ecff;padding:0 3px;border-radius:3px}
+
+/* ---------- pinned rewrite ---------- */
+.rewrite-sec{position:relative;background:var(--ink);color:#faf9f6}
+.rewrite-head{text-align:center;padding:120px 0 0;max-width:560px;margin:0 auto}
+.rewrite-head h2{color:#faf9f6;font-size:clamp(28px,3.4vw,42px);font-style:italic}
+.rewrite-head p{color:rgba(250,249,246,.55);margin-top:12px;font-family:Inter,sans-serif}
+.rewrite-pin{height:100vh;display:flex;align-items:center;justify-content:center}
+.rewrite-card{width:min(680px,90vw);background:#252220;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:36px 40px;font-size:18px;line-height:1.9}
+.rewrite-badge{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-family:Inter,sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--rose);margin-bottom:18px}
+#rwTarget{transition:none;border-radius:4px}
+
+/* ---------- stats ---------- */
+.stats{padding:100px 0;text-align:center}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.stat b{display:block;font-family:"Newsreader",serif;font-size:clamp(30px,3.6vw,44px);font-weight:600;font-style:italic}
+.stat span{display:block;margin-top:8px;font-size:13px;color:var(--mut);font-family:Inter,sans-serif}
+
+/* ---------- testimonials ---------- */
+.testi{padding:0 0 120px}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.tcard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;transition:transform .3s,box-shadow .3s}
+.tcard:hover{transform:translateY(-6px);box-shadow:0 22px 46px rgba(28,26,23,.1)}
+.tcard p{font-size:15.5px;line-height:1.7;color:var(--ink);font-style:italic}
+.tcard .who{margin-top:16px;font-size:13px;color:var(--mut);font-family:Inter,sans-serif}
+
+/* ---------- final cta ---------- */
+.final{padding:0 0 120px}
+.final-box{position:relative;background:linear-gradient(135deg,#efe9ff,#faf9f6);border:1px solid var(--line);border-radius:28px;padding:90px 40px;text-align:center}
+.final-box h2{font-size:clamp(30px,4.2vw,48px);font-style:italic}
+.final-box p{margin:16px auto 0;max-width:420px;font-size:16px;font-family:Inter,sans-serif}
+.final-box .cta{justify-content:center;margin-top:30px;display:flex;gap:14px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:56px 0 30px}
+.foot-top{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;padding-bottom:36px;border-bottom:1px solid var(--line)}
+.foot-brand p{max-width:280px;margin-top:12px;font-size:14px;line-height:1.6;font-family:Inter,sans-serif}
+.foot-cols{display:flex;gap:56px}
+.foot-col h6{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);margin-bottom:15px;font-family:Inter,sans-serif}
+.foot-col a{display:block;font-size:14px;color:var(--ink);margin-bottom:9px;text-decoration:none;opacity:.8;font-family:Inter,sans-serif}
+.foot-col a:hover{opacity:1;color:var(--iris)}
+.foot-bottom{display:flex;justify-content:space-between;padding-top:24px;font-size:12.5px;color:var(--mut);font-family:Inter,sans-serif}
+
+@media(max-width:900px){
+  .story-row{grid-template-columns:1fr}
+  .story-row.rev .txt{order:1}
+  .story-row.rev .vis{order:2}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:28px}
+  .testi-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+}
+@media(max-width:600px){
+  .foot-top{flex-direction:column;gap:28px}
+  .foot-cols{gap:30px;flex-wrap:wrap}
+  .editor-body{padding:26px 22px;font-size:16px}
+  .rewrite-card{padding:26px 24px;font-size:15.5px}
+}
+@media(prefers-reduced-motion:reduce){
+  .rv{opacity:1!important;transform:none!important}
+}
 </style></head>
-<body data-cf-keep-dark><div class="wrap"><span class="kicker">JOIN 4,200+ ON THE WAITLIST</span><h2>Be first to try v3.</h2><p>Early access, launch pricing and priority onboarding.</p>
-<form id="form"><input type="email" placeholder="you@company.com" required><button>Notify me</button></form>
-<div class="success" id="success">You're on the list ✓ — check your inbox soon.</div></div>
+<body data-cf-keep-dark>
+
+<nav class="nav" id="nav">
+  <div class="nav-in">
+    <div class="brand">Marginalia</div>
+    <div class="nav-links"><a>Editor</a><a>Tone</a><a>Pricing</a><a>Blog</a></div>
+    <div class="nav-right"><span class="lg">Log in</span><button class="btn btn-iris">Start writing</button></div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap hero-in">
+    <span class="eb rv">Your next draft, already better</span>
+    <h1 class="rv">Write like you, only with fewer second drafts.</h1>
+    <p class="lead rv">Marginalia rewrites in your own voice, tightens what's loose, and never sounds like a robot pretending to be a person.</p>
+    <div class="cta rv"><button class="btn btn-iris">Start writing free</button><button class="btn btn-line">Watch it edit</button></div>
+  </div>
+  <div class="wrap editor-wrap">
+    <div class="editor rv" id="editorBox">
+      <div class="editor-top"><div class="l"><i></i><i></i><i></i></div><div class="r"><b></b>Marginalia — draft.md</div></div>
+      <div class="editor-body" id="editorBody"></div>
+    </div>
+  </div>
+</section>
+
+<section class="press">
+  <div class="wrap">
+    <div class="lbl">Trusted by writers at</div>
+    <div class="press-row"><div>The Gentle Press</div><div>Kinfolk</div><div>Bon Appétit</div><div>Cherry Bombe</div><div>Well+Good</div></div>
+  </div>
+</section>
+
+<section class="story">
+  <div class="wrap story-row">
+    <div class="txt">
+      <span class="eb rv">Match your tone</span>
+      <h2 class="rv">Formal for the board. Loose for the newsletter.</h2>
+      <p class="body rv">One slider, five tones — Marginalia rewrites the same paragraph to fit wherever it's going.</p>
+    </div>
+    <div class="vis rv">
+      <div class="tone-row"><span class="tone-chip">Playful</span><span class="tone-chip on">Confident</span><span class="tone-chip">Formal</span><span class="tone-chip">Warm</span></div>
+      <p class="sample-text">Our Q3 numbers <span class="diff-old">were kind of okay, we think</span><span class="diff-new">exceeded projection by 14%</span>, driven mostly by the new onboarding flow.</p>
+    </div>
+  </div>
+</section>
+
+<section class="story">
+  <div class="wrap story-row rev">
+    <div class="txt">
+      <span class="eb rv">Stay you</span>
+      <h2 class="rv">It learns your sentences, not a template.</h2>
+      <p class="body rv">Marginalia studies fifty pages of your own writing before it ever suggests a word — so suggestions sound like you on a good day.</p>
+    </div>
+    <div class="vis rv">
+      <div class="tone-row"><span class="tone-chip on">Your voice</span><span class="tone-chip">Generic AI</span></div>
+      <p class="sample-text">I've been circling this idea for weeks and <span class="diff-new">still can't quite pin down why it matters</span> — but I keep coming back to it anyway.</p>
+    </div>
+  </div>
+</section>
+
+<section class="rewrite-sec">
+  <div class="rewrite-head">
+    <span class="eb rv" style="color:var(--rose)">Live rewrite</span>
+    <h2 class="rv">Watch one sentence get tightened.</h2>
+    <p class="rv">Scroll to step through the edit.</p>
+  </div>
+  <div class="rewrite-pin" id="rewritePin">
+    <div class="rewrite-card">
+      <div class="rewrite-badge" id="rewriteBadge">● Analyzing</div>
+      <span>I just wanted to reach out and let you know that we are, at this point in time, <span id="rwTarget">more or less ready to</span> proceed with the launch.</span>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="wrap stats-grid">
+    <div class="stat"><b data-count="40" data-suffix="%">0</b><span>Fewer edit rounds</span></div>
+    <div class="stat"><b data-count="2100000" data-suffix="+">0</b><span>Drafts rewritten</span></div>
+    <div class="stat"><b data-count="5">0</b><span>Tone presets</span></div>
+    <div class="stat"><b data-count="4" data-suffix=".8★">0</b><span>Average rating</span></div>
+  </div>
+</section>
+
+<section class="testi">
+  <div class="wrap">
+    <div class="testi-grid">
+      <div class="tcard rv2"><p>"The tone slider alone saved me from three awkward client emails this week."</p><div class="who">— Priya, freelance copywriter</div></div>
+      <div class="tcard rv2"><p>"First AI writing tool that doesn't make everything sound like a LinkedIn post."</p><div class="who">— Marcus, newsletter writer</div></div>
+      <div class="tcard rv2"><p>"It genuinely learned my voice. My editor stopped flagging 'AI-sounding' passages."</p><div class="who">— Dana, journalist</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <div class="final-box rv">
+      <h2>Your next draft is one rewrite away.</h2>
+      <p>Free for your first 20 rewrites, no card required.</p>
+      <div class="cta"><button class="btn btn-iris">Start writing free</button></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <div class="brand">Marginalia</div>
+        <p>AI rewriting that stays in your own voice.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h6>Product</h6><a>Editor</a><a>Tone presets</a><a>API</a></div>
+        <div class="foot-col"><h6>Company</h6><a>About</a><a>Careers</a><a>Journal</a></div>
+        <div class="foot-col"><h6>Support</h6><a>Help center</a><a>Contact</a><a>Status</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 Marginalia Inc.</span><span>Privacy · Terms</span></div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
-document.getElementById("form").addEventListener("submit",function(e){e.preventDefault();e.target.style.display="none";document.getElementById("success").style.display="block"});
+(function(){
+  var nav = document.getElementById("nav");
+  document.addEventListener("scroll", function(){ nav.classList.toggle("on", window.scrollY > 14); }, { passive: true });
+
+  function fmt(n, suffix){
+    var v = Math.round(n);
+    var s = v >= 1000000 ? (v/1000000).toFixed(1).replace(/\.0$/,"") + "M" : v >= 1000 ? (v/1000).toFixed(1).replace(/\.0$/,"") + "K" : String(v);
+    return s + (suffix || "");
+  }
+
+  // Typewriter effect in the hero editor: types a sentence, then shows an
+  // AI suggestion chip appearing beside it, looping.
+  var script = [
+    { text: "The onboarding flow still feels ", chip: null },
+    { text: "clunky", chip: { label: "Try: “unwieldy”", icon: true } },
+    { text: " in the second step.", chip: null }
+  ];
+  var editorBody = document.getElementById("editorBody");
+
+  function typeEditor(){
+    editorBody.innerHTML = "";
+    var textNode = document.createElement("span");
+    editorBody.appendChild(textNode);
+    var cursor = document.createElement("span");
+    cursor.className = "cursor";
+    editorBody.appendChild(cursor);
+    var si = 0;
+    function nextSeg(){
+      if (si >= script.length) {
+        gsap.delayedCall(2.2, typeEditor);
+        return;
+      }
+      var seg = script[si], ci = 0;
+      var iv = setInterval(function(){
+        textNode.textContent += seg.text[ci];
+        ci++;
+        if (ci >= seg.text.length) {
+          clearInterval(iv);
+          if (seg.chip) {
+            var chip = document.createElement("span");
+            chip.className = "suggest-chip";
+            chip.textContent = seg.chip.label;
+            editorBody.insertBefore(chip, cursor);
+            if (window.gsap) gsap.to(chip, { opacity: 1, duration: .3 }); else chip.style.opacity = 1;
+          }
+          si++;
+          setTimeout(nextSeg, seg.chip ? 500 : 120);
+        }
+      }, 28);
+    }
+    nextSeg();
+  }
+
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!window.gsap || !window.ScrollTrigger || reduced) {
+    document.querySelectorAll(".rv,.rv2").forEach(function(el){ el.style.opacity = 1; el.style.transform = "none"; });
+    document.querySelectorAll(".stat b[data-count]").forEach(function(el){ el.textContent = fmt(+el.dataset.count, el.dataset.suffix); });
+    editorBody.textContent = "The onboarding flow still feels unwieldy in the second step.";
+    document.getElementById("rwTarget").textContent = "ready to";
+    document.getElementById("rwTarget").style.color = "#c9c0ff";
+    document.getElementById("rewriteBadge").textContent = "● Rewritten";
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  var tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+  tl.to(".hero-in .rv", { opacity: 1, y: 0, duration: .8, stagger: .08 })
+    .fromTo("#editorBox", { opacity: 0, y: 40, scale: .97 }, { opacity: 1, y: 0, scale: 1, duration: .9 }, "-=.5")
+    .call(typeEditor, null, "-=.2");
+
+  document.querySelectorAll(".rv").forEach(function(el){
+    if (el.closest(".hero")) return;
+    gsap.to(el, { opacity: 1, y: 0, duration: .85, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 85%" } });
+  });
+  document.querySelectorAll(".rv2").forEach(function(el){
+    gsap.from(el, { opacity: 0, y: 26, duration: .7, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 88%" } });
+  });
+  gsap.from(".press-row div", { opacity: 0, y: 10, stagger: .06, duration: .6, scrollTrigger: { trigger: ".press-row", start: "top 90%" } });
+
+  // Pinned rewrite: the status badge shifts from "Analyzing" to "Rewriting"
+  // to "Done", then the struck-through phrase swaps for the tightened one —
+  // all scrubbed to scroll so the reader controls the pace of the edit.
+  var badge = document.getElementById("rewriteBadge");
+  var target = document.getElementById("rwTarget");
+  var rewriteTl = gsap.timeline({
+    scrollTrigger: { trigger: "#rewritePin", start: "top top", end: "+=190%", pin: true, scrub: .5 }
+  });
+  rewriteTl
+    .to({}, { duration: .2, onStart: function(){ badge.textContent = "● Analyzing"; } })
+    .to({}, { duration: .2, onStart: function(){ badge.textContent = "● Rewriting"; } })
+    .to(target, { color: "#e8a5a5", duration: .2, onStart: function(){ target.style.textDecoration = "line-through"; } })
+    .to(target, {
+      duration: .01,
+      onComplete: function(){
+        target.textContent = "ready to";
+        target.style.textDecoration = "none";
+        badge.textContent = "● Done";
+      }
+    }, "+=.15")
+    .fromTo(target, { color: "#e8a5a5" }, { color: "#c9c0ff", backgroundColor: "rgba(106,92,255,.18)", duration: .3 });
+
+  ScrollTrigger.create({
+    trigger: ".stats", start: "top 80%", once: true,
+    onEnter: function(){
+      document.querySelectorAll(".stat b[data-count]").forEach(function(el){
+        var target = +el.dataset.count, suffix = el.dataset.suffix || "", o = { v: 0 };
+        gsap.to(o, { v: target, duration: 1.8, ease: "power2.out", onUpdate: function(){ el.textContent = fmt(o.v, suffix); } });
+      });
+    }
+  });
+
+  window.addEventListener("load", function(){ ScrollTrigger.refresh(); });
+})();
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "animated-stats-band": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Animated Stats Band</title><style>
