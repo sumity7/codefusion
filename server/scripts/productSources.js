@@ -454,25 +454,38 @@ setTimeout(type,400);
 
   "marquee-testimonials": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Marquee Testimonials</title><style>
-:root{--bg:#050507;--line:#272632}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;overflow:hidden}
-.kicker{display:block;margin-bottom:16px;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.marquee{width:100%;overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
-.track{display:flex;gap:14px;width:max-content;animation:scroll 18s linear infinite}
+:root{--bg:#fdf6f3;--ink:#2b211d;--mut:#8a7a72;--rose:#c9576b;--card:#fff;--line:#f0e2dc}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:50px 0;overflow:hidden}
+h2{font-family:Georgia,serif;font-style:italic;font-weight:400;font-size:24px;color:var(--ink);margin:0 0 30px}
+.marquee-wrap{width:100%;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.track{display:flex;gap:18px;width:max-content;animation:scroll 28s linear infinite}
 .track:hover{animation-play-state:paused}
-.card{width:220px;padding:16px;border:1px solid var(--line);border-radius:13px;background:#0d0d12;font-size:9px;color:#a49dae;box-shadow:0 16px 40px -22px rgba(0,0,0,.7);transition:border-color .2s}
-.card:hover{border-color:#544c67}
-.card b{display:block;margin-top:8px;color:#eee9f8;font-size:9px}
-@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes scroll{to{transform:translateX(-50%)}}
+.card{width:260px;flex:none;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+.card .stars{color:#e8ab3d;font-size:13px;margin-bottom:10px}
+.card p{margin:0;font-size:13px;color:var(--ink);line-height:1.6}
+.card .who{display:flex;align-items:center;gap:9px;margin-top:14px}
+.card .who span{width:28px;height:28px;border-radius:50%}
+.card .who b{font-size:12px;color:var(--ink);display:block}
+.card .who i{font-size:10.5px;color:var(--mut);font-style:normal}
 </style></head>
-<body data-cf-keep-dark><span class="kicker">AUTO-SCROLLING</span>
-<div class="marquee"><div class="track" id="track"></div></div>
+<body>
+<h2>"Genuinely changed how we work."</h2>
+<div class="marquee-wrap">
+  <div class="track" id="track">
+    <div class="card"><div class="stars">★★★★★</div><p>The onboarding alone saved us two weeks of setup time.</p><div class="who"><span style="background:#c9576b"></span><div><b>Maya K.</b><i>Product Lead</i></div></div></div>
+    <div class="card"><div class="stars">★★★★★</div><p>Support responded in four minutes. Four. I timed it.</p><div class="who"><span style="background:#e8ab3d"></span><div><b>Daniel R.</b><i>Founder</i></div></div></div>
+    <div class="card"><div class="stars">★★★★★</div><p>We moved off three separate tools onto just this one.</p><div class="who"><span style="background:#7a9b76"></span><div><b>Priya N.</b><i>Ops Manager</i></div></div></div>
+    <div class="card"><div class="stars">★★★★★</div><p>My whole team actually enjoys using it. Rare thing.</p><div class="who"><span style="background:#6b7fc9"></span><div><b>Jo T.</b><i>Design Director</i></div></div></div>
+  </div>
+</div>
 <script>
-const quotes=["Shipped in a day, not a sprint.","The polish is on another level.","Our best-performing landing page yet.","Support that actually replies.","Exactly what our team needed."];
-const track=document.getElementById("track");
-[...quotes,...quotes].forEach(function(q,i){const d=document.createElement("div");d.className="card";d.innerHTML=q+"<b>— Builder "+(i%quotes.length+1)+"</b>";track.appendChild(d)});
+var track=document.getElementById("track");
+track.innerHTML+=track.innerHTML;
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "mega-menu-navbar": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Mega Menu Navbar</title><style>
@@ -2612,84 +2625,39 @@ button:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px rgba(16,185
 `,
 
   "avatar-stack-proof": `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Avatar Stack Social Proof</title><style>
-:root{--bg:#050507;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:24px;text-align:center}
-.stack{display:flex;justify-content:center}
-.stack div{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:800;color:#0a090f;margin-left:-12px;border:2px solid #050507;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
-.stack div:first-child{margin-left:0}
-.stack:hover div{margin-left:2px}
-.stack div:hover{transform:translateY(-6px) scale(1.08)}
-.a{background:linear-gradient(135deg,#d7d0ff,#9b8aff)}
-.b{background:linear-gradient(135deg,#ffd7e8,#ff9bc4)}
-.c{background:linear-gradient(135deg,#d0f0ff,#8ac6ff)}
-.d{background:linear-gradient(135deg,#d9ffd0,#8ade9b)}
-.e{background:#1b1823;color:#c4b5fd;font-size:9px}
-p{margin:14px 0 0;font-size:10px;color:#847e8f}
-p b{color:#e6e1f2}
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Avatar Stack Proof</title><style>
+:root{--bg:#fdf6f3;--ink:#2b211d;--mut:#8a7a72;--rose:#c9576b}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.wrap{text-align:center}
+.stack{display:flex;justify-content:center;margin-bottom:16px}
+.av{width:44px;height:44px;border-radius:50%;border:3px solid var(--bg);margin-left:-12px;opacity:0;transform:scale(.6) translateY(8px);box-shadow:0 4px 10px rgba(43,33,29,.12)}
+.av:first-child{margin-left:0}
+.av.more{background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.stars{color:#e8ab3d;font-size:15px;letter-spacing:2px;margin-bottom:8px}
+p{margin:0;font-size:14px;color:var(--ink);font-weight:600}
+span{font-size:12px;color:var(--mut)}
 </style></head>
-<body data-cf-keep-dark><div><div class="stack"><div class="a">SC</div><div class="b">JM</div><div class="c">AR</div><div class="d">TK</div><div class="e">+9k</div></div><p>Trusted by <b>9,000+</b> builders shipping this week</p></div>
-</body></html>`,
-
-  /* ===================== BOILERPLATES ===================== */
-
-  "nova-saas": `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Nova SaaS</title><style>
-:root{--bg:#07060f;--panel:rgba(255,255,255,.045);--stroke:rgba(255,255,255,.1);--ink:#eef0ff;--dim:#8b8aa8;--v1:#7c5cff;--v2:#22d3ee}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(900px 500px at 82% -10%,rgba(124,92,255,.3),transparent 60%),radial-gradient(700px 400px at 8% 15%,rgba(34,211,238,.16),transparent 60%),var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,sans-serif}
-.shell{display:grid;grid-template-columns:212px 1fr;min-height:100vh}
-aside{border-right:1px solid var(--stroke);padding:20px 14px;backdrop-filter:blur(16px)}
-.brand{display:flex;align-items:center;gap:9px;font-weight:800;letter-spacing:-.02em;margin-bottom:22px}
-.brand i{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--v1),var(--v2));display:grid;place-items:center;font-style:normal;font-size:13px;color:#08060f}
-nav a{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;color:var(--dim);font-size:12px;text-decoration:none;transition:.2s}
-nav a.on,nav a:hover{background:var(--panel);color:var(--ink)}
-nav small{display:block;margin:16px 0 6px;color:#55536e;font-size:9px;letter-spacing:.14em}
-main{padding:24px 26px}
-.top{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
-h1{margin:0;font-size:23px;letter-spacing:-.03em}
-.top p{margin:4px 0 0;color:var(--dim);font-size:12px}
-.cta{border:0;border-radius:11px;padding:11px 16px;background:linear-gradient(135deg,var(--v1),#a78bfa);color:#fff;font-weight:700;font-size:12px;cursor:pointer;box-shadow:0 12px 30px rgba(124,92,255,.35)}
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0}
-.kpi{padding:16px;border:1px solid var(--stroke);border-radius:15px;background:var(--panel);backdrop-filter:blur(12px)}
-.kpi small{color:var(--dim);font-size:10px;letter-spacing:.08em}
-.kpi b{display:block;margin-top:9px;font-size:25px;letter-spacing:-.03em}
-.kpi em{font-style:normal;font-size:11px;color:#5eead4}
-.split{display:grid;grid-template-columns:1.55fr 1fr;gap:12px}
-.card{padding:18px;border:1px solid var(--stroke);border-radius:16px;background:var(--panel);backdrop-filter:blur(12px)}
-.card h3{margin:0 0 14px;font-size:13px;letter-spacing:-.01em}
-.bars{display:flex;align-items:flex-end;gap:7px;height:150px}
-.bars i{flex:1;border-radius:6px 6px 3px 3px;background:linear-gradient(180deg,var(--v2),var(--v1));opacity:.85;transition:height .7s cubic-bezier(.2,.9,.2,1)}
-.row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px}
-.row:last-child{border:0}
-.av{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#a78bfa,#22d3ee);display:grid;place-items:center;font-size:10px;font-weight:800;color:#0b0918}
-.row span{margin-left:auto;color:var(--dim);font-size:11px}
-.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
-.plan{padding:18px;border:1px solid var(--stroke);border-radius:15px;background:var(--panel)}
-.plan.hot{border-color:rgba(124,92,255,.55);background:linear-gradient(180deg,rgba(124,92,255,.16),transparent)}
-.plan b{font-size:22px;letter-spacing:-.03em}
-.plan small{display:block;color:var(--dim);font-size:11px;margin-top:4px}
-.plan button{width:100%;margin-top:12px;border:1px solid var(--stroke);border-radius:10px;background:transparent;color:var(--ink);padding:9px;font-size:11px;cursor:pointer;transition:.2s}
-.plan.hot button{background:var(--v1);border-color:var(--v1)}
-.plan button:hover{transform:translateY(-1px)}
-@media(max-width:900px){.shell{grid-template-columns:1fr}aside{display:none}.kpis{grid-template-columns:repeat(2,1fr)}.split,.plans{grid-template-columns:1fr}}
-</style></head>
-<body><div class="shell">
-<aside><div class="brand"><i>N</i>Nova</div><nav><small>WORKSPACE</small><a class="on">◧ Overview</a><a>◈ Analytics</a><a>◎ Customers</a><a>▤ Billing</a><small>SETTINGS</small><a>⚙ Preferences</a><a>⇄ Integrations</a></nav></aside>
-<main>
-<div class="top"><div><h1>Good morning, Sarah</h1><p>Here's what moved in the last 7 days.</p></div><button class="cta">+ New report</button></div>
-<div class="kpis"><div class="kpi"><small>MRR</small><b>$48.2K</b><em>▲ 12.4%</em></div><div class="kpi"><small>ACTIVE USERS</small><b>3,204</b><em>▲ 8.1%</em></div><div class="kpi"><small>CHURN</small><b>1.2%</b><em>▼ 0.3%</em></div><div class="kpi"><small>NPS</small><b>62</b><em>▲ 4</em></div></div>
-<div class="split">
-<div class="card"><h3>Revenue — last 12 weeks</h3><div class="bars" id="bars"></div></div>
-<div class="card"><h3>Recent signups</h3><div class="row"><span class="av">SC</span>Sarah Chen<span>2m</span></div><div class="row"><span class="av">JM</span>Jamie Ortiz<span>18m</span></div><div class="row"><span class="av">AR</span>Ana Ruiz<span>1h</span></div><div class="row"><span class="av">TK</span>Tom Kade<span>3h</span></div></div>
+<body>
+<div class="wrap">
+  <div class="stack" id="stack">
+    <div class="av" style="background:#c9576b"></div>
+    <div class="av" style="background:#e8ab3d"></div>
+    <div class="av" style="background:#7a9b76"></div>
+    <div class="av" style="background:#6b7fc9"></div>
+    <div class="av more" data-cf-keep-dark>+2K</div>
+  </div>
+  <div class="stars">★★★★★</div>
+  <p>Loved by 2,400+ teams</p>
+  <span>Rated 4.9 out of 5 on average</span>
 </div>
-<div class="plans"><div class="plan"><b>$19</b><small>Starter · 3 projects</small><button>Choose</button></div><div class="plan hot"><b>$49</b><small>Scale · unlimited</small><button>Choose Scale</button></div><div class="plan"><b>$99</b><small>Studio · teams</small><button>Choose</button></div></div>
-</main></div>
 <script>
-const bars=document.getElementById("bars");
-for(let i=0;i<12;i++){const b=document.createElement("i");b.style.height=(28+Math.random()*66)+"%";bars.appendChild(b)}
-setInterval(()=>[...bars.children].forEach(b=>b.style.height=(28+Math.random()*66)+"%"),2200);
+document.querySelectorAll(".av").forEach(function(av,i){
+  setTimeout(function(){ av.style.transition="opacity .4s,transform .4s cubic-bezier(.34,1.56,.64,1)"; av.style.opacity=1; av.style.transform="scale(1) translateY(0)"; }, 100+i*90);
+});
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "atlas-agency": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Atlas Agency</title><style>
@@ -3361,52 +3329,64 @@ tick();
 
   "carousel-dot-testimonials": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Testimonial Carousel</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:16px;place-items:center;padding:40px;width:min(360px,86vw)}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.card{border:1px solid var(--line);border-radius:16px;background:#0d0d12;padding:24px;text-align:center;min-height:120px;box-shadow:0 20px 50px -22px rgba(0,0,0,.6);animation:fade .3s cubic-bezier(.2,.8,.2,1)}
-.card p{color:#eee9f8;font-size:13px;line-height:1.6;margin:0 0 12px}
-.card b{color:var(--lav);font-size:11px}
-.dots{display:flex;gap:6px}
-.dots span{width:7px;height:7px;border-radius:50%;background:#3a3546;cursor:pointer;transition:background .3s,transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .3s}
-.dots span.active{background:linear-gradient(135deg,#d7d0ff,#9b8aff);transform:scale(1.3);box-shadow:0 0 8px rgba(196,181,253,.5)}
-@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+:root{--bg:#fdf6f3;--ink:#2b211d;--mut:#8a7a72;--rose:#c9576b;--card:#fff;--line:#f0e2dc}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:360px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:30px;text-align:center;position:relative;overflow:hidden}
+.slide{display:none;animation:fade .4s ease}
+.slide.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.quote-mark{font-family:Georgia,serif;font-size:44px;color:#f0d9dd;line-height:.5;margin-bottom:6px}
+.slide p{margin:0;font-size:14.5px;color:var(--ink);line-height:1.7;font-style:italic;font-family:Georgia,serif}
+.who{margin-top:18px}
+.who b{display:block;font-size:12.5px;color:var(--ink)}
+.who span{font-size:11px;color:var(--mut)}
+.dots{display:flex;justify-content:center;gap:8px;margin-top:22px}
+.dots button{width:8px;height:8px;border-radius:50%;border:0;background:var(--line);cursor:pointer;padding:0;transition:background .25s,transform .25s}
+.dots button.on{background:var(--rose);transform:scale(1.3)}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">TAP A DOT</span>
-<div class="card" id="card"><p>"CodeFusion cut our build time in half — every component just works."</p><b>Maya Torres · Frontend Lead</b></div>
-<div class="dots" id="dots"><span class="active"></span><span></span><span></span></div></div>
+<body>
+<div class="card">
+  <div class="slide on"><div class="quote-mark">"</div><p>The migration we dreaded took one afternoon, not the two weeks we'd budgeted.</p><div class="who"><b>Nadia Farouk</b><span>CTO, Portside</span></div></div>
+  <div class="slide"><div class="quote-mark">"</div><p>Support answers like they actually use the product. Refreshing, honestly.</p><div class="who"><b>Tomas Berg</b><span>Founder, Haven</span></div></div>
+  <div class="slide"><div class="quote-mark">"</div><p>We finally have one dashboard the whole company trusts.</p><div class="who"><b>Lena Wu</b><span>COO, Argus</span></div></div>
+  <div class="dots" id="dots"><button class="on"></button><button></button><button></button></div>
+</div>
 <script>
-const quotes=[{q:"CodeFusion cut our build time in half — every component just works.",a:"Maya Torres · Frontend Lead"},
-{q:"The polish here rivals a custom design agency, at a fraction of the cost.",a:"Dev Patel · Founder"},
-{q:"We shipped our MVP in a weekend using nothing but this library.",a:"Ines Laurent · Product Designer"}];
-const card=document.getElementById("card"),dots=[...document.querySelectorAll("#dots span")];
-dots.forEach(function(d,i){d.addEventListener("click",function(){
-  dots.forEach(function(x){x.classList.remove("active")});d.classList.add("active");
-  card.style.animation="none";void card.offsetWidth;card.style.animation="";
-  card.innerHTML='<p>"'+quotes[i].q+'"</p><b>'+quotes[i].a+"</b>";
-})});
+var slides=document.querySelectorAll(".slide"), dots=document.querySelectorAll(".dots button"), cur=0;
+function go(i){
+  slides[cur].classList.remove("on"); dots[cur].classList.remove("on");
+  cur=i; slides[cur].classList.add("on"); dots[cur].classList.add("on");
+}
+dots.forEach(function(d,i){ d.addEventListener("click",function(){ go(i); }); });
+setInterval(function(){ go((cur+1)%slides.length); },3800);
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "pull-quote-testimonial": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Pull Quote Testimonial</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;position:relative;overflow:hidden}
-body::before{content:"";position:absolute;inset:-20%;background:radial-gradient(circle at 50% 30%,rgba(155,138,255,.1),transparent 60%);pointer-events:none}
-.wrap{position:relative;max-width:420px;padding:40px;text-align:center}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.mark{font-size:40px;background:linear-gradient(135deg,#9b8aff,#3a3546);-webkit-background-clip:text;background-clip:text;color:transparent;font-family:Georgia,serif;line-height:1}
-blockquote{margin:10px 0 20px;font-size:19px;color:#f7f5fb;line-height:1.4;font-weight:600}
-.who{color:#a49dbc;font-size:12px}
-.logos{display:flex;gap:18px;justify-content:center;margin-top:22px;opacity:.6}
-.logos span{color:#817d8a;font-size:11px;font-weight:800;letter-spacing:1px}
+:root{--bg:#fdf6f3;--ink:#2b211d;--mut:#8a7a72;--rose:#c9576b}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:60px}
+.wrap{max-width:560px;text-align:center;position:relative}
+.mark{position:absolute;top:-40px;left:50%;transform:translateX(-50%);font-family:Georgia,serif;font-size:90px;color:#f0d9dd;line-height:1;user-select:none}
+blockquote{margin:0;font-family:Georgia,serif;font-size:clamp(22px,3vw,30px);font-style:italic;color:var(--ink);line-height:1.4;position:relative}
+.rule{width:40px;height:2px;background:var(--rose);margin:26px auto}
+.who b{display:block;font-size:13.5px;color:var(--ink)}
+.who span{font-size:12px;color:var(--mut)}
+.logo{margin-top:16px;font-family:Georgia,serif;font-weight:700;font-style:italic;font-size:15px;color:#c7b6b9}
 </style></head>
-<body data-cf-keep-dark><div class="wrap"><span class="kicker">TRUSTED BY BUILDERS</span><div class="mark">"</div>
-<blockquote>It feels like our whole product got a design upgrade overnight.</blockquote>
-<div class="who">Renée Fischer — Head of Design, Northstar</div>
-<div class="logos"><span>NORTHSTAR</span><span>ORBIT</span><span>FLUENT</span></div></div>
-</body></html>`,
+<body>
+<div class="wrap">
+  <div class="mark">"</div>
+  <blockquote>We didn't just save time switching to this platform — we changed how the whole company thinks about its own data.</blockquote>
+  <div class="rule"></div>
+  <div class="who"><b>Renata Silva</b><span>VP Operations</span></div>
+  <div class="logo">Fenwick</div>
+</div>
+</body></html>
+`,
 
   "command-palette-nav": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Command Palette Nav</title><style>
@@ -5643,130 +5623,196 @@ p{margin:16px auto 30px;font-size:15px;color:var(--mut);max-width:420px}
 
   "social-proof-wall": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Social Proof Wall</title><style>
-:root{--bg:#050507;--line:#272632}
-*{box-sizing:border-box}body{margin:0;height:100vh;overflow:hidden;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center}
-.wall{display:flex;gap:14px;width:340px;height:260px;overflow:hidden;mask-image:linear-gradient(to bottom,transparent,#000 15%,#000 85%,transparent)}
-.col{display:grid;gap:10px;animation:scroll 14s linear infinite}
-.col.down{animation-direction:reverse}
-.note{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#111017;color:#c9c4d6;font-size:10px;line-height:1.5;box-shadow:0 12px 30px -18px rgba(0,0,0,.6);transition:border-color .2s}
-.note:hover{border-color:#544c67}
-@keyframes scroll{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+:root{--bg:#fdf6f3;--ink:#2b211d;--mut:#8a7a72;--rose:#c9576b;--card:#fff;--line:#f0e2dc}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px;display:flex;justify-content:center}
+.grid{columns:3 220px;column-gap:16px;max-width:700px}
+.card{break-inside:avoid;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:16px;opacity:0;transform:translateY(14px)}
+.card .stars{color:#e8ab3d;font-size:12px;margin-bottom:8px}
+.card p{margin:0;font-size:12.5px;color:var(--ink);line-height:1.6}
+.card .who{display:flex;align-items:center;gap:8px;margin-top:12px}
+.card .who span{width:24px;height:24px;border-radius:50%;flex:none}
+.card .who b{font-size:11.5px;color:var(--ink);display:block}
+@media(max-width:600px){.grid{columns:2 140px}}
 </style></head>
-<body data-cf-keep-dark><div class="wall">
-<div class="col">
-<div class="note">"Shipped our redesign in a week."</div><div class="note">"Feels like a $50k design system."</div><div class="note">"Support answered in minutes."</div>
-<div class="note">"Shipped our redesign in a week."</div><div class="note">"Feels like a $50k design system."</div><div class="note">"Support answered in minutes."</div>
+<body>
+<div class="grid" id="grid">
+  <div class="card"><div class="stars">★★★★★</div><p>Switched our whole agency over in a week. Zero regrets.</p><div class="who"><span style="background:#c9576b"></span><b>Nadia F.</b></div></div>
+  <div class="card"><div class="stars">★★★★★</div><p>The reporting alone is worth the subscription.</p><div class="who"><span style="background:#e8ab3d"></span><b>Tomas B.</b></div></div>
+  <div class="card"><div class="stars">★★★★★</div><p>Finally, a tool our clients actually understand too.</p><div class="who"><span style="background:#7a9b76"></span><b>Lena W.</b></div></div>
+  <div class="card"><div class="stars">★★★★★</div><p>Setup took nine minutes. I know because I timed it.</p><div class="who"><span style="background:#6b7fc9"></span><b>Kabir M.</b></div></div>
+  <div class="card"><div class="stars">★★★★★</div><p>Best onboarding experience of any SaaS we've tried.</p><div class="who"><span style="background:#c9576b"></span><b>Owen P.</b></div></div>
+  <div class="card"><div class="stars">★★★★★</div><p>Our churn dropped 30% the quarter after we switched.</p><div class="who"><span style="background:#e8ab3d"></span><b>Sara L.</b></div></div>
 </div>
-<div class="col down">
-<div class="note">"Our best onboarding metric yet."</div><div class="note">"Zero regressions after launch."</div><div class="note">"Worth every token."</div>
-<div class="note">"Our best onboarding metric yet."</div><div class="note">"Zero regressions after launch."</div><div class="note">"Worth every token."</div>
-</div>
-</div>
-</body></html>`,
+<script>
+document.querySelectorAll(".card").forEach(function(c,i){
+  setTimeout(function(){ c.style.transition="opacity .5s ease,transform .5s cubic-bezier(.2,.8,.2,1)"; c.style.opacity=1; c.style.transform="translateY(0)"; }, 100+i*90);
+});
+</script>
+</body></html>
+`,
 
   "expandable-review-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Expandable Review Card</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:280px;padding:18px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
-.card b{color:#f7f5fb;font-size:12px}
-.card p{color:#a49dbc;font-size:11px;line-height:1.7;margin:8px 0;overflow:hidden;max-height:38px;transition:max-height .35s cubic-bezier(.2,.8,.2,1)}
-.card p.open{max-height:200px}
-.more{border:0;background:none;color:var(--lav);font-size:10px;cursor:pointer;padding:0;font-weight:700}
-.votes{display:flex;gap:10px;margin-top:12px}
-.votes button{border:1px solid var(--line);border-radius:7px;background:#111017;color:#817d8a;font-size:10px;padding:6px 9px;cursor:pointer;transition:border-color .2s,color .2s,transform .15s cubic-bezier(.34,1.56,.64,1)}
-.votes button:hover{border-color:#544c67;color:#eee9f8}
-.votes button:active{transform:scale(.94)}
+:root{--bg:#fdf6f3;--ink:#2b211d;--mut:#8a7a72;--rose:#c9576b;--card:#fff;--line:#f0e2dc}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:340px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px}
+.top{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+.av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#c9576b,#e8ab3d)}
+.top b{display:block;font-size:13px;color:var(--ink)}
+.top span{font-size:11.5px;color:var(--mut)}
+.stars{color:#e8ab3d;font-size:13px;margin-bottom:10px}
+.text{font-size:13px;color:var(--ink);line-height:1.7;overflow:hidden;max-height:4.6em;position:relative;transition:max-height .4s cubic-bezier(.2,.8,.2,1)}
+.text.open{max-height:300px}
+.text:not(.open):after{content:"";position:absolute;bottom:0;left:0;right:0;height:1.6em;background:linear-gradient(transparent,var(--card))}
+.more{margin-top:10px;background:none;border:0;color:var(--rose);font-size:12.5px;font-weight:700;cursor:pointer;padding:0;font-family:inherit}
 </style></head>
-<body data-cf-keep-dark><div class="card"><b>Priya M. ★★★★★</b>
-<p id="text">The onboarding alone saved us two weeks of internal debate. Every component slots into our existing design tokens without a fight, and the copy-prompt feature meant our junior devs could extend things confidently on day one.</p>
-<button class="more" id="more">Read more</button>
-<div class="votes"><button id="up">👍 12</button><button id="down">👎 0</button></div></div>
+<body>
+<div class="card">
+  <div class="top"><div class="av"></div><div><b>Renata Silva</b><span>Verified customer · 3 weeks ago</span></div></div>
+  <div class="stars">★★★★★</div>
+  <div class="text" id="text">We evaluated six platforms before landing here, and honestly it wasn't close. The onboarding flow alone saved our team two full weeks of setup — everything from data migration to custom fields just worked on the first try. Support has been fast and genuinely helpful every time we've reached out, which after years of ticket queues on other tools felt almost suspicious. Would recommend to anyone still on the fence.</div>
+  <button class="more" id="moreBtn">Read more</button>
+</div>
 <script>
-const text=document.getElementById("text"),more=document.getElementById("more");
-more.addEventListener("click",function(){text.classList.toggle("open");more.textContent=text.classList.contains("open")?"Show less":"Read more"});
-document.getElementById("up").addEventListener("click",function(e){e.target.textContent="👍 13"});
+var text=document.getElementById("text"), btn=document.getElementById("moreBtn");
+btn.addEventListener("click",function(){
+  var open=text.classList.toggle("open");
+  btn.textContent = open ? "Show less" : "Read more";
+});
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "before-after-results-testimonial": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Before/After Results Testimonial</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{position:relative;width:290px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;overflow:hidden;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
-.card::before{content:"";position:absolute;top:-50%;right:-20%;width:180px;height:180px;background:radial-gradient(circle,rgba(95,212,161,.14),transparent 70%)}
-.result{position:relative;display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:14px}
-.result b{font-size:26px;color:#5f5c68}
-.result b.after{background:linear-gradient(135deg,#7fe0ac,#41b878);-webkit-background-clip:text;background-clip:text;color:transparent}
-.result span{color:#5f5c68;font-size:16px}
-.card p{position:relative;color:#c9c4d6;font-size:12px;line-height:1.7;margin:0}
-.card small{position:relative;display:block;margin-top:10px;color:#817d8a;font-size:10px}
+:root{--bg:#fdf6f3;--ink:#2b211d;--mut:#8a7a72;--rose:#c9576b;--card:#fff;--line:#f0e2dc;--green:#5d8a5b}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:360px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px}
+.quote{font-family:Georgia,serif;font-style:italic;font-size:16px;color:var(--ink);line-height:1.5;margin-bottom:18px}
+.who{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.who span{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#c9576b,#e8ab3d)}
+.who b{font-size:12.5px;color:var(--ink);display:block}
+.who i{font-size:11px;color:var(--mut);font-style:normal}
+.stats{display:flex;gap:12px}
+.stat{flex:1;background:#fbf4f1;border-radius:12px;padding:14px;text-align:center}
+.stat b{display:block;font-size:22px;color:var(--green);font-weight:800}
+.stat span{font-size:10.5px;color:var(--mut)}
+.arrow{display:flex;align-items:center;justify-content:center;color:var(--mut)}
+.arrow svg{width:16px;height:16px}
 </style></head>
-<body data-cf-keep-dark><div class="card"><div class="result"><b>41%</b><span>→</span><b class="after">89%</b></div>
-<p>"Our checkout conversion nearly doubled after we swapped in the pricing and form components — no other changes."</p>
-<small>— Marcus Lee, Growth Lead at Fluent</small></div>
-</body></html>`,
+<body>
+<div class="card">
+  <div class="quote">"We went from drowning in support tickets to actually getting ahead of them — in six weeks."</div>
+  <div class="who"><span></span><div><b>Renata Silva</b><i>Head of Support, Fenwick</i></div></div>
+  <div class="stats">
+    <div class="stat"><b id="before">184</b><span>Tickets/week — before</span></div>
+    <div class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+    <div class="stat"><b id="after">0</b><span>Tickets/week — after</span></div>
+  </div>
+</div>
+<script>
+var after=document.getElementById("after"), target=41, start=null;
+function step(ts){ if(!start)start=ts; var p=Math.min(1,(ts-start)/1000); after.textContent=Math.round(target*p); if(p<1)requestAnimationFrame(step); }
+setTimeout(function(){ requestAnimationFrame(step); },300);
+</script>
+</body></html>
+`,
 
   "video-call-style-testimonial": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Video Call Style Testimonial</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.wrap{width:290px}
-.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.tile{position:relative;height:80px;border-radius:10px;background:linear-gradient(135deg,#191527,#141119);display:grid;place-items:center;color:#eee9f8;font-size:11px;font-weight:700;box-shadow:0 12px 30px -18px rgba(0,0,0,.6);transition:box-shadow .3s}
-.tile.speaking{box-shadow:0 0 0 2px #5fd4a1,0 0 20px -4px rgba(95,212,161,.5);animation:pulse 1.8s ease-in-out infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 2px #5fd4a1,0 0 20px -4px rgba(95,212,161,.5)}50%{box-shadow:0 0 0 2px #5fd4a1,0 0 28px -2px rgba(95,212,161,.7)}}
-.tile span{position:absolute;bottom:6px;left:8px;font-size:8px;color:#817d8a;font-weight:400}
-.quote{margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:12px;background:#0d0d12;color:#c9c4d6;font-size:11px;line-height:1.6;box-shadow:0 16px 40px -22px rgba(0,0,0,.7)}
+:root{--bg:#fdf6f3;--ink:#2b211d;--mut:#8a7a72;--rose:#c9576b}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.frame{width:340px;border-radius:18px;overflow:hidden;box-shadow:0 30px 60px -20px rgba(43,33,29,.25)}
+.video{position:relative;height:220px;background:linear-gradient(160deg,#8a6b6f,#463236);display:flex;align-items:center;justify-content:center}
+.video .av{width:74px;height:74px;border-radius:50%;background:linear-gradient(135deg,#c9576b,#e8ab3d);border:3px solid rgba(255,255,255,.3)}
+.rec{position:absolute;top:12px;left:12px;display:flex;align-items:center;gap:6px;background:rgba(0,0,0,.35);color:#fff;font-size:10.5px;padding:4px 9px;border-radius:20px;font-family:ui-monospace,monospace}
+.rec i{width:6px;height:6px;border-radius:50%;background:#ff5252;animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.3}}
+.name-tag{position:absolute;bottom:12px;left:12px;background:rgba(0,0,0,.4);color:#fff;font-size:11.5px;padding:5px 10px;border-radius:7px}
+.mini{position:absolute;bottom:12px;right:12px;width:56px;height:40px;border-radius:8px;background:linear-gradient(160deg,#c9c0be,#8a807c);border:2px solid #fff}
+.text{background:#fff;padding:18px 20px}
+.text p{margin:0;font-size:12.5px;color:var(--ink);line-height:1.6;font-style:italic}
+.text .who{margin-top:10px;font-size:11px;color:var(--mut)}
 </style></head>
-<body data-cf-keep-dark><div class="wrap"><div class="tiles">
-<div class="tile speaking">JR<span>Jordan</span></div><div class="tile">SC<span>Sam</span></div>
-<div class="tile">LP<span>Lena</span></div><div class="tile">DK<span>Devon</span></div>
-</div><div class="quote">"We onboarded the whole team on this library live, on a call — nobody got stuck once."</div></div>
-</body></html>`,
+<body>
+<div class="frame">
+  <div class="video" data-cf-keep-dark><div class="rec"><i></i>REC 04:12</div><div class="av"></div><div class="name-tag">Renata Silva</div><div class="mini"></div></div>
+  <div class="text"><p>"I wasn't expecting to leave a video review, but genuinely — this tool earned it."</p><div class="who">Recorded customer story · Fenwick Inc.</div></div>
+</div>
+</body></html>
+`,
 
   "star-breakdown-reviews": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Star Breakdown Reviews</title><style>
-:root{--bg:#050507;--line:#272632}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:270px;padding:20px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
-.top{display:flex;align-items:center;gap:14px;margin-bottom:14px}
-.top strong{font-size:34px;color:#f7f5fb}
-.top div span{display:block;color:#e8b563;font-size:12px;text-shadow:0 0 10px rgba(232,181,99,.4)}
-.top div small{color:#6f6c77;font-size:9px}
-.row{display:flex;align-items:center;gap:8px;margin-bottom:5px}
-.row span{width:12px;font-size:9px;color:#817d8a}
-.track{flex:1;height:5px;border-radius:3px;background:#1c1a24;overflow:hidden}
-.fill{height:100%;background:linear-gradient(90deg,#c98f3a,#e8b563);box-shadow:0 0 8px rgba(232,181,99,.4);width:0;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+:root{--bg:#fdf6f3;--ink:#2b211d;--mut:#8a7a72;--rose:#c9576b;--card:#fff;--line:#f0e2dc;--gold:#e8ab3d}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:340px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px}
+.top{display:flex;gap:20px;align-items:center;margin-bottom:22px}
+.big{font-size:44px;font-weight:800;color:var(--ink)}
+.top-right .stars{color:var(--gold);font-size:15px}
+.top-right span{font-size:11.5px;color:var(--mut);display:block;margin-top:4px}
+.rows{display:flex;flex-direction:column;gap:8px}
+.row{display:flex;align-items:center;gap:10px;font-size:11.5px;color:var(--mut)}
+.row .bar{flex:1;height:7px;background:#f5ece8;border-radius:5px;overflow:hidden}
+.row .bar i{display:block;height:100%;background:var(--gold);border-radius:5px;width:0;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.row .pct{width:30px;text-align:right}
 </style></head>
-<body data-cf-keep-dark><div class="card"><div class="top"><strong>4.9</strong><div><span>★★★★★</span><small>Based on 1,204 reviews</small></div></div>
-<div class="row"><span>5</span><div class="track"><div class="fill" data-w="88"></div></div></div>
-<div class="row"><span>4</span><div class="track"><div class="fill" data-w="9"></div></div></div>
-<div class="row"><span>3</span><div class="track"><div class="fill" data-w="2"></div></div></div>
-<div class="row"><span>2</span><div class="track"><div class="fill" data-w="1"></div></div></div>
-<div class="row"><span>1</span><div class="track"><div class="fill" data-w="0"></div></div></div>
+<body>
+<div class="card">
+  <div class="top"><div class="big">4.9</div><div class="top-right"><div class="stars">★★★★★</div><span>Based on 2,412 reviews</span></div></div>
+  <div class="rows" id="rows">
+    <div class="row"><span>5★</span><div class="bar"><i data-w="88"></i></div><span class="pct">88%</span></div>
+    <div class="row"><span>4★</span><div class="bar"><i data-w="9"></i></div><span class="pct">9%</span></div>
+    <div class="row"><span>3★</span><div class="bar"><i data-w="2"></i></div><span class="pct">2%</span></div>
+    <div class="row"><span>2★</span><div class="bar"><i data-w="1"></i></div><span class="pct">1%</span></div>
+    <div class="row"><span>1★</span><div class="bar"><i data-w="0"></i></div><span class="pct">0%</span></div>
+  </div>
 </div>
 <script>
-requestAnimationFrame(function(){document.querySelectorAll(".fill").forEach(function(f){f.style.width=f.dataset.w+"%"})});
+setTimeout(function(){
+  document.querySelectorAll("#rows .bar i").forEach(function(el,i){
+    setTimeout(function(){ el.style.width=el.dataset.w+"%"; },i*100);
+  });
+},300);
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "case-study-highlight-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Case Study Highlight Card</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:290px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;overflow:hidden;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
-.tag{padding:14px 18px 0;color:#817d8a;font-size:9px;letter-spacing:1px;display:flex;justify-content:space-between}
-.tag b{color:var(--lav);font-weight:700}
-.card p{padding:12px 18px;margin:0;color:#eee9f8;font-size:13px;line-height:1.6;font-weight:600}
-.stat{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-top:1px solid var(--line);background:linear-gradient(135deg,#132318,#111017)}
-.stat strong{background:linear-gradient(135deg,#7fe0ac,#41b878);-webkit-background-clip:text;background-clip:text;color:transparent;font-size:18px}
-.stat span{color:#6f6c77;font-size:9px}
+:root{--bg:#fdf6f3;--ink:#2b211d;--mut:#8a7a72;--rose:#c9576b;--card:#fff;--line:#f0e2dc}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:360px;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
+.card:hover{transform:translateY(-6px);box-shadow:0 26px 54px -20px rgba(43,33,29,.25)}
+.top{background:linear-gradient(155deg,#f5ece8,#fbf4f1);padding:26px;display:flex;justify-content:space-between;align-items:flex-start}
+.logo{font-family:Georgia,serif;font-weight:700;font-style:italic;font-size:19px;color:var(--ink)}
+.tag{font-size:10.5px;background:#fff;color:var(--rose);padding:4px 10px;border-radius:20px;font-weight:700}
+.metric{padding:22px 26px 0}
+.metric b{font-size:38px;color:var(--rose);font-weight:800}
+.metric span{display:block;font-size:12px;color:var(--mut);margin-top:2px}
+.body{padding:16px 26px 26px}
+.body p{margin:0;font-size:13px;color:var(--ink);line-height:1.65}
+.link{margin-top:14px;display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;color:var(--ink);cursor:pointer}
+.link svg{width:13px;height:13px;transition:transform .25s}
+.card:hover .link svg{transform:translateX(4px)}
 </style></head>
-<body data-cf-keep-dark><div class="card"><div class="tag"><span>CLIENT: ORBIT LABS</span><b>SaaS</b></div>
-<p>"We replaced three vendor tools with CodeFusion's dashboard kit and cut our build timeline in half."</p>
-<div class="stat"><strong>+52%</strong><span>faster shipping</span></div></div>
-</body></html>`,
+<body>
+<div class="card">
+  <div class="top"><div class="logo">Fenwick</div><span class="tag">Case study</span></div>
+  <div class="metric"><b>+142%</b><span>Growth in qualified pipeline</span></div>
+  <div class="body">
+    <p>How a 40-person sales team replaced four disconnected tools with a single source of truth — and closed Q3 with their best pipeline ever.</p>
+    <div class="link">Read the full story <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></div>
+  </div>
+</div>
+</body></html>
+`,
 
   "progress-breadcrumb-nav": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Progress Breadcrumb Nav</title><style>
