@@ -410,22 +410,47 @@ sw.addEventListener("click",function(){
 
   "typewriter-hero": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Typewriter Hero</title><style>
-:root{--bg:#050507;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;text-align:center}
-.kicker{display:block;margin-bottom:16px;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-h1{font:700 clamp(30px,5.5vw,58px) "Space Grotesk",sans-serif;letter-spacing:-.04em}
-h1 span{color:var(--lav);text-shadow:0 0 24px rgba(196,181,253,.35)}
-#cursor{display:inline-block;width:3px;background:var(--lav);margin-left:2px;box-shadow:0 0 8px rgba(196,181,253,.6);animation:blink 1s step-end infinite}
+:root{--bg:#faf9f6;--ink:#0a0a0a;--mut:#6b665c;--coral:#ff4d3d}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif;padding:50px}
+.hero{max-width:560px;text-align:center}
+.eb{display:inline-flex;align-items:center;gap:8px;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);margin-bottom:18px}
+.eb:before{content:"";width:20px;height:1.5px;background:var(--coral)}
+h1{margin:0;font-size:clamp(32px,5vw,52px);font-weight:700;letter-spacing:-.03em;color:var(--ink);line-height:1.1;min-height:2.4em}
+.cursor{display:inline-block;width:3px;height:.9em;background:var(--coral);vertical-align:-.1em;animation:blink 1s step-end infinite}
 @keyframes blink{50%{opacity:0}}
-p{color:#847e8f;font-size:11px;margin-top:14px}
+p{margin:20px 0 0;font-size:15.5px;color:var(--mut);opacity:0;transition:opacity .6s}
+p.show{opacity:1}
+.cta{margin-top:28px;display:inline-flex;align-items:center;gap:9px;background:var(--ink);color:#fff;padding:14px 26px;border-radius:999px;font-size:13.5px;font-weight:700;cursor:pointer;opacity:0;transform:translateY(10px);transition:opacity .5s,transform .5s}
+.cta.show{opacity:1;transform:translateY(0)}
+.cta svg{width:14px;height:14px;transition:transform .3s}
+.cta:hover svg{transform:translateX(4px)}
 </style></head>
-<body data-cf-keep-dark><div><span class="kicker">BUILD FOR</span><h1>We design for <span id="word">founders</span><i id="cursor">&nbsp;</i></h1><p>A rotating word hero for landing pages.</p></div>
+<body>
+<div class="hero">
+  <span class="eb">The all-in-one workspace</span>
+  <h1 id="type"><span class="cursor"></span></h1>
+  <p id="lead">Plan, write and ship — without switching tabs seventeen times a day.</p>
+  <div class="cta" id="cta" data-cf-keep-dark>Start for free <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></div>
+</div>
 <script>
-const words=["founders","designers","engineers","teams"];const el=document.getElementById("word");let wi=0,ci=0,deleting=false;
-function tick(){const word=words[wi];el.textContent=word.slice(0,ci);if(!deleting&&ci<word.length){ci++;setTimeout(tick,80)}else if(!deleting&&ci===word.length){deleting=true;setTimeout(tick,1100)}else if(deleting&&ci>0){ci--;setTimeout(tick,40)}else{deleting=false;wi=(wi+1)%words.length;setTimeout(tick,300)}}
-tick();
+var text="Where great ideas get finished.";
+var el=document.getElementById("type"), cursor=el.querySelector(".cursor");
+var i=0;
+function type(){
+  if(i<=text.length){
+    el.innerHTML=text.slice(0,i)+'<span class="cursor"></span>';
+    i++;
+    setTimeout(type,45);
+  } else {
+    document.getElementById("lead").classList.add("show");
+    document.getElementById("cta").classList.add("show");
+  }
+}
+setTimeout(type,400);
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "marquee-testimonials": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Marquee Testimonials</title><style>
@@ -1506,21 +1531,55 @@ pw.addEventListener("input",checkPw);
 
   "split-image-hero": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Split Image Hero</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:24px}
-.split{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:center;max-width:640px}
-.copy small{font-size:9px;letter-spacing:2px;color:#9d94b0;font-weight:700}
-.copy h1{margin:10px 0;font:700 clamp(24px,4.4vw,38px) "Space Grotesk",sans-serif;letter-spacing:-.04em;line-height:1.05}
-.copy p{margin:0 0 16px;color:#847e8f;font-size:10px;line-height:1.7}
-.copy button{border:0;border-radius:10px;padding:11px 18px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;font-weight:800;font-size:10px;cursor:pointer;box-shadow:0 10px 24px -10px rgba(155,138,255,.6);transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
-.copy button:active{transform:scale(.96)}
-.art{aspect-ratio:1;border-radius:20px;border:1px solid var(--line);background:radial-gradient(circle at 40% 30%,rgba(155,138,255,.34),transparent 60%),#0e0d14;display:grid;place-items:center;overflow:hidden;box-shadow:0 30px 70px -24px rgba(0,0,0,.7)}
-.art i{width:60%;aspect-ratio:1;border-radius:50%;border:1px solid rgba(196,181,253,.35);box-shadow:0 0 30px -6px rgba(196,181,253,.3);animation:pulse 3.4s ease-in-out infinite}
-@keyframes pulse{50%{transform:scale(.86);border-color:rgba(196,181,253,.7)}}
-@media(max-width:560px){.split{grid-template-columns:1fr}}
+:root{--bg:#faf9f6;--ink:#0a0a0a;--mut:#6b665c;--coral:#ff4d3d}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif}
+.hero{display:grid;grid-template-columns:1fr 1fr;min-height:100vh;align-items:center}
+.txt{padding:60px}
+.eb{display:inline-flex;align-items:center;gap:8px;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);margin-bottom:16px;opacity:0;transform:translateY(10px)}
+h1{margin:0;font-size:clamp(32px,4.2vw,50px);font-weight:700;letter-spacing:-.03em;color:var(--ink);line-height:1.06;opacity:0;transform:translateY(16px)}
+h1 em{font-style:italic;color:var(--coral)}
+p{margin:18px 0 0;font-size:15px;color:var(--mut);max-width:380px;opacity:0;transform:translateY(16px)}
+.cta{margin-top:26px;display:flex;gap:12px;opacity:0;transform:translateY(16px)}
+.cta button{padding:13px 24px;border-radius:999px;border:0;font-size:13px;font-weight:700;cursor:pointer}
+.cta .p{background:var(--ink);color:#fff}
+.cta .s{background:transparent;color:var(--ink);border:1.5px solid var(--ink)!important}
+.vis{position:relative;height:100vh;overflow:hidden;background:linear-gradient(155deg,#ffe0da,#ff4d3d)}
+.vis .card{position:absolute;background:#fff;border-radius:20px;box-shadow:0 30px 60px -20px rgba(0,0,0,.25);padding:20px}
+.c1{top:18%;left:12%;width:180px;opacity:0;transform:translateY(20px) rotate(-4deg)}
+.c2{bottom:16%;right:10%;width:160px;opacity:0;transform:translateY(20px) rotate(3deg)}
+.c1 .av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#ff4d3d,#ffb199);margin-bottom:10px}
+.c1 b{display:block;font-size:12.5px;color:var(--ink)}
+.c1 span{font-size:10.5px;color:var(--mut)}
+.c2 b{display:block;font-size:22px;color:var(--ink)}
+.c2 span{font-size:10.5px;color:var(--mut)}
+@media(max-width:900px){ .hero{grid-template-columns:1fr} .vis{height:340px} }
 </style></head>
-<body data-cf-keep-dark><div class="split"><div class="copy"><small>NEW RELEASE</small><h1>Design once. Ship everywhere.</h1><p>A split hero that keeps the message and the visual in balance.</p><button>See the system</button></div><div class="art"><i></i></div></div>
-</body></html>`,
+<body>
+<div class="hero">
+  <div class="txt">
+    <span class="eb" id="e1">For freelancers &amp; small teams</span>
+    <h1 id="e2">Invoicing that gets you paid <em>faster</em>.</h1>
+    <p id="e3">Send a polished invoice in under sixty seconds, and get notified the moment it's opened.</p>
+    <div class="cta" id="e4"><button class="p" data-cf-keep-dark>Create your first invoice</button><button class="s">Watch demo</button></div>
+  </div>
+  <div class="vis">
+    <div class="card c1" id="c1"><div class="av"></div><b>Invoice #0412 paid</b><span>2 minutes ago</span></div>
+    <div class="card c2" id="c2"><b>$84,210</b><span>Collected this quarter</span></div>
+  </div>
+</div>
+<script>
+[["e1",0],["e2",120],["e3",240],["e4",360],["c1",500],["c2",620]].forEach(function(pair){
+  setTimeout(function(){
+    var el=document.getElementById(pair[0]);
+    el.style.transition="opacity .6s cubic-bezier(.2,.8,.2,1),transform .6s cubic-bezier(.2,.8,.2,1)";
+    el.style.opacity=1;
+    el.style.transform=el.id==="c1"?"translateY(0) rotate(-4deg)":el.id==="c2"?"translateY(0) rotate(3deg)":"translateY(0)";
+  },pair[1]);
+});
+</script>
+</body></html>
+`,
 
   "faq-accordion-section": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Vaultline Landing Page</title><style>
@@ -3232,49 +3291,73 @@ document.getElementById("markAll").addEventListener("click",function(){
 
   "animated-gradient-hero": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Animated Gradient Hero</title><style>
-:root{--bg:#050507}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;position:relative;overflow:hidden;display:grid;place-items:center}
-.aurora{position:absolute;inset:-20%;background:conic-gradient(from 0deg,#9b8aff,#5fd4a1,#f4b0c8,#9b8aff);filter:blur(90px);opacity:.35;animation:spin 14s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.hero{position:relative;text-align:center;padding:60px 30px;max-width:480px}
-.kicker{color:#c4b5fd;font-size:10px;letter-spacing:2px;font-weight:700}
-h1{color:#f7f5fb;font-size:32px;margin:14px 0;line-height:1.15}
-p{color:#a49dbc;font-size:13px;margin:0 0 20px}
-button{padding:13px 26px;border:0;border-radius:12px;background:#f7f5fb;color:#0a090f;font-weight:800;font-size:12px;cursor:pointer;box-shadow:0 16px 34px -10px rgba(0,0,0,.5);transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
-button:active{transform:scale(.96)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif;position:relative;overflow:hidden;background:#0a0a0a}
+.gradient-bg{position:absolute;inset:-20%;background:linear-gradient(120deg,#ff4d3d,#ff8a75,#ffd6ae,#ff4d3d);background-size:300% 300%;animation:flow 12s ease infinite;filter:blur(60px);opacity:.75}
+@keyframes flow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.hero{position:relative;text-align:center;max-width:600px;padding:50px}
+.eb{display:inline-flex;gap:8px;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff;opacity:.8;margin-bottom:18px}
+h1{margin:0;font-size:clamp(36px,6vw,64px);font-weight:800;letter-spacing:-.03em;color:#fff;line-height:1.05}
+p{margin:18px auto 0;font-size:15.5px;color:rgba(255,255,255,.75);max-width:420px}
+.cta{margin-top:28px;display:inline-flex;gap:9px;background:#fff;color:#0a0a0a;padding:14px 28px;border-radius:999px;font-size:13.5px;font-weight:700;cursor:pointer;transition:transform .25s}
+.cta:hover{transform:translateY(-2px) scale(1.02)}
 </style></head>
-<body data-cf-keep-dark><div class="aurora"></div><div class="hero"><span class="kicker">INTRODUCING V2</span><h1>Design systems that move with you.</h1><p>An adaptive component library built for teams shipping fast, polished products.</p><button>Start building →</button></div>
-</body></html>`,
+<body data-cf-keep-dark>
+<div class="gradient-bg"></div>
+<div class="hero">
+  <span class="eb">Now in public beta</span>
+  <h1>Motion that never sits still.</h1>
+  <p>A living gradient background, warm and slow, that never quite repeats the same frame.</p>
+  <div class="cta">Join the beta</div>
+</div>
+</body></html>
+`,
 
   "particle-field-hero": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Particle Field Hero</title><style>
-:root{--bg:#050507}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;position:relative;overflow:hidden}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#0a0a0a;font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
 canvas{position:absolute;inset:0}
-.hero{position:relative;display:grid;place-items:center;min-height:100vh;text-align:center;padding:40px}
-.kicker{color:#9d94b0;font-size:10px;letter-spacing:2px;font-weight:700}
-h1{color:#f7f5fb;font-size:30px;margin:14px 0;max-width:420px}
+.hero{position:relative;text-align:center;max-width:600px;padding:50px}
+.eb{display:inline-flex;gap:8px;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ff4d3d;margin-bottom:18px}
+h1{margin:0;font-size:clamp(34px,5.6vw,58px);font-weight:800;letter-spacing:-.03em;color:#fff;line-height:1.08}
+p{margin:18px auto 0;font-size:15px;color:rgba(255,255,255,.6);max-width:420px}
+.cta{margin-top:28px;display:inline-flex;gap:9px;background:#ff4d3d;color:#fff;padding:14px 28px;border-radius:999px;font-size:13.5px;font-weight:700;cursor:pointer}
 </style></head>
-<body data-cf-keep-dark><canvas id="c"></canvas><div class="hero"><div><span class="kicker">MOVE YOUR CURSOR</span><h1>Interfaces with a pulse.</h1></div></div>
+<body data-cf-keep-dark>
+<canvas id="field"></canvas>
+<div class="hero">
+  <span class="eb">Infrastructure for the next decade</span>
+  <h1>Built from a thousand moving parts.</h1>
+  <p>A quiet particle field behind the headline — connections forming and dissolving, just like your network.</p>
+  <div class="cta">Get started free</div>
+</div>
 <script>
-const c=document.getElementById("c"),ctx=c.getContext("2d");let w,h,mx=-999,my=-999;
-function resize(){w=c.width=innerWidth;h=c.height=innerHeight}resize();addEventListener("resize",resize);
-addEventListener("pointermove",e=>{mx=e.clientX;my=e.clientY});
-const dots=Array.from({length:90},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3}));
+var canvas=document.getElementById("field"), ctx=canvas.getContext("2d");
+function resize(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
+resize(); window.addEventListener("resize",resize);
+var N=70, pts=[];
+for(var i=0;i<N;i++) pts.push({ x:Math.random()*canvas.width, y:Math.random()*canvas.height, vx:(Math.random()-.5)*.3, vy:(Math.random()-.5)*.3 });
 function tick(){
-  ctx.clearRect(0,0,w,h);
-  dots.forEach(d=>{
-    d.x+=d.vx;d.y+=d.vy;
-    if(d.x<0||d.x>w)d.vx*=-1;if(d.y<0||d.y>h)d.vy*=-1;
-    const dist=Math.hypot(d.x-mx,d.y-my);
-    const r=dist<120?2.4:1.3;
-    ctx.beginPath();ctx.arc(d.x,d.y,r,0,Math.PI*2);ctx.fillStyle=dist<120?"#c4b5fd":"#3a3546";ctx.fill();
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  pts.forEach(function(p){
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0||p.x>canvas.width) p.vx*=-1;
+    if(p.y<0||p.y>canvas.height) p.vy*=-1;
   });
+  for(var i=0;i<N;i++){
+    ctx.beginPath(); ctx.arc(pts[i].x,pts[i].y,1.6,0,Math.PI*2); ctx.fillStyle="rgba(255,77,61,.7)"; ctx.fill();
+    for(var j=i+1;j<N;j++){
+      var dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y, d=Math.sqrt(dx*dx+dy*dy);
+      if(d<120){ ctx.beginPath(); ctx.moveTo(pts[i].x,pts[i].y); ctx.lineTo(pts[j].x,pts[j].y); ctx.strokeStyle="rgba(255,255,255,"+(0.08*(1-d/120))+")"; ctx.lineWidth=1; ctx.stroke(); }
+    }
+  }
   requestAnimationFrame(tick);
 }
 tick();
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "carousel-dot-testimonials": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Testimonial Carousel</title><style>
@@ -5338,129 +5421,225 @@ results.forEach(function(r,idx){
 
   "parallax-tilt-hero": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Parallax Tilt Hero</title><style>
-:root{--bg:#050507}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center;perspective:1000px}
-.hero{width:min(420px,90vw);padding:40px;text-align:center;transform-style:preserve-3d;transition:transform .1s ease-out}
-.kicker{color:#9d94b0;font-size:10px;letter-spacing:2px;font-weight:700;transform:translateZ(30px)}
-h1{color:#f7f5fb;font-size:30px;margin:14px 0;transform:translateZ(50px)}
-.card{margin-top:20px;padding:22px;border:1px solid #272632;border-radius:16px;background:linear-gradient(135deg,#171325,#0d0d12);transform:translateZ(70px);box-shadow:0 30px 60px rgba(0,0,0,.4)}
-.card span{color:#c4b5fd;font-size:11px}
+:root{--bg:#faf9f6;--ink:#0a0a0a;--mut:#6b665c;--coral:#ff4d3d}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif;overflow:hidden;perspective:1000px}
+.hero{position:relative;text-align:center;transform-style:preserve-3d}
+.layer{position:absolute;border-radius:50%;filter:blur(2px)}
+.l1{width:120px;height:120px;background:linear-gradient(135deg,#ff4d3d,#ffb199);top:-60px;left:-100px;transform:translateZ(40px)}
+.l2{width:70px;height:70px;background:#0a0a0a;bottom:-30px;right:-90px;transform:translateZ(70px)}
+.l3{width:36px;height:36px;border:3px solid #ff4d3d;background:none;top:30%;right:-130px;transform:translateZ(90px)}
+.eb{display:inline-flex;gap:8px;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);margin-bottom:16px;transform:translateZ(30px)}
+h1{margin:0;font-size:clamp(34px,5vw,56px);font-weight:700;letter-spacing:-.03em;color:var(--ink);line-height:1.08;transform:translateZ(60px)}
+p{margin:18px auto 0;font-size:15px;color:var(--mut);max-width:400px;transform:translateZ(20px)}
+.cta{margin-top:26px;display:inline-flex;gap:9px;background:var(--ink);color:#fff;padding:14px 26px;border-radius:999px;font-size:13.5px;font-weight:700;cursor:pointer;transform:translateZ(80px)}
 </style></head>
-<body data-cf-keep-dark><div class="hero" id="hero"><span class="kicker">TILT-REACTIVE INTERFACE</span><h1>Depth that responds to you.</h1><div class="card"><span>Move your cursor to feel the layers shift.</span></div></div>
+<body>
+<div class="hero" id="hero">
+  <div class="layer l1"></div><div class="layer l2" data-cf-keep-dark></div><div class="layer l3"></div>
+  <span class="eb">Move your cursor</span>
+  <h1>Depth that responds to you.</h1>
+  <p>A subtle 3D tilt hero — every layer drifts at its own depth as you move.</p>
+  <div class="cta" data-cf-keep-dark>Explore the effect</div>
+</div>
 <script>
-const hero=document.getElementById("hero");
-document.addEventListener("pointermove",e=>{
-  const rx=(e.clientY/innerHeight-.5)*-10,ry=(e.clientX/innerWidth-.5)*10;
-  hero.style.transform=\`rotateX(\${rx}deg) rotateY(\${ry}deg)\`;
+var hero=document.getElementById("hero");
+document.addEventListener("mousemove",function(e){
+  var x=(e.clientX/window.innerWidth-.5), y=(e.clientY/window.innerHeight-.5);
+  hero.style.transform="rotateY("+(x*10)+"deg) rotateX("+(-y*10)+"deg)";
 });
+document.addEventListener("mouseleave",function(){ hero.style.transform="rotateY(0) rotateX(0)"; });
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "scroll-driven-hero": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Scroll Driven Hero</title><style>
-:root{--bg:#050507}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:"Space Grotesk",Inter,sans-serif}
-.spacer{height:60vh}
-.hero{min-height:100vh;display:grid;place-items:center;text-align:center;position:sticky;top:0}
-.word{display:inline-block;color:#f7f5fb;font-size:38px;font-weight:800;transition:transform .1s linear,opacity .1s linear;text-shadow:0 0 30px rgba(196,181,253,.2)}
+:root{--bg:#faf9f6;--ink:#0a0a0a;--mut:#6b665c;--coral:#ff4d3d}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif}
+.hero{height:180vh;position:relative}
+.pin{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+h1{margin:0;font-size:clamp(36px,7vw,90px);font-weight:800;letter-spacing:-.04em;color:var(--ink);text-align:center;will-change:transform,opacity}
+.sub{margin-top:18px;font-size:15px;color:var(--mut);will-change:opacity}
+.hint{position:absolute;bottom:30px;font-size:11px;color:var(--mut);letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.hint svg{width:13px;height:13px;animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+.after{padding:80px 40px;text-align:center;color:var(--mut);font-size:13px}
 </style></head>
-<body data-cf-keep-dark><div class="hero"><div id="line">
-<span class="word">Design.</span> <span class="word">Ship.</span> <span class="word">Repeat.</span>
-</div></div><div class="spacer"></div>
+<body>
+<section class="hero">
+  <div class="pin">
+    <h1 id="h1">Scroll to see it move.</h1>
+    <p class="sub" id="sub">This headline scales and fades as the page scrolls past it.</p>
+    <div class="hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>Scroll</div>
+  </div>
+</section>
+<div class="after">You've reached the next section.</div>
 <script>
-const words=[...document.querySelectorAll(".word")];
-addEventListener("scroll",()=>{
-  const p=Math.min(1,scrollY/300);
-  words.forEach((w,i)=>{const d=Math.max(0,p-i*.15);w.style.transform=\`translateY(\${-d*40}px)\`;w.style.opacity=1-d});
-});
+var h1=document.getElementById("h1"), sub=document.getElementById("sub"), hero=document.querySelector(".hero");
+function onScroll(){
+  var r=hero.getBoundingClientRect();
+  var total=hero.offsetHeight-window.innerHeight;
+  var p=Math.min(1,Math.max(0,-r.top/total));
+  var scale=1+p*.6, opacity=1-p*1.3;
+  h1.style.transform="scale("+scale+")";
+  h1.style.opacity=Math.max(0,opacity);
+  sub.style.opacity=Math.max(0,1-p*2.2);
+}
+window.addEventListener("scroll",onScroll);
+onScroll();
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "video-frame-hero": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Video Frame Hero</title><style>
-:root{--bg:#050507;--line:#272632}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:30px}
-.frame{width:min(460px,100%);border:1px solid var(--line);border-radius:18px;overflow:hidden;background:linear-gradient(135deg,#191527,#0a0a0f);box-shadow:0 30px 70px -24px rgba(0,0,0,.7)}
-.screen{height:230px;position:relative;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,rgba(155,138,255,.14),transparent 60%)}
-.play{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center;cursor:pointer;color:#0a090f;font-size:16px;box-shadow:0 10px 30px -8px rgba(0,0,0,.5);transition:transform .2s cubic-bezier(.34,1.56,.64,1)}
-.play:hover{transform:scale(1.08)}
-.controls{display:flex;align-items:center;gap:10px;padding:12px 16px;border-top:1px solid var(--line)}
-.scrub{flex:1;height:3px;border-radius:2px;background:#252230;overflow:hidden}
-.scrub i{display:block;width:34%;height:100%;background:linear-gradient(90deg,#9b8aff,#d7d0ff);box-shadow:0 0 8px rgba(196,181,253,.5);border-radius:2px}
-.time{color:#77737f;font-size:9px}
+:root{--bg:#faf9f6;--ink:#0a0a0a;--mut:#6b665c;--coral:#ff4d3d}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif;padding:50px}
+.hero{text-align:center;max-width:640px}
+.eb{display:inline-flex;gap:8px;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);margin-bottom:16px}
+h1{margin:0;font-size:clamp(30px,4.2vw,46px);font-weight:700;letter-spacing:-.03em;color:var(--ink)}
+p{margin:16px auto 30px;font-size:15px;color:var(--mut);max-width:420px}
+.frame{position:relative;border-radius:20px;overflow:hidden;box-shadow:0 40px 80px -24px rgba(0,0,0,.3);aspect-ratio:16/9;background:linear-gradient(155deg,#2a2622,#0a0a0a)}
+.frame .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:30px 30px}
+.play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:70px;height:70px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.play:hover{transform:translate(-50%,-50%) scale(1.1)}
+.play svg{width:22px;height:22px;color:var(--ink);margin-left:3px}
+.ring{position:absolute;top:50%;left:50%;width:70px;height:70px;border-radius:50%;border:1.5px solid rgba(255,255,255,.4);transform:translate(-50%,-50%);animation:pulse-ring 2s ease-out infinite}
+@keyframes pulse-ring{0%{transform:translate(-50%,-50%) scale(1);opacity:1}100%{transform:translate(-50%,-50%) scale(1.8);opacity:0}}
+.dur{position:absolute;bottom:16px;right:18px;color:#fff;font-size:11.5px;background:rgba(0,0,0,.4);padding:4px 9px;border-radius:6px;font-family:ui-monospace,monospace}
 </style></head>
-<body data-cf-keep-dark><div class="frame"><div class="screen"><span class="play">▶</span></div><div class="controls"><div class="scrub"><i></i></div><span class="time">1:12 / 3:20</span></div></div>
-</body></html>`,
+<body>
+<div class="hero">
+  <span class="eb">Watch it in 90 seconds</span>
+  <h1>See the product before you sign up.</h1>
+  <p>No forms, no sales call — just a real walkthrough of what you'll actually use.</p>
+  <div class="frame" data-cf-keep-dark><div class="grid"></div><div class="ring"></div><div class="play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div><span class="dur">1:32</span></div>
+</div>
+</body></html>
+`,
 
   "3d-cube-rotator-hero": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>3D Cube Rotator Hero</title><style>
-:root{--bg:#050507}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center;perspective:800px}
-.cube-wrap{width:140px;height:140px;position:relative;transform-style:preserve-3d;animation:spin 9s linear infinite}
-.cube-wrap:hover{animation-play-state:paused}
-.face{position:absolute;inset:0;border:1px solid rgba(196,181,253,.3);border-radius:10px;background:linear-gradient(135deg,#171325,#0d0d12);display:grid;place-items:center;color:#c4b5fd;font-size:11px;font-weight:700}
-.f1{transform:rotateY(0deg) translateZ(70px)}
-.f2{transform:rotateY(90deg) translateZ(70px)}
-.f3{transform:rotateY(180deg) translateZ(70px)}
-.f4{transform:rotateY(-90deg) translateZ(70px)}
-@keyframes spin{to{transform:rotateY(360deg)}}
-.kicker{position:absolute;top:40px;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
+:root{--bg:#faf9f6;--ink:#0a0a0a;--mut:#6b665c;--coral:#ff4d3d}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif;padding:50px;gap:60px;flex-wrap:wrap}
+.txt{max-width:340px}
+.eb{display:inline-flex;gap:8px;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);margin-bottom:16px}
+h1{margin:0;font-size:clamp(30px,3.6vw,44px);font-weight:700;letter-spacing:-.03em;color:var(--ink);line-height:1.1}
+p{margin:16px 0 26px;font-size:14.5px;color:var(--mut)}
+.cta{display:inline-flex;gap:9px;background:var(--ink);color:#fff;padding:13px 24px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer}
+.stage{width:200px;height:200px;perspective:900px}
+.cube{width:100%;height:100%;position:relative;transform-style:preserve-3d;animation:rotate 14s linear infinite}
+.face{position:absolute;width:200px;height:200px;border:1px solid rgba(0,0,0,.08);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff;backface-visibility:hidden}
+.f1{background:linear-gradient(135deg,#ff4d3d,#ff8a75);transform:translateZ(100px)}
+.f2{background:linear-gradient(135deg,#0a0a0a,#2a2622);transform:rotateY(90deg) translateZ(100px)}
+.f3{background:linear-gradient(135deg,#ff8a75,#ff4d3d);transform:rotateY(180deg) translateZ(100px)}
+.f4{background:linear-gradient(135deg,#2a2622,#0a0a0a);transform:rotateY(-90deg) translateZ(100px)}
+.f5{background:linear-gradient(135deg,#ffb199,#ff4d3d);transform:rotateX(90deg) translateZ(100px)}
+.f6{background:linear-gradient(135deg,#0a0a0a,#3a352e);transform:rotateX(-90deg) translateZ(100px)}
+@keyframes rotate{from{transform:rotateX(0) rotateY(0)}to{transform:rotateX(360deg) rotateY(360deg)}}
 </style></head>
-<body data-cf-keep-dark><span class="kicker">HOVER TO PAUSE</span>
-<div class="cube-wrap"><div class="face f1">Design</div><div class="face f2">Build</div><div class="face f3">Test</div><div class="face f4">Ship</div></div>
-</body></html>`,
+<body>
+<div class="txt">
+  <span class="eb">Every angle, one platform</span>
+  <h1>Built to handle your whole workflow.</h1>
+  <p>Design, build and ship — one rotating set of tools instead of six disconnected ones.</p>
+  <div class="cta" data-cf-keep-dark>See how it fits together</div>
+</div>
+<div class="stage"><div class="cube">
+  <div class="face f1">Design</div><div class="face f2">Build</div><div class="face f3">Test</div>
+  <div class="face f4">Ship</div><div class="face f5">Monitor</div><div class="face f6">Scale</div>
+</div></div>
+</body></html>
+`,
 
   "chat-bubble-hero": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Chat Bubble Hero</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center;padding:30px;position:relative;overflow:hidden}
-body::before{content:"";position:absolute;inset:-20%;background:radial-gradient(circle at 70% 30%,rgba(155,138,255,.14),transparent 55%);pointer-events:none}
-.thread{position:relative;width:min(360px,100%);display:grid;gap:10px}
-.bubble{max-width:80%;padding:11px 14px;border-radius:16px;font-size:12px;line-height:1.5;opacity:0;transform:translateY(8px) scale(.96);animation:in .4s cubic-bezier(.2,.8,.2,1) forwards;box-shadow:0 12px 30px -16px rgba(0,0,0,.6)}
-.them{background:#17131f;color:#eee9f8;border-bottom-left-radius:4px;justify-self:start}
-.me{background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;border-bottom-right-radius:4px;justify-self:end;box-shadow:0 12px 30px -14px rgba(155,138,255,.5)}
-.typing{display:flex;gap:4px;padding:12px 14px;border-radius:16px;border-bottom-left-radius:4px;background:#17131f;justify-self:start;width:fit-content}
-.typing i{width:5px;height:5px;border-radius:50%;background:#847e8f;animation:bounce 1s ease-in-out infinite}
-.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
-@keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-4px);opacity:1}}
-@keyframes in{to{opacity:1;transform:none}}
+:root{--bg:#faf9f6;--ink:#0a0a0a;--mut:#6b665c;--coral:#ff4d3d}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif;padding:0 50px}
+.txt{max-width:400px}
+.eb{display:inline-flex;gap:8px;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);margin-bottom:16px}
+h1{margin:0;font-size:clamp(30px,4vw,46px);font-weight:700;letter-spacing:-.03em;color:var(--ink);line-height:1.1}
+p{margin:16px 0 26px;font-size:14.5px;color:var(--mut)}
+.cta{display:inline-flex;gap:9px;background:var(--ink);color:#fff;padding:13px 24px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer}
+.chat{max-width:320px;justify-self:center}
+.bubble{max-width:78%;padding:11px 15px;border-radius:16px;font-size:13px;margin-bottom:10px;opacity:0;transform:translateY(10px)}
+.them{background:#fff;color:var(--ink);border:1px solid #eee;border-bottom-left-radius:4px}
+.me{background:var(--ink);color:#fff;margin-left:auto;border-bottom-right-radius:4px}
+.typing{display:inline-flex;gap:4px;background:#fff;border:1px solid #eee;border-radius:16px;border-bottom-left-radius:4px;padding:12px 16px;opacity:0}
+.typing span{width:6px;height:6px;border-radius:50%;background:#bbb;animation:bounce 1.2s ease-in-out infinite}
+.typing span:nth-child(2){animation-delay:.15s}
+.typing span:nth-child(3){animation-delay:.3s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
 </style></head>
-<body data-cf-keep-dark><div class="thread" id="thread"></div>
+<body>
+<div class="txt">
+  <span class="eb">Support that feels human</span>
+  <h1>Answers in seconds, not tickets.</h1>
+  <p>Live chat backed by your docs, your team, and a bot that actually knows when to hand off.</p>
+  <div class="cta" data-cf-keep-dark>Try the widget free</div>
+</div>
+<div class="chat" id="chat">
+  <div class="bubble them" id="b1">Hey! Does this integrate with Slack?</div>
+  <div class="bubble me" id="b2" data-cf-keep-dark>Yep — two-click setup, no code needed 🎉</div>
+  <div class="typing" id="typing"><span></span><span></span><span></span></div>
+  <div class="bubble them" id="b3">That's exactly what I needed, thanks!</div>
+</div>
 <script>
-const msgs=[{t:"them",m:"Hey — can this actually ship by Friday?"},{t:"me",m:"Already in staging."},{t:"them",m:"That's the fastest launch we've had."}];
-const thread=document.getElementById("thread");
-let delay=0;
-msgs.forEach(function(x){
+var steps=[["b1",300],["b2",1000],["typing",1700],["b3",2900]];
+steps.forEach(function(s){
   setTimeout(function(){
-    const typing=document.createElement("div");typing.className="typing";typing.innerHTML="<i></i><i></i><i></i>";thread.appendChild(typing);
-    setTimeout(function(){
-      typing.remove();
-      const d=document.createElement("div");d.className="bubble "+x.t;d.textContent=x.m;thread.appendChild(d);
-    },500);
-  },delay);
-  delay+=900;
+    var el=document.getElementById(s[0]);
+    el.style.transition="opacity .4s,transform .4s cubic-bezier(.2,.8,.2,1)";
+    el.style.opacity=1; el.style.transform="translateY(0)";
+    if(s[0]==="typing") setTimeout(function(){ el.style.opacity=0; },1000);
+  },s[1]);
 });
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "map-pin-hero": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Map Pin Hero</title><style>
-:root{--bg:#050507}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center;overflow:hidden;position:relative}
-body::before{content:"";position:absolute;inset:-20%;background:radial-gradient(circle at 40% 40%,rgba(155,138,255,.1),transparent 55%);pointer-events:none}
-.map{position:relative;width:320px;height:220px}
-.pin{position:absolute;width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 0 0 0 rgba(196,181,253,.5),0 0 10px rgba(196,181,253,.6);animation:pulse 2s infinite}
-.pin::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid rgba(196,181,253,.4)}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(196,181,253,.5),0 0 10px rgba(196,181,253,.6)}70%{box-shadow:0 0 0 14px rgba(196,181,253,0),0 0 10px rgba(196,181,253,.6)}100%{box-shadow:0 0 0 0 rgba(196,181,253,0),0 0 10px rgba(196,181,253,.6)}}
-.route{position:absolute;stroke:#6d5f93;stroke-width:1.5;stroke-dasharray:340;stroke-dashoffset:340;fill:none;filter:drop-shadow(0 0 4px rgba(196,181,253,.3));animation:draw 2.4s ease forwards}
-@keyframes draw{to{stroke-dashoffset:0}}
-.kicker{position:absolute;top:-30px;left:0;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
+:root{--bg:#faf9f6;--ink:#0a0a0a;--mut:#6b665c;--coral:#ff4d3d}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);font-family:"Space Grotesk",Inter,ui-sans-serif,Arial,sans-serif;padding:50px}
+.hero{text-align:center;max-width:600px}
+.eb{display:inline-flex;gap:8px;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);margin-bottom:16px}
+h1{margin:0;font-size:clamp(30px,4.2vw,46px);font-weight:700;letter-spacing:-.03em;color:var(--ink)}
+p{margin:16px auto 30px;font-size:15px;color:var(--mut);max-width:420px}
+.map{position:relative;height:260px;border-radius:20px;overflow:hidden;background:#eef0e8;box-shadow:0 30px 60px -20px rgba(0,0,0,.2)}
+.map svg.roads{position:absolute;inset:0;width:100%;height:100%}
+.map svg.roads path{stroke:#d8dbcc;stroke-width:3;fill:none}
+.pin{position:absolute;top:44%;left:38%;transform:translate(-50%,-100%)}
+.pin svg{width:34px;height:34px;color:var(--coral);filter:drop-shadow(0 6px 10px rgba(255,77,61,.4))}
+.ripple{position:absolute;top:44%;left:38%;width:16px;height:16px;border-radius:50%;background:var(--coral);transform:translate(-50%,-50%);opacity:.5}
+.ripple:after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--coral);animation:ripple 2s ease-out infinite}
+@keyframes ripple{0%{transform:scale(1);opacity:.6}100%{transform:scale(3.4);opacity:0}}
+.pin2{position:absolute;top:64%;left:66%;width:9px;height:9px;border-radius:50%;background:#0a0a0a;opacity:.4}
+.card{position:absolute;bottom:16px;left:16px;background:#fff;border-radius:12px;padding:11px 15px;box-shadow:0 10px 24px -10px rgba(0,0,0,.25);text-align:left}
+.card b{display:block;font-size:12.5px;color:var(--ink)}
+.card span{font-size:10.5px;color:var(--mut)}
 </style></head>
-<body data-cf-keep-dark><div class="map"><span class="kicker">3 DESTINATIONS PLOTTED</span>
-<svg class="route" width="320" height="220"><path d="M30,180 Q120,40 180,90 T290,40"/></svg>
-<div class="pin" style="left:26px;top:176px"></div><div class="pin" style="left:176px;top:86px;animation-delay:.6s"></div><div class="pin" style="left:286px;top:36px;animation-delay:1.2s"></div>
+<body>
+<div class="hero">
+  <span class="eb">Live in 40+ cities</span>
+  <h1>Same-day delivery, tracked block by block.</h1>
+  <p>Watch your order move in real time, from the kitchen to your front door.</p>
+  <div class="map">
+    <svg class="roads" viewBox="0 0 400 260"><path d="M0,120 C100,100 180,160 400,110"/><path d="M60,0 C100,80 140,180 180,260"/><path d="M250,0 C240,90 280,160 320,260"/></svg>
+    <div class="ripple"></div>
+    <div class="pin"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C7.6 2 4 5.6 4 10c0 6 8 12 8 12s8-6 8-12c0-4.4-3.6-8-8-8zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg></div>
+    <div class="pin2" data-cf-keep-dark></div>
+    <div class="card"><b>Order #4471</b><span>Arriving in 8 minutes</span></div>
+  </div>
 </div>
-</body></html>`,
+</body></html>
+`,
 
   "social-proof-wall": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Social Proof Wall</title><style>
