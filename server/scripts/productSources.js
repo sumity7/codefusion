@@ -3557,29 +3557,355 @@ footer{border-top:1px solid var(--line);padding:56px 0 30px}
 `,
 
   "animated-stats-band": `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Animated Stats Band</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.band{position:relative;display:flex;gap:0;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
-.band::before{content:"";position:absolute;top:-60%;left:35%;width:200px;height:200px;background:radial-gradient(circle,rgba(155,138,255,.16),transparent 70%)}
-.stat{position:relative;padding:26px 32px;text-align:center;border-right:1px solid var(--line);transition:background .25s}
-.stat:hover{background:#0f0d16}
-.stat:last-child{border-right:0}
-.stat b{display:block;font-size:26px;background:linear-gradient(135deg,#f7f5fb,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}
-.stat span{font-size:10px;color:#817d8a;letter-spacing:.5px}
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Lindwell Studio Landing Page</title><style>
+:root{--stone:#efeae2;--ink:#211f1c;--mut:#7c766a;--clay:#b5663f;--clay-d:#9a5231;--line:#ddd5c6;--card:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--stone);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3{font-family:"Cormorant Garamond","Georgia",serif;margin:0;font-weight:500;letter-spacing:0;color:var(--ink)}
+p{margin:0;color:var(--mut)}
+button{font-family:inherit;cursor:pointer;border:0}
+.wrap{max-width:1200px;margin:0 auto;padding:0 32px}
+.rv{opacity:0;transform:translateY(30px)}
+.eb{display:inline-flex;align-items:center;gap:10px;font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--clay-d);margin-bottom:16px}
+.eb:before{content:"";width:24px;height:1px;background:var(--clay-d)}
+
+/* ---------- buttons ---------- */
+.btn{position:relative;display:inline-flex;align-items:center;gap:10px;border-radius:2px;padding:15px 26px;font-size:13.5px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;transition:transform .3s cubic-bezier(.2,.8,.2,1),background .3s,color .3s}
+.btn svg{width:14px;height:14px;flex:none;transition:transform .3s}
+.btn:hover svg{transform:translateX(4px)}
+.btn-ink{background:var(--ink);color:var(--stone)}
+.btn-ink:hover{background:var(--clay-d)}
+.btn-line{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.btn-line:hover{background:var(--ink);color:var(--stone)}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:60;transition:background .4s,box-shadow .4s}
+.nav-in{max-width:1200px;margin:0 auto;padding:26px 32px;display:flex;align-items:center;gap:34px}
+.nav.on{background:rgba(239,234,226,.9);backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--line)}
+.brand{font-family:"Cormorant Garamond",serif;font-size:24px;letter-spacing:.06em;text-transform:uppercase}
+.nav-links{display:flex;gap:32px;margin:0 auto;font-size:12.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--mut)}
+.nav-links a{position:relative;cursor:pointer}
+.nav-links a:after{content:"";position:absolute;left:0;bottom:-6px;width:100%;height:1px;background:var(--clay-d);transform:scaleX(0);transform-origin:right;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a:hover:after{transform:scaleX(1);transform-origin:left}
+.nav-right .lg{font-size:12.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--mut)}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding:60px 0 0}
+.hero-top{text-align:center;max-width:760px;margin:0 auto;padding-bottom:44px}
+.hero .eb{justify-content:center}
+.hero h1{font-size:clamp(40px,5.6vw,74px);line-height:1.08}
+.hero h1 em{font-style:italic;color:var(--clay)}
+.hero-photo{position:relative;height:66vh;min-height:440px;overflow:hidden}
+.hero-photo .img{position:absolute;inset:-6% -6%;background:linear-gradient(150deg,#d8cdb9,#9b8f76 45%,#6f6656);will-change:transform}
+.hero-photo .img:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(33,31,28,0) 40%,rgba(33,31,28,.45));}
+.hero-photo .cap{position:absolute;bottom:28px;left:32px;color:#fff;font-size:12.5px;letter-spacing:.05em;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.hero-photo .cap b{font-weight:600}
+.hero-meta{display:flex;justify-content:space-between;padding:26px 0 60px;border-bottom:1px solid var(--line);font-size:13px;color:var(--mut)}
+.hero-meta div b{display:block;color:var(--ink);font-family:"Cormorant Garamond",serif;font-size:20px;font-weight:500;margin-bottom:4px}
+
+/* ---------- horizontal gallery ---------- */
+.gallery-sec{padding:120px 0}
+.gallery-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:44px}
+.gallery-head h2{font-size:clamp(30px,3.4vw,44px)}
+.gallery-nav{display:flex;gap:10px}
+.gnav-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--ink);display:flex;align-items:center;justify-content:center;transition:background .3s,color .3s}
+.gnav-btn:hover{background:var(--ink);color:var(--stone)}
+.gnav-btn svg{width:16px;height:16px}
+.gtrack-wrap{overflow:hidden}
+.gtrack{display:flex;gap:24px;width:max-content}
+.gcard{width:380px;flex:none}
+.gcard .img{height:480px;overflow:hidden;position:relative}
+.gcard .img i{position:absolute;inset:0;display:block;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.gcard:hover .img i{transform:scale(1.08)}
+.gcard .meta{padding-top:16px;display:flex;justify-content:space-between;align-items:baseline}
+.gcard .meta h4{font-size:20px;font-weight:500}
+.gcard .meta span{font-size:12px;color:var(--mut);letter-spacing:.04em;text-transform:uppercase}
+
+/* ---------- philosophy story ---------- */
+.story{padding:0 0 130px}
+.story-row{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.story h2{font-size:clamp(28px,3.2vw,42px);line-height:1.2}
+.story p.body{font-size:16px;line-height:1.85;max-width:440px;margin-top:20px}
+.num-row{display:flex;gap:40px;margin-top:34px}
+.num-row div b{display:block;font-family:"Cormorant Garamond",serif;font-size:38px;font-weight:500;color:var(--clay-d)}
+.num-row div span{font-size:12px;color:var(--mut);letter-spacing:.04em;text-transform:uppercase}
+.story-vis{position:relative;height:520px;overflow:hidden}
+.story-vis .img{position:absolute;inset:-8%;background:linear-gradient(155deg,#c9bda3,#84775e)}
+
+/* ---------- pinned site-to-structure ---------- */
+.morph-sec{position:relative;background:var(--ink);color:var(--stone)}
+.morph-head{text-align:center;padding:120px 0 0;max-width:600px;margin:0 auto}
+.morph-head .eb{color:#d8ab8c}
+.morph-head .eb:before{background:#d8ab8c}
+.morph-head h2{color:var(--stone);font-size:clamp(28px,3.4vw,42px)}
+.morph-pin{height:100vh;display:flex;align-items:center;justify-content:center}
+.morph-frame{position:relative;width:min(760px,88vw);height:min(52vw,460px);overflow:hidden}
+.morph-layer{position:absolute;inset:0}
+.morph-layer .img{position:absolute;inset:-8%}
+.morph-label{position:absolute;bottom:20px;left:20px;color:#fff;font-size:12px;letter-spacing:.06em;text-transform:uppercase;background:rgba(0,0,0,.35);padding:7px 13px;backdrop-filter:blur(6px)}
+
+/* ---------- stats ---------- */
+.stats{padding:100px 0;border-top:1px solid rgba(239,234,226,.15);border-bottom:1px solid rgba(239,234,226,.15)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center}
+.stat b{display:block;font-family:"Cormorant Garamond",serif;font-size:clamp(34px,4vw,52px);font-weight:500;color:var(--stone)}
+.stat span{display:block;margin-top:8px;font-size:12px;color:rgba(239,234,226,.55);letter-spacing:.04em;text-transform:uppercase}
+
+/* ---------- testimonial ---------- */
+.testi{padding:130px 0;background:var(--ink);color:var(--stone)}
+.testi-card{max-width:760px;margin:0 auto;text-align:center}
+.testi-card p{font-family:"Cormorant Garamond",serif;font-size:clamp(24px,2.8vw,34px);line-height:1.4;color:var(--stone);font-style:italic}
+.testi-card .who{margin-top:26px;font-size:12.5px;color:rgba(239,234,226,.55);letter-spacing:.05em;text-transform:uppercase}
+
+/* ---------- final cta ---------- */
+.final{padding:130px 0;text-align:center}
+.final h2{font-size:clamp(32px,4.6vw,56px);max-width:700px;margin:0 auto}
+.final p{margin:20px auto 0;max-width:440px;font-size:15px}
+.final .cta{margin-top:36px;display:flex;gap:14px;justify-content:center}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:60px 0 30px}
+.foot-top{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;padding-bottom:40px;border-bottom:1px solid var(--line)}
+.foot-brand p{max-width:280px;margin-top:14px;font-size:14px;line-height:1.6}
+.foot-cols{display:flex;gap:60px}
+.foot-col h6{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);margin-bottom:16px}
+.foot-col a{display:block;font-size:14px;color:var(--ink);margin-bottom:10px;text-decoration:none;opacity:.8}
+.foot-col a:hover{opacity:1;color:var(--clay-d)}
+.foot-bottom{display:flex;justify-content:space-between;padding-top:26px;font-size:12.5px;color:var(--mut)}
+
+@media(max-width:900px){
+  .story-row{grid-template-columns:1fr}
+  .story-vis{height:360px}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:30px}
+  .nav-links{display:none}
+  .gallery-head{flex-direction:column;align-items:flex-start;gap:20px}
+}
+@media(max-width:600px){
+  .foot-top{flex-direction:column;gap:30px}
+  .foot-cols{gap:34px;flex-wrap:wrap}
+  .num-row{gap:26px}
+  .gcard{width:280px}
+  .gcard .img{height:360px}
+}
+@media(prefers-reduced-motion:reduce){
+  .rv{opacity:1!important;transform:none!important}
+}
 </style></head>
-<body data-cf-keep-dark><div class="band" id="band">
-<div class="stat"><b data-t="12400">0</b><span>ACTIVE TEAMS</span></div>
-<div class="stat"><b data-t="98">0</b><span>UPTIME %</span></div>
-<div class="stat"><b data-t="340">0</b><span>COMPONENTS SHIPPED</span></div>
-</div>
+<body data-cf-keep-dark>
+
+<nav class="nav" id="nav">
+  <div class="nav-in">
+    <div class="brand">Lindwell</div>
+    <div class="nav-links"><a>Work</a><a>Studio</a><a>Journal</a><a>Contact</a></div>
+    <div class="nav-right" style="margin-left:auto"><span class="lg">Enquire</span></div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap hero-top">
+    <span class="eb rv">Architecture &amp; interiors, since 2011</span>
+    <h1 class="rv">Spaces that hold <em>still</em>, long after the noise leaves.</h1>
+  </div>
+  <div class="hero-photo rv" id="heroPhoto">
+    <div class="img" id="heroImg"></div>
+    <div class="cap">Selected work <b>— Meridian House, 2025</b></div>
+  </div>
+  <div class="wrap hero-meta rv">
+    <div><b>84</b>Projects completed</div>
+    <div><b>13</b>Design awards</div>
+    <div><b>19</b>Cities worked in</div>
+    <div><b>2011</b>Studio founded</div>
+  </div>
+</section>
+
+<section class="gallery-sec">
+  <div class="wrap">
+    <div class="gallery-head">
+      <div><span class="eb rv">Selected work</span><h2 class="rv">A studio for quiet architecture.</h2></div>
+      <div class="gallery-nav rv">
+        <button class="gnav-btn" id="gPrev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18l-6-6 6-6"/></svg></button>
+        <button class="gnav-btn" id="gNext"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18l6-6-6-6"/></svg></button>
+      </div>
+    </div>
+  </div>
+  <div class="gtrack-wrap wrap">
+    <div class="gtrack rv" id="gTrack">
+      <div class="gcard"><div class="img"><i style="background:linear-gradient(155deg,#d8cdb9,#8f8367)"></i></div><div class="meta"><h4>Meridian House</h4><span>Residential</span></div></div>
+      <div class="gcard"><div class="img"><i style="background:linear-gradient(155deg,#cbb8a0,#6f6250)"></i></div><div class="meta"><h4>Cane &amp; Stone Studio</h4><span>Workspace</span></div></div>
+      <div class="gcard"><div class="img"><i style="background:linear-gradient(155deg,#c2c7b9,#767a68)"></i></div><div class="meta"><h4>Willowmere Pavilion</h4><span>Cultural</span></div></div>
+      <div class="gcard"><div class="img"><i style="background:linear-gradient(155deg,#d3c4ae,#8a7a5e)"></i></div><div class="meta"><h4>The Kiln House</h4><span>Residential</span></div></div>
+      <div class="gcard"><div class="img"><i style="background:linear-gradient(155deg,#bfb6a4,#665d4e)"></i></div><div class="meta"><h4>North Ridge Retreat</h4><span>Hospitality</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="story">
+  <div class="wrap story-row">
+    <div class="story-vis rv"><div class="img"></div></div>
+    <div>
+      <span class="eb rv">Our approach</span>
+      <h2 class="rv">We design from the site inward, never the render outward.</h2>
+      <p class="body rv">Every project begins with weeks on the land before a single line is drawn — light, wind, the way a room will sound at 7am.</p>
+      <div class="num-row rv"><div><b>6</b><span>Months, avg. design phase</span></div><div><b>92%</b><span>Client referral rate</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="morph-sec">
+  <div class="morph-head">
+    <span class="eb rv">From site to structure</span>
+    <h2 class="rv">Watch a clearing become a home.</h2>
+  </div>
+  <div class="morph-pin" id="morphPin">
+    <div class="morph-frame">
+      <div class="morph-layer" id="ml0"><div class="img" style="background:linear-gradient(155deg,#8a9169,#4f5540)"></div></div>
+      <div class="morph-layer" id="ml1"><div class="img" style="background:linear-gradient(155deg,#a99b7c,#6b5e46)"></div></div>
+      <div class="morph-layer" id="ml2"><div class="img" style="background:linear-gradient(155deg,#d8cdb9,#8f8367)"></div></div>
+      <div class="morph-label" id="morphLabel">Site survey — week 1</div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="wrap stats-grid">
+    <div class="stat"><b data-count="84">0</b><span>Projects completed</span></div>
+    <div class="stat"><b data-count="13">0</b><span>Design awards</span></div>
+    <div class="stat"><b data-count="19">0</b><span>Cities worked in</span></div>
+    <div class="stat"><b data-count="14">0</b><span>Years in practice</span></div>
+  </div>
+</section>
+
+<section class="testi">
+  <div class="wrap">
+    <div class="testi-card rv">
+      <p>"They spent three weeks just watching how light moved through the site before drawing anything. The house still feels like it grew there."</p>
+      <div class="who">— Naomi &amp; Theo Reyes, Meridian House</div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <div class="rv">
+      <span class="eb rv" style="justify-content:center">Start a project</span>
+      <h2>Tell us about the site. We'll listen first.</h2>
+      <p>We take on a small number of projects each year — enquire early.</p>
+      <div class="cta"><button class="btn btn-ink">Enquire about a project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg></button><button class="btn btn-line">View the full portfolio</button></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <div class="brand">Lindwell</div>
+        <p>An architecture and interiors studio designing from the site inward.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h6>Studio</h6><a>Work</a><a>About</a><a>Journal</a></div>
+        <div class="foot-col"><h6>Connect</h6><a>Enquire</a><a>Careers</a><a>Press</a></div>
+        <div class="foot-col"><h6>Follow</h6><a>Instagram</a><a>Pinterest</a><a>LinkedIn</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 Lindwell Studio.</span><span>Privacy · Terms</span></div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
-document.querySelectorAll("#band b").forEach(function(el){
-  const target=Number(el.dataset.t);let v=0;
-  const t=setInterval(function(){v+=Math.ceil(target/40);if(v>=target){v=target;clearInterval(t)}el.textContent=v.toLocaleString();},30);
-});
+(function(){
+  var nav = document.getElementById("nav");
+  document.addEventListener("scroll", function(){ nav.classList.toggle("on", window.scrollY > 14); }, { passive: true });
+
+  function fmt(n){ return String(Math.round(n)); }
+
+  var track = document.getElementById("gTrack");
+  function scrollGallery(dir){
+    track.scrollBy ? null : null;
+    var amount = 404;
+    if (window.gsap) {
+      gsap.to(track, { x: "-=" + (dir * amount), duration: .6, ease: "power2.out", modifiers: {
+        x: function(x){
+          var min = -(track.scrollWidth - track.parentElement.clientWidth);
+          var n = parseFloat(x);
+          if (n > 0) n = 0;
+          if (n < min) n = min;
+          return n + "px";
+        }
+      }});
+    }
+  }
+  document.getElementById("gNext").addEventListener("click", function(){ scrollGallery(1); });
+  document.getElementById("gPrev").addEventListener("click", function(){ scrollGallery(-1); });
+
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!window.gsap || !window.ScrollTrigger || reduced) {
+    document.querySelectorAll(".rv").forEach(function(el){ el.style.opacity = 1; el.style.transform = "none"; });
+    document.querySelectorAll(".stat b[data-count]").forEach(function(el){ el.textContent = fmt(+el.dataset.count); });
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  var tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+  tl.to(".hero-top .rv", { opacity: 1, y: 0, duration: .85, stagger: .1 })
+    .fromTo("#heroPhoto", { opacity: 0, scale: 1.04 }, { opacity: 1, scale: 1, duration: 1.1 }, "-=.5")
+    .to(".hero-meta.rv", { opacity: 1, y: 0, duration: .7 }, "-=.4");
+
+  // Hero photo: slow continuous zoom, classic editorial "Ken Burns" drift,
+  // plus an extra parallax nudge tied to scroll.
+  gsap.to("#heroImg", { scale: 1.12, duration: 14, ease: "sine.inOut", yoyo: true, repeat: -1 });
+  gsap.to("#heroImg", { y: 40, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
+
+  document.querySelectorAll(".rv").forEach(function(el){
+    if (el.closest(".hero")) return;
+    gsap.to(el, { opacity: 1, y: 0, duration: .9, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 85%" } });
+  });
+
+  // Horizontal gallery: hover-tilted image zoom is pure CSS; add a subtle
+  // scroll-linked parallax so the whole row drifts slightly as it enters.
+  gsap.from("#gTrack .gcard", { opacity: 0, x: 40, stagger: .08, duration: .8, scrollTrigger: { trigger: "#gTrack", start: "top 85%" } });
+
+  document.querySelectorAll(".story-vis").forEach(function(vis){
+    gsap.to(vis.querySelector(".img"), { y: -30, ease: "none", scrollTrigger: { trigger: vis, start: "top bottom", end: "bottom top", scrub: true } });
+  });
+
+  // Pinned site-to-structure: three photo layers crossfade in sequence with
+  // a slow zoom on each, captions updating in sync, all scrubbed to scroll.
+  var labels = ["Site survey — week 1", "Framing — month 3", "Completed — month 11"];
+  var labelEl = document.getElementById("morphLabel");
+  gsap.set(["#ml1", "#ml2"], { opacity: 0 });
+  gsap.set("#ml0 .img,#ml1 .img,#ml2 .img", { scale: 1.15 });
+  var morphTl = gsap.timeline({
+    scrollTrigger: { trigger: "#morphPin", start: "top top", end: "+=200%", pin: true, scrub: .6 }
+  });
+  morphTl
+    .to("#ml0 .img", { scale: 1, duration: .33, ease: "none" })
+    .to("#ml0", { opacity: 0, duration: .33, onStart: function(){ labelEl.textContent = labels[1]; } })
+    .to("#ml1", { opacity: 1, duration: .33 }, "<")
+    .to("#ml1 .img", { scale: 1, duration: .33, ease: "none" }, "<")
+    .to("#ml1", { opacity: 0, duration: .33, onStart: function(){ labelEl.textContent = labels[2]; } }, "+=.05")
+    .to("#ml2", { opacity: 1, duration: .33 }, "<")
+    .to("#ml2 .img", { scale: 1, duration: .33, ease: "none" }, "<");
+
+  ScrollTrigger.create({
+    trigger: ".stats", start: "top 80%", once: true,
+    onEnter: function(){
+      document.querySelectorAll(".stat b[data-count]").forEach(function(el){
+        var target = +el.dataset.count, o = { v: 0 };
+        gsap.to(o, { v: target, duration: 1.6, ease: "power2.out", onUpdate: function(){ el.textContent = fmt(o.v); } });
+      });
+    }
+  });
+
+  window.addEventListener("load", function(){ ScrollTrigger.refresh(); });
+})();
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "elastic-press-button": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Elastic Press Button</title><style>
