@@ -451,23 +451,51 @@ const track=document.getElementById("track");
 
   "mega-menu-navbar": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Mega Menu Navbar</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
-nav{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--line)}
-nav b{font:700 14px "Space Grotesk",sans-serif}
-.item{position:relative}
-.item>span{font-size:10px;color:#c1bccb;cursor:pointer;padding:8px 0;transition:color .2s}
-.item:hover>span{color:#fff}
-.mega{position:absolute;top:100%;left:0;width:420px;opacity:0;pointer-events:none;transform:translateY(-6px);display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:18px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;box-shadow:0 30px 70px -14px rgba(0,0,0,.6),0 0 0 1px rgba(196,181,253,.06);transition:opacity .25s,transform .25s}
-.item:hover .mega{opacity:1;pointer-events:auto;transform:none}
-.mega a{display:block;color:#a49dae;font-size:9px;padding:6px 0;transition:color .2s}
-.mega a:hover{color:var(--lav)}
-.mega b{display:block;color:#eee9f8;font-size:10px;margin-bottom:4px}
-.content{padding:50px 24px;color:#77737f;font-size:10px}
+:root{--bg:#fff;--ink:#14161f;--mut:#6b7080;--sky:#0ea5e9;--line:#e7e9f0}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#f7f8fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
+nav{background:var(--bg);border-bottom:1px solid var(--line);padding:16px 32px;display:flex;align-items:center;gap:30px;position:relative;z-index:5}
+.brand{font-weight:800;font-size:17px;color:var(--ink)}
+.brand span{color:var(--sky)}
+.links{display:flex;gap:24px;font-size:13.5px;color:var(--mut);font-weight:600}
+.links > div{cursor:pointer;padding:6px 0;display:flex;align-items:center;gap:5px}
+.links > div:hover{color:var(--ink)}
+.links svg{width:12px;height:12px;transition:transform .25s}
+.links > div:hover svg{transform:rotate(180deg)}
+.mega{position:absolute;top:100%;left:0;right:0;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 30px 60px -30px rgba(20,22,31,.25);padding:26px 32px;display:grid;grid-template-columns:1fr 1fr 1fr 1.2fr;gap:24px;opacity:0;pointer-events:none;transform:translateY(-6px);transition:opacity .25s,transform .25s}
+.links > div:hover .mega{opacity:1;pointer-events:auto;transform:translateY(0)}
+.col h5{font-size:10.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;margin:0 0 10px}
+.col a{display:block;font-size:12.5px;color:var(--ink);text-decoration:none;padding:5px 0;font-weight:500}
+.col a:hover{color:var(--sky)}
+.feat{background:linear-gradient(150deg,#e6f6fe,#f7fbff);border-radius:12px;padding:16px}
+.feat b{display:block;font-size:12.5px;color:var(--ink);margin-bottom:4px}
+.feat span{display:block;font-size:11px;color:var(--mut);line-height:1.5}
+.feat button{display:block;margin-top:12px;background:var(--sky);color:#fff;border:0;padding:7px 13px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer}
+.right{margin-left:auto;display:flex;gap:14px;align-items:center}
+.cta{background:var(--ink);color:#fff;padding:9px 16px;border-radius:9px;font-size:12.5px;font-weight:600;cursor:pointer}
+.stage{padding:60px;text-align:center;color:var(--mut);font-size:13px}
 </style></head>
-<body data-cf-keep-dark><nav><b>STUDIO.</b><div class="item"><span>Products ▾</span><div class="mega"><div><b>Design</b><a href="#">Templates</a><a href="#">Components</a></div><div><b>Engineering</b><a href="#">API</a><a href="#">CLI</a></div></div></div><span style="font-size:10px;color:#77737f">Pricing</span></nav>
-<p class="content">Hover "Products ▾" to open the mega menu.</p>
-</body></html>`,
+<body>
+<nav>
+  <div class="brand">Core<span>Kit</span></div>
+  <div class="links">
+    <div>Product <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+      <div class="mega">
+        <div class="col"><h5>Platform</h5><a>Analytics</a><a>Automations</a><a>Integrations</a></div>
+        <div class="col"><h5>Use cases</h5><a>For startups</a><a>For agencies</a><a>For enterprise</a></div>
+        <div class="col"><h5>Resources</h5><a>Docs</a><a>API reference</a><a>Changelog</a></div>
+        <div class="feat"><b>New: Workflow Builder</b><span>Automate approvals visually, no code required.</span><button>Explore →</button></div>
+      </div>
+    </div>
+    <div>Pricing</div>
+    <div>Customers</div>
+    <div>Docs</div>
+  </div>
+  <div class="right"><span>Log in</span><div class="cta" data-cf-keep-dark>Get started</div></div>
+</nav>
+<div class="stage">Hover "Product" to open the mega menu</div>
+</body></html>
+`,
 
   "multi-step-form": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Multi-Step Form</title><style>
@@ -2404,24 +2432,43 @@ footer{border-top:1px solid var(--line);padding:56px 0 28px}
 
   "sidebar-nav-collapse": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Collapsible Sidebar Nav</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:flex;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
-aside{width:170px;padding:18px 12px;border-right:1px solid var(--line);background:#0b0b10;transition:width .35s cubic-bezier(.2,.8,.2,1);overflow:hidden}
-aside.collapsed{width:58px}
-aside b{display:block;font:700 13px "Space Grotesk",sans-serif;margin-bottom:16px;white-space:nowrap}
-aside a{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:8px;color:#847e8f;text-decoration:none;font-size:10px;white-space:nowrap;transition:background .25s,color .25s}
-aside a:hover{background:#171420;color:#e6e1f2}
-aside a.active{background:linear-gradient(135deg,#221d33,#181425);color:#e6e1f2;box-shadow:inset 0 0 0 1px rgba(196,181,253,.15)}
-aside i{font-style:normal;color:var(--lav);flex:0 0 16px;text-align:center}
-aside.collapsed span{opacity:0}
-aside span{transition:opacity .2s}
-main{flex:1;padding:22px}
-main button{border:1px solid var(--line);border-radius:9px;background:#0d0d12;color:#c1bccb;padding:9px 13px;font-size:10px;cursor:pointer;box-shadow:0 12px 30px -18px rgba(0,0,0,.6);transition:border-color .2s,color .2s}
-main button:hover{border-color:#544c67;color:#eee9f8}
+:root{--bg:#fff;--ink:#14161f;--mut:#6b7080;--sky:#0ea5e9;--line:#e7e9f0;--panel:#f7f8fb}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--panel);font-family:Inter,ui-sans-serif,Arial,sans-serif;display:flex}
+aside{width:220px;background:var(--bg);border-right:1px solid var(--line);padding:16px 12px;transition:width .3s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column}
+aside.collapsed{width:68px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding:0 6px}
+.brand{font-weight:800;font-size:15px;color:var(--ink);white-space:nowrap;overflow:hidden}
+.toggle{width:28px;height:28px;border-radius:8px;border:1px solid var(--line);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none}
+.toggle svg{width:14px;height:14px;color:var(--mut);transition:transform .3s}
+aside.collapsed .toggle svg{transform:rotate(180deg)}
+.item{display:flex;align-items:center;gap:12px;padding:10px 10px;border-radius:9px;cursor:pointer;color:var(--mut);font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden}
+.item:hover{background:var(--panel);color:var(--ink)}
+.item.on{background:#e6f6fe;color:var(--sky)}
+.item svg{width:17px;height:17px;flex:none}
+.item span{transition:opacity .2s;opacity:1}
+aside.collapsed .item span{opacity:0;width:0}
+.stage{flex:1;padding:60px;color:var(--mut);font-size:13px}
 </style></head>
-<body data-cf-keep-dark><aside id="side"><b>CF</b><a class="active"><i>◧</i><span>Overview</span></a><a><i>◈</i><span>Projects</span></a><a><i>◎</i><span>Team</span></a><a><i>⚙</i><span>Settings</span></a></aside><main><button id="t">Toggle sidebar</button></main>
-<script>document.getElementById("t").addEventListener("click",function(){document.getElementById("side").classList.toggle("collapsed")});</script>
-</body></html>`,
+<body>
+<aside id="sidebar">
+  <div class="top"><span class="brand" id="brandTxt">CoreKit</span><div class="toggle" id="toggle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m15 6-6 6 6 6"/></svg></div></div>
+  <div class="item on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span>Overview</span></div>
+  <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg><span>Analytics</span></div>
+  <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg><span>Calendar</span></div>
+  <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21a8 8 0 1 0-16 0"/><circle cx="12" cy="7" r="4"/></svg><span>Team</span></div>
+  <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></div>
+</aside>
+<div class="stage">Click the arrow to collapse the sidebar</div>
+<script>
+var sidebar=document.getElementById("sidebar"), toggle=document.getElementById("toggle");
+toggle.addEventListener("click",function(){ sidebar.classList.toggle("collapsed"); });
+document.querySelectorAll(".item").forEach(function(it){
+  it.addEventListener("click",function(){ document.querySelectorAll(".item").forEach(function(x){x.classList.remove("on")}); it.classList.add("on"); });
+});
+</script>
+</body></html>
+`,
 
   "hover-zoom-gallery": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Hover Zoom Gallery</title><style>
@@ -3280,51 +3327,97 @@ blockquote{margin:10px 0 20px;font-size:19px;color:#f7f5fb;line-height:1.4;font-
 
   "command-palette-nav": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Command Palette Nav</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-header{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;border-bottom:1px solid var(--line)}
-header b{color:#f7f5fb;font-size:13px}
-.search{display:flex;align-items:center;gap:8px;padding:9px 14px;border:1px solid var(--line);border-radius:9px;background:#111017;color:#817d8a;font-size:11px;cursor:pointer;transition:border-color .2s}
-.search:hover{border-color:#544c67}
-.overlay{position:fixed;inset:0;background:rgba(5,5,7,.7);backdrop-filter:blur(2px);display:none;place-items:start center;padding-top:100px}
-.overlay.open{display:grid}
-.palette{width:min(420px,88vw);border:1px solid var(--line);border-radius:14px;background:#0d0d12;overflow:hidden;box-shadow:0 40px 90px -20px rgba(0,0,0,.7),0 0 0 1px rgba(196,181,253,.1);animation:pop .2s cubic-bezier(.2,.8,.2,1)}
-@keyframes pop{from{opacity:0;transform:translateY(-8px) scale(.98)}to{opacity:1;transform:none}}
-.palette input{width:100%;padding:14px 16px;border:0;border-bottom:1px solid var(--line);background:transparent;color:#f7f5fb;font-size:13px;outline:0}
-.palette div{padding:11px 16px;font-size:12px;color:#c9c4d6;cursor:pointer;transition:background .15s,color .15s}
-.palette div:hover{background:#17131f;color:var(--lav)}
+:root{--bg:#fff;--ink:#14161f;--mut:#6b7080;--sky:#0ea5e9;--line:#e7e9f0}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#f7f8fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
+nav{background:var(--bg);border-bottom:1px solid var(--line);padding:16px 32px;display:flex;align-items:center;gap:24px}
+.brand{font-weight:800;font-size:16px;color:var(--ink)}
+.kbtn{margin-left:auto;display:flex;align-items:center;gap:10px;background:#f7f8fb;border:1px solid var(--line);border-radius:9px;padding:9px 14px;font-size:12.5px;color:var(--mut);cursor:pointer}
+.kbtn kbd{background:#fff;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:10.5px;font-family:ui-monospace,monospace}
+.overlay{position:fixed;inset:0;background:rgba(20,22,31,.5);display:flex;align-items:flex-start;justify-content:center;padding-top:100px;opacity:0;pointer-events:none;transition:opacity .2s}
+.overlay.open{opacity:1;pointer-events:auto}
+.palette{width:440px;max-width:90vw;background:#fff;border-radius:16px;box-shadow:0 40px 80px -20px rgba(0,0,0,.4);overflow:hidden;transform:translateY(-10px);transition:transform .2s}
+.overlay.open .palette{transform:translateY(0)}
+.psearch{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.psearch svg{width:16px;height:16px;color:var(--mut)}
+.psearch input{border:0;outline:none;font-size:14px;flex:1;font-family:inherit;color:var(--ink)}
+.presults{padding:8px;max-height:280px;overflow-y:auto}
+.pres{display:flex;align-items:center;gap:11px;padding:10px 10px;border-radius:9px;cursor:pointer}
+.pres.active{background:#e6f6fe}
+.pres .ic{width:28px;height:28px;border-radius:8px;background:#f7f8fb;display:flex;align-items:center;justify-content:center;flex:none}
+.pres .ic svg{width:14px;height:14px;color:var(--sky)}
+.pres b{font-size:12.5px;color:var(--ink);font-weight:600}
+.pres span{font-size:11px;color:var(--mut);margin-left:auto}
+.stage{padding:60px;text-align:center;color:var(--mut);font-size:13px}
 </style></head>
-<body data-cf-keep-dark><header><b>CodeFusion</b><div class="search" id="open">Search… ⌘K</div></header>
-<div class="overlay" id="overlay"><div class="palette"><input placeholder="Type a command…">
-<div>Go to Dashboard</div><div>Create new component</div><div>Toggle theme</div><div>View documentation</div></div></div>
+<body>
+<nav><div class="brand">CoreKit</div><div class="kbtn" id="open">Search... <kbd>⌘K</kbd></div></nav>
+<div class="stage">Click the search button to open the command palette</div>
+<div class="overlay" id="overlay">
+  <div class="palette">
+    <div class="psearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="Jump to a page or action…" autofocus></div>
+    <div class="presults">
+      <div class="pres active"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/></svg></div><b>Go to Dashboard</b><span>G D</span></div>
+      <div class="pres"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21a8 8 0 1 0-16 0"/><circle cx="12" cy="7" r="4"/></svg></div><b>Go to Team</b><span>G T</span></div>
+      <div class="pres"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6z"/></svg></div><b>Open Settings</b><span>G S</span></div>
+      <div class="pres"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg></div><b>Create new project</b><span>C</span></div>
+    </div>
+  </div>
+</div>
 <script>
-const open=document.getElementById("open"),overlay=document.getElementById("overlay");
-open.addEventListener("click",function(){overlay.classList.add("open")});
-overlay.addEventListener("click",function(e){if(e.target===overlay)overlay.classList.remove("open")});
-document.addEventListener("keydown",function(e){if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();overlay.classList.add("open")}if(e.key==="Escape")overlay.classList.remove("open")});
+var overlay=document.getElementById("overlay"), openBtn=document.getElementById("open");
+openBtn.addEventListener("click",function(){ overlay.classList.add("open"); });
+overlay.addEventListener("click",function(e){ if(e.target===overlay) overlay.classList.remove("open"); });
+document.addEventListener("keydown",function(e){ if(e.key==="Escape") overlay.classList.remove("open"); });
+document.querySelectorAll(".pres").forEach(function(p){
+  p.addEventListener("mouseenter",function(){ document.querySelectorAll(".pres").forEach(function(x){x.classList.remove("active")}); p.classList.add("active"); });
+});
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "sliding-underline-tabs": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Sliding Underline Tabs</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:20px;padding:40px}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.tabs{position:relative;display:flex;gap:26px;border-bottom:1px solid var(--line);padding-bottom:0}
-.tabs button{background:none;border:0;color:#817d8a;font-size:12px;font-weight:700;padding:10px 2px;cursor:pointer;transition:color .25s}
-.tabs button.active{color:#f7f5fb}
-.underline{position:absolute;bottom:-1px;height:2px;background:linear-gradient(90deg,#9b8aff,#d7d0ff);box-shadow:0 0 8px rgba(196,181,253,.6);transition:left .3s cubic-bezier(.2,.8,.2,1),width .3s cubic-bezier(.2,.8,.2,1)}
+:root{--bg:#fff;--ink:#14161f;--mut:#9aa0ae;--sky:#0ea5e9;--line:#e7e9f0}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f7f8fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:360px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 24px 50px -24px rgba(20,22,31,.15)}
+.tabs{display:flex;position:relative;border-bottom:1px solid var(--line);margin-bottom:18px}
+.tab{padding:10px 16px;font-size:13px;font-weight:600;color:var(--mut);cursor:pointer;position:relative;z-index:1}
+.tab.on{color:var(--sky)}
+.underline{position:absolute;bottom:-1px;height:2.5px;background:var(--sky);border-radius:2px;transition:left .3s cubic-bezier(.2,.8,.2,1),width .3s cubic-bezier(.2,.8,.2,1)}
+.panel{font-size:12.5px;color:var(--mut);line-height:1.7;min-height:60px}
+.panel b{display:block;color:var(--ink);font-size:13px;margin-bottom:6px}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">CLICK A TAB</span>
-<div class="tabs" id="tabs"><button class="active">Overview</button><button>Analytics</button><button>Settings</button><button>Billing</button><div class="underline" id="u"></div></div></div>
+<body>
+<div class="card">
+  <div class="tabs" id="tabs">
+    <div class="tab on" data-i="0">Overview</div>
+    <div class="tab" data-i="1">Analytics</div>
+    <div class="tab" data-i="2">Team</div>
+    <div class="tab" data-i="3">Billing</div>
+    <div class="underline" id="underline"></div>
+  </div>
+  <div class="panel" id="panel"><b>Overview</b>A quick summary of your workspace activity and recent changes.</div>
+</div>
 <script>
-const tabs=document.getElementById("tabs"),buttons=[...tabs.querySelectorAll("button")],u=document.getElementById("u");
-function place(btn){u.style.width=btn.offsetWidth+"px";u.style.left=btn.offsetLeft+"px"}
-buttons.forEach(function(b){b.addEventListener("click",function(){buttons.forEach(function(x){x.classList.remove("active")});b.classList.add("active");place(b)})});
-place(buttons[0]);
+var tabs=document.querySelectorAll(".tab"), underline=document.getElementById("underline"), panel=document.getElementById("panel");
+var copy=[["Overview","A quick summary of your workspace activity and recent changes."],["Analytics","Track usage, conversion and retention across your product."],["Team","Manage members, roles and pending invitations."],["Billing","View invoices, update your card, or change your plan."]];
+function moveUnderline(tab){
+  underline.style.left=tab.offsetLeft+"px";
+  underline.style.width=tab.offsetWidth+"px";
+}
+tabs.forEach(function(t){
+  t.addEventListener("click",function(){
+    tabs.forEach(function(x){x.classList.remove("on")}); t.classList.add("on");
+    moveUnderline(t);
+    var c=copy[+t.dataset.i]; panel.innerHTML="<b>"+c[0]+"</b>"+c[1];
+  });
+});
+moveUnderline(tabs[0]);
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "drag-drop-upload-form": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Drag &amp; Drop Upload Form</title><style>
@@ -5498,119 +5591,249 @@ requestAnimationFrame(function(){document.querySelectorAll(".fill").forEach(func
 
   "progress-breadcrumb-nav": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Progress Breadcrumb Nav</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.trail{display:flex;align-items:center}
-.step{display:flex;align-items:center;gap:8px;color:#5f5c68;font-size:11px}
-.step b{width:22px;height:22px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-size:10px;color:#817d8a;transition:box-shadow .3s}
-.step.done b{background:linear-gradient(135deg,#7fe0ac,#41b878);border-color:transparent;color:#0a090f}
-.step.active{color:#f7f5fb}
-.step.active b{background:linear-gradient(135deg,#d7d0ff,#9b8aff);border-color:transparent;color:#0a090f;box-shadow:0 0 0 5px rgba(196,181,253,.18)}
-.line{width:36px;height:1px;background:var(--line);margin:0 6px}
-.line.done{background:linear-gradient(90deg,#41b878,#7fe0ac)}
+:root{--bg:#fff;--ink:#14161f;--mut:#6b7080;--sky:#0ea5e9;--line:#e7e9f0;--green:#16a34a}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f7f8fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.wrap{width:min(460px,92vw)}
+.crumb{display:flex;align-items:center}
+.step{display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer}
+.circ{width:32px;height:32px;border-radius:50%;background:#fff;border:2px solid var(--line);color:var(--mut);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;transition:all .3s cubic-bezier(.2,.8,.2,1)}
+.step.done .circ{background:var(--green);border-color:var(--green);color:#fff}
+.step.on .circ{border-color:var(--sky);color:var(--sky);box-shadow:0 0 0 4px rgba(14,165,233,.12)}
+.step span{font-size:11px;color:var(--mut);font-weight:600;white-space:nowrap}
+.step.on span{color:var(--ink)}
+.line{flex:1;height:2px;background:var(--line);margin:0 -2px 24px;position:relative;top:-16px}
+.line i{position:absolute;inset:0;background:var(--green);width:0;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.line.done i{width:100%}
+.card{margin-top:30px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;text-align:center;font-size:13px;color:var(--mut)}
+.card b{color:var(--ink);display:block;margin-bottom:6px;font-size:14px}
 </style></head>
-<body data-cf-keep-dark><div class="trail">
-<div class="step done"><b>✓</b>Cart</div><div class="line done"></div>
-<div class="step active"><b>2</b>Shipping</div><div class="line"></div>
-<div class="step"><b>3</b>Payment</div>
+<body>
+<div class="wrap">
+  <div class="crumb" id="crumb">
+    <div class="step done" data-i="0"><div class="circ"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><span>Cart</span></div>
+    <div class="line done"><i></i></div>
+    <div class="step on" data-i="1"><div class="circ">2</div><span>Shipping</span></div>
+    <div class="line"><i></i></div>
+    <div class="step" data-i="2"><div class="circ">3</div><span>Payment</span></div>
+    <div class="line"><i></i></div>
+    <div class="step" data-i="3"><div class="circ">4</div><span>Confirm</span></div>
+  </div>
+  <div class="card" id="cardTxt"><b>Shipping details</b>Enter your delivery address to continue.</div>
 </div>
-</body></html>`,
+<script>
+var steps=document.querySelectorAll(".step"), lines=document.querySelectorAll(".line");
+var copy=["Review cart","Shipping details","Payment method","Order confirmed"];
+var desc=["Double-check your items before continuing.","Enter your delivery address to continue.","Add a payment method to place your order.","Your order has been placed successfully."];
+steps.forEach(function(s){
+  s.addEventListener("click",function(){
+    var idx=+s.dataset.i;
+    steps.forEach(function(st,i){ st.classList.toggle("on", i===idx); st.classList.toggle("done", i<idx); });
+    lines.forEach(function(l,i){ l.classList.toggle("done", i<idx); });
+    document.getElementById("cardTxt").innerHTML="<b>"+copy[idx]+"</b>"+desc[idx];
+  });
+});
+</script>
+</body></html>
+`,
 
   "bottom-tab-bar-nav": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Bottom Tab Bar Nav</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:end center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding-bottom:40px}
-.tabbar{position:relative;display:flex;width:260px;padding:5px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
-.tabbar button{flex:1;position:relative;z-index:1;border:0;background:none;padding:10px 0;color:#77737f;font-size:9px;cursor:pointer;transition:color .25s}
-.tabbar button.active{color:#0a090f}
-.pill{position:absolute;top:5px;bottom:5px;width:calc(33.33% - 4px);border-radius:11px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 8px 20px -8px rgba(155,138,255,.6);transition:left .35s cubic-bezier(.34,1.56,.64,1)}
+:root{--bg:#fff;--ink:#14161f;--mut:#9aa0ae;--sky:#0ea5e9;--line:#e7e9f0}
+*{box-sizing:border-box}
+body{margin:0;height:100vh;display:flex;align-items:flex-end;justify-content:center;background:#f7f8fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.phone{width:280px;height:420px;background:#fff;border-radius:28px;border:8px solid #fff;box-shadow:0 30px 70px -24px rgba(20,22,31,.3);position:relative;overflow:hidden}
+.content{padding:20px;color:var(--mut);font-size:12px}
+.content b{display:block;color:var(--ink);font-size:15px;margin-bottom:6px}
+.tabbar{position:absolute;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;padding:10px 6px 14px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;position:relative}
+.tab svg{width:21px;height:21px;color:var(--mut);transition:color .2s,transform .2s}
+.tab span{font-size:9.5px;color:var(--mut);font-weight:600;transition:color .2s}
+.tab.on svg{color:var(--sky);transform:translateY(-2px)}
+.tab.on span{color:var(--sky)}
+.indicator{position:absolute;top:-10px;left:50%;width:4px;height:4px;border-radius:50%;background:var(--sky);opacity:0;transition:opacity .2s}
+.tab.on .indicator{opacity:1}
 </style></head>
-<body data-cf-keep-dark><div class="tabbar" id="bar"><div class="pill" id="pill"></div>
-<button class="active">Home</button><button>Search</button><button>Profile</button></div>
+<body>
+<div class="phone">
+  <div class="content" id="content"><b>Home</b>Your personalized feed and recent activity.</div>
+  <div class="tabbar" id="tabbar">
+    <div class="tab on" data-t="Home"><div class="indicator"></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Home</span></div>
+    <div class="tab" data-t="Search"><div class="indicator"></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><span>Search</span></div>
+    <div class="tab" data-t="Alerts"><div class="indicator"></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span>Alerts</span></div>
+    <div class="tab" data-t="Profile"><div class="indicator"></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21a8 8 0 1 0-16 0"/><circle cx="12" cy="7" r="4"/></svg><span>Profile</span></div>
+  </div>
+</div>
 <script>
-const bar=document.getElementById("bar"),pill=document.getElementById("pill"),buttons=[...bar.querySelectorAll("button")];
-buttons.forEach(function(b,i){b.addEventListener("click",function(){buttons.forEach(function(x){x.classList.remove("active")});b.classList.add("active");pill.style.left=(5+i*(250/3))+"px"})});
+var descs={Home:"Your personalized feed and recent activity.",Search:"Find people, posts and topics.",Alerts:"Nothing new right now — check back later.",Profile:"View and edit your public profile."};
+document.querySelectorAll(".tab").forEach(function(t){
+  t.addEventListener("click",function(){
+    document.querySelectorAll(".tab").forEach(function(x){x.classList.remove("on")}); t.classList.add("on");
+    document.getElementById("content").innerHTML="<b>"+t.dataset.t+"</b>"+descs[t.dataset.t];
+  });
+});
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "vertical-dot-nav": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Vertical Dot Nav</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;height:100vh;display:flex;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.dotnav{display:grid;gap:16px;align-self:center;padding-left:30px}
-.dotnav button{width:9px;height:9px;border-radius:50%;border:1px solid #4a4657;background:transparent;cursor:pointer;position:relative;transition:background .3s,border-color .3s,box-shadow .3s,transform .3s cubic-bezier(.34,1.56,.64,1)}
-.dotnav button.active{background:var(--lav);border-color:var(--lav);box-shadow:0 0 0 4px rgba(196,181,253,.18);transform:scale(1.2)}
-.dotnav button.active::after{content:attr(data-l);position:absolute;left:18px;top:-4px;color:#eee9f8;font-size:10px;white-space:nowrap}
-.sections{flex:1;display:grid}
-section{height:100vh;display:grid;place-items:center;color:#4a4657;font-size:40px;font-weight:800;scroll-snap-align:start;background:radial-gradient(circle at 30% 30%,rgba(155,138,255,.06),transparent 60%)}
-.sections{scroll-snap-type:y mandatory;overflow-y:auto}
+:root{--bg:#fff;--ink:#14161f;--mut:#9aa0ae;--sky:#0ea5e9;--line:#e7e9f0}
+*{box-sizing:border-box}
+body{margin:0;height:100vh;overflow-y:scroll;font-family:Inter,ui-sans-serif,Arial,sans-serif;scroll-behavior:smooth}
+section{height:100vh;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#fff}
+.s0{background:linear-gradient(150deg,#0ea5e9,#0369a1)}
+.s1{background:linear-gradient(150deg,#14161f,#31354a)}
+.s2{background:linear-gradient(150deg,#0ea5e9,#075985)}
+.s3{background:linear-gradient(150deg,#1e2130,#0ea5e9)}
+.dots{position:fixed;right:26px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:16px;z-index:5}
+.dot{width:9px;height:9px;border-radius:50%;background:rgba(20,22,31,.15);cursor:pointer;position:relative;transition:background .3s}
+.dot .lbl{position:absolute;right:20px;top:50%;transform:translateY(-50%);background:#14161f;color:#fff;font-size:11px;padding:5px 9px;border-radius:6px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s}
+.dot:hover .lbl{opacity:1}
+.dot.on{background:var(--sky);transform:scale(1.3)}
 </style></head>
-<body data-cf-keep-dark><div class="dotnav" id="dots">
-<button class="active" data-l="Intro"></button><button data-l="Features"></button><button data-l="Pricing"></button>
+<body>
+<div class="dots" id="dots" data-cf-keep-dark>
+  <div class="dot on" data-i="0"><span class="lbl">Overview</span></div>
+  <div class="dot" data-i="1"><span class="lbl">Features</span></div>
+  <div class="dot" data-i="2"><span class="lbl">Pricing</span></div>
+  <div class="dot" data-i="3"><span class="lbl">Contact</span></div>
 </div>
-<div class="sections" id="sections"><section>01</section><section>02</section><section>03</section></div>
+<section class="s0" id="sec0">Overview</section>
+<section class="s1" id="sec1">Features</section>
+<section class="s2" id="sec2">Pricing</section>
+<section class="s3" id="sec3">Contact</section>
 <script>
-const dots=[...document.querySelectorAll("#dots button")],sections=[...document.querySelectorAll("section")];
-dots.forEach(function(d,i){d.addEventListener("click",function(){dots.forEach(function(x){x.classList.remove("active")});d.classList.add("active");sections[i].scrollIntoView({behavior:"smooth"})})});
+var dots=document.querySelectorAll(".dot"), sections=[0,1,2,3].map(function(i){return document.getElementById("sec"+i)});
+dots.forEach(function(d){
+  d.addEventListener("click",function(){ sections[+d.dataset.i].scrollIntoView({behavior:"smooth"}); });
+});
+window.addEventListener("scroll",function(){
+  var mid=window.scrollY+window.innerHeight/2, idx=0;
+  sections.forEach(function(s,i){ if(s.offsetTop<=mid) idx=i; });
+  dots.forEach(function(d,i){ d.classList.toggle("on", i===idx); });
+});
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "search-expand-nav": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Search Expand Nav</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-header{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:1px solid var(--line)}
-header b{color:#f7f5fb;font-size:13px}
-nav{display:flex;gap:18px;color:#817d8a;font-size:11px;align-items:center}
-.search-btn{width:34px;height:34px;border:1px solid var(--line);border-radius:9px;background:#111017;color:#9d94b0;cursor:pointer;transition:width .3s ease,border-color .2s}
-.search-btn:hover{border-color:#544c67}
-.search-wrap{position:relative;display:flex;align-items:center}
-.search-wrap input{position:absolute;right:0;width:0;opacity:0;padding:0;border:1px solid var(--line);border-radius:9px;background:#111017;color:#fff;font-size:11px;height:34px;transition:width .35s cubic-bezier(.2,.8,.2,1),opacity .2s ease,padding .3s ease,box-shadow .2s}
-.search-wrap.open input{width:180px;opacity:1;padding:0 12px;right:0;box-shadow:0 0 0 3px rgba(196,181,253,.15)}
-.search-wrap.open .search-btn{opacity:0;pointer-events:none}
+:root{--bg:#fff;--ink:#14161f;--mut:#6b7080;--sky:#0ea5e9;--line:#e7e9f0}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#f7f8fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
+nav{background:var(--bg);border-bottom:1px solid var(--line);padding:16px 32px;display:flex;align-items:center;gap:24px}
+.brand{font-weight:800;font-size:16px;color:var(--ink)}
+.links{display:flex;gap:22px;font-size:13px;color:var(--mut);font-weight:600}
+.right{margin-left:auto;display:flex;align-items:center;gap:14px}
+.search-wrap{display:flex;align-items:center;background:#f7f8fb;border:1px solid var(--line);border-radius:20px;overflow:hidden;width:38px;height:38px;transition:width .35s cubic-bezier(.2,.8,.2,1)}
+.search-wrap.open{width:220px}
+.search-wrap button{width:38px;height:38px;border:0;background:none;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;color:var(--mut)}
+.search-wrap button svg{width:16px;height:16px}
+.search-wrap input{border:0;background:none;outline:none;font-size:13px;font-family:inherit;width:100%;color:var(--ink);opacity:0;transition:opacity .25s}
+.search-wrap.open input{opacity:1}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#0ea5e9,#0369a1)}
+.stage{padding:60px;text-align:center;color:var(--mut);font-size:13px}
 </style></head>
-<body data-cf-keep-dark><header><b>CodeFusion</b><nav><span>Products</span><span>Docs</span>
-<div class="search-wrap" id="wrap"><input id="input" placeholder="Search…"><button class="search-btn" id="btn">⚲</button></div>
-</nav></header>
+<body>
+<nav>
+  <div class="brand">CoreKit</div>
+  <div class="links"><span>Product</span><span>Pricing</span><span>Docs</span></div>
+  <div class="right">
+    <div class="search-wrap" id="wrap"><button id="btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button><input type="text" id="inp" placeholder="Search docs, projects…"></div>
+    <div class="avatar"></div>
+  </div>
+</nav>
+<div class="stage">Click the search icon to expand</div>
 <script>
-const wrap=document.getElementById("wrap"),btn=document.getElementById("btn"),input=document.getElementById("input");
-btn.addEventListener("click",function(){wrap.classList.add("open");input.focus()});
-input.addEventListener("blur",function(){if(!input.value)wrap.classList.remove("open")});
+var wrap=document.getElementById("wrap"), btn=document.getElementById("btn"), inp=document.getElementById("inp");
+btn.addEventListener("click",function(){
+  wrap.classList.toggle("open");
+  if(wrap.classList.contains("open")) setTimeout(function(){ inp.focus(); },300);
+});
+document.addEventListener("click",function(e){ if(!wrap.contains(e.target)) wrap.classList.remove("open"); });
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "icon-rail-nav": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Icon Rail Nav</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;height:100vh;display:flex;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.rail{width:56px;border-right:1px solid var(--line);display:grid;align-content:start;gap:4px;padding:14px 8px;transition:width .3s cubic-bezier(.2,.8,.2,1);overflow:hidden}
-.rail:hover{width:150px}
-.rail a{display:flex;align-items:center;gap:12px;padding:10px;border-radius:9px;color:#817d8a;font-size:11px;white-space:nowrap;text-decoration:none;transition:background .2s,color .2s}
-.rail a:hover{background:#111017;color:#eee9f8}
-.rail a i{width:18px;height:18px;flex:none;border-radius:5px;background:#1c1a24;display:grid;place-items:center;font-style:normal;color:var(--lav);font-size:10px;transition:background .2s,color .2s}
-.rail a.active{color:#e6e1f2;background:linear-gradient(135deg,#221d33,#181425)}
-.rail a.active i{background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f}
+:root{--bg:#14161f;--sky:#0ea5e9;--mut:#787e94}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;background:#f7f8fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.rail{width:64px;background:#14161f;display:flex;flex-direction:column;align-items:center;padding:18px 0;gap:6px}
+.logo{width:32px;height:32px;border-radius:9px;background:var(--sky);margin-bottom:16px}
+.ic{width:42px;height:42px;border-radius:11px;display:flex;align-items:center;justify-content:center;color:var(--mut);cursor:pointer;position:relative;transition:background .2s,color .2s}
+.ic:hover{background:rgba(255,255,255,.06);color:#fff}
+.ic.on{background:rgba(14,165,233,.15);color:var(--sky)}
+.ic svg{width:19px;height:19px}
+.tip{position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);background:#14161f;color:#fff;font-size:11px;padding:6px 10px;border-radius:7px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s;z-index:5}
+.ic:hover .tip{opacity:1}
+.stage{flex:1;padding:60px;color:#6b7080;font-size:13px}
 </style></head>
-<body data-cf-keep-dark><div class="rail"><a class="active"><i>◧</i>Dashboard</a><a><i>◨</i>Projects</a><a><i>◩</i>Reports</a><a><i>◪</i>Settings</a></div>
-</body></html>`,
+<body>
+<div class="rail" data-cf-keep-dark>
+  <div class="logo"></div>
+  <div class="ic on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg><span class="tip">Dashboard</span></div>
+  <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg><span class="tip">Analytics</span></div>
+  <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21a8 8 0 1 0-16 0"/><circle cx="12" cy="7" r="4"/></svg><span class="tip">Team</span></div>
+  <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="tip">Notifications</span></div>
+  <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82"/></svg><span class="tip">Settings</span></div>
+</div>
+<div class="stage">Hover an icon to see its tooltip</div>
+<script>
+document.querySelectorAll(".ic").forEach(function(ic){
+  ic.addEventListener("click",function(){ document.querySelectorAll(".ic").forEach(function(x){x.classList.remove("on")}); ic.classList.add("on"); });
+});
+</script>
+</body></html>
+`,
 
   "pagination-nav": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Pagination Nav</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.pager{position:relative;display:flex;gap:4px;padding:4px;border:1px solid var(--line);border-radius:12px;background:#0d0d12;box-shadow:0 16px 40px -22px rgba(0,0,0,.7)}
-.pager button{position:relative;z-index:1;width:32px;height:32px;border:0;background:none;color:#817d8a;font-size:11px;cursor:pointer;border-radius:8px;transition:color .25s}
-.pager button:hover{color:#eee9f8}
-.pager button.active{color:#0a090f}
-.pill{position:absolute;top:4px;left:4px;width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 6px 16px -6px rgba(155,138,255,.6);transition:left .3s cubic-bezier(.34,1.56,.64,1)}
+:root{--bg:#fff;--ink:#14161f;--mut:#9aa0ae;--sky:#0ea5e9;--line:#e7e9f0}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f7f8fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 26px}
+.rows{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink);padding:8px 0;border-bottom:1px solid #f2f3f7}
+.row span{color:var(--mut)}
+.pager{display:flex;align-items:center;justify-content:center;gap:6px}
+.pg-btn{width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--mut);font-size:12.5px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.pg-btn:hover{border-color:var(--sky);color:var(--sky)}
+.pg-btn.on{background:var(--sky);color:#fff;border-color:var(--sky)}
+.pg-btn svg{width:13px;height:13px}
+.pg-btn:disabled{opacity:.35;pointer-events:none}
 </style></head>
-<body data-cf-keep-dark><div class="pager" id="pager"><div class="pill" id="pill"></div>
-<button>‹</button><button class="active">1</button><button>2</button><button>3</button><button>4</button><button>›</button></div>
+<body>
+<div class="card">
+  <div class="rows" id="rows"></div>
+  <div class="pager" id="pager"></div>
+</div>
 <script>
-const pager=document.getElementById("pager"),pill=document.getElementById("pill"),buttons=[...pager.querySelectorAll("button")].slice(1,5);
-buttons.forEach(function(b){b.addEventListener("click",function(){buttons.forEach(function(x){x.classList.remove("active")});b.classList.add("active");pill.style.left=b.offsetLeft+"px"})});
+var totalPages=6, cur=1;
+var items=["Onboarding flow redesign","API rate limiting","Dark mode polish","Billing invoice export","Mobile nav refactor","Search relevance tuning","SSO rollout","Webhook retries","Team roles UI","Changelog automation","Slack integration","Audit log export"];
+function renderRows(){
+  var start=(cur-1)*2, end=start+2;
+  var html="";
+  for(var i=start;i<Math.min(end,items.length);i++) html+='<div class="row">'+items[i]+'<span>#'+(1000+i)+'</span></div>';
+  document.getElementById("rows").innerHTML=html;
+}
+function renderPager(){
+  var html='<button class="pg-btn" id="prev" '+(cur===1?"disabled":"")+'><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m15 18-6-6 6-6"/></svg></button>';
+  for(var p=1;p<=totalPages;p++) html+='<button class="pg-btn'+(p===cur?" on":"")+'" data-p="'+p+'">'+p+'</button>';
+  html+='<button class="pg-btn" id="next" '+(cur===totalPages?"disabled":"")+'><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m9 18 6-6-6-6"/></svg></button>';
+  document.getElementById("pager").innerHTML=html;
+  document.querySelectorAll(".pg-btn[data-p]").forEach(function(b){ b.addEventListener("click",function(){ cur=+b.dataset.p; render(); }); });
+  var prev=document.getElementById("prev"), next=document.getElementById("next");
+  if(prev) prev.addEventListener("click",function(){ cur--; render(); });
+  if(next) next.addEventListener("click",function(){ cur++; render(); });
+}
+function render(){ renderRows(); renderPager(); }
+render();
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "rating-feedback-form": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Rating Feedback Form</title><style>
