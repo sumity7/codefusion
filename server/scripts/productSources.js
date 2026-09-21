@@ -8851,4 +8851,260 @@ button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit
 </script>
 </body></html>
 `,
+  "aurora-mesh-drift": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Aurora Mesh Drift</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#080a12;overflow:hidden;font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.55;mix-blend-mode:screen}
+.b1{width:420px;height:420px;background:#7c5cff;top:-100px;left:-80px;animation:drift1 16s ease-in-out infinite}
+.b2{width:380px;height:380px;background:#3ddbd9;top:20%;right:-100px;animation:drift2 20s ease-in-out infinite}
+.b3{width:340px;height:340px;background:#ff5ca8;bottom:-100px;left:20%;animation:drift3 18s ease-in-out infinite}
+@keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(80px,60px)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-70px,50px)}}
+@keyframes drift3{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,-70px)}}
+.caption{position:absolute;bottom:20px;left:20px;color:rgba(255,255,255,.5);font-size:11px;letter-spacing:.06em;text-transform:uppercase;z-index:2}
+</style></head>
+<body data-cf-keep-dark>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+<div class="caption">Slow-drifting aurora mesh</div>
+</body></html>
+`,
+  "dot-pattern-spotlight": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Dot Pattern Spotlight</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#fafafa;font-family:Inter,ui-sans-serif,Arial,sans-serif;overflow:hidden}
+canvas{position:absolute;inset:0}
+.caption{position:absolute;bottom:20px;left:20px;color:#8a8a93;font-size:11px;letter-spacing:.06em;text-transform:uppercase;z-index:2}
+</style></head>
+<body>
+<canvas id="c"></canvas>
+<div class="caption">Move your cursor to brighten nearby dots</div>
+<script>
+var c=document.getElementById("c"), ctx=c.getContext("2d");
+function resize(){ c.width=window.innerWidth; c.height=window.innerHeight; }
+resize(); window.addEventListener("resize",resize);
+var gap=26, mouse={x:-999,y:-999};
+document.addEventListener("mousemove",function(e){ mouse.x=e.clientX; mouse.y=e.clientY; });
+function tick(){
+  ctx.clearRect(0,0,c.width,c.height);
+  for(var x=gap/2;x<c.width;x+=gap){
+    for(var y=gap/2;y<c.height;y+=gap){
+      var dx=x-mouse.x, dy=y-mouse.y, dist=Math.sqrt(dx*dx+dy*dy);
+      var glow=Math.max(0,1-dist/160);
+      var r=1.2+glow*2.6;
+      ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
+      ctx.fillStyle = glow>0.05 ? "rgba(139,92,246,"+(0.25+glow*.75)+")" : "rgba(210,210,216,.55)";
+      ctx.fill();
+    }
+  }
+  requestAnimationFrame(tick);
+}
+tick();
+</script>
+</body></html>
+`,
+  "gradient-wave-field": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Gradient Wave Field</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#0d1420;overflow:hidden;font-family:Inter,ui-sans-serif,Arial,sans-serif}
+canvas{position:absolute;inset:0}
+.caption{position:absolute;bottom:20px;left:20px;color:rgba(255,255,255,.5);font-size:11px;letter-spacing:.06em;text-transform:uppercase;z-index:2}
+</style></head>
+<body data-cf-keep-dark>
+<canvas id="c"></canvas>
+<div class="caption">Layered sine waves</div>
+<script>
+var c=document.getElementById("c"), ctx=c.getContext("2d"), t=0;
+function resize(){ c.width=window.innerWidth; c.height=window.innerHeight; }
+resize(); window.addEventListener("resize",resize);
+var layers=[
+  {amp:40,freq:.008,speed:.02,color:"rgba(79,124,255,.35)",offset:.4},
+  {amp:30,freq:.011,speed:.03,color:"rgba(139,92,246,.3)",offset:.55},
+  {amp:50,freq:.006,speed:.015,color:"rgba(61,219,217,.25)",offset:.7}
+];
+function tick(){
+  ctx.clearRect(0,0,c.width,c.height);
+  layers.forEach(function(l){
+    ctx.beginPath();
+    ctx.moveTo(0,c.height);
+    for(var x=0;x<=c.width;x+=8){
+      var y=c.height*l.offset + Math.sin(x*l.freq + t*l.speed)*l.amp;
+      ctx.lineTo(x,y);
+    }
+    ctx.lineTo(c.width,c.height); ctx.closePath();
+    ctx.fillStyle=l.color; ctx.fill();
+  });
+  t++;
+  requestAnimationFrame(tick);
+}
+tick();
+</script>
+</body></html>
+`,
+  "grain-gradient-bg": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Grain Gradient</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;overflow:hidden;font-family:Inter,ui-sans-serif,Arial,sans-serif;background:linear-gradient(150deg,#ff8a5c,#ff5c8a 45%,#7c5cff)}
+canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.35;mix-blend-mode:overlay;image-rendering:pixelated}
+.caption{position:absolute;bottom:20px;left:20px;color:rgba(255,255,255,.7);font-size:11px;letter-spacing:.06em;text-transform:uppercase;z-index:2}
+</style></head>
+<body data-cf-keep-dark>
+<canvas id="c"></canvas>
+<div class="caption">Warm gradient with animated film grain</div>
+<script>
+var c=document.getElementById("c"), ctx=c.getContext("2d");
+// Rendered at a fixed low resolution and scaled up via CSS + pixelated
+// image-rendering — regenerating true per-pixel noise at full viewport
+// resolution every frame is needlessly expensive for the same visual effect.
+c.width=180; c.height=120;
+function grain(){
+  var w=c.width,h=c.height,img=ctx.createImageData(w,h),d=img.data;
+  for(var i=0;i<d.length;i+=4){
+    var v=Math.random()*255;
+    d[i]=d[i+1]=d[i+2]=v; d[i+3]=255;
+  }
+  ctx.putImageData(img,0,0);
+}
+function loop(){ grain(); setTimeout(loop,90); }
+loop();
+</script>
+</body></html>
+`,
+  "kinetic-cursor-grid": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Kinetic Cursor Grid</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#0a0a0f;font-family:Inter,ui-sans-serif,Arial,sans-serif;overflow:hidden}
+canvas{position:absolute;inset:0}
+.caption{position:absolute;bottom:20px;left:20px;color:rgba(255,255,255,.5);font-size:11px;letter-spacing:.06em;text-transform:uppercase;z-index:2}
+</style></head>
+<body data-cf-keep-dark>
+<canvas id="c"></canvas>
+<div class="caption">Move your cursor</div>
+<script>
+var c=document.getElementById("c"), ctx=c.getContext("2d");
+function resize(){ c.width=window.innerWidth; c.height=window.innerHeight; }
+resize(); window.addEventListener("resize",resize);
+var gap=34, mouse={x:-999,y:-999};
+document.addEventListener("mousemove",function(e){ mouse.x=e.clientX; mouse.y=e.clientY; });
+function tick(){
+  ctx.clearRect(0,0,c.width,c.height);
+  for(var x=gap/2;x<c.width;x+=gap){
+    for(var y=gap/2;y<c.height;y+=gap){
+      var dx=x-mouse.x, dy=y-mouse.y, dist=Math.sqrt(dx*dx+dy*dy);
+      var push=Math.max(0,1-dist/140);
+      var ox=x+(dx/(dist||1))*push*16, oy=y+(dy/(dist||1))*push*16;
+      var r=1.4+push*2.4;
+      ctx.beginPath(); ctx.arc(ox,oy,r,0,Math.PI*2);
+      ctx.fillStyle="rgba(139,120,255,"+(0.18+push*.6)+")";
+      ctx.fill();
+    }
+  }
+  requestAnimationFrame(tick);
+}
+tick();
+</script>
+</body></html>
+`,
+  "ripple-surface-bg": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Ripple Surface</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#08111a;overflow:hidden;font-family:Inter,ui-sans-serif,Arial,sans-serif;cursor:pointer}
+canvas{position:absolute;inset:0}
+.caption{position:absolute;bottom:20px;left:20px;color:rgba(255,255,255,.5);font-size:11px;letter-spacing:.06em;text-transform:uppercase;z-index:2}
+</style></head>
+<body data-cf-keep-dark>
+<canvas id="c"></canvas>
+<div class="caption">Click anywhere to send a ripple</div>
+<script>
+var c=document.getElementById("c"), ctx=c.getContext("2d"), ripples=[];
+function resize(){ c.width=window.innerWidth; c.height=window.innerHeight; }
+resize(); window.addEventListener("resize",resize);
+function addRipple(x,y){ ripples.push({x:x,y:y,r:0,a:.5}); }
+document.addEventListener("click",function(e){ addRipple(e.clientX,e.clientY); });
+setInterval(function(){ addRipple(Math.random()*c.width,Math.random()*c.height); },1800);
+function tick(){
+  ctx.clearRect(0,0,c.width,c.height);
+  ripples.forEach(function(r){
+    r.r+=2.2; r.a*=.985;
+    ctx.beginPath(); ctx.arc(r.x,r.y,r.r,0,Math.PI*2);
+    ctx.strokeStyle="rgba(77,163,255,"+r.a+")"; ctx.lineWidth=1.4; ctx.stroke();
+  });
+  ripples=ripples.filter(function(r){ return r.a>.02; });
+  requestAnimationFrame(tick);
+}
+addRipple(c.width/2,c.height/2);
+tick();
+</script>
+</body></html>
+`,
+  "starfield-parallax": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Starfield Parallax</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#05050a;overflow:hidden;font-family:Inter,ui-sans-serif,Arial,sans-serif}
+canvas{position:absolute;inset:0}
+.caption{position:absolute;bottom:20px;left:20px;color:rgba(255,255,255,.5);font-size:11px;letter-spacing:.06em;text-transform:uppercase;z-index:2}
+</style></head>
+<body data-cf-keep-dark>
+<canvas id="c"></canvas>
+<div class="caption">Move your cursor for depth</div>
+<script>
+var c=document.getElementById("c"), ctx=c.getContext("2d");
+function resize(){ c.width=window.innerWidth; c.height=window.innerHeight; }
+resize(); window.addEventListener("resize",resize);
+var stars=[];
+for(var i=0;i<160;i++) stars.push({ x:Math.random(), y:Math.random(), z:Math.random()*.8+.2, tw:Math.random()*Math.PI*2 });
+var mouse={x:.5,y:.5};
+document.addEventListener("mousemove",function(e){ mouse.x=e.clientX/window.innerWidth; mouse.y=e.clientY/window.innerHeight; });
+function tick(){
+  ctx.clearRect(0,0,c.width,c.height);
+  stars.forEach(function(s){
+    s.tw+=0.02;
+    var px=s.x*c.width + (mouse.x-.5)*40*s.z;
+    var py=s.y*c.height + (mouse.y-.5)*40*s.z;
+    var r=s.z*1.8;
+    var a=.4+Math.sin(s.tw)*.4+.2;
+    ctx.beginPath(); ctx.arc(px,py,r,0,Math.PI*2);
+    ctx.fillStyle="rgba(255,255,255,"+Math.max(0,a)+")"; ctx.fill();
+  });
+  requestAnimationFrame(tick);
+}
+tick();
+</script>
+</body></html>
+`,
+  "topographic-flow-lines": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Topographic Flow Lines</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#0c1210;overflow:hidden;font-family:Inter,ui-sans-serif,Arial,sans-serif}
+canvas{position:absolute;inset:0}
+.caption{position:absolute;bottom:20px;left:20px;color:rgba(255,255,255,.5);font-size:11px;letter-spacing:.06em;text-transform:uppercase;z-index:2}
+</style></head>
+<body data-cf-keep-dark>
+<canvas id="c"></canvas>
+<div class="caption">Animated contour lines</div>
+<script>
+var c=document.getElementById("c"), ctx=c.getContext("2d"), t=0;
+function resize(){ c.width=window.innerWidth; c.height=window.innerHeight; }
+resize(); window.addEventListener("resize",resize);
+function noise(x,y,tt){ return Math.sin(x*.01+tt)*Math.cos(y*.012-tt*.7)+Math.sin((x+y)*.006+tt*.5); }
+function tick(){
+  ctx.clearRect(0,0,c.width,c.height);
+  var step=26;
+  for(var lvl=-2;lvl<=2;lvl++){
+    ctx.beginPath();
+    ctx.strokeStyle="rgba(96,222,180,"+(0.12+Math.abs(lvl)*.03)+")";
+    ctx.lineWidth=1.2;
+    for(var x=0;x<c.width;x+=step){
+      var y0=c.height/2 + noise(x,lvl*80,t)*90 + lvl*70;
+      if(x===0) ctx.moveTo(x,y0); else ctx.lineTo(x,y0);
+    }
+    ctx.stroke();
+  }
+  t+=0.006;
+  requestAnimationFrame(tick);
+}
+tick();
+</script>
+</body></html>
+`,
 };
