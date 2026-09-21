@@ -3597,7 +3597,7 @@ nav{background:var(--bg);border-bottom:1px solid var(--line);padding:16px 32px;d
 <div class="stage">Click the search button to open the command palette</div>
 <div class="overlay" id="overlay">
   <div class="palette">
-    <div class="psearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" placeholder="Jump to a page or action…" autofocus></div>
+    <div class="psearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input type="text" id="paletteInput" placeholder="Jump to a page or action…"></div>
     <div class="presults">
       <div class="pres active"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/></svg></div><b>Go to Dashboard</b><span>G D</span></div>
       <div class="pres"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21a8 8 0 1 0-16 0"/><circle cx="12" cy="7" r="4"/></svg></div><b>Go to Team</b><span>G T</span></div>
@@ -3607,8 +3607,8 @@ nav{background:var(--bg);border-bottom:1px solid var(--line);padding:16px 32px;d
   </div>
 </div>
 <script>
-var overlay=document.getElementById("overlay"), openBtn=document.getElementById("open");
-openBtn.addEventListener("click",function(){ overlay.classList.add("open"); });
+var overlay=document.getElementById("overlay"), openBtn=document.getElementById("open"), paletteInput=document.getElementById("paletteInput");
+openBtn.addEventListener("click",function(){ overlay.classList.add("open"); paletteInput.focus(); });
 overlay.addEventListener("click",function(e){ if(e.target===overlay) overlay.classList.remove("open"); });
 document.addEventListener("keydown",function(e){ if(e.key==="Escape") overlay.classList.remove("open"); });
 document.querySelectorAll(".pres").forEach(function(p){
@@ -4825,6 +4825,300 @@ body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--
 <div><div class="kicker">PRESS DOWN</div>
 <div class="stage"><div class="shadow-layer"></div><button class="btn">Buy now — $29</button></div>
 </div>
+</body></html>
+`,
+
+  "premium-button-kit": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Premium Button Kit</title><style>
+:root{--bg:#0a0a0a;--card:#0d0d0d;--line:#232323;--ink:#ededed}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;transition:background .3s ease}
+.kit{max-width:640px;margin:0 auto;padding:56px 24px 64px}
+.kit-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;gap:16px}
+.kicker{color:#7a7d96;font-size:10px;letter-spacing:2px;font-weight:700}
+.kicker b{color:var(--ink)}
+.mode-toggle{width:36px;height:36px;display:grid;place-items:center;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);cursor:pointer}
+.mode-toggle svg{width:15px;height:15px}
+.mode-toggle .sun{display:none}
+.kit[data-mode="light"]{--card:#f4f4f4;--line:#e4e4e4;--ink:#171717}
+.kit[data-mode="light"] .mode-toggle .sun{display:block}
+.kit[data-mode="light"] .mode-toggle .moon{display:none}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.btn{display:flex;justify-content:center;align-items:center;gap:6px;height:40px;padding:0 14px;border:none;border-radius:8px;font:600 13.5px/1 Inter,sans-serif;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.btn svg{width:15px;height:15px;flex-shrink:0}
+
+.btn.primary{background:#ededed;color:#0a0a0a}
+.btn.primary:hover{background:#cccccc}
+.btn.secondary{background:#171717;color:#ededed;border:1px solid rgba(255,255,255,.14)}
+.btn.secondary:hover{background:rgba(255,255,255,.09)}
+.btn.tertiary{background:#171717;color:#ededed}
+.btn.tertiary:hover{background:rgba(255,255,255,.09)}
+.btn.error{background:#e2162a;color:#fff}
+.btn.error:hover{background:#ff565f}
+.btn.warning{background:#ff9300;color:#0a0a0a}
+.btn.warning:hover{background:#d27504}
+.btn.rounded{border-radius:100px}
+.btn.disabled,.btn.disabled:hover{background:#1a1a1a;color:#8f8f8f;border:1px solid #2e2e2e;cursor:not-allowed}
+
+.kit[data-mode="light"] .btn.primary{background:#171717;color:#fff}
+.kit[data-mode="light"] .btn.primary:hover{background:#383838}
+.kit[data-mode="light"] .btn.secondary{background:#fff;color:#171717;border-color:rgba(0,0,0,.08)}
+.kit[data-mode="light"] .btn.secondary:hover{background:rgba(0,0,0,.06)}
+.kit[data-mode="light"] .btn.tertiary{background:#fff;color:#171717}
+.kit[data-mode="light"] .btn.tertiary:hover{background:rgba(0,0,0,.06)}
+.kit[data-mode="light"] .btn.error{background:#ea001d;color:#f5f5f5}
+.kit[data-mode="light"] .btn.error:hover{background:#ae292f}
+.kit[data-mode="light"] .btn.disabled,.kit[data-mode="light"] .btn.disabled:hover{background:#f2f2f2;border-color:#ebebeb;color:#8f8f8f}
+
+.spinner{position:relative;width:16px;height:16px}
+.spinner i{position:absolute;height:8%;width:24%;left:38%;top:46%;border-radius:5px;background:#8f8f8f;animation:spin 1.2s linear infinite}
+@keyframes spin{0%{opacity:.15}100%{opacity:1}}
+
+.sub{margin-top:34px;padding-top:26px;border-top:1px solid var(--line)}
+.sub-label{color:#7a7d96;font-size:9px;letter-spacing:1.5px;font-weight:700;margin-bottom:14px}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.row+.row{margin-top:12px}
+.btn.sz-small{height:32px;padding:0 12px;font-size:13px}
+.btn.sz-large{height:48px;padding:0 18px;font-size:15px}
+.btn.icon{width:40px;height:40px;padding:0}
+.btn.icon.sz-small{width:32px;height:32px}
+.btn.icon.sz-large{width:48px;height:48px}
+.btn.circle{border-radius:100%}
+</style></head>
+<body data-cf-keep-dark>
+<div class="kit" id="kit">
+  <div class="kit-head">
+    <span class="kicker">ADAPTIVE <b>BUTTON</b> SYSTEM</span>
+    <button class="mode-toggle" id="modeToggle" aria-label="Toggle preview theme">
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+  </div>
+
+  <div class="grid">
+    <button class="btn primary">Primary</button>
+    <button class="btn secondary">Secondary</button>
+    <button class="btn tertiary">Tertiary</button>
+    <button class="btn error">Error</button>
+    <button class="btn warning">Warning</button>
+    <button class="btn primary rounded">Rounded</button>
+    <button class="btn secondary" id="loadingBtn"><span class="loadingLabel">Trigger loading</span></button>
+    <button class="btn disabled" disabled>Disabled</button>
+    <button class="btn primary" id="iconBtn"><svg viewBox="0 0 16 16" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.46966 13.7803L6.99999 14.3107L8.06065 13.25L7.53032 12.7197L3.56065 8.75001H14.25H15V7.25001H14.25H3.56065L7.53032 3.28034L8.06065 2.75001L6.99999 1.68935L6.46966 2.21968L1.39644 7.2929C1.00592 7.68342 1.00592 8.31659 1.39644 8.70711L6.46966 13.7803Z"/></svg><span>With Icon</span></button>
+  </div>
+
+  <div class="sub">
+    <div class="sub-label">SIZES</div>
+    <div class="row">
+      <button class="btn primary sz-small">Upload</button>
+      <button class="btn primary">Upload</button>
+      <button class="btn primary sz-large">Upload</button>
+    </div>
+    <div class="sub-label" style="margin-top:22px">SHAPES</div>
+    <div class="row">
+      <button class="btn primary icon sz-small" aria-label="Up"><svg viewBox="0 0 16 16" fill="currentColor" style="width:13px;height:13px"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.70711 1.39644C8.31659 1.00592 7.68342 1.00592 7.2929 1.39644L2.21968 6.46966L1.68935 6.99999L2.75001 8.06065L3.28034 7.53032L7.25001 3.56065V14.25V15H8.75001V14.25V3.56065L12.7197 7.53032L13.25 8.06065L14.3107 6.99999L13.7803 6.46966L8.70711 1.39644Z"/></svg></button>
+      <button class="btn primary icon" aria-label="Up"><svg viewBox="0 0 16 16" fill="currentColor" style="width:15px;height:15px"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.70711 1.39644C8.31659 1.00592 7.68342 1.00592 7.2929 1.39644L2.21968 6.46966L1.68935 6.99999L2.75001 8.06065L3.28034 7.53032L7.25001 3.56065V14.25V15H8.75001V14.25V3.56065L12.7197 7.53032L13.25 8.06065L14.3107 6.99999L13.7803 6.46966L8.70711 1.39644Z"/></svg></button>
+      <button class="btn primary icon sz-large" aria-label="Up"><svg viewBox="0 0 16 16" fill="currentColor" style="width:17px;height:17px"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.70711 1.39644C8.31659 1.00592 7.68342 1.00592 7.2929 1.39644L2.21968 6.46966L1.68935 6.99999L2.75001 8.06065L3.28034 7.53032L7.25001 3.56065V14.25V15H8.75001V14.25V3.56065L12.7197 7.53032L13.25 8.06065L14.3107 6.99999L13.7803 6.46966L8.70711 1.39644Z"/></svg></button>
+      <button class="btn primary icon circle" aria-label="Up"><svg viewBox="0 0 16 16" fill="currentColor" style="width:15px;height:15px"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.70711 1.39644C8.31659 1.00592 7.68342 1.00592 7.2929 1.39644L2.21968 6.46966L1.68935 6.99999L2.75001 8.06065L3.28034 7.53032L7.25001 3.56065V14.25V15H8.75001V14.25V3.56065L12.7197 7.53032L13.25 8.06065L14.3107 6.99999L13.7803 6.46966L8.70711 1.39644Z"/></svg></button>
+    </div>
+  </div>
+</div>
+<script>
+var kit=document.getElementById("kit"), toggle=document.getElementById("modeToggle");
+toggle.addEventListener("click",function(){
+  kit.dataset.mode = kit.dataset.mode==="light" ? "dark" : "light";
+  document.body.style.background = kit.dataset.mode==="light" ? "#fafafa" : "#0a0a0a";
+});
+
+var loadingBtn=document.getElementById("loadingBtn"), loadingLabel=loadingBtn.querySelector(".loadingLabel");
+var isLoading=false;
+loadingBtn.addEventListener("click",function(){
+  if(isLoading) return;
+  isLoading=true;
+  loadingBtn.disabled=true;
+  loadingLabel.textContent="";
+  var spinner=document.createElement("span");
+  spinner.className="spinner";
+  for(var i=0;i<12;i++){
+    var bar=document.createElement("i");
+    bar.style.transform="rotate("+(i*30)+"deg) translate(146%)";
+    bar.style.animationDelay=(-1.2+i*0.1).toFixed(1)+"s";
+    spinner.appendChild(bar);
+  }
+  loadingBtn.insertBefore(spinner, loadingLabel);
+  setTimeout(function(){
+    spinner.remove();
+    loadingLabel.textContent="Trigger loading";
+    loadingBtn.disabled=false;
+    isLoading=false;
+  },1800);
+});
+</script>
+</body></html>
+`,
+
+  "gradient-accent-button-set": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Gradient Accent Button Set</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#fff;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:flex;align-items:center;justify-content:center;padding:40px 20px}
+.wrap{width:min(320px,100%)}
+.kicker{color:#a1a1aa;font-size:10px;letter-spacing:2px;font-weight:700;margin-bottom:18px;text-align:center}
+.stack{display:flex;flex-direction:column;gap:12px}
+.btn{position:relative;height:44px;border:none;border-radius:10px;font:600 13.5px/1 Inter,sans-serif;cursor:pointer;overflow:hidden;transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease}
+.btn::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.35) 48%,transparent 66%);transform:translateX(-120%);transition:transform .55s ease}
+.btn:hover{transform:translateY(-2px) scale(1.015)}
+.btn:hover::after{transform:translateX(120%)}
+
+.btn.primary{background:#141414;color:#fff;box-shadow:0 6px 16px rgba(0,0,0,.12)}
+.btn.primary:hover{box-shadow:0 12px 26px rgba(0,0,0,.22)}
+
+.btn.accent{background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff;box-shadow:0 6px 18px rgba(79,70,229,.28)}
+.btn.accent:hover{box-shadow:0 14px 32px rgba(79,70,229,.42)}
+
+.btn.secondary{background:#f4f4f5;color:#3f3f46;box-shadow:none;border:1px solid #e4e4e7}
+.btn.secondary:hover{background:#ececef;border-color:#d4d4d8}
+
+.btn.destructive{background:linear-gradient(135deg,#f87171,#ef4444);color:#fff;box-shadow:0 6px 18px rgba(239,68,68,.28)}
+.btn.destructive:hover{box-shadow:0 14px 32px rgba(239,68,68,.4)}
+
+.btn.minimal{background:#fff;color:#3f3f46;border:1px solid #e4e4e7;box-shadow:none}
+.btn.minimal:hover{border-color:#a1a1aa;background:#fafafa}
+
+.icon-row{display:flex;justify-content:center;gap:12px;margin-top:22px}
+.icon-btn{width:42px;height:42px;border-radius:50%;border:1px solid #e4e4e7;background:#fff;color:#52525b;display:grid;place-items:center;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),border-color .2s,color .2s,background .2s}
+.icon-btn svg{width:16px;height:16px}
+.icon-btn:hover{transform:translateY(-3px) scale(1.08);border-color:#4f46e5;color:#4f46e5;background:#eef0ff}
+.icon-btn.danger:hover{border-color:#ef4444;color:#ef4444;background:#fef2f2}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="kicker">HOVER TO PREVIEW</div>
+  <div class="stack">
+    <button class="btn primary">Primary</button>
+    <button class="btn accent">Accent</button>
+    <button class="btn secondary">Secondary</button>
+    <button class="btn destructive">Destructive</button>
+    <button class="btn minimal">Minimal</button>
+  </div>
+  <div class="icon-row">
+    <button class="icon-btn" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <button class="icon-btn danger" aria-label="Delete"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg></button>
+    <button class="icon-btn" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+</div>
+</body></html>
+`,
+
+  "labeled-action-buttons": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Labeled Action Buttons</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#fff;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:flex;align-items:center;justify-content:center;padding:40px 20px}
+.wrap{width:min(420px,100%)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn{position:relative;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;border:1px solid transparent;cursor:pointer;text-align:left;transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease,background .2s ease,border-color .2s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn .ic{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;flex-shrink:0;transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+.btn:hover .ic{transform:scale(1.1)}
+.btn .ic svg{width:16px;height:16px}
+.btn .tx b{display:block;font-size:12.5px;font-weight:700;color:inherit}
+.btn .tx small{display:block;font-size:10px;margin-top:1px;opacity:.7}
+
+.btn.dark{background:#141414;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+.btn.dark:hover{box-shadow:0 12px 26px rgba(0,0,0,.24)}
+.btn.dark .ic{background:rgba(255,255,255,.12)}
+
+.btn.outline{background:#fff;border-color:#e4e4e7;color:#141414}
+.btn.outline:hover{border-color:#c4c4cc;box-shadow:0 8px 20px rgba(0,0,0,.06)}
+.btn.outline .ic{background:#f4f4f5;color:#52525b}
+.badge{position:absolute;top:-7px;right:10px;background:#141414;color:#fff;font-size:8px;font-weight:700;letter-spacing:.5px;padding:3px 7px;border-radius:999px}
+
+.btn.ghost{grid-column:span 2;background:transparent;color:#141414}
+.btn.ghost:hover{background:#f8f8fa}
+.btn.ghost .ic{background:#f4f4f5;color:#52525b}
+
+.spin{animation:spin 1s linear infinite;transform-origin:center}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.caption{margin-top:20px;color:#8a8a92;font-size:10.5px;line-height:1.7;text-align:center}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="grid">
+    <button class="btn dark">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></span>
+      <span class="tx"><b>Download</b><small>File size: 12MB</small></span>
+    </button>
+    <button class="btn outline" style="position:relative">
+      <span class="badge">NEW</span>
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></span>
+      <span class="tx"><b>Export CSV</b><small>Rows: 12,341</small></span>
+    </button>
+    <button class="btn dark">
+      <span class="ic spin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-2.64-6.36"/></svg></span>
+      <span class="tx"><b>Upload</b><small>.png, .jpg only</small></span>
+    </button>
+    <button class="btn dark">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg></span>
+      <span class="tx"><b>Sent</b><small>Delivered</small></span>
+    </button>
+    <button class="btn ghost">
+      <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg></span>
+      <span class="tx"><b>Save</b><small>Auto-save enabled</small></span>
+    </button>
+  </div>
+  <p class="caption">Use cases: downloads, uploads, attachments, contextual actions (e.g., "Add — 3 items"), or any place where a short caption helps reduce ambiguity.</p>
+</div>
+</body></html>
+`,
+
+  "store-download-badges": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Store Download Badges</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#fff;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:flex;align-items:center;justify-content:center;padding:40px 20px}
+.wrap{display:flex;flex-direction:column;gap:16px;align-items:center}
+.badge{display:flex;align-items:center;gap:10px;height:52px;padding:0 18px;border-radius:11px;background:#0a0a0a;color:#fff;cursor:pointer;transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .25s ease,background .25s ease}
+.badge:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,.28)}
+.badge svg{width:22px;height:22px;flex-shrink:0}
+.badge .tx{display:flex;flex-direction:column;line-height:1.15}
+.badge .tx small{font-size:9px;letter-spacing:.3px;opacity:.85}
+.badge .tx b{font-size:16px;font-weight:600;font-family:Georgia,serif;letter-spacing:.2px}
+.badge.play:hover{background:#0a0a0a;box-shadow:0 14px 30px rgba(16,163,74,.25)}
+.badge.play svg{width:24px;height:24px}
+</style></head>
+<body>
+<div class="wrap">
+  <button class="badge apple">
+    <svg viewBox="0 0 384 512" fill="currentColor"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141 4 184.8 4 273.9q0 39.9 14.6 82.4c13 37.7 60 130.2 109 128.6 25.7-.6 43.8-18.2 77.2-18.2 32.4 0 49.1 18.2 77.8 18.2 49.4-.7 91.8-85 104.2-122.8-66.4-31.3-68.1-91.8-68.1-93.4zM255.1 71.8c27.7-32.8 25.2-62.6 24.4-73.3-24.5 1.4-52.8 16.9-69 36-18 20.4-28.6 45.6-26.3 73.1 26.9 2.1 51.4-11.4 70.9-35.8z"/></svg>
+    <span class="tx"><small>Download on the</small><b>App Store</b></span>
+  </button>
+  <button class="badge play">
+    <svg viewBox="0 0 512 512" fill="currentColor"><path d="M325.3 234.3 104.3 13.1a34.4 34.4 0 0 0-33.7 3.8L275 221.4Zm-260.2-215a34.3 34.3 0 0 0-9.6 24v433.4a34.3 34.3 0 0 0 9.6 24L275 291Zm237.4 234-236.5 130a34.4 34.4 0 0 0 33.7 3.8l221-124.9Zm79.4-107.4-70.5-40.7L246.5 256l64.9 65.1 70.5-40.7a37.4 37.4 0 0 0 0-64.5Z"/></svg>
+    <span class="tx"><small>GET IT ON</small><b>Google Play</b></span>
+  </button>
+</div>
+</body></html>
+`,
+
+  "halftone-glow-cta": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Halftone Glow CTA</title><style>
+:root{--glow:#3b5bff}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#fff;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:flex;align-items:center;justify-content:center;padding:40px 20px}
+.cta{position:relative;height:58px;padding:0 34px;border:none;border-radius:100px;background:#0a0a12;color:#fff;font:600 14px/1 Inter,sans-serif;cursor:pointer;overflow:hidden;isolation:isolate;transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .3s ease}
+.cta:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 16px 40px rgba(59,91,255,.35)}
+.cta .label{position:relative;z-index:2}
+.cta .glow{position:absolute;inset:0;z-index:1;background:radial-gradient(circle at 82% 50%,var(--glow) 0%,transparent 62%);opacity:.55;transition:opacity .35s ease,transform .6s cubic-bezier(.2,.8,.2,1)}
+.cta:hover .glow{opacity:.9;transform:scale(1.15)}
+.cta .dots{position:absolute;inset:0;z-index:1;background-image:radial-gradient(rgba(255,255,255,.55) 1px,transparent 1.3px);background-size:7px 7px;-webkit-mask-image:radial-gradient(circle at 82% 50%,#000 0%,transparent 55%);mask-image:radial-gradient(circle at 82% 50%,#000 0%,transparent 55%);opacity:.7;transition:opacity .35s ease}
+.cta:hover .dots{opacity:1}
+</style></head>
+<body>
+<button class="cta">
+  <span class="glow"></span>
+  <span class="dots"></span>
+  <span class="label">Get unlimited access</span>
+</button>
 </body></html>
 `,
 

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getCombinedSourceCode } from "../services/combinedSource";
 import { useTheme } from "../hooks/useTheme";
 
@@ -396,6 +396,14 @@ export function SourcePreview({
 
   const frameRef = useRef(null);
   const wrapRef = useRef(null);
+  // Card listing keeps the iframe pointer-events:none by default (see the
+  // CSS comment on .p-media .source-preview-frame) so it doesn't swallow
+  // the click that should navigate the card. While the card is actively
+  // hovered, real pointer events are let through instead — this is what
+  // makes each product's own :hover CSS and mousemove-tracked effects
+  // (cursor glow, magnetic pull, etc.) actually run inside the preview,
+  // rather than only approximating them from outside the sandbox.
+  const [hovering, setHovering] = useState(false);
 
   const source =
     buildPreviewSource(
@@ -461,8 +469,22 @@ export function SourcePreview({
     <div
       ref={wrapRef}
       className={`source-preview-wrap ${mode}`}
-      onMouseEnter={listing ? () => drive("start") : undefined}
-      onMouseLeave={listing ? () => drive("stop") : undefined}
+      onMouseEnter={
+        listing
+          ? () => {
+              drive("start");
+              setHovering(true);
+            }
+          : undefined
+      }
+      onMouseLeave={
+        listing
+          ? () => {
+              drive("stop");
+              setHovering(false);
+            }
+          : undefined
+      }
     >
       <iframe
         ref={frameRef}
@@ -473,6 +495,7 @@ export function SourcePreview({
         className={`source-preview-frame ${mode}`}
         srcDoc={source}
         sandbox="allow-scripts allow-forms allow-modals"
+        style={listing ? { pointerEvents: hovering ? "auto" : "none" } : undefined}
       />
     </div>
   );
