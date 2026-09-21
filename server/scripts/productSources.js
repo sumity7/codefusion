@@ -362,27 +362,51 @@ body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--
 
   "toggle-pricing-switch": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Toggle Pricing Switch</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center;padding:30px}
-.kicker{display:block;margin-bottom:16px;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.switcher{display:flex;align-items:center;gap:10px;margin-bottom:24px;font-size:10px;color:#847e8f}
-.track{width:44px;height:24px;border-radius:999px;background:#242130;position:relative;cursor:pointer;border:1px solid #363243;transition:box-shadow .3s}
-.track.on{box-shadow:0 0 0 3px rgba(196,181,253,.15)}
-.thumb{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#d7d0ff,#9b8aff);box-shadow:0 2px 6px rgba(0,0,0,.4);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
-.track.on .thumb{transform:translateX(20px)}
-.plans{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.plan{padding:20px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;min-width:160px;box-shadow:0 16px 40px -22px rgba(0,0,0,.7)}
-.plan strong{display:block;font:700 30px "Space Grotesk",sans-serif;margin:8px 0;background:linear-gradient(135deg,#f7f5fb,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}
-.plan small{color:#77737f;font-size:8px}
+:root{--bg:#0a1512;--panel:#101d19;--line:rgba(255,255,255,.08);--ink:#eef4f1;--mut:#7c8c87;--em:#10b981;--gold:#f2c14e}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.stage{display:flex;flex-direction:column;align-items:center;gap:24px}
+.switch-row{display:flex;align-items:center;gap:12px}
+.switch-row span{font-size:13px;color:var(--mut);font-weight:600}
+.switch-row span.on{color:#fff}
+.sw{width:46px;height:26px;background:var(--panel);border:1px solid var(--line);border-radius:20px;position:relative;cursor:pointer}
+.sw .knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:var(--em);transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.sw.on .knob{transform:translateX(20px)}
+.save{font-size:10.5px;background:rgba(242,193,78,.15);color:var(--gold);padding:3px 9px;border-radius:20px;font-weight:700}
+.cards{display:flex;gap:16px}
+.card{width:180px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px}
+.card.feat{border-color:var(--em);box-shadow:0 0 0 1px var(--em),0 30px 60px -24px rgba(16,185,129,.3)}
+.tier{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
+.price{font-size:30px;font-weight:800;color:#fff;margin:10px 0 4px}
+.price span{font-size:13px;color:var(--mut);font-weight:500}
+.card ul{list-style:none;padding:0;margin:16px 0;display:flex;flex-direction:column;gap:8px}
+.card li{font-size:11.5px;color:var(--ink);display:flex;gap:7px}
+.card li:before{content:"✓";color:var(--em)}
+.card button{width:100%;padding:10px;border-radius:9px;border:0;font-size:12px;font-weight:600;cursor:pointer;background:var(--panel);color:var(--ink);border:1px solid var(--line)}
+.card.feat button{background:var(--em);color:#04221a}
 </style></head>
-<body data-cf-keep-dark><span class="kicker">TOGGLE BILLING</span>
-<div class="switcher">Monthly<div class="track" id="track"><div class="thumb"></div></div>Yearly (save 20%)</div>
-<div class="plans"><div class="plan"><small>STARTER</small><strong id="p1">$12</strong><small>per month</small></div><div class="plan"><small>PRO</small><strong id="p2">$29</strong><small>per month</small></div></div>
+<body data-cf-keep-dark>
+<div class="stage">
+  <div class="switch-row"><span class="on" id="mLabel">Monthly</span><div class="sw" id="sw"><div class="knob"></div></div><span id="yLabel">Yearly</span><span class="save">Save 20%</span></div>
+  <div class="cards">
+    <div class="card"><div class="tier">Starter</div><div class="price" data-m="9" data-y="86">$<span id="p0">9</span><span>/mo</span></div><ul><li>3 projects</li><li>Community support</li></ul><button>Choose</button></div>
+    <div class="card feat"><div class="tier">Pro</div><div class="price" data-m="29" data-y="278">$<span id="p1">29</span><span>/mo</span></div><ul><li>Unlimited projects</li><li>Priority support</li><li>Advanced analytics</li></ul><button>Choose</button></div>
+  </div>
+</div>
 <script>
-const track=document.getElementById("track"),p1=document.getElementById("p1"),p2=document.getElementById("p2");
-track.addEventListener("click",function(){const on=track.classList.toggle("on");p1.textContent=on?"$115":"$12";p2.textContent=on?"$278":"$29"});
+var sw=document.getElementById("sw"), mLabel=document.getElementById("mLabel"), yLabel=document.getElementById("yLabel");
+var on=false;
+sw.addEventListener("click",function(){
+  on=!on; sw.classList.toggle("on",on);
+  mLabel.classList.toggle("on",!on); yLabel.classList.toggle("on",on);
+  document.querySelectorAll(".price").forEach(function(p,i){
+    var el=document.getElementById("p"+i);
+    el.textContent = on ? Math.round(+p.dataset.y/12) : p.dataset.m;
+  });
+});
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "typewriter-hero": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Typewriter Hero</title><style>
@@ -2369,21 +2393,38 @@ main button:hover{border-color:#544c67;color:#eee9f8}
 
   "single-plan-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Single Plan Card</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd;--ok:#9fd6ad}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:24px}
-.plan{width:min(280px,92vw);padding:26px;border:1px solid #4b4166;border-radius:20px;background:radial-gradient(circle at 50% 0,rgba(155,138,255,.2),transparent 55%),#0e0d14;box-shadow:0 30px 70px rgba(0,0,0,.5);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
-.plan:hover{transform:translateY(-6px)}
-.plan small{font-size:8px;letter-spacing:2px;color:#a49dae;font-weight:700}
-.plan strong{display:block;margin:10px 0;font:700 44px "Space Grotesk",sans-serif;letter-spacing:-.04em}
-.plan strong em{font-style:normal;font-size:12px;color:#847e8f}
-.plan li{list-style:none;display:flex;gap:8px;align-items:center;padding:5px 0;font-size:9px;color:#b4aec0}
-.plan li:before{content:"✓";color:var(--ok)}
-.plan ul{padding:0;margin:14px 0 18px}
-.plan button{width:100%;border:0;border-radius:11px;padding:13px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;font-weight:800;font-size:11px;cursor:pointer;transition:filter .25s}
-.plan button:hover{filter:brightness(1.06)}
+:root{--bg:#0a1512;--panel:#101d19;--line:rgba(255,255,255,.08);--ink:#eef4f1;--mut:#7c8c87;--em:#10b981;--gold:#f2c14e}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:300px;background:linear-gradient(165deg,#132720,var(--panel));border:1px solid var(--em);border-radius:20px;padding:30px;box-shadow:0 0 0 1px rgba(16,185,129,.2),0 40px 80px -30px rgba(16,185,129,.35);position:relative;overflow:hidden}
+.card:before{content:"";position:absolute;top:-60px;right:-60px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(16,185,129,.25),transparent 70%)}
+.badge{position:relative;display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--gold);background:rgba(242,193,78,.12);padding:5px 11px;border-radius:20px;margin-bottom:16px}
+.tier{position:relative;font-size:16px;color:#fff;font-weight:700}
+.price{position:relative;font-size:42px;font-weight:800;color:#fff;margin:8px 0 4px}
+.price span{font-size:14px;color:var(--mut);font-weight:500}
+.desc{position:relative;font-size:12.5px;color:var(--mut);margin-bottom:20px}
+ul{position:relative;list-style:none;padding:0;margin:0 0 24px;display:flex;flex-direction:column;gap:10px}
+li{font-size:13px;color:var(--ink);display:flex;gap:9px;align-items:center}
+li svg{width:15px;height:15px;color:var(--em);flex:none}
+button{position:relative;width:100%;padding:13px;border-radius:11px;border:0;background:var(--em);color:#04221a;font-size:13.5px;font-weight:700;cursor:pointer;transition:transform .2s,box-shadow .2s}
+button:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px rgba(16,185,129,.5)}
 </style></head>
-<body data-cf-keep-dark><div class="plan"><small>CODEFUSION PRO</small><strong>₹499<em>/mo</em></strong><ul><li>Every component unlocked</li><li>Copy code and prompts</li><li>New drops every week</li><li>Cancel anytime</li></ul><button>Get Pro</button></div>
-</body></html>`,
+<body data-cf-keep-dark>
+<div class="card">
+  <span class="badge">Most flexible</span>
+  <div class="tier">Growth Plan</div>
+  <div class="price">$49<span>/month</span></div>
+  <div class="desc">Everything a growing team needs, billed simply.</div>
+  <ul>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Unlimited team members</li>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Advanced permissions</li>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>API access &amp; webhooks</li>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Priority support</li>
+  </ul>
+  <button>Start 14-day trial</button>
+</div>
+</body></html>
+`,
 
   "avatar-stack-proof": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Avatar Stack Social Proof</title><style>
@@ -2903,54 +2944,78 @@ comp.addEventListener("touchmove",function(e){ setPos(e.touches[0].clientX); });
 
   "usage-slider-pricing": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Usage-Based Pricing Slider</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:18px;padding:40px;width:min(340px,86vw)}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.calc{position:relative;border:1px solid var(--line);border-radius:16px;background:#0d0d12;padding:24px;overflow:hidden;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
-.calc::before{content:"";position:absolute;top:-50%;right:-20%;width:200px;height:200px;background:radial-gradient(circle,rgba(155,138,255,.16),transparent 70%)}
-.calc b{position:relative;color:#817d8a;font-size:11px;display:block;margin-bottom:6px}
-.calc .price{position:relative;font-size:34px;font-weight:800;color:#f7f5fb}
-.calc .price span{font-size:13px;color:#817d8a;font-weight:600}
-input[type=range]{width:100%;margin:18px 0 8px;accent-color:#c4b5fd;position:relative}
-.rowlabel{position:relative;display:flex;justify-content:space-between;color:#a49dbc;font-size:11px}
-#cost{background:linear-gradient(135deg,#f7f5fb,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}
-#cost span{color:#817d8a;background:none;-webkit-text-fill-color:#817d8a}
+:root{--bg:#0a1512;--panel:#101d19;--line:rgba(255,255,255,.08);--ink:#eef4f1;--mut:#7c8c87;--em:#10b981}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:300px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:26px}
+.tier{font-size:15px;color:#fff;font-weight:700;margin-bottom:2px}
+.sub{font-size:12px;color:var(--mut);margin-bottom:20px}
+.usage-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink);margin-bottom:8px}
+.usage-row b{color:var(--em)}
+input[type=range]{width:100%;appearance:none;height:5px;background:var(--line);border-radius:4px;outline:none;margin-bottom:20px}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:var(--em);cursor:pointer;box-shadow:0 4px 12px rgba(16,185,129,.5)}
+.bar{height:8px;background:#0a1512;border-radius:6px;overflow:hidden;margin-bottom:20px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,#10b981,#34d399);border-radius:6px;transition:width .2s}
+.price{font-size:30px;font-weight:800;color:#fff}
+.price span{font-size:13px;color:var(--mut);font-weight:500}
+button{width:100%;margin-top:18px;padding:12px;border-radius:10px;border:0;background:var(--em);color:#04221a;font-size:13px;font-weight:700;cursor:pointer}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">DRAG TO ESTIMATE YOUR PLAN</span>
-<div class="calc"><b>Monthly active users</b><div class="price"><span id="users">2,500</span></div>
-<input type="range" id="slider" min="500" max="50000" step="500" value="2500">
-<div class="rowlabel"><span>500</span><span>50,000+</span></div>
-<div class="price" style="margin-top:18px" id="cost">$29<span>/mo</span></div></div></div>
+<body data-cf-keep-dark>
+<div class="card">
+  <div class="tier">API Requests</div>
+  <div class="sub">Pay only for what you use</div>
+  <div class="usage-row"><span>Monthly volume</span><b id="volLabel">500K calls</b></div>
+  <input type="range" min="1" max="10" value="5" id="slider">
+  <div class="bar"><i id="fill" style="width:50%"></i></div>
+  <div class="price">$<span id="price">45</span><span>/month</span></div>
+  <button>Set usage limit</button>
+</div>
 <script>
-const slider=document.getElementById("slider"),users=document.getElementById("users"),cost=document.getElementById("cost");
-slider.addEventListener("input",function(){
-  const v=Number(slider.value);
-  users.textContent=v.toLocaleString();
-  const price=v<=2500?29:v<=10000?79:v<=25000?199:399;
-  cost.innerHTML="$"+price+"<span>/mo</span>";
-});
+var slider=document.getElementById("slider"), volLabel=document.getElementById("volLabel"), price=document.getElementById("price"), fill=document.getElementById("fill");
+function render(){
+  var v=+slider.value, vol=v*100, cost=v*9;
+  volLabel.textContent=(vol>=1000?(vol/1000)+"M":vol+"K")+" calls";
+  price.textContent=cost;
+  fill.style.width=(v/10*100)+"%";
+}
+slider.addEventListener("input",render);
+render();
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "highlighted-tier-cards": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Highlighted Tier Cards</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{display:grid;gap:16px;padding:40px}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700}
-.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.tier{border:1px solid var(--line);border-radius:14px;background:#0d0d12;padding:18px 16px;text-align:center;box-shadow:0 16px 40px -22px rgba(0,0,0,.7);transition:border-color .3s,transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
-.tier b{display:block;color:#817d8a;font-size:10px;letter-spacing:1px}
-.tier strong{display:block;font-size:22px;color:#f7f5fb;margin:10px 0}
-.tier:hover{border-color:#544c67;transform:translateY(-6px);box-shadow:0 24px 50px -18px rgba(155,138,255,.3)}
-.tier:hover strong{background:linear-gradient(135deg,#f7f5fb,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}
+:root{--bg:#0a1512;--panel:#101d19;--line:rgba(255,255,255,.08);--ink:#eef4f1;--mut:#7c8c87;--em:#10b981}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.grid{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;max-width:640px}
+.card{width:190px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;transition:transform .3s cubic-bezier(.2,.8,.2,1);opacity:0;transform:translateY(16px)}
+.card:hover{transform:translateY(-6px)!important}
+.card.feat{border-color:var(--em);box-shadow:0 0 0 1px var(--em),0 30px 60px -24px rgba(16,185,129,.35);position:relative}
+.pop{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--em);color:#04221a;font-size:10px;font-weight:800;padding:4px 12px;border-radius:20px;letter-spacing:.03em}
+.tier{font-size:12px;color:var(--mut);text-transform:uppercase}
+.price{font-size:26px;font-weight:800;color:#fff;margin:8px 0 14px}
+.price span{font-size:12px;color:var(--mut)}
+ul{list-style:none;padding:0;margin:0 0 16px;display:flex;flex-direction:column;gap:8px}
+li{font-size:11.5px;color:var(--ink)}
+li:before{content:"✓ ";color:var(--em)}
+button{width:100%;padding:10px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:#fff;font-size:12px;font-weight:600;cursor:pointer}
+.card.feat button{background:var(--em);color:#04221a;border:0}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">HOVER A PLAN</span>
-<div class="tiers"><div class="tier"><b>STARTER</b><strong>$9</strong><span style="color:#817d8a;font-size:10px">For solo builders</span></div>
-<div class="tier"><b>GROWTH</b><strong>$29</strong><span style="color:#817d8a;font-size:10px">For small teams</span></div>
-<div class="tier"><b>SCALE</b><strong>$79</strong><span style="color:#817d8a;font-size:10px">For fast movers</span></div></div></div>
-</body></html>`,
+<body data-cf-keep-dark>
+<div class="grid" id="grid">
+  <div class="card"><div class="tier">Starter</div><div class="price">$9<span>/mo</span></div><ul><li>3 projects</li><li>1 seat</li><li>Community support</li></ul><button>Choose</button></div>
+  <div class="card feat"><div class="pop">Most popular</div><div class="tier">Pro</div><div class="price">$29<span>/mo</span></div><ul><li>Unlimited projects</li><li>5 seats</li><li>Priority support</li><li>Advanced analytics</li></ul><button>Choose</button></div>
+  <div class="card"><div class="tier">Enterprise</div><div class="price">Custom</div><ul><li>Unlimited seats</li><li>Dedicated CSM</li><li>Custom SLA</li></ul><button>Contact us</button></div>
+</div>
+<script>
+document.querySelectorAll(".card").forEach(function(c,i){
+  setTimeout(function(){ c.style.transition="opacity .5s ease,transform .5s cubic-bezier(.2,.8,.2,1)"; c.style.opacity=1; c.style.transform="translateY(0)"; }, 120+i*100);
+});
+</script>
+</body></html>
+`,
 
   "kanban-board-preview": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Kanban Board Preview</title><style>
@@ -4524,133 +4589,272 @@ document.querySelectorAll(".item").forEach(function(el,i){
 
   "sliding-price-ladder": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Sliding Price Ladder</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.stage{width:280px}
-.kicker{color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;display:block;margin-bottom:14px}
-.ladder{position:relative;border:1px solid var(--line);border-radius:16px;background:#0d0d12;padding:22px;text-align:center;overflow:hidden;box-shadow:0 20px 50px -22px rgba(0,0,0,.6);transition:box-shadow .3s}
-.ladder::before{content:"";position:absolute;top:-40%;left:50%;transform:translateX(-50%);width:200px;height:200px;background:radial-gradient(circle,rgba(155,138,255,.16),transparent 70%)}
-.ladder strong{position:relative;display:block;font-size:32px;background:linear-gradient(135deg,#f7f5fb,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent;transition:transform .2s}
-.ladder b{position:relative;display:block;color:#817d8a;font-size:11px;margin-top:4px}
-input[type=range]{width:100%;margin-top:18px;accent-color:#c4b5fd;position:relative}
-.steps{position:relative;display:flex;justify-content:space-between;color:#5f5c68;font-size:9px;margin-top:6px}
+:root{--bg:#0a1512;--panel:#101d19;--line:rgba(255,255,255,.08);--ink:#eef4f1;--mut:#7c8c87;--em:#10b981}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:300px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:26px}
+.top span{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
+.tier-name{font-size:16px;color:#fff;font-weight:700;margin-top:6px}
+.price{font-size:34px;font-weight:800;color:#fff;margin:10px 0 18px}
+.price span{font-size:13px;color:var(--mut)}
+input[type=range]{width:100%;appearance:none;height:5px;background:var(--line);border-radius:4px;outline:none;margin:6px 0 4px}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:var(--em);cursor:pointer;box-shadow:0 4px 12px rgba(16,185,129,.5)}
+.ladder-labels{display:flex;justify-content:space-between;font-size:10.5px;color:var(--mut);margin-bottom:20px}
+ul{list-style:none;padding:0;margin:0 0 20px;display:flex;flex-direction:column;gap:9px}
+li{font-size:12.5px;color:var(--ink);display:flex;gap:8px}
+li:before{content:"✓";color:var(--em)}
+button{width:100%;padding:12px;border-radius:10px;border:0;background:var(--em);color:#04221a;font-size:13px;font-weight:700;cursor:pointer}
 </style></head>
-<body data-cf-keep-dark><div class="stage"><span class="kicker">DRAG BETWEEN TIERS</span>
-<div class="ladder"><strong id="price">$19</strong><b id="tier">STARTER</b>
-<input type="range" id="slider" min="0" max="2" step="1" value="0">
-<div class="steps"><span>Starter</span><span>Growth</span><span>Scale</span></div></div></div>
+<body data-cf-keep-dark>
+<div class="card">
+  <div class="top"><span>Choose your tier</span></div>
+  <div class="tier-name" id="tierName">Starter</div>
+  <div class="price">$<span id="price">9</span><span>/mo</span></div>
+  <input type="range" min="0" max="3" step="1" value="0" id="slider">
+  <div class="ladder-labels"><span>Starter</span><span>Team</span><span>Business</span><span>Enterprise</span></div>
+  <ul id="feats"></ul>
+  <button>Continue with <span id="btnTier">Starter</span></button>
+</div>
 <script>
-const tiers=[{p:"$19",t:"STARTER"},{p:"$49",t:"GROWTH"},{p:"$99",t:"SCALE"}];
-const slider=document.getElementById("slider"),price=document.getElementById("price"),tier=document.getElementById("tier");
-slider.addEventListener("input",function(){const x=tiers[Number(slider.value)];price.textContent=x.p;tier.textContent=x.t;price.style.transform="scale(1.1)";setTimeout(function(){price.style.transform="scale(1)"},150)});
+var tiers=[
+  {name:"Starter",price:9,feats:["3 projects","Community support"]},
+  {name:"Team",price:29,feats:["Unlimited projects","Email support","Team roles"]},
+  {name:"Business",price:79,feats:["Advanced analytics","Priority support","SSO"]},
+  {name:"Enterprise",price:199,feats:["Dedicated CSM","Custom contracts","99.99% SLA"]}
+];
+var slider=document.getElementById("slider"), tierName=document.getElementById("tierName"), price=document.getElementById("price"), feats=document.getElementById("feats"), btnTier=document.getElementById("btnTier");
+function render(){
+  var t=tiers[+slider.value];
+  tierName.textContent=t.name; price.textContent=t.price; btnTier.textContent=t.name;
+  feats.innerHTML="";
+  t.feats.forEach(function(f){ var li=document.createElement("li"); li.textContent=f; feats.appendChild(li); });
+}
+slider.addEventListener("input",render);
+render();
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "feature-checklist-pricing-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Feature Checklist Pricing Card</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:250px;padding:22px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
-.card b{display:block;font-size:11px;color:#817d8a}
-.card strong{display:block;font-size:28px;color:#f7f5fb;margin:6px 0 14px}
-.feat{display:flex;align-items:center;gap:8px;padding:7px 0;color:#c9c4d6;font-size:11px;position:relative;transition:color .2s}
-.feat:hover{color:#eee9f8}
-.feat i{width:15px;height:15px;border-radius:50%;background:linear-gradient(135deg,#173523,#0f1a12);border:1px solid #2b5a3c;display:grid;place-items:center;font-size:8px;color:#5fd4a1;flex:none;font-style:normal}
-.tip{display:none;position:absolute;left:24px;top:26px;padding:6px 8px;border:1px solid var(--line);border-radius:7px;background:#17131f;color:#a49dbc;font-size:9px;z-index:2;width:170px;box-shadow:0 12px 30px -14px rgba(0,0,0,.6)}
-.feat:hover .tip{display:block}
+:root{--bg:#0a1512;--panel:#101d19;--line:rgba(255,255,255,.08);--ink:#eef4f1;--mut:#7c8c87;--em:#10b981}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:300px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:26px}
+.tier{font-size:15px;color:#fff;font-weight:700}
+.price{font-size:32px;font-weight:800;color:#fff;margin:8px 0 18px}
+.price span{font-size:13px;color:var(--mut)}
+.feat{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);opacity:0;transform:translateX(-8px)}
+.feat:last-of-type{border-bottom:0}
+.feat span{font-size:12.5px;color:var(--ink)}
+.check{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.check.yes{background:rgba(16,185,129,.15);color:var(--em)}
+.check.no{background:rgba(255,255,255,.05);color:var(--mut)}
+.check svg{width:11px;height:11px}
+button{width:100%;margin-top:20px;padding:12px;border-radius:10px;border:0;background:var(--em);color:#04221a;font-size:13px;font-weight:700;cursor:pointer}
 </style></head>
-<body data-cf-keep-dark><div class="card"><b>PRO PLAN</b><strong>$29/mo</strong>
-<div class="feat"><i>✓</i>Unlimited projects<div class="tip">No cap on active or archived projects.</div></div>
-<div class="feat"><i>✓</i>Priority support<div class="tip">Average first response under 2 hours.</div></div>
-<div class="feat"><i>✓</i>Advanced analytics<div class="tip">Cohort, funnel and retention reports included.</div></div>
+<body data-cf-keep-dark>
+<div class="card">
+  <div class="tier">Business Plan</div>
+  <div class="price">$79<span>/mo per seat</span></div>
+  <div id="feats">
+    <div class="feat"><span>Unlimited projects</span><div class="check yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div></div>
+    <div class="feat"><span>Advanced permissions</span><div class="check yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div></div>
+    <div class="feat"><span>SSO &amp; SCIM</span><div class="check yes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div></div>
+    <div class="feat"><span>Dedicated CSM</span><div class="check no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6 6 18M6 6l12 12"/></svg></div></div>
+    <div class="feat"><span>Custom SLA</span><div class="check no"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 6 6 18M6 6l12 12"/></svg></div></div>
+  </div>
+  <button>Choose Business</button>
 </div>
-</body></html>`,
+<script>
+document.querySelectorAll(".feat").forEach(function(el,i){
+  setTimeout(function(){ el.style.transition="opacity .35s ease,transform .35s cubic-bezier(.2,.8,.2,1)"; el.style.opacity=1; el.style.transform="translateX(0)"; }, 100+i*80);
+});
+</script>
+</body></html>
+`,
 
   "team-seats-pricing-calculator": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Team Seats Pricing Calculator</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:250px;padding:22px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;text-align:center;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
-.card b{display:block;color:#817d8a;font-size:11px;margin-bottom:10px}
-.stepper{display:flex;align-items:center;justify-content:center;gap:14px}
-.stepper button{width:32px;height:32px;border:1px solid var(--line);border-radius:8px;background:#111017;color:#eee9f8;font-size:16px;cursor:pointer;transition:transform .15s cubic-bezier(.34,1.56,.64,1),border-color .2s}
-.stepper button:hover{border-color:#544c67}
-.stepper button:active{transform:scale(.9)}
-.stepper strong{font-size:20px;color:#f7f5fb;min-width:30px}
-.total{margin-top:16px;font-size:26px;font-weight:800;background:linear-gradient(135deg,#f7f5fb,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent;transition:transform .15s}
-.per{color:#5f5c68;font-size:10px}
+:root{--bg:#0a1512;--panel:#101d19;--line:rgba(255,255,255,.08);--ink:#eef4f1;--mut:#7c8c87;--em:#10b981}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:300px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:26px}
+.tier{font-size:15px;color:#fff;font-weight:700;margin-bottom:18px}
+.stepper{display:flex;align-items:center;justify-content:space-between;background:#0a1512;border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:18px}
+.stepper .lbl{font-size:12px;color:var(--mut)}
+.stepper .count{font-size:20px;color:#fff;font-weight:700}
+.stepper .btns{display:flex;gap:8px}
+.stepper button{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:#fff;font-size:15px;cursor:pointer}
+.stepper button:hover{border-color:var(--em);color:var(--em)}
+.calc-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--mut);padding:6px 0}
+.total{display:flex;justify-content:space-between;align-items:baseline;padding-top:12px;margin-top:8px;border-top:1px solid var(--line)}
+.total b{font-size:26px;color:#fff}
+.total span{font-size:12px;color:var(--mut)}
+button.cta{width:100%;margin-top:18px;padding:12px;border-radius:10px;border:0;background:var(--em);color:#04221a;font-size:13px;font-weight:700;cursor:pointer}
 </style></head>
-<body data-cf-keep-dark><div class="card"><b>TEAM SEATS</b>
-<div class="stepper"><button id="dec">−</button><strong id="seats">5</strong><button id="inc">+</button></div>
-<div class="total" id="total">$60</div><div class="per">$12 / seat / month</div></div>
+<body data-cf-keep-dark>
+<div class="card">
+  <div class="tier">Team Plan Calculator</div>
+  <div class="stepper"><div><div class="lbl">Team seats</div><div class="count" id="count">5</div></div><div class="btns"><button id="dec">−</button><button id="inc">+</button></div></div>
+  <div class="calc-row"><span>$12 × <span id="seatEcho">5</span> seats</span><span id="sub">$60</span></div>
+  <div class="calc-row"><span>Annual discount (15%)</span><span id="disc">−$9</span></div>
+  <div class="total"><b>$<span id="total">51</span></b><span>/month, billed annually</span></div>
+  <button class="cta">Continue with <span id="seatEcho2">5</span> seats</button>
+</div>
 <script>
-let n=5;const seats=document.getElementById("seats"),total=document.getElementById("total");
-function render(){seats.textContent=n;total.textContent="$"+(n*12);total.style.transform="scale(1.08)";setTimeout(function(){total.style.transform="scale(1)"},120)}
-document.getElementById("inc").addEventListener("click",function(){n=Math.min(50,n+1);render()});
-document.getElementById("dec").addEventListener("click",function(){n=Math.max(1,n-1);render()});
+var n=5, count=document.getElementById("count"), sub=document.getElementById("sub"), disc=document.getElementById("disc"), total=document.getElementById("total");
+function render(){
+  count.textContent=n;
+  document.getElementById("seatEcho").textContent=n;
+  document.getElementById("seatEcho2").textContent=n;
+  var s=n*12, d=Math.round(s*.15), t=s-d;
+  sub.textContent="$"+s; disc.textContent="−$"+d; total.textContent=t;
+}
+document.getElementById("inc").addEventListener("click",function(){ n=Math.min(200,n+1); render(); });
+document.getElementById("dec").addEventListener("click",function(){ n=Math.max(1,n-1); render(); });
+render();
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "limited-time-pricing-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Limited Time Pricing Card</title><style>
-:root{--bg:#050507}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{position:relative;width:250px;padding:22px;border:1px solid #4c3f2a;border-radius:16px;background:#181307;overflow:hidden;box-shadow:0 20px 50px -20px rgba(240,198,116,.2)}
-.card::before{content:"";position:absolute;top:-50%;right:-20%;width:180px;height:180px;background:radial-gradient(circle,rgba(240,198,116,.16),transparent 70%)}
-.badge{position:relative;display:inline-block;padding:4px 9px;border-radius:999px;background:linear-gradient(135deg,#4a3812,#3a2c10);color:#f0c674;font-size:9px;font-weight:700;box-shadow:0 0 12px rgba(240,198,116,.2)}
-.card strong{position:relative;display:block;font-size:30px;color:#fff;margin:10px 0 4px}
-.card s{color:#7a7466;font-size:12px}
-.urgency-track{position:relative;height:4px;border-radius:3px;background:#2a2313;margin-top:16px;overflow:hidden}
-.urgency-fill{height:100%;width:70%;background:linear-gradient(90deg,#f0c674,#f7db9c);box-shadow:0 0 10px rgba(240,198,116,.6);animation:shrink 25s linear forwards}
-@keyframes shrink{to{width:0%}}
-.card small{position:relative;display:block;margin-top:8px;color:#9c9482;font-size:9px}
+:root{--bg:#0a1512;--panel:#101d19;--line:rgba(255,255,255,.08);--ink:#eef4f1;--mut:#7c8c87;--em:#10b981;--gold:#f2c14e}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:300px;background:var(--panel);border:1px solid rgba(242,193,78,.3);border-radius:18px;padding:24px;position:relative;overflow:hidden}
+.ribbon{position:absolute;top:16px;right:-34px;background:var(--gold);color:#3a2a00;font-size:10px;font-weight:800;padding:5px 40px;transform:rotate(40deg);letter-spacing:.04em}
+.timer{display:flex;gap:8px;margin-bottom:18px}
+.t{background:#0a1512;border:1px solid var(--line);border-radius:9px;padding:8px 10px;text-align:center;min-width:44px}
+.t b{display:block;font-size:17px;color:var(--gold);font-family:ui-monospace,monospace}
+.t span{font-size:9px;color:var(--mut);text-transform:uppercase}
+.tier{font-size:15px;color:#fff;font-weight:700}
+.price-row{display:flex;align-items:baseline;gap:10px;margin:8px 0 18px}
+.price{font-size:32px;font-weight:800;color:#fff}
+.was{font-size:15px;color:var(--mut);text-decoration:line-through}
+ul{list-style:none;padding:0;margin:0 0 20px;display:flex;flex-direction:column;gap:8px}
+li{font-size:12.5px;color:var(--ink)}
+li:before{content:"✓ ";color:var(--em)}
+button{width:100%;padding:12px;border-radius:10px;border:0;background:var(--gold);color:#3a2a00;font-size:13px;font-weight:700;cursor:pointer}
 </style></head>
-<body data-cf-keep-dark><div class="card"><span class="badge">LAUNCH WEEK OFFER</span><strong>$39<s style="margin-left:8px">$79</s></strong>
-<div class="urgency-track"><div class="urgency-fill"></div></div><small>Offer window closing</small></div>
-</body></html>`,
+<body data-cf-keep-dark>
+<div class="card">
+  <div class="ribbon">-40%</div>
+  <div class="timer" id="timer">
+    <div class="t"><b id="h">00</b><span>Hrs</span></div>
+    <div class="t"><b id="m">00</b><span>Min</span></div>
+    <div class="t"><b id="s">00</b><span>Sec</span></div>
+  </div>
+  <div class="tier">Founder's Deal</div>
+  <div class="price-row"><span class="price">$29</span><span class="was">$49</span></div>
+  <ul><li>Locked-in for life</li><li>All Pro features</li><li>Early access to betas</li></ul>
+  <button>Claim founder price</button>
+</div>
+<script>
+var end=Date.now()+3*3600*1000+24*60*1000+8*1000;
+function tick(){
+  var d=Math.max(0,end-Date.now());
+  var h=Math.floor(d/3600000), m=Math.floor(d%3600000/60000), s=Math.floor(d%60000/1000);
+  document.getElementById("h").textContent=String(h).padStart(2,"0");
+  document.getElementById("m").textContent=String(m).padStart(2,"0");
+  document.getElementById("s").textContent=String(s).padStart(2,"0");
+}
+tick(); setInterval(tick,1000);
+</script>
+</body></html>
+`,
 
   "enterprise-contact-pricing-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Enterprise Contact Pricing Card</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:270px;padding:22px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
-.card b{display:block;color:#817d8a;font-size:11px}
-.card strong{display:block;font-size:22px;color:#f7f5fb;margin:8px 0 14px}
-.card button{width:100%;padding:11px;border:0;border-radius:10px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;font-weight:800;font-size:11px;cursor:pointer;box-shadow:0 10px 24px -10px rgba(155,138,255,.6);transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
-.card button:active{transform:scale(.97)}
-.quote-form{max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.2,.8,.2,1)}
-.quote-form.open{max-height:120px;margin-top:12px}
-.quote-form input{width:100%;padding:9px;margin-top:8px;border:1px solid var(--line);border-radius:8px;background:#111017;color:#fff;font-size:11px;outline:0;transition:border-color .25s,box-shadow .25s}
-.quote-form input:focus{border-color:#6d5f93;box-shadow:0 0 0 3px rgba(196,181,253,.2)}
+:root{--bg:#0a1512;--panel:#101d19;--line:rgba(255,255,255,.08);--ink:#eef4f1;--mut:#7c8c87;--em:#10b981}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:320px;background:linear-gradient(165deg,#111f1b,var(--panel));border:1px solid var(--line);border-radius:18px;padding:28px}
+.tier{font-size:15px;color:#fff;font-weight:700;display:flex;align-items:center;gap:8px}
+.tier svg{width:16px;height:16px;color:var(--em)}
+.price{font-size:26px;font-weight:800;color:#fff;margin:10px 0 6px}
+.desc{font-size:12.5px;color:var(--mut);margin-bottom:20px;line-height:1.6}
+ul{list-style:none;padding:0;margin:0 0 22px;display:flex;flex-direction:column;gap:10px}
+li{font-size:12.5px;color:var(--ink);display:flex;gap:9px}
+li svg{width:14px;height:14px;color:var(--em);flex:none}
+form{display:flex;flex-direction:column;gap:10px}
+input{background:#0a1512;border:1px solid var(--line);border-radius:9px;padding:11px 13px;color:#fff;font-size:12.5px;font-family:inherit;outline:none;transition:border-color .2s}
+input:focus{border-color:var(--em)}
+button{padding:12px;border-radius:10px;border:0;background:var(--em);color:#04221a;font-size:13px;font-weight:700;cursor:pointer;margin-top:4px}
+.sent{display:none;text-align:center;padding:20px 0;color:var(--em);font-size:13px;font-weight:600}
+.sent svg{width:32px;height:32px;margin-bottom:10px}
 </style></head>
-<body data-cf-keep-dark><div class="card"><b>ENTERPRISE</b><strong>Custom pricing</strong>
-<button id="toggle">Request a quote</button>
-<div class="quote-form" id="form"><input placeholder="Work email"><input placeholder="Team size"></div></div>
-<script>document.getElementById("toggle").addEventListener("click",function(){document.getElementById("form").classList.toggle("open")});</script>
-</body></html>`,
+<body data-cf-keep-dark>
+<div class="card">
+  <div class="tier"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6z"/></svg>Enterprise</div>
+  <div class="price">Custom pricing</div>
+  <div class="desc">Volume discounts, dedicated infrastructure and a named account team.</div>
+  <ul>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Custom SLA &amp; uptime guarantee</li>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Dedicated infrastructure</li>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Named CSM &amp; onboarding</li>
+  </ul>
+  <form id="form"><input type="email" placeholder="Work email" required><input type="text" placeholder="Company name" required><button type="submit">Request pricing</button></form>
+  <div class="sent" id="sent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>We'll be in touch within 24 hours.</div>
+</div>
+<script>
+document.getElementById("form").addEventListener("submit",function(e){
+  e.preventDefault();
+  document.getElementById("form").style.display="none";
+  document.getElementById("sent").style.display="block";
+});
+</script>
+</body></html>
+`,
 
   "addon-bundle-pricing-card": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Add-on Bundle Pricing Card</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.card{width:260px;padding:22px;border:1px solid var(--line);border-radius:16px;background:#0d0d12;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
-.card b{display:block;color:#817d8a;font-size:11px;margin-bottom:8px}
-.addon{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid var(--line);color:#c9c4d6;font-size:11px;transition:color .2s}
-.addon:first-of-type{border-top:0}
-.addon:hover{color:#eee9f8}
-.addon input{accent-color:#c4b5fd;width:15px;height:15px}
-.total{display:flex;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:16px;font-weight:800;background:linear-gradient(135deg,#f7f5fb,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}
+:root{--bg:#0a1512;--panel:#101d19;--line:rgba(255,255,255,.08);--ink:#eef4f1;--mut:#7c8c87;--em:#10b981}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:40px}
+.card{width:300px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px}
+.tier{font-size:15px;color:#fff;font-weight:700;margin-bottom:4px}
+.base{font-size:12px;color:var(--mut);margin-bottom:18px}
+.addon{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.addon:last-of-type{border-bottom:0}
+.cb{width:19px;height:19px;border-radius:6px;border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;flex:none;transition:background .2s,border-color .2s}
+.cb.on{background:var(--em);border-color:var(--em)}
+.cb svg{width:11px;height:11px;color:#04221a;opacity:0;transition:opacity .15s}
+.cb.on svg{opacity:1}
+.addon .info{flex:1}
+.addon b{display:block;font-size:12.5px;color:#fff}
+.addon span{font-size:11px;color:var(--mut)}
+.addon .amt{font-size:12.5px;color:var(--em);font-weight:600}
+.total{display:flex;justify-content:space-between;align-items:baseline;margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.total b{font-size:24px;color:#fff}
+.total span{font-size:11.5px;color:var(--mut)}
+button{width:100%;margin-top:16px;padding:12px;border-radius:10px;border:0;background:var(--em);color:#04221a;font-size:13px;font-weight:700;cursor:pointer}
 </style></head>
-<body data-cf-keep-dark><div class="card"><b>BASE PLAN — $19/mo</b>
-<label class="addon"><span>+ Extra storage ($5)</span><input type="checkbox" data-p="5"></label>
-<label class="addon"><span>+ Advanced API access ($9)</span><input type="checkbox" data-p="9"></label>
-<label class="addon"><span>+ Priority support ($7)</span><input type="checkbox" data-p="7"></label>
-<div class="total"><span>Total</span><span id="total">$19</span></div></div>
+<body data-cf-keep-dark>
+<div class="card">
+  <div class="tier">Build your plan</div>
+  <div class="base">Base plan — $19/mo</div>
+  <div id="addons">
+    <div class="addon" data-p="12"><div class="cb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="info"><b>Advanced analytics</b><span>Cohort &amp; funnel reports</span></div><div class="amt">+$12</div></div>
+    <div class="addon" data-p="8"><div class="cb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="info"><b>Priority support</b><span>2-hour response time</span></div><div class="amt">+$8</div></div>
+    <div class="addon" data-p="15"><div class="cb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="info"><b>White-labeling</b><span>Remove all branding</span></div><div class="amt">+$15</div></div>
+  </div>
+  <div class="total"><b>$<span id="total">19</span></b><span>/month</span></div>
+  <button>Continue</button>
+</div>
 <script>
-const boxes=[...document.querySelectorAll(".addon input")],total=document.getElementById("total");
-boxes.forEach(function(b){b.addEventListener("change",function(){const sum=19+boxes.filter(function(x){return x.checked}).reduce(function(s,x){return s+Number(x.dataset.p)},0);total.textContent="$"+sum})});
+var base=19, total=base;
+document.querySelectorAll(".addon").forEach(function(a){
+  a.addEventListener("click",function(){
+    var cb=a.querySelector(".cb"), p=+a.dataset.p, on=cb.classList.toggle("on");
+    total += on ? p : -p;
+    document.getElementById("total").textContent=total;
+  });
+});
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "drag-reorder-widgets": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Drag Reorder Widgets</title><style>
