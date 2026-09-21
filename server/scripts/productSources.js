@@ -4598,23 +4598,359 @@ buttons.forEach(function(b){b.addEventListener("click",function(){buttons.forEac
 </body></html>`,
 
   "product-hunt-style-launch-banner": `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Launch Banner</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.banner{display:flex;align-items:center;gap:14px;padding:14px 18px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;width:320px;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
-.icon{position:relative;width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);flex:none;box-shadow:0 8px 20px -8px rgba(155,138,255,.6)}
-.info b{display:block;color:#f7f5fb;font-size:12px}
-.info span{color:#817d8a;font-size:9px}
-.upvote{margin-left:auto;display:grid;place-items:center;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:#111017;color:#eee9f8;font-size:11px;cursor:pointer;text-align:center;transition:transform .2s cubic-bezier(.34,1.56,.64,1),border-color .2s,background .2s}
-.upvote.voted{border-color:transparent;background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f}
-.upvote:active{transform:scale(.92)}
-.upvote small{display:block;color:#5f5c68;font-size:8px}
-.upvote.voted small{color:#3a2f57}
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Solstice Landing Page</title><style>
+:root{--cream:#fff6ea;--ink:#231a12;--mut:#7a6a58;--sun:#ff6a3d;--sun-d:#e5502a;--berry:#c23a6b;--gold:#ffc857;--line:#ecd9c2}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3{font-family:"Fraunces","Space Grotesk",serif;margin:0;font-weight:600;letter-spacing:-.02em;color:var(--ink)}
+p{margin:0;color:var(--mut)}
+button{font-family:inherit;cursor:pointer;border:0}
+.wrap{max-width:1180px;margin:0 auto;padding:0 32px}
+.rv{opacity:0;transform:translateY(28px)}
+.eb{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--sun-d);margin-bottom:14px}
+
+/* ---------- buttons ---------- */
+.btn{position:relative;display:inline-flex;align-items:center;gap:9px;border-radius:999px;padding:16px 28px;font-size:15px;font-weight:700;overflow:hidden;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
+.btn svg{width:16px;height:16px;flex:none;transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.btn:hover svg{transform:translateX(4px) rotate(8deg)}
+.btn-sun{background:var(--sun);color:#fff;box-shadow:0 14px 30px rgba(255,106,61,.35)}
+.btn-sun:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 20px 42px rgba(255,106,61,.45);background:var(--sun-d)}
+.btn-ink{background:var(--ink);color:var(--cream)}
+.btn-ink:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(35,26,18,.3)}
+.btn-line{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.btn-line:hover{transform:translateY(-3px);background:var(--ink);color:var(--cream)}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:60;transition:background .4s,box-shadow .4s}
+.nav-in{max-width:1180px;margin:0 auto;padding:24px 32px;display:flex;align-items:center;gap:34px}
+.nav.on{background:rgba(255,246,234,.88);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--line)}
+.brand{font-family:"Fraunces",serif;font-size:23px;font-weight:700;letter-spacing:-.02em}
+.nav-links{display:flex;gap:30px;margin:0 auto;font-size:14.5px;color:var(--mut);font-weight:600}
+.nav-links a{position:relative;cursor:pointer}
+.nav-links a:after{content:"";position:absolute;left:0;bottom:-5px;width:100%;height:2px;background:var(--sun);transform:scaleX(0);transform-origin:right;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a:hover:after{transform:scaleX(1);transform-origin:left}
+.nav-right{display:flex;align-items:center;gap:18px}
+.nav-right .cart{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;cursor:pointer}
+.nav-right .cart svg{width:18px;height:18px}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding:70px 0 0;overflow:hidden}
+.hero-in{position:relative;z-index:1;text-align:center;max-width:820px;margin:0 auto}
+.hero .eb{justify-content:center}
+.hero h1{font-size:clamp(46px,7vw,96px);line-height:.98}
+.hero h1 .it{font-style:italic;color:var(--sun)}
+.hero p.lead{margin-top:20px;font-size:18px;line-height:1.6;max-width:480px;margin-left:auto;margin-right:auto}
+.hero .cta{display:flex;gap:14px;justify-content:center;margin-top:30px}
+.blob{position:absolute;border-radius:50%;filter:blur(40px);opacity:.55;pointer-events:none}
+.blob1{width:500px;height:500px;background:var(--gold);top:-120px;left:-140px}
+.blob2{width:420px;height:420px;background:var(--berry);top:0;right:-160px;opacity:.35}
+
+/* horizontal product strip */
+.pstrip-wrap{margin-top:56px;overflow:hidden;padding-bottom:60px}
+.pstrip{display:flex;gap:22px;width:max-content;padding:6px 32px}
+.pcard{width:280px;flex:none;border-radius:26px;overflow:hidden;position:relative;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.pcard:hover{transform:translateY(-10px) rotate(-1deg)}
+.pcard .art{height:320px;display:flex;align-items:center;justify-content:center;position:relative}
+.pcard .art svg{width:60%;height:60%}
+.pcard .info{background:#fff;padding:18px 20px;border-radius:0 0 26px 26px}
+.pcard .info b{display:block;font-family:"Fraunces",serif;font-size:17px}
+.pcard .info span{font-size:13.5px;color:var(--mut)}
+.pcard .price{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.92);border-radius:20px;padding:6px 13px;font-weight:800;font-size:13.5px}
+
+/* ---------- logos ---------- */
+.press{padding:36px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.press .lbl{text-align:center;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin-bottom:22px}
+.press-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:26px;opacity:.6}
+.press-row div{font-family:"Fraunces",serif;font-weight:700;font-size:18px;font-style:italic}
+
+/* ---------- feature story ---------- */
+.story{padding:130px 0}
+.story-row{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.story-row.rev .txt{order:2}
+.story-row.rev .vis{order:1}
+.story h2{font-size:clamp(30px,3.4vw,44px)}
+.story p.body{font-size:16.5px;line-height:1.7;max-width:440px;margin-top:16px}
+.chip-row{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+.chip{background:#fff;border:1px solid var(--line);border-radius:20px;padding:8px 15px;font-size:13px;font-weight:600}
+.vis{position:relative;border-radius:28px;overflow:hidden;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center}
+.vis svg{width:56%;height:56%}
+.swatch-strip{display:flex;gap:8px;position:absolute;bottom:20px;left:20px}
+.swatch-strip span{width:26px;height:26px;border-radius:50%;border:2px solid #fff}
+
+/* ---------- ingredient band ---------- */
+.ing-band{background:var(--ink);color:var(--cream);padding:90px 0}
+.ing-head{text-align:center;max-width:560px;margin:0 auto 50px}
+.ing-head h2{color:var(--cream);font-size:clamp(28px,3.2vw,40px)}
+.ing-head .eb{color:var(--gold)}
+.ing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.ing-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:24px;text-align:center;transition:transform .3s,background .3s}
+.ing-card:hover{transform:translateY(-6px);background:rgba(255,255,255,.09)}
+.ing-card .ic{width:50px;height:50px;margin:0 auto 14px;border-radius:50%;background:var(--sun);display:flex;align-items:center;justify-content:center}
+.ing-card .ic svg{width:24px;height:24px;color:#fff}
+.ing-card h4{color:var(--cream);font-size:15.5px;margin-bottom:8px}
+.ing-card p{color:rgba(255,246,234,.55);font-size:13px;line-height:1.55}
+
+/* ---------- pinned unbox ---------- */
+.unbox-sec{position:relative}
+.unbox-head{text-align:center;padding:120px 0 0;max-width:560px;margin:0 auto}
+.unbox-head h2{font-size:clamp(28px,3.4vw,42px)}
+.unbox-pin{height:100vh;display:flex;align-items:center;justify-content:center}
+.unbox-stage{position:relative;width:min(560px,88vw);height:440px;display:flex;align-items:center;justify-content:center}
+.unbox-layer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:30px}
+.unbox-layer svg{width:60%;height:60%}
+.unbox-dots{position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);display:flex;gap:8px}
+.unbox-dots span{width:7px;height:7px;border-radius:50%;background:var(--line)}
+.unbox-dots span.on{background:var(--sun)}
+
+/* ---------- reviews ---------- */
+.reviews{padding:0 0 130px}
+.review-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.rcard{background:#fff;border:1px solid var(--line);border-radius:20px;padding:26px;transition:transform .3s,box-shadow .3s}
+.rcard:hover{transform:translateY(-6px) rotate(.6deg);box-shadow:0 20px 44px rgba(35,26,18,.1)}
+.rcard .stars{color:var(--gold);font-size:14px;margin-bottom:12px;letter-spacing:1px}
+.rcard p{font-size:14.5px;line-height:1.6;color:var(--ink)}
+.rcard .who{margin-top:16px;font-size:13px;font-weight:700}
+
+/* ---------- final cta ---------- */
+.final{padding:0 0 120px}
+.final-box{position:relative;background:linear-gradient(120deg,var(--sun),var(--berry));border-radius:32px;padding:90px 40px;text-align:center;overflow:hidden}
+.final-box h2{position:relative;color:#fff;font-size:clamp(32px,4.6vw,54px)}
+.final-box p{position:relative;color:rgba(255,255,255,.85);margin:16px auto 0;max-width:440px;font-size:16px}
+.final-box .cta{position:relative;justify-content:center;margin-top:30px;display:flex;gap:14px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:60px 0 30px}
+.foot-top{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;padding-bottom:40px;border-bottom:1px solid var(--line)}
+.foot-brand p{max-width:280px;margin-top:14px;font-size:14px;line-height:1.6}
+.foot-cols{display:flex;gap:60px}
+.foot-col h6{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);margin-bottom:16px}
+.foot-col a{display:block;font-size:14px;color:var(--ink);margin-bottom:10px;text-decoration:none;opacity:.8}
+.foot-col a:hover{opacity:1;color:var(--sun-d)}
+.foot-bottom{display:flex;justify-content:space-between;padding-top:26px;font-size:13px;color:var(--mut)}
+
+@media(max-width:900px){
+  .story-row{grid-template-columns:1fr}
+  .story-row.rev .txt{order:1}
+  .story-row.rev .vis{order:2}
+  .ing-grid{grid-template-columns:repeat(2,1fr)}
+  .review-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+}
+@media(max-width:600px){
+  .foot-top{flex-direction:column;gap:30px}
+  .foot-cols{gap:34px;flex-wrap:wrap}
+  .pcard{width:230px}
+  .pcard .art{height:260px}
+}
+@media(prefers-reduced-motion:reduce){
+  .rv{opacity:1!important;transform:none!important}
+}
 </style></head>
-<body data-cf-keep-dark><div class="banner"><div class="icon"></div><div class="info"><b>CodeFusion is live on Launch Day</b><span>#3 Product of the Day</span></div>
-<button class="upvote" id="up">▲<br><small id="count">412</small></button></div>
-<script>document.getElementById("up").addEventListener("click",function(e){e.currentTarget.classList.add("voted");document.getElementById("count").textContent="413"});</script>
-</body></html>`,
+<body data-cf-keep-dark>
+
+<nav class="nav" id="nav">
+  <div class="nav-in">
+    <div class="brand">Solstice</div>
+    <div class="nav-links"><a>Shop</a><a>Ingredients</a><a>Reviews</a><a>Journal</a></div>
+    <div class="nav-right"><span class="cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Cart (0)</span></div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="wrap hero-in">
+    <span class="eb rv">The summer drop</span>
+    <h1 class="rv">Taste like <em class="it">golden</em> hour.</h1>
+    <p class="lead rv">Small-batch sparkling tonics, brewed with real fruit and zero the guesswork. Six new flavors, dropping now.</p>
+    <div class="cta rv"><button class="btn btn-sun">Shop the drop <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></button><button class="btn btn-line">Find a store</button></div>
+  </div>
+  <div class="pstrip-wrap">
+    <div class="pstrip rv" id="pstrip">
+      <div class="pcard"><div class="art" style="background:linear-gradient(160deg,#ffb27a,#ff6a3d)"><svg viewBox="0 0 100 140" fill="none"><rect x="30" y="18" width="40" height="104" rx="18" fill="#fff" opacity=".92"/><rect x="40" y="4" width="20" height="22" rx="6" fill="#fff" opacity=".92"/></svg></div><div class="price">$6.50</div><div class="info"><b>Blood Orange</b><span>Sparkling tonic · 12oz</span></div></div>
+      <div class="pcard"><div class="art" style="background:linear-gradient(160deg,#f2a6c9,#c23a6b)"><svg viewBox="0 0 100 140" fill="none"><rect x="30" y="18" width="40" height="104" rx="18" fill="#fff" opacity=".92"/><rect x="40" y="4" width="20" height="22" rx="6" fill="#fff" opacity=".92"/></svg></div><div class="price">$6.50</div><div class="info"><b>Wild Hibiscus</b><span>Sparkling tonic · 12oz</span></div></div>
+      <div class="pcard"><div class="art" style="background:linear-gradient(160deg,#ffe08a,#ffc857)"><svg viewBox="0 0 100 140" fill="none"><rect x="30" y="18" width="40" height="104" rx="18" fill="#fff" opacity=".92"/><rect x="40" y="4" width="20" height="22" rx="6" fill="#fff" opacity=".92"/></svg></div><div class="price">$6.50</div><div class="info"><b>Golden Ginger</b><span>Sparkling tonic · 12oz</span></div></div>
+      <div class="pcard"><div class="art" style="background:linear-gradient(160deg,#a8e0c4,#3f9e6f)"><svg viewBox="0 0 100 140" fill="none"><rect x="30" y="18" width="40" height="104" rx="18" fill="#fff" opacity=".92"/><rect x="40" y="4" width="20" height="22" rx="6" fill="#fff" opacity=".92"/></svg></div><div class="price">$6.50</div><div class="info"><b>Cucumber Mint</b><span>Sparkling tonic · 12oz</span></div></div>
+      <div class="pcard"><div class="art" style="background:linear-gradient(160deg,#c7b6f2,#8a63d6)"><svg viewBox="0 0 100 140" fill="none"><rect x="30" y="18" width="40" height="104" rx="18" fill="#fff" opacity=".92"/><rect x="40" y="4" width="20" height="22" rx="6" fill="#fff" opacity=".92"/></svg></div><div class="price">$6.50</div><div class="info"><b>Lavender Peach</b><span>Sparkling tonic · 12oz</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="press">
+  <div class="wrap">
+    <div class="lbl">As featured in</div>
+    <div class="press-row"><div>Bon Appétit</div><div>Food52</div><div>Kinfolk</div><div>Well+Good</div><div>Cherry Bombe</div></div>
+  </div>
+</section>
+
+<section class="story">
+  <div class="wrap story-row">
+    <div class="txt">
+      <span class="eb rv">Small batch</span>
+      <h2 class="rv">Brewed in 40-gallon batches, not tanker trucks.</h2>
+      <p class="body rv">Real fruit, cold-pressed weekly. No concentrate, no artificial anything — just the two of us and a very patient co-packer.</p>
+      <div class="chip-row rv"><span class="chip">Zero added sugar</span><span class="chip">Real fruit juice</span><span class="chip">Non-GMO</span></div>
+    </div>
+    <div class="vis rv" style="background:linear-gradient(160deg,#ffcf9c,#ff6a3d)">
+      <svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="70" fill="#fff" opacity=".18"/><rect x="70" y="40" width="60" height="130" rx="26" fill="#fff" opacity=".92"/></svg>
+      <div class="swatch-strip"><span style="background:#ff6a3d"></span><span style="background:#c23a6b"></span><span style="background:#ffc857"></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="story">
+  <div class="wrap story-row rev">
+    <div class="txt">
+      <span class="eb rv">Honest label</span>
+      <h2 class="rv">Five ingredients. You can pronounce all of them.</h2>
+      <p class="body rv">Filtered water, real fruit juice, a whisper of cane sugar, botanicals, and bubbles. That's the whole list.</p>
+      <div class="chip-row rv"><span class="chip">42 calories</span><span class="chip">No preservatives</span></div>
+    </div>
+    <div class="vis rv" style="background:linear-gradient(160deg,#f2a6c9,#c23a6b)">
+      <svg viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="70" fill="#fff" opacity=".18"/><rect x="70" y="40" width="60" height="130" rx="26" fill="#fff" opacity=".92"/></svg>
+      <div class="swatch-strip"><span style="background:#c23a6b"></span><span style="background:#ffc857"></span><span style="background:#3f9e6f"></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="ing-band">
+  <div class="wrap">
+    <div class="ing-head">
+      <span class="eb rv" style="justify-content:center">What's inside</span>
+      <h2 class="rv">Every can, accounted for.</h2>
+    </div>
+    <div class="ing-grid">
+      <div class="ing-card rv2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/></svg></div><h4>Real fruit</h4><p>Cold-pressed weekly from whole fruit, never concentrate.</p></div>
+      <div class="ing-card rv2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6z"/></svg></div><h4>Non-GMO</h4><p>Every ingredient verified, no exceptions, no asterisks.</p></div>
+      <div class="ing-card rv2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div><h4>Low sugar</h4><p>Naturally sweetened, roughly a third the sugar of soda.</p></div>
+      <div class="ing-card rv2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></div><h4>Independent</h4><p>Woman-owned, self-funded, brewed three miles from here.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="unbox-sec">
+  <div class="unbox-head">
+    <span class="eb rv" style="justify-content:center">Unboxing</span>
+    <h2 class="rv">What lands on your doorstep.</h2>
+  </div>
+  <div class="unbox-pin" id="unboxPin">
+    <div class="unbox-stage">
+      <div class="unbox-layer" id="ul0" style="background:linear-gradient(160deg,#ffe4c2,#ffb27a)"><svg viewBox="0 0 200 160" fill="none"><rect x="20" y="20" width="160" height="120" rx="14" fill="#fff" opacity=".9"/><path d="M20 60h160M90 20v120" stroke="#ffb27a" stroke-width="3"/></svg></div>
+      <div class="unbox-layer" id="ul1" style="background:linear-gradient(160deg,#ffcf9c,#ff6a3d)"><svg viewBox="0 0 100 140" fill="none"><rect x="20" y="14" width="60" height="118" rx="20" fill="#fff" opacity=".92"/></svg></div>
+      <div class="unbox-layer" id="ul2" style="background:linear-gradient(160deg,#f2a6c9,#c23a6b)"><svg viewBox="0 0 160 100" fill="none"><rect x="15" y="20" width="50" height="60" rx="16" fill="#fff" opacity=".92"/><rect x="75" y="20" width="50" height="60" rx="16" fill="#fff" opacity=".7"/><rect x="105" y="20" width="50" height="60" rx="16" fill="#fff" opacity=".5"/></svg></div>
+      <div class="unbox-dots"><span class="on"></span><span></span><span></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="reviews">
+  <div class="wrap">
+    <div class="ing-head" style="margin-bottom:44px">
+      <span class="eb rv" style="justify-content:center">Reviews</span>
+      <h2 class="rv">6,000+ five-star sips and counting.</h2>
+    </div>
+    <div class="review-grid">
+      <div class="rcard rv2"><div class="stars">★★★★★</div><p>"Cracked one open at a rooftop party and three people asked where to buy it. Obsessed."</p><div class="who">— Priya, Brooklyn</div></div>
+      <div class="rcard rv2"><div class="stars">★★★★★</div><p>"Finally a 'healthy' soda that doesn't taste like a punishment. Hibiscus is unreal."</p><div class="who">— Marcus, Austin</div></div>
+      <div class="rcard rv2"><div class="stars">★★★★★</div><p>"Ordered the variety pack, immediately reordered two more. My fridge is now 60% Solstice."</p><div class="who">— Dana, Portland</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <div class="final-box rv">
+      <h2>Your fridge is missing something golden.</h2>
+      <p>Free shipping on the variety 12-pack — today only.</p>
+      <div class="cta"><button class="btn btn-ink">Shop the drop <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></button></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <div class="brand">Solstice</div>
+        <p>Small-batch sparkling tonics, brewed with real fruit.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h6>Shop</h6><a>All flavors</a><a>Variety pack</a><a>Subscribe &amp; save</a></div>
+        <div class="foot-col"><h6>Company</h6><a>Our story</a><a>Ingredients</a><a>Stockists</a></div>
+        <div class="foot-col"><h6>Help</h6><a>Shipping</a><a>FAQ</a><a>Contact</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 Solstice Drinks Co.</span><span>Privacy · Terms</span></div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  var nav = document.getElementById("nav");
+  document.addEventListener("scroll", function(){ nav.classList.toggle("on", window.scrollY > 14); }, { passive: true });
+
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!window.gsap || !window.ScrollTrigger || reduced) {
+    document.querySelectorAll(".rv,.rv2").forEach(function(el){ el.style.opacity = 1; el.style.transform = "none"; });
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  var tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+  tl.to(".hero-in .rv", { opacity: 1, y: 0, duration: .8, stagger: .08 })
+    .fromTo("#pstrip", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .9 }, "-=.5")
+    .from("#pstrip .pcard", { opacity: 0, y: 26, scale: .94, stagger: .08, duration: .6 }, "-=.6");
+
+  // Product strip: draggable-feel horizontal auto-drift, pausing on hover,
+  // plus a subtle scroll-linked parallax so the row shifts with page scroll.
+  var strip = document.getElementById("pstrip");
+  var drift = gsap.to(strip, { x: -(strip.scrollWidth - window.innerWidth + 64), duration: 26, ease: "none", repeat: -1, yoyo: true });
+  strip.addEventListener("mouseenter", function(){ drift.pause(); });
+  strip.addEventListener("mouseleave", function(){ drift.resume(); });
+
+  document.querySelectorAll(".rv").forEach(function(el){
+    if (el.closest(".hero")) return;
+    gsap.to(el, { opacity: 1, y: 0, duration: .85, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 85%" } });
+  });
+  document.querySelectorAll(".rv2").forEach(function(el){
+    gsap.from(el, { opacity: 0, y: 26, duration: .7, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 88%" } });
+  });
+
+  gsap.from(".press-row div", { opacity: 0, y: 10, stagger: .06, duration: .6, scrollTrigger: { trigger: ".press-row", start: "top 90%" } });
+
+  // Parallax drift on each story visual as its section scrolls past.
+  document.querySelectorAll(".story .vis").forEach(function(vis){
+    gsap.to(vis, { y: -26, ease: "none", scrollTrigger: { trigger: vis.closest(".story"), start: "top bottom", end: "bottom top", scrub: true } });
+  });
+
+  // Pinned unboxing: three product layers crossfade in sequence with a
+  // gentle scale-down, dot indicator tracking the active layer, scrubbed.
+  var layers = ["#ul0", "#ul1", "#ul2"];
+  gsap.set(layers.slice(1), { opacity: 0, scale: .92 });
+  var dots = document.querySelectorAll(".unbox-dots span");
+  var unboxTl = gsap.timeline({
+    scrollTrigger: { trigger: "#unboxPin", start: "top top", end: "+=180%", pin: true, scrub: .5,
+      onUpdate: function(self){
+        var stage = Math.min(2, Math.floor(self.progress * 3));
+        dots.forEach(function(d, i){ d.classList.toggle("on", i === stage); });
+      }
+    }
+  });
+  unboxTl.to("#ul0", { opacity: 0, scale: 1.06, duration: .33 })
+    .to("#ul1", { opacity: 1, scale: 1, duration: .33 }, "<")
+    .to("#ul1", { opacity: 0, scale: 1.06, duration: .33 }, "+=.15")
+    .to("#ul2", { opacity: 1, scale: 1, duration: .33 }, "<");
+
+  window.addEventListener("load", function(){ ScrollTrigger.refresh(); });
+})();
+</script>
+</body></html>
+`,
 
   "newsletter-signup-split-section": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Newsletter Signup Split Section</title><style>
