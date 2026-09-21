@@ -5673,20 +5673,400 @@ footer{border-top:1px solid rgba(255,255,255,.08);padding:60px 0 30px}
 `,
 
   "trust-badges-security-band": `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Trust Badges Security Band</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.band{display:flex;gap:12px;padding:18px 22px;border:1px solid var(--line);border-radius:14px;background:#0d0d12;box-shadow:0 20px 50px -22px rgba(0,0,0,.6)}
-.badge{display:grid;place-items:center;gap:6px;padding:10px 14px;border-radius:10px;transition:transform .25s cubic-bezier(.2,.8,.2,1),background .25s}
-.badge:hover{transform:translateY(-4px);background:#12101a}
-.badge i{width:26px;height:26px;border-radius:50%;background:#141020;display:grid;place-items:center;color:var(--lav);font-size:12px;font-style:normal;transition:box-shadow .3s,background .3s}
-.badge:hover i{box-shadow:0 0 0 5px rgba(196,181,253,.15);background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f}
-.badge span{color:#6f6c77;font-size:8px;letter-spacing:.5px}
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Sentrix Landing Page</title><style>
+:root{--bg:#08090b;--panel:#0e1013;--panel2:#131619;--line:rgba(255,255,255,.08);--ink:#e8ebee;--mut:#767d86;--red:#ff3b3b;--cyan:#37e6d0;--amber:#ffab3d}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3{font-family:"Space Grotesk",Inter,sans-serif;margin:0;font-weight:600;letter-spacing:-.03em;color:#fff}
+p{margin:0;color:var(--mut)}
+button{font-family:inherit;cursor:pointer;border:0}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.wrap{max-width:1160px;margin:0 auto;padding:0 32px}
+.rv{opacity:0;transform:translateY(28px)}
+.eb{display:inline-flex;align-items:center;gap:9px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:16px;font-family:"JetBrains Mono",monospace}
+.eb .dot{width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);animation:pulse-dot 1.6s ease-in-out infinite}
+@keyframes pulse-dot{50%{opacity:.3}}
+
+/* ---------- buttons ---------- */
+.btn{position:relative;display:inline-flex;align-items:center;gap:9px;border-radius:9px;padding:14px 24px;font-size:14.5px;font-weight:600;transition:transform .25s,box-shadow .25s,border-color .25s}
+.btn svg{width:15px;height:15px;flex:none;transition:transform .25s}
+.btn:hover svg{transform:translateX(3px)}
+.btn-red{background:var(--red);color:#fff;box-shadow:0 0 0 rgba(255,59,59,.4)}
+.btn-red:hover{transform:translateY(-2px);box-shadow:0 16px 34px rgba(255,59,59,.3)}
+.btn-line{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn-line:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.28);background:rgba(255,255,255,.04)}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:60;border-bottom:1px solid transparent;transition:background .4s,border-color .4s}
+.nav-in{max-width:1160px;margin:0 auto;padding:20px 32px;display:flex;align-items:center;gap:34px}
+.nav.on{background:rgba(8,9,11,.85);backdrop-filter:blur(16px);border-bottom-color:var(--line)}
+.brand{display:flex;align-items:center;gap:9px;font-size:18px;font-weight:700;color:#fff}
+.brand svg{width:20px;height:20px;color:var(--red)}
+.nav-links{display:flex;gap:28px;margin:0 auto;font-size:13.5px;color:var(--mut)}
+.nav-links a{position:relative;cursor:pointer}
+.nav-links a:after{content:"";position:absolute;left:0;bottom:-5px;width:100%;height:1px;background:var(--red);transform:scaleX(0);transform-origin:right;transition:transform .3s}
+.nav-links a:hover{color:#fff}
+.nav-links a:hover:after{transform:scaleX(1);transform-origin:left}
+.nav-right{display:flex;align-items:center;gap:16px}
+.nav-right .lg{font-size:13.5px;color:var(--mut)}
+.nav-right .btn{padding:10px 18px;font-size:13px}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding:100px 0 60px;overflow:hidden}
+.hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 60% 55% at 50% 10%,#000,transparent)}
+.hero-in{position:relative;text-align:center;max-width:800px;margin:0 auto}
+.hero .eb{justify-content:center}
+.hero h1{font-size:clamp(38px,5vw,64px);line-height:1.06}
+.hero h1 .glitch{color:var(--red);position:relative;display:inline-block}
+.hero p.lead{margin-top:22px;font-size:17px;line-height:1.65;max-width:560px;margin-left:auto;margin-right:auto}
+.hero .cta{display:flex;gap:14px;justify-content:center;margin-top:32px;flex-wrap:wrap}
+
+/* network monitor mockup */
+.mon-wrap{position:relative;margin-top:56px}
+.mon{position:relative;z-index:1;background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:0 40px 90px rgba(0,0,0,.55);max-width:960px;margin:0 auto;overflow:hidden}
+.mon-top{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--line)}
+.mon-top .l{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--mut)}
+.mon-top .l b{width:8px;height:8px;border-radius:50%;background:var(--cyan);display:inline-block;box-shadow:0 0 8px var(--cyan)}
+.mon-top .r{font-size:11.5px;color:var(--mut);font-family:"JetBrains Mono",monospace}
+.mon-body{display:grid;grid-template-columns:1fr 260px;min-height:300px}
+.net-canvas{position:relative;padding:28px}
+.net-canvas svg{width:100%;height:260px}
+.net-node{fill:var(--panel2);stroke:rgba(255,255,255,.15)}
+.net-node.alert{stroke:var(--red)}
+.net-line{stroke:rgba(255,255,255,.1);stroke-width:1}
+.net-line.alert{stroke:var(--red);stroke-width:1.4}
+.mon-side{border-left:1px solid var(--line);padding:20px}
+.mon-side h5{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);margin-bottom:14px}
+.alert-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.alert-row:last-child{border-bottom:0}
+.alert-row i{width:8px;height:8px;border-radius:50%;background:var(--red);margin-top:5px;flex:none;box-shadow:0 0 8px var(--red)}
+.alert-row b{display:block;font-size:12.5px;color:#fff}
+.alert-row span{font-size:11px;color:var(--mut);font-family:"JetBrains Mono",monospace}
+
+/* ---------- logos ---------- */
+.logos{padding:44px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.logos .lbl{text-align:center;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin-bottom:24px;font-family:"JetBrains Mono",monospace}
+.logo-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:28px;opacity:.5}
+.logo-row div{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:18px;color:#fff}
+
+/* ---------- feature grid ---------- */
+.feats{padding:130px 0}
+.feats-head{max-width:600px;margin:0 auto 56px;text-align:center}
+.feats-head h2{font-size:clamp(28px,3.4vw,42px)}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.fcard{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:28px;transition:transform .3s,border-color .3s}
+.fcard:hover{transform:translateY(-6px);border-color:rgba(255,59,59,.3)}
+.fcard .ic{width:44px;height:44px;border-radius:11px;background:rgba(255,59,59,.1);display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.fcard .ic svg{width:21px;height:21px;color:var(--red)}
+.fcard h3{font-size:17px;margin-bottom:10px}
+.fcard p{font-size:14px;line-height:1.65}
+
+/* ---------- pinned threat sequence ---------- */
+.threat-sec{position:relative}
+.threat-head{text-align:center;padding:120px 0 0;max-width:600px;margin:0 auto}
+.threat-head h2{font-size:clamp(28px,3.4vw,42px)}
+.threat-pin{height:100vh;display:flex;align-items:center;justify-content:center}
+.threat-card{width:min(640px,90vw);background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:32px;box-shadow:0 40px 90px rgba(0,0,0,.5)}
+.threat-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.threat-badge{font-size:11px;font-weight:700;padding:5px 11px;border-radius:20px;text-transform:uppercase;letter-spacing:.04em;font-family:"JetBrains Mono",monospace}
+.threat-badge.detect{background:rgba(255,171,61,.15);color:var(--amber)}
+.threat-badge.block{background:rgba(255,59,59,.15);color:var(--red)}
+.threat-badge.resolved{background:rgba(55,230,208,.15);color:var(--cyan)}
+.threat-log{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:16px 18px;font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--mut);min-height:120px;line-height:1.8}
+.threat-log .ok{color:var(--cyan)}
+.threat-log .warn{color:var(--amber)}
+.threat-log .err{color:var(--red)}
+.threat-line{opacity:0}
+.threat-stages{display:flex;justify-content:center;gap:8px;margin-top:20px}
+.threat-stages span{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.15)}
+.threat-stages span.on{background:var(--red)}
+
+/* ---------- stats ---------- */
+.stats{padding:0 0 120px;text-align:center}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.stat b{display:block;font-family:"Space Grotesk",sans-serif;font-size:clamp(30px,3.6vw,46px);font-weight:700;color:#fff}
+.stat span{display:block;margin-top:8px;font-size:12.5px;color:var(--mut)}
+
+/* ---------- testimonial ---------- */
+.testi{padding:0 0 130px}
+.testi-card{max-width:740px;margin:0 auto;text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:56px 48px}
+.testi-card p{font-size:21px;line-height:1.55;color:#fff;font-weight:500}
+.testi-card .who{margin-top:24px;font-size:13.5px;color:var(--mut)}
+
+/* ---------- final cta ---------- */
+.final{padding:0 0 120px}
+.final-box{position:relative;background:linear-gradient(135deg,#1a0808,#08090b);border:1px solid rgba(255,59,59,.2);border-radius:26px;padding:90px 40px;text-align:center;overflow:hidden}
+.final-box:before{content:"";position:absolute;width:600px;height:400px;border-radius:50%;background:radial-gradient(ellipse,rgba(255,59,59,.2),transparent 70%);top:-140px;left:50%;transform:translateX(-50%)}
+.final-box h2{position:relative;font-size:clamp(30px,4.4vw,50px);max-width:640px;margin:0 auto}
+.final-box p{position:relative;margin:18px auto 0;max-width:440px;font-size:16px}
+.final-box .cta{position:relative;justify-content:center;margin-top:32px;display:flex;gap:14px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:60px 0 30px}
+.foot-top{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;padding-bottom:40px;border-bottom:1px solid var(--line)}
+.foot-brand p{max-width:280px;margin-top:14px;font-size:14px;line-height:1.6}
+.foot-cols{display:flex;gap:60px}
+.foot-col h6{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);margin-bottom:16px;font-family:"JetBrains Mono",monospace}
+.foot-col a{display:block;font-size:14px;color:var(--ink);margin-bottom:10px;text-decoration:none;opacity:.75}
+.foot-col a:hover{opacity:1;color:var(--red)}
+.foot-bottom{display:flex;justify-content:space-between;padding-top:26px;font-size:13px;color:var(--mut)}
+
+@media(max-width:900px){
+  .mon-body{grid-template-columns:1fr}
+  .mon-side{border-left:0;border-top:1px solid var(--line)}
+  .feat-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:26px}
+  .nav-links{display:none}
+}
+@media(max-width:600px){
+  .foot-top{flex-direction:column;gap:28px}
+  .foot-cols{gap:30px;flex-wrap:wrap}
+  .testi-card{padding:36px 24px}
+  .testi-card p{font-size:18px}
+}
+@media(prefers-reduced-motion:reduce){
+  .rv{opacity:1!important;transform:none!important}
+}
 </style></head>
-<body data-cf-keep-dark><div class="band">
-<div class="badge"><i>✓</i><span>SOC 2</span></div><div class="badge"><i>⚿</i><span>GDPR</span></div><div class="badge"><i>◈</i><span>ISO 27001</span></div>
-</div>
-</body></html>`,
+<body data-cf-keep-dark>
+
+<nav class="nav" id="nav">
+  <div class="nav-in">
+    <div class="brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6z"/></svg>Sentrix</div>
+    <div class="nav-links"><a>Platform</a><a>Threat intel</a><a>Pricing</a><a>Docs</a></div>
+    <div class="nav-right"><span class="lg">Sign in</span><button class="btn btn-red">Request a demo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></button></div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap hero-in">
+    <span class="eb rv"><span class="dot"></span>Real-time threat detection</span>
+    <h1 class="rv">See the breach <span class="glitch" id="glitchWord">before</span> it happens.</h1>
+    <p class="lead rv">Sentrix watches every endpoint, every packet, every login — and shuts down anomalies in milliseconds, not tickets.</p>
+    <div class="cta rv"><button class="btn btn-red">Request a demo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></button><button class="btn btn-line">Read the whitepaper</button></div>
+  </div>
+  <div class="wrap mon-wrap">
+    <div class="mon rv" id="heroMon">
+      <div class="mon-top">
+        <div class="l"><b></b>NETWORK MONITOR — 412 NODES</div>
+        <div class="r" id="clockLbl">00:00:00 UTC</div>
+      </div>
+      <div class="mon-body">
+        <div class="net-canvas">
+          <svg viewBox="0 0 480 260" id="netSvg">
+            <line class="net-line" x1="60" y1="60" x2="180" y2="120"/>
+            <line class="net-line" x1="180" y1="120" x2="320" y2="70"/>
+            <line class="net-line" x1="180" y1="120" x2="220" y2="210"/>
+            <line class="net-line alert" x1="220" y1="210" x2="360" y2="190"/>
+            <line class="net-line" x1="320" y1="70" x2="420" y2="130"/>
+            <line class="net-line" x1="60" y1="60" x2="90" y2="180"/>
+            <circle class="net-node" cx="60" cy="60" r="7"/>
+            <circle class="net-node" cx="180" cy="120" r="9"/>
+            <circle class="net-node" cx="320" cy="70" r="7"/>
+            <circle class="net-node" cx="220" cy="210" r="7"/>
+            <circle class="net-node alert" cx="360" cy="190" r="9" id="alertNode"/>
+            <circle class="net-node" cx="420" cy="130" r="6"/>
+            <circle class="net-node" cx="90" cy="180" r="6"/>
+          </svg>
+        </div>
+        <div class="mon-side">
+          <h5>Live alerts</h5>
+          <div class="alert-row"><i></i><div><b>Unusual login pattern</b><span>node-360 · 2s ago</span></div></div>
+          <div class="alert-row"><i style="background:var(--amber);box-shadow:0 0 8px var(--amber)"></i><div><b>Port scan detected</b><span>node-220 · 41s ago</span></div></div>
+          <div class="alert-row"><i style="background:var(--cyan);box-shadow:0 0 8px var(--cyan)"></i><div><b>Threat auto-resolved</b><span>node-180 · 2m ago</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="logos">
+  <div class="wrap">
+    <div class="lbl">// trusted by security teams at</div>
+    <div class="logo-row"><div>Halborn</div><div>Northbeam</div><div>Fenwick</div><div>Argus</div><div>Prysm</div></div>
+  </div>
+</section>
+
+<section class="feats">
+  <div class="wrap">
+    <div class="feats-head">
+      <span class="eb rv" style="justify-content:center">Platform</span>
+      <h2 class="rv">Detection that doesn't wait for a ticket.</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="fcard rv2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div><h3>Anomaly detection</h3><p>Behavioral baselines per endpoint, flagging deviations in real time, not overnight batches.</p></div>
+      <div class="fcard rv2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h8l-1 8 10-12h-8z"/></svg></div><h3>Automated response</h3><p>Isolate a compromised node in under 200ms, no human in the loop required.</p></div>
+      <div class="fcard rv2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6z"/></svg></div><h3>Compliance-ready</h3><p>SOC 2, ISO 27001 and HIPAA-mapped controls, audit trail included by default.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="threat-sec">
+  <div class="threat-head">
+    <span class="eb rv" style="justify-content:center">Anatomy of a block</span>
+    <h2 class="rv">From detection to resolution, in seconds.</h2>
+  </div>
+  <div class="threat-pin" id="threatPin">
+    <div class="threat-card">
+      <div class="threat-top"><span class="mono" style="font-size:12px;color:var(--mut)">INCIDENT #4471</span><span class="threat-badge detect" id="threatBadge">Detecting</span></div>
+      <div class="threat-log" id="threatLog">
+        <div class="threat-line" id="tl0">&gt; scanning node-360 traffic pattern...</div>
+        <div class="threat-line" id="tl1">&gt; <span class="warn">anomaly score 0.94 — flagged</span></div>
+        <div class="threat-line" id="tl2">&gt; <span class="err">blocking outbound connection...</span></div>
+        <div class="threat-line" id="tl3">&gt; <span class="ok">node-360 isolated. incident resolved in 184ms</span></div>
+      </div>
+      <div class="threat-stages" id="threatStages"><span class="on"></span><span></span><span></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="wrap stats-grid">
+    <div class="stat"><b data-count="4200000000" data-suffix="+">0</b><span>Events analyzed daily</span></div>
+    <div class="stat"><b data-count="184" data-suffix="ms">0</b><span>Median response time</span></div>
+    <div class="stat"><b data-count="99" data-suffix=".99%">0</b><span>Platform uptime</span></div>
+    <div class="stat"><b data-count="1800">0</b><span>Enterprises protected</span></div>
+  </div>
+</section>
+
+<section class="testi">
+  <div class="wrap">
+    <div class="testi-card rv">
+      <p>"Sentrix caught a lateral-movement attempt our old SIEM would've surfaced two days later, if at all."</p>
+      <div class="who">— Grace Lin, CISO, Northbeam</div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <div class="final-box rv">
+      <h2>Stop reading alerts. Start blocking them.</h2>
+      <p>See Sentrix live on your own network in a 30-minute demo.</p>
+      <div class="cta"><button class="btn btn-red">Request a demo <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></button><button class="btn btn-line">Talk to sales</button></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <div class="brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6z"/></svg>Sentrix</div>
+        <p>Real-time threat detection and automated response for the modern enterprise.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h6>Product</h6><a>Detection</a><a>Response</a><a>Compliance</a></div>
+        <div class="foot-col"><h6>Company</h6><a>About</a><a>Careers</a><a>Trust center</a></div>
+        <div class="foot-col"><h6>Resources</h6><a>Docs</a><a>Threat intel</a><a>Status</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 Sentrix Security Inc.</span><span>Privacy · Terms</span></div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  var nav = document.getElementById("nav");
+  document.addEventListener("scroll", function(){ nav.classList.toggle("on", window.scrollY > 14); }, { passive: true });
+
+  function fmt(n, suffix){
+    var v = Math.round(n);
+    var s = v >= 1000000000 ? (v/1000000000).toFixed(1).replace(/\.0$/,"") + "B" :
+            v >= 1000000 ? (v/1000000).toFixed(1).replace(/\.0$/,"") + "M" :
+            v >= 1000 ? (v/1000).toFixed(1).replace(/\.0$/,"") + "K" : String(v);
+    return s + (suffix || "");
+  }
+
+  // Live-feeling UTC clock in the monitor mockup header.
+  function tickClock(){
+    var d = new Date();
+    var pad = function(n){ return String(n).padStart(2, "0"); };
+    document.getElementById("clockLbl").textContent = pad(d.getUTCHours()) + ":" + pad(d.getUTCMinutes()) + ":" + pad(d.getUTCSeconds()) + " UTC";
+  }
+  tickClock();
+  setInterval(tickClock, 1000);
+
+  // Subtle text-glitch on the hero's accent word: brief character scramble.
+  var glitchChars = "!<>-_\\/[]{}—=+*^?#";
+  var glitchEl = document.getElementById("glitchWord");
+  var original = glitchEl.textContent;
+  function runGlitch(){
+    var iterations = 0;
+    var iv = setInterval(function(){
+      glitchEl.textContent = original.split("").map(function(ch, i){
+        if (i < iterations) return original[i];
+        return glitchChars[Math.floor(Math.random() * glitchChars.length)];
+      }).join("");
+      iterations += 1;
+      if (iterations > original.length) { clearInterval(iv); glitchEl.textContent = original; }
+    }, 45);
+  }
+
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!window.gsap || !window.ScrollTrigger || reduced) {
+    document.querySelectorAll(".rv,.rv2").forEach(function(el){ el.style.opacity = 1; el.style.transform = "none"; });
+    document.querySelectorAll(".stat b[data-count]").forEach(function(el){ el.textContent = fmt(+el.dataset.count, el.dataset.suffix); });
+    document.querySelectorAll(".threat-line").forEach(function(el){ el.style.opacity = 1; });
+    document.getElementById("threatBadge").textContent = "Resolved";
+    document.getElementById("threatBadge").className = "threat-badge resolved";
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  var tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+  tl.to(".hero-in .rv", { opacity: 1, y: 0, duration: .8, stagger: .08 })
+    .fromTo("#heroMon", { opacity: 0, y: 40, scale: .97 }, { opacity: 1, y: 0, scale: 1, duration: 1 }, "-=.5")
+    .call(runGlitch, null, "-=.8");
+
+  setInterval(runGlitch, 5000);
+
+  // Alert node on the network graph pulses to draw the eye, echoing a live monitor.
+  gsap.to("#alertNode", { r: 12, duration: .9, ease: "sine.inOut", yoyo: true, repeat: -1 });
+  gsap.to(".mon-top .l b", { scale: 1.4, duration: 1, ease: "sine.inOut", yoyo: true, repeat: -1 });
+
+  document.querySelectorAll(".rv").forEach(function(el){
+    if (el.closest(".hero")) return;
+    gsap.to(el, { opacity: 1, y: 0, duration: .85, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 85%" } });
+  });
+  document.querySelectorAll(".rv2").forEach(function(el){
+    gsap.from(el, { opacity: 0, y: 26, duration: .7, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 88%" } });
+  });
+  gsap.from(".logo-row div", { opacity: 0, y: 10, stagger: .06, duration: .6, scrollTrigger: { trigger: ".logo-row", start: "top 90%" } });
+
+  // Pinned incident timeline: log lines type into view, the status badge
+  // progresses detecting -> blocking -> resolved, and stage dots track it —
+  // all driven by scroll scrub through the pinned card.
+  var badge = document.getElementById("threatBadge");
+  var stages = document.querySelectorAll("#threatStages span");
+  var threatTl = gsap.timeline({
+    scrollTrigger: { trigger: "#threatPin", start: "top top", end: "+=200%", pin: true, scrub: .5 }
+  });
+  threatTl
+    .to("#tl0", { opacity: 1, duration: .15 })
+    .to("#tl1", { opacity: 1, duration: .15, onStart: function(){ badge.textContent = "Detecting"; badge.className = "threat-badge detect"; stages[0].classList.add("on"); } }, "+=.1")
+    .to("#tl2", { opacity: 1, duration: .15, onStart: function(){ badge.textContent = "Blocking"; badge.className = "threat-badge block"; stages[1].classList.add("on"); } }, "+=.15")
+    .to("#tl3", { opacity: 1, duration: .15, onStart: function(){ badge.textContent = "Resolved"; badge.className = "threat-badge resolved"; stages[2].classList.add("on"); } }, "+=.15");
+
+  ScrollTrigger.create({
+    trigger: ".stats", start: "top 80%", once: true,
+    onEnter: function(){
+      document.querySelectorAll(".stat b[data-count]").forEach(function(el){
+        var target = +el.dataset.count, suffix = el.dataset.suffix || "", o = { v: 0 };
+        gsap.to(o, { v: target, duration: 1.8, ease: "power2.out", onUpdate: function(){ el.textContent = fmt(o.v, suffix); } });
+      });
+    }
+  });
+
+  window.addEventListener("load", function(){ ScrollTrigger.refresh(); });
+})();
+</script>
+</body></html>
+`,
 
   "final-cta-gradient-section": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>AI Palette Generator Landing Page</title><style>
