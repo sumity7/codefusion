@@ -521,25 +521,584 @@ document.querySelectorAll(".tabs button").forEach(btn=>btn.addEventListener("cli
 </body></html>`,
 
   "sticky-cta-banner": `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Sticky CTA Banner</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.kicker{display:block;color:#9d94b0;font-size:9px;letter-spacing:2px;font-weight:700;padding:20px 24px}
-.content{padding:0 24px 100px;color:#847e8f;font-size:11px;line-height:1.9;max-width:500px}
-.content h1{color:#f7f5fb;font:700 34px "Space Grotesk",sans-serif;letter-spacing:-.03em}
-#banner{position:fixed;left:16px;right:16px;bottom:-80px;display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border:1px solid var(--line);border-radius:14px;background:#0d0d12ee;backdrop-filter:blur(10px);box-shadow:0 25px 60px -10px rgba(0,0,0,.6),0 0 0 1px rgba(196,181,253,.08);transition:bottom .4s cubic-bezier(.2,.8,.2,1)}
-#banner.show{bottom:16px}
-#banner b{font:700 12px "Space Grotesk",sans-serif}
-#banner button{border:0;border-radius:9px;padding:9px 16px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;font-size:9px;font-weight:800;cursor:pointer;box-shadow:0 8px 20px -8px rgba(155,138,255,.6);transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
-#banner button:active{transform:scale(.94)}
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>FlowState Landing Page</title><style>
+:root{--ink:#211d1a;--mut:#847c72;--paper:#faf6ef;--card:#fff;--line:#e8e0d3;--coral:#ff5a36;--coral-d:#e8451f;--forest:#2d5a3d;--gold:#d4a53d}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Plus Jakarta Sans",Inter,ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3{font-family:"Sora","Plus Jakarta Sans",sans-serif;margin:0;font-weight:600;letter-spacing:-.03em;color:var(--ink)}
+p{margin:0;color:var(--mut)}
+button{font-family:inherit;cursor:pointer;border:0}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.wrap{max-width:1180px;margin:0 auto;padding:0 32px}
+.rv{opacity:0;transform:translateY(30px)}
+.eb{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--coral);margin-bottom:16px}
+.eb:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--coral)}
+
+/* ---------- buttons ---------- */
+.btn{position:relative;display:inline-flex;align-items:center;gap:9px;border-radius:14px;padding:15px 26px;font-size:15px;font-weight:700;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
+.btn svg{width:16px;height:16px;flex:none;transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.btn:hover svg{transform:translate(3px,-3px)}
+.btn-coral{background:var(--coral);color:#fff;box-shadow:0 10px 26px rgba(255,90,54,.32)}
+.btn-coral:hover{transform:translateY(-3px);box-shadow:0 18px 38px rgba(255,90,54,.42);background:var(--coral-d)}
+.btn-line{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn-line:hover{transform:translateY(-3px);border-color:var(--ink)}
+.magnetic{will-change:transform}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:60;transition:background .4s,box-shadow .4s,backdrop-filter .4s}
+.nav-in{max-width:1180px;margin:0 auto;padding:22px 32px;display:flex;align-items:center;gap:34px;transition:padding .4s}
+.nav.on{background:rgba(250,246,239,.86);backdrop-filter:blur(18px) saturate(1.5);box-shadow:0 1px 0 rgba(33,29,26,.06),0 10px 30px rgba(33,29,26,.05)}
+.nav.on .nav-in{padding:13px 32px}
+.brand{display:flex;align-items:center;gap:10px;font-family:"Sora",sans-serif;font-size:20px;font-weight:700;letter-spacing:-.03em}
+.brand .dot{width:11px;height:11px;border-radius:4px;background:var(--coral);transition:transform .5s cubic-bezier(.2,.8,.2,1),border-radius .5s}
+.brand:hover .dot{transform:rotate(135deg);border-radius:50%}
+.nav-links{display:flex;gap:30px;margin:0 auto;font-size:14.5px;color:var(--mut)}
+.nav-links a{position:relative;cursor:pointer;padding-bottom:4px;transition:color .25s}
+.nav-links a:after{content:"";position:absolute;left:0;bottom:0;width:100%;height:2px;border-radius:2px;background:var(--coral);transform:scaleX(0);transform-origin:right;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a:hover:after{transform:scaleX(1);transform-origin:left}
+.nav-right{display:flex;align-items:center;gap:18px}
+.nav-right .lg{font-size:14.5px;color:var(--mut);cursor:pointer}
+.nav-right .lg:hover{color:var(--ink)}
+.nav-right .btn{padding:11px 20px;font-size:13.5px;border-radius:11px}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding:88px 0 40px;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1fr .92fr;gap:50px;align-items:center}
+.hero-blob{position:absolute;top:-180px;right:-220px;width:640px;height:640px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(255,90,54,.22),transparent 68%);filter:blur(10px);z-index:0}
+.hero h1{font-size:clamp(40px,4.6vw,68px);line-height:1.04}
+.hero h1 em{font-style:normal;color:var(--coral);position:relative}
+.hero p.lead{margin-top:22px;font-size:18px;line-height:1.6;max-width:480px}
+.hero .cta{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap}
+.trust-mini{display:flex;align-items:center;gap:12px;margin-top:34px}
+.trust-mini .avs{display:flex}
+.trust-mini .avs span{width:32px;height:32px;border-radius:50%;border:2.5px solid var(--paper);margin-left:-9px;display:block;background-size:cover}
+.trust-mini .avs span:first-child{margin-left:0}
+.trust-mini small{font-size:13px;color:var(--mut)}
+
+/* kanban mockup */
+.board{position:relative;z-index:1;background:var(--card);border-radius:22px;border:1px solid var(--line);box-shadow:0 30px 70px rgba(33,29,26,.14);padding:20px;transform:rotate(1.2deg)}
+.board-bar{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.board-bar i{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.board-bar span{margin-left:8px;font-size:12.5px;color:var(--mut)}
+.board-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.col h5{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.col h5 b{background:var(--line);color:var(--ink);border-radius:6px;padding:1px 6px;font-size:10.5px}
+.tcard{background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:11px 12px;margin-bottom:10px;cursor:grab}
+.tcard .tag{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:2px 7px;border-radius:5px;margin-bottom:7px}
+.tag.design{background:#e9ddff;color:#6c3fd8}
+.tag.dev{background:#d7f0e6;color:var(--forest)}
+.tag.copy{background:#ffe6cf;color:var(--coral-d)}
+.tcard p{font-size:12.5px;color:var(--ink);line-height:1.35}
+.tcard .foot{display:flex;align-items:center;justify-content:space-between;margin-top:9px}
+.tcard .foot span{width:20px;height:20px;border-radius:50%;background:var(--gold)}
+.tcard .foot i{font-size:10.5px;color:var(--mut);font-style:normal}
+.tcard.done p{text-decoration:line-through;color:var(--mut)}
+.tcard.done{opacity:.75}
+
+/* ---------- logo cloud ---------- */
+.logos{padding:44px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.logos .lbl{text-align:center;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin-bottom:26px}
+.logo-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:30px;opacity:.55;filter:grayscale(1)}
+.logo-row div{font-family:"Sora",sans-serif;font-weight:700;font-size:20px;letter-spacing:-.02em;transition:opacity .3s,filter .3s}
+.logo-row div:hover{opacity:1;filter:grayscale(0)}
+
+/* ---------- feature story ---------- */
+.story{padding:130px 0}
+.story-row{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.story-row.rev .txt{order:2}
+.story-row.rev .vis{order:1}
+.story h2{font-size:clamp(28px,3vw,40px);margin:14px 0 18px}
+.story p.body{font-size:16.5px;line-height:1.7;max-width:440px}
+.story ul{list-style:none;margin:22px 0 0;padding:0;display:flex;flex-direction:column;gap:12px}
+.story li{display:flex;align-items:center;gap:10px;font-size:14.5px;color:var(--ink)}
+.story li svg{width:18px;height:18px;color:var(--forest);flex:none}
+.vis{position:relative}
+.vcard{background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:0 26px 60px rgba(33,29,26,.1);padding:26px;position:relative}
+.timeline{display:flex;flex-direction:column;gap:16px}
+.tl-row{display:flex;align-items:center;gap:14px}
+.tl-dot{width:30px;height:30px;border-radius:50%;background:var(--paper);border:2px solid var(--line);display:flex;align-items:center;justify-content:center;flex:none}
+.tl-dot.on{background:var(--forest);border-color:var(--forest)}
+.tl-dot svg{width:14px;height:14px;color:#fff}
+.tl-bar{flex:1;height:8px;background:var(--paper);border-radius:5px;overflow:hidden}
+.tl-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--coral),var(--gold));border-radius:5px;width:0}
+.chart-vis{display:flex;align-items:end;gap:8px;height:150px;padding:10px 6px}
+.chart-vis .bar{flex:1;background:linear-gradient(180deg,var(--coral),var(--gold));border-radius:8px 8px 3px 3px;height:0}
+.focus-ring{position:absolute;inset:-16px;border:1.5px dashed var(--line);border-radius:30px;pointer-events:none}
+
+/* ---------- pinned workflow ---------- */
+.flow-sec{padding:60px 0 0;background:var(--ink);color:#fff;position:relative}
+.flow-head{text-align:center;padding-top:60px;max-width:620px;margin:0 auto}
+.flow-head .eb{color:var(--gold)}
+.flow-head .eb:before{background:var(--gold)}
+.flow-head h2{color:#fff;font-size:clamp(28px,3.4vw,42px)}
+.flow-head p{color:rgba(255,255,255,.55);margin-top:14px;font-size:16px}
+.flow-pin{height:100vh;display:flex;align-items:center;justify-content:center;position:relative}
+.flow-board{width:min(920px,90vw);background:#2a2521;border:1px solid rgba(255,255,255,.09);border-radius:22px;padding:24px;box-shadow:0 40px 90px rgba(0,0,0,.5)}
+.flow-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.flow-col{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:14px;min-height:260px}
+.flow-col h5{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,.4);margin-bottom:12px}
+.fcard{background:#332c26;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 12px;margin-bottom:10px;font-size:12.5px;color:#f1ece4;position:relative}
+.fcard .tag{display:inline-block;font-size:9.5px;font-weight:700;text-transform:uppercase;padding:2px 6px;border-radius:4px;margin-bottom:6px;background:rgba(255,90,54,.2);color:#ff9979}
+.flow-progress{display:flex;justify-content:center;gap:10px;margin-top:26px}
+.flow-progress span{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.2);transition:background .3s,transform .3s}
+.flow-progress span.on{background:var(--coral);transform:scale(1.3)}
+
+/* ---------- stats ---------- */
+.stats{padding:110px 0;text-align:center}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.stat b{display:block;font-family:"Sora",sans-serif;font-size:clamp(34px,4vw,52px);font-weight:700;letter-spacing:-.03em;color:var(--ink)}
+.stat span{display:block;margin-top:8px;font-size:13.5px;color:var(--mut)}
+
+/* ---------- testimonials ---------- */
+.testi{padding:60px 0 130px}
+.testi-track{display:flex;gap:22px;overflow:hidden}
+.tcard2{flex:0 0 auto;width:380px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:30px;transition:transform .4s cubic-bezier(.2,.8,.2,1),box-shadow .4s}
+.tcard2:hover{transform:translateY(-8px) rotate(-.6deg);box-shadow:0 24px 50px rgba(33,29,26,.14)}
+.tcard2 .stars{color:var(--gold);font-size:14px;margin-bottom:14px;letter-spacing:2px}
+.tcard2 p{color:var(--ink);font-size:15.5px;line-height:1.6}
+.tcard2 .who{display:flex;align-items:center;gap:10px;margin-top:20px}
+.tcard2 .who span{width:38px;height:38px;border-radius:50%;background:var(--line)}
+.tcard2 .who b{display:block;font-size:14px;color:var(--ink)}
+.tcard2 .who i{font-style:normal;font-size:12.5px;color:var(--mut)}
+
+/* ---------- pricing ---------- */
+.pricing{padding:0 0 130px}
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.pcard{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:34px 28px;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s,border-color .35s}
+.pcard:hover{transform:translateY(-8px);box-shadow:0 26px 54px rgba(33,29,26,.12);border-color:#e0d4c0}
+.pcard.feat{background:var(--ink);color:#fff;position:relative;overflow:hidden}
+.pcard.feat:before{content:"";position:absolute;top:-40%;right:-30%;width:220px;height:220px;background:radial-gradient(circle,rgba(255,90,54,.35),transparent 70%)}
+.pcard.feat .tier,.pcard.feat p{color:rgba(255,255,255,.6)}
+.pcard.feat li{color:#fff}
+.pcard .tier{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);font-weight:700}
+.pcard .amt{font-family:"Sora",sans-serif;font-size:40px;font-weight:700;margin:14px 0;letter-spacing:-.03em}
+.pcard .amt span{font-size:14px;color:var(--mut);font-weight:500}
+.pcard ul{list-style:none;padding:0;margin:22px 0;display:flex;flex-direction:column;gap:11px}
+.pcard li{display:flex;gap:9px;align-items:center;font-size:14px;color:var(--ink)}
+.pcard li svg{width:15px;height:15px;color:var(--forest);flex:none}
+.pcard .btn{width:100%;justify-content:center;margin-top:8px}
+.badge-pop{position:absolute;top:20px;right:20px;background:var(--coral);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.04em}
+
+/* ---------- final cta ---------- */
+.final{padding:0 0 120px}
+.final-box{position:relative;background:var(--ink);border-radius:32px;padding:90px 40px;text-align:center;overflow:hidden}
+.final-glow{position:absolute;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(255,90,54,.4),transparent 68%);left:50%;top:50%;transform:translate(-50%,-50%);filter:blur(20px)}
+.final-box h2{position:relative;color:#fff;font-size:clamp(30px,4.4vw,52px);max-width:640px;margin:0 auto}
+.final-box p{position:relative;color:rgba(255,255,255,.55);margin:18px auto 0;max-width:460px;font-size:16px}
+.final-box .cta{position:relative;justify-content:center;margin-top:34px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:60px 0 30px}
+.foot-top{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;padding-bottom:40px;border-bottom:1px solid var(--line)}
+.foot-brand p{max-width:280px;margin-top:14px;font-size:14px;line-height:1.6}
+.foot-cols{display:flex;gap:60px}
+.foot-col h6{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);margin-bottom:16px}
+.foot-col a{display:block;font-size:14px;color:var(--ink);margin-bottom:10px;text-decoration:none;opacity:.8;transition:opacity .2s}
+.foot-col a:hover{opacity:1}
+.foot-bottom{display:flex;justify-content:space-between;padding-top:26px;font-size:13px;color:var(--mut)}
+
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr}
+  .board{transform:none;margin-top:20px}
+  .story-row{grid-template-columns:1fr}
+  .story-row.rev .txt{order:1}
+  .story-row.rev .vis{order:2}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:30px}
+  .price-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+}
+@media(max-width:600px){
+  .board-cols{grid-template-columns:1fr}
+  .logo-row{justify-content:center}
+  .foot-top{flex-direction:column;gap:30px}
+  .foot-cols{gap:34px;flex-wrap:wrap}
+  /* The pinned workflow board must fit inside one mobile viewport with room
+     to spare — a three-column grid stacked to 1fr would run taller than the
+     pin itself, stranding the "Done" column and dots below the fold with no
+     way to scroll to them while pinned. Keep all three columns side by side
+     (narrow) and shrink the card/board chrome instead of stacking. */
+  .flow-board{padding:14px}
+  .flow-cols{gap:8px}
+  .flow-col{min-height:150px;padding:10px 8px}
+  .flow-col h5{font-size:10px;margin-bottom:8px}
+  .fcard{font-size:10.5px;padding:8px 9px}
+  .fcard .tag{font-size:8px}
+  .flow-head{padding-top:40px}
+}
+@media(prefers-reduced-motion:reduce){
+  .rv{opacity:1!important;transform:none!important}
+}
 </style></head>
-<body data-cf-keep-dark><span class="kicker">SCROLL DOWN</span>
-<div class="content"><h1>Something worth<br>scrolling for.</h1><p>Keep reading — a call-to-action banner slides up from the bottom once you've scrolled past the fold.</p></div>
-<div id="banner"><b>Ready to start your free trial?</b><button>Get started</button></div>
+<body data-cf-keep-dark>
+
+<nav class="nav" id="nav">
+  <div class="nav-in">
+    <div class="brand"><span class="dot"></span>FlowState</div>
+    <div class="nav-links">
+      <a>Product</a><a>Workflows</a><a>Pricing</a><a>Customers</a>
+    </div>
+    <div class="nav-right">
+      <span class="lg">Sign in</span>
+      <button class="btn btn-coral magnetic">Start free <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></button>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-blob"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eb rv">Project management, reimagined</span>
+      <h1 class="rv">Work moves <em>fast</em> when everyone's in flow.</h1>
+      <p class="lead rv">FlowState turns scattered tasks into a single living board — plan, assign and ship without the status-meeting overhead.</p>
+      <div class="cta rv">
+        <button class="btn btn-coral magnetic">Start for free <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></button>
+        <button class="btn btn-line">Watch demo</button>
+      </div>
+      <div class="trust-mini rv">
+        <div class="avs">
+          <span style="background:linear-gradient(135deg,#ff9979,#ff5a36)"></span>
+          <span style="background:linear-gradient(135deg,#8fd6b4,#2d5a3d)"></span>
+          <span style="background:linear-gradient(135deg,#f2cf7e,#d4a53d)"></span>
+          <span style="background:linear-gradient(135deg,#b6a4f0,#6c3fd8)"></span>
+        </div>
+        <small>Trusted by 12,000+ product teams</small>
+      </div>
+    </div>
+    <div class="board rv" id="heroBoard">
+      <div class="board-bar"><i></i><i></i><i></i><span>Sprint 24 — Launch week</span></div>
+      <div class="board-cols">
+        <div class="col"><h5>To do <b>3</b></h5>
+          <div class="tcard" data-fly="1"><span class="tag design">Design</span><p>Redesign onboarding empty states</p><div class="foot"><span></span><i>Due Fri</i></div></div>
+          <div class="tcard" data-fly="2"><span class="tag copy">Copy</span><p>Write launch email sequence</p><div class="foot"><span></span><i>Due Mon</i></div></div>
+        </div>
+        <div class="col"><h5>In progress <b>2</b></h5>
+          <div class="tcard" data-fly="3"><span class="tag dev">Dev</span><p>Ship real-time board sync</p><div class="foot"><span></span><i>Today</i></div></div>
+        </div>
+        <div class="col"><h5>Done <b>4</b></h5>
+          <div class="tcard done" data-fly="4"><span class="tag dev">Dev</span><p>Migrate auth to SSO</p><div class="foot"><span></span><i>Yesterday</i></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="logos">
+  <div class="wrap">
+    <div class="lbl">Powering teams at</div>
+    <div class="logo-row">
+      <div>Northwind</div><div>Vellum</div><div>Cascade Labs</div><div>Ampersand</div><div>Origin&nbsp;Co.</div><div>Haven</div>
+    </div>
+  </div>
+</section>
+
+<section class="story">
+  <div class="wrap story-row">
+    <div class="txt">
+      <span class="eb rv">Plan</span>
+      <h2 class="rv">See the whole sprint before you commit to it.</h2>
+      <p class="body rv">Drag tasks across a timeline that recalculates capacity in real time, so nobody's sprint quietly overflows.</p>
+      <ul class="rv">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Auto-balances workload across the team</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Flags conflicts before they happen</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Syncs with the board, no double-entry</li>
+      </ul>
+    </div>
+    <div class="vis rv">
+      <div class="focus-ring"></div>
+      <div class="vcard">
+        <div class="timeline" id="tl">
+          <div class="tl-row"><div class="tl-dot on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="tl-bar"><i style="width:100%"></i></div></div>
+          <div class="tl-row"><div class="tl-dot on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div><div class="tl-bar"><i data-w="72"></i></div></div>
+          <div class="tl-row"><div class="tl-dot"></div><div class="tl-bar"><i data-w="38"></i></div></div>
+          <div class="tl-row"><div class="tl-dot"></div><div class="tl-bar"><i data-w="15"></i></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="story">
+  <div class="wrap story-row rev">
+    <div class="txt">
+      <span class="eb rv">Measure</span>
+      <h2 class="rv">Velocity you can actually trust.</h2>
+      <p class="body rv">Every board update rolls straight into a live burnup chart — no exports, no spreadsheet gymnastics.</p>
+      <ul class="rv">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Live throughput and cycle-time charts</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Shareable reports for stakeholders</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Historical trends, not just snapshots</li>
+      </ul>
+    </div>
+    <div class="vis rv">
+      <div class="focus-ring"></div>
+      <div class="vcard">
+        <div class="chart-vis" id="chart">
+          <div class="bar" data-h="38"></div><div class="bar" data-h="62"></div><div class="bar" data-h="48"></div>
+          <div class="bar" data-h="80"></div><div class="bar" data-h="66"></div><div class="bar" data-h="94"></div><div class="bar" data-h="74"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="flow-sec">
+  <div class="flow-head">
+    <span class="eb rv">Live workflow</span>
+    <h2 class="rv">Watch a task travel the whole board.</h2>
+    <p class="rv">One card, three states — scroll to follow it from idea to shipped.</p>
+  </div>
+  <div class="flow-pin" id="flowPin">
+    <div class="flow-board">
+      <div class="flow-cols">
+        <div class="flow-col" id="fcTodo"><h5>To do</h5></div>
+        <div class="flow-col" id="fcProg"><h5>In progress</h5></div>
+        <div class="flow-col" id="fcDone"><h5>Done</h5></div>
+      </div>
+      <div class="flow-progress"><span class="on"></span><span></span><span></span></div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="wrap stats-grid">
+    <div class="stat"><b data-count="12400">0</b><span>Teams on FlowState</span></div>
+    <div class="stat"><b data-count="41" data-suffix="%">0</b><span>Faster sprint planning</span></div>
+    <div class="stat"><b data-count="2100000" data-suffix="+">0</b><span>Tasks shipped this year</span></div>
+    <div class="stat"><b data-count="99" data-suffix=".9%">0</b><span>Uptime SLA</span></div>
+  </div>
+</section>
+
+<section class="testi">
+  <div class="wrap">
+    <span class="eb rv">Customers</span>
+    <h2 class="rv" style="margin-bottom:30px">Teams that stopped drowning in status updates.</h2>
+  </div>
+  <div class="wrap">
+    <div class="testi-track rv">
+      <div class="tcard2"><div class="stars">★★★★★</div><p>"We cut our planning meetings in half. The workload view alone paid for itself in the first sprint."</p><div class="who"><span></span><div><b>Maya Ortiz</b><i>Head of Product, Cascade Labs</i></div></div></div>
+      <div class="tcard2"><div class="stars">★★★★★</div><p>"FlowState is the first tool the whole team actually opens every day, engineers included."</p><div class="who"><span></span><div><b>Daniel Reyes</b><i>Eng Lead, Northwind</i></div></div></div>
+      <div class="tcard2"><div class="stars">★★★★★</div><p>"The live burnup chart replaced three spreadsheets and a very tired ops person."</p><div class="who"><span></span><div><b>Priya Nair</b><i>COO, Ampersand</i></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing">
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:50px">
+      <span class="eb rv" style="justify-content:center">Pricing</span>
+      <h2 class="rv">Start free. Scale when it's earned.</h2>
+    </div>
+    <div class="price-grid">
+      <div class="pcard">
+        <div class="tier">Starter</div>
+        <div class="amt">$0<span>/mo</span></div>
+        <p>For small teams getting their first board off the ground.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Up to 5 members</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>3 active boards</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Basic reporting</li>
+        </ul>
+        <button class="btn btn-line">Get started</button>
+      </div>
+      <div class="pcard feat">
+        <span class="badge-pop">Most popular</span>
+        <div class="tier">Team</div>
+        <div class="amt">$18<span>/user/mo</span></div>
+        <p>For teams that live and breathe their sprint board.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Unlimited members</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Unlimited boards</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Live velocity charts</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Priority support</li>
+        </ul>
+        <button class="btn btn-coral">Start free trial</button>
+      </div>
+      <div class="pcard">
+        <div class="tier">Enterprise</div>
+        <div class="amt">Custom</div>
+        <p>For orgs that need SSO, audit logs and a dedicated CSM.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>SSO &amp; SCIM</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Audit logs</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M20 6 9 17l-5-5"/></svg>Dedicated CSM</li>
+        </ul>
+        <button class="btn btn-line">Talk to sales</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <div class="final-box rv">
+      <div class="final-glow"></div>
+      <h2>Stop chasing updates. Start seeing them.</h2>
+      <p>Free forever for small teams — no credit card, no setup call.</p>
+      <div class="cta"><button class="btn btn-coral magnetic">Start for free <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></button></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <div class="brand"><span class="dot"></span>FlowState</div>
+        <p>The living board for teams who'd rather build than report status.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h6>Product</h6><a>Boards</a><a>Timeline</a><a>Reporting</a></div>
+        <div class="foot-col"><h6>Company</h6><a>About</a><a>Careers</a><a>Blog</a></div>
+        <div class="foot-col"><h6>Resources</h6><a>Docs</a><a>API</a><a>Status</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 FlowState Inc.</span><span>Privacy · Terms</span></div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
-document.addEventListener("scroll",function(){document.getElementById("banner").classList.toggle("show",window.scrollY>150)},{passive:true});
+(function(){
+  var nav = document.getElementById("nav");
+  document.addEventListener("scroll", function(){
+    nav.classList.toggle("on", window.scrollY > 14);
+  }, { passive: true });
+
+  // count-up stat numbers, formatted once fully counted
+  function fmt(n, suffix){
+    var v = Math.round(n);
+    var s = v >= 1000000 ? (v/1000000).toFixed(1).replace(/\.0$/,"") + "M" :
+            v >= 1000 ? (v/1000).toFixed(1).replace(/\.0$/,"") + "K" : String(v);
+    return s + (suffix || "");
+  }
+  document.querySelectorAll(".stat b").forEach(function(el){
+    el.textContent = fmt(0, el.dataset.suffix);
+  });
+
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!window.gsap || !window.ScrollTrigger || reduced) {
+    document.querySelectorAll(".rv").forEach(function(el){ el.style.opacity = 1; el.style.transform = "none"; });
+    document.querySelectorAll(".tl-bar i[data-w]").forEach(function(el){ el.style.width = el.dataset.w + "%"; });
+    document.querySelectorAll(".chart-vis .bar").forEach(function(el){ el.style.height = el.dataset.h + "%"; });
+    document.querySelectorAll(".stat b[data-count]").forEach(function(el){ el.textContent = fmt(+el.dataset.count, el.dataset.suffix); });
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Hero entrance choreography: copy rises in, board mockup settles from a
+  // slight scale/rotate offset so it reads as "dropping into place."
+  var tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+  tl.to(".hero .rv", { opacity: 1, y: 0, duration: .8, stagger: .08 })
+    .fromTo("#heroBoard", { opacity: 0, y: 40, rotate: 5, scale: .96 },
+      { opacity: 1, y: 0, rotate: 1.2, scale: 1, duration: 1 }, "-=.6")
+    .from("#heroBoard .tcard", { opacity: 0, y: 16, stagger: .07, duration: .5 }, "-=.5");
+
+  // Gentle idle float on the hero board so the page feels alive even at rest.
+  gsap.to("#heroBoard", { y: -8, duration: 3.2, ease: "sine.inOut", yoyo: true, repeat: -1, delay: 1.6 });
+
+  // Generic reveal for every other .rv block as it enters the viewport.
+  document.querySelectorAll(".rv").forEach(function(el){
+    if (el.closest(".hero")) return;
+    gsap.to(el, {
+      opacity: 1, y: 0, duration: .85, ease: "power3.out",
+      scrollTrigger: { trigger: el, start: "top 85%" }
+    });
+  });
+
+  // Logo cloud: subtle stagger-in for each mark.
+  gsap.from(".logo-row div", {
+    opacity: 0, y: 12, stagger: .06, duration: .6,
+    scrollTrigger: { trigger: ".logo-row", start: "top 88%" }
+  });
+
+  // Timeline bars fill in as the "Plan" story section scrolls into view.
+  ScrollTrigger.create({
+    trigger: "#tl", start: "top 75%", once: true,
+    onEnter: function(){
+      document.querySelectorAll("#tl .tl-bar i[data-w]").forEach(function(el, i){
+        gsap.to(el, { width: el.dataset.w + "%", duration: 1.1, delay: i * .12, ease: "power2.out" });
+      });
+    }
+  });
+
+  // Bar chart grows up from the baseline as the "Measure" story enters.
+  ScrollTrigger.create({
+    trigger: "#chart", start: "top 75%", once: true,
+    onEnter: function(){
+      gsap.to("#chart .bar", { height: function(i, t){ return t.dataset.h + "%"; }, duration: 1, stagger: .06, ease: "power2.out" });
+    }
+  });
+
+  // Story visuals: soft parallax drift as their section scrolls past.
+  document.querySelectorAll(".story .vis").forEach(function(vis){
+    gsap.to(vis, {
+      y: -30, ease: "none",
+      scrollTrigger: { trigger: vis.closest(".story"), start: "top bottom", end: "bottom top", scrub: true }
+    });
+  });
+
+  // Pinned workflow: a single task card travels To do -> In progress -> Done
+  // as the section is pinned, driven purely by scroll progress (scrub).
+  var card = document.createElement("div");
+  card.className = "fcard";
+  card.innerHTML = '<span class="tag">Feature</span>Ship real-time board sync';
+  document.getElementById("fcTodo").appendChild(card);
+  var dots = document.querySelectorAll(".flow-progress span");
+  var cols = [document.getElementById("fcTodo"), document.getElementById("fcProg"), document.getElementById("fcDone")];
+
+  ScrollTrigger.create({
+    trigger: "#flowPin", start: "top top", end: "+=160%", pin: true, scrub: .4,
+    onUpdate: function(self){
+      var stage = Math.min(2, Math.floor(self.progress * 3));
+      var target = cols[stage];
+      if (card.parentElement !== target) {
+        target.appendChild(card);
+        gsap.fromTo(card, { opacity: 0, scale: .9 }, { opacity: 1, scale: 1, duration: .35 });
+        dots.forEach(function(d, i){ d.classList.toggle("on", i === stage); });
+      }
+    }
+  });
+
+  // Stat counters animate once, on first entry into view.
+  ScrollTrigger.create({
+    trigger: ".stats", start: "top 75%", once: true,
+    onEnter: function(){
+      document.querySelectorAll(".stat b[data-count]").forEach(function(el){
+        var target = +el.dataset.count, suffix = el.dataset.suffix || "";
+        var obj = { v: 0 };
+        gsap.to(obj, { v: target, duration: 1.8, ease: "power2.out", onUpdate: function(){ el.textContent = fmt(obj.v, suffix); } });
+      });
+    }
+  });
+
+  // Pricing cards: staggered rise, featured card given a touch more lift.
+  gsap.from(".pcard", {
+    opacity: 0, y: 36, stagger: .1, duration: .8, ease: "power3.out",
+    scrollTrigger: { trigger: ".price-grid", start: "top 82%" }
+  });
+
+  // Magnetic button pull toward the cursor within a small radius.
+  document.querySelectorAll(".magnetic").forEach(function(btn){
+    btn.addEventListener("mousemove", function(e){
+      var r = btn.getBoundingClientRect();
+      var x = e.clientX - r.left - r.width / 2, y = e.clientY - r.top - r.height / 2;
+      gsap.to(btn, { x: x * .3, y: y * .35, duration: .3, ease: "power2.out" });
+    });
+    btn.addEventListener("mouseleave", function(){
+      gsap.to(btn, { x: 0, y: 0, duration: .5, ease: "elastic.out(1,.4)" });
+    });
+  });
+
+  window.addEventListener("load", function(){ ScrollTrigger.refresh(); });
+})();
 </script>
-</body></html>`,
+</body></html>
+`,
 
   "card-hover-tilt": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Hover Tilt Card</title><style>
