@@ -3661,6 +3661,246 @@ moveUnderline(tabs[0]);
 </body></html>
 `,
 
+  "radial-hex-menu": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Radial Hex Menu</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#0b0b0f;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center}
+.wheel{position:relative;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle at 50% 40%,#17171f,#0b0b0f 70%);border:1px solid #26262f}
+.hub{position:absolute;top:50%;left:50%;width:52px;height:52px;margin:-26px 0 0 -26px;border-radius:50%;background:#fff;color:#0b0b0f;display:grid;place-items:center;cursor:pointer;z-index:3;transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.hub:hover{transform:scale(1.08)}
+.hub svg{width:18px;height:18px}
+.node{position:absolute;width:66px;height:66px;margin:-33px 0 0 -33px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#9b98a6;cursor:pointer;transition:transform .25s cubic-bezier(.34,1.56,.64,1),color .2s ease,background .2s ease}
+.node svg{width:18px;height:18px}
+.node span{font-size:8px;font-weight:600;letter-spacing:.4px}
+.node:hover{color:#fff;background:rgba(255,255,255,.06);transform:scale(1.1)}
+.n1{top:12%;left:50%}
+.n2{top:50%;left:85%}
+.n3{top:50%;left:15%}
+.n4{top:88%;left:50%}
+.n5{top:26%;left:82%}
+.n6{top:26%;left:18%}
+</style></head>
+<body data-cf-keep-dark>
+<div class="wheel">
+  <div class="node n1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18M3 15v4a2 2 0 0 0 2 2h4m10-6v4a2 2 0 0 1-2 2h-4"/></svg><span>SETTINGS</span></div>
+  <div class="node n2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><span>SEARCH</span></div>
+  <div class="node n3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 22h16M5 2h14M6 2v4a6 6 0 0 0 12 0V2M6 22v-4a6 6 0 0 1 12 0v4"/></svg><span>NEWS</span></div>
+  <div class="node n4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>HOME</span></div>
+  <div class="node n5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>SPORTS</span></div>
+  <div class="node n6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zm12-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/></svg><span>MUSIC</span></div>
+  <div class="hub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg></div>
+</div>
+</body></html>
+`,
+
+  "docs-dropdown-nav": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Docs Dropdown Nav</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#fff;font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.bar{display:flex;align-items:center;gap:22px;height:52px;padding:0 22px;border-bottom:1px solid #eceef2}
+.bar a{color:#3f3f46;font-size:12.5px;font-weight:500;text-decoration:none}
+.trig{position:relative}
+.trig button{display:flex;align-items:center;gap:5px;background:none;border:none;color:#3f3f46;font:500 12.5px Inter,sans-serif;cursor:pointer;padding:0}
+.trig svg{width:12px;height:12px;transition:transform .2s ease}
+.trig:hover svg{transform:rotate(180deg)}
+.panel{position:absolute;top:36px;left:-16px;width:460px;padding:20px;border:1px solid #ececf1;border-radius:14px;background:#fff;box-shadow:0 24px 50px -18px rgba(20,20,30,.18);opacity:0;pointer-events:none;transform:translateY(-6px);transition:opacity .2s ease,transform .2s ease;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.trig:hover .panel{opacity:1;pointer-events:auto;transform:none}
+.panel h4{margin:0 0 4px;font-size:12px;color:#0a0a0a}
+.panel p{margin:0;font-size:10.5px;color:#8a8a92;line-height:1.6}
+.panel>div{padding:8px;border-radius:8px;transition:background .15s ease}
+.panel>div:hover{background:#f7f7f9}
+.brand{margin-right:24px;font-weight:700;font-size:13px;color:#0a0a0a}
+</style></head>
+<body>
+<nav class="bar">
+  <span class="brand">◆ shadcn/ui</span>
+  <a href="#">Getting started</a>
+  <span class="trig">
+    <button>Components <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg></button>
+    <div class="panel">
+      <div><h4>Introduction</h4><p>Re-usable components built using Radix UI and Tailwind CSS.</p></div>
+      <div><h4>Installation</h4><p>How to install dependencies and structure your app.</p></div>
+      <div><h4>Typography</h4><p>Styles for headings, paragraphs, lists, etc.</p></div>
+      <div><h4>Theming</h4><p>Customize your design tokens and dark mode.</p></div>
+    </div>
+  </span>
+  <a href="#">Documentation</a>
+</nav>
+</body></html>
+`,
+
+  "scroll-collapse-nav": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Scroll Collapse Nav</title><style>
+*{box-sizing:border-box}
+body{margin:0;background:#fafafa;font-family:Inter,ui-sans-serif,Arial,sans-serif}
+.head{position:sticky;top:0;z-index:2;padding:16px 0;background:linear-gradient(#fafafa,#fafafa 70%,transparent);text-align:center}
+.head h1{margin:0 0 4px;font-size:15px;color:#0a0a0a}
+.head p{margin:0;font-size:10px;color:#9a9aa2}
+.stage{height:calc(100vh - 74px);overflow-y:auto;display:flex;justify-content:center;padding-top:24px}
+.stage-inner{height:180vh;width:100%;display:flex;justify-content:center}
+.nav{position:sticky;top:64px;height:44px;flex-shrink:0;display:flex;align-items:center;gap:16px;padding:0 22px;border-radius:100px;background:#fff;border:1px solid #ececf1;box-shadow:0 10px 26px -12px rgba(20,20,30,.16);transition:gap .35s cubic-bezier(.2,.8,.2,1),padding .35s cubic-bezier(.2,.8,.2,1)}
+.nav a{color:#3f3f46;font-size:11.5px;font-weight:500;text-decoration:none;white-space:nowrap;overflow:hidden;max-width:80px;opacity:1;transition:max-width .35s cubic-bezier(.2,.8,.2,1),opacity .25s ease,margin .35s ease}
+.nav svg{width:15px;height:15px;color:#52525b;flex-shrink:0}
+.nav.collapsed{gap:0;padding:0 14px}
+.nav.collapsed a{max-width:0;opacity:0;margin:0}
+.filler{height:1px}
+</style></head>
+<body>
+<div class="head"><h1>Scroll Collapse Nav</h1><p>Scroll the panel below — the pill shrinks to icons, then expands again</p></div>
+<div class="stage" id="stage">
+  <div class="stage-inner">
+    <nav class="nav" id="nav">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <a href="#">Home</a><a href="#">About</a><a href="#">Services</a><a href="#">Contact</a>
+    </nav>
+  </div>
+</div>
+<script>
+var stage = document.getElementById("stage"), nav = document.getElementById("nav");
+stage.addEventListener("scroll", function () {
+  if (stage.scrollTop > 40) nav.classList.add("collapsed");
+  else nav.classList.remove("collapsed");
+});
+nav.addEventListener("click", function () {
+  stage.scrollTo({ top: 0, behavior: "smooth" });
+});
+</script>
+</body></html>
+`,
+
+  "slideout-panel-nav": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Slide-out Panel Nav</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#f4f4f5;font-family:Inter,ui-sans-serif,Arial,sans-serif;overflow:hidden}
+.trigger{position:absolute;top:18px;right:18px;z-index:3;display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #e4e4e7;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:11px;font-weight:600;color:#27272a}
+.trigger svg{width:14px;height:14px}
+.trigger em{font-style:normal;color:#a1a1aa;font-weight:500;margin-right:4px}
+.panel{position:absolute;top:0;right:0;bottom:0;width:64%;display:flex;flex-direction:column;justify-content:center;padding:0 40px;background:linear-gradient(120deg,#71717a,#a1a1aa);transform:translateX(100%);transition:transform .45s cubic-bezier(.16,1,.3,1)}
+.panel.open{transform:translateX(0)}
+.panel a{display:block;color:#0a0a0a;font-size:26px;font-weight:800;text-decoration:none;letter-spacing:-.02em;padding:5px 0;transition:transform .2s ease,color .2s ease}
+.panel a:hover{transform:translateX(8px);color:#fff}
+</style></head>
+<body>
+<div class="trigger" id="trigger"><em>click me</em><span id="label">Menu</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h16M4 18h16"/></svg></div>
+<div class="panel" id="panel">
+  <a href="#">About Us</a>
+  <a href="#">Our Work</a>
+  <a href="#">Services</a>
+  <a href="#">Blog</a>
+  <a href="#">Contact Us</a>
+</div>
+<script>
+var trigger = document.getElementById("trigger"), panel = document.getElementById("panel"), label = document.getElementById("label");
+trigger.addEventListener("click", function () {
+  var open = panel.classList.toggle("open");
+  label.textContent = open ? "Close" : "Menu";
+  trigger.querySelector("svg").innerHTML = open
+    ? '<path d="M18 6 6 18M6 6l12 12"/>'
+    : '<path d="M4 6h16M4 12h16M4 18h16"/>';
+});
+</script>
+</body></html>
+`,
+
+  "magnify-dock-nav": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Magnify Dock</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#fafafa;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center}
+.dock{display:flex;align-items:flex-end;gap:8px;padding:12px 14px;border-radius:20px;background:rgba(255,255,255,.75);backdrop-filter:blur(16px);border:1px solid #ececf1;box-shadow:0 20px 45px -18px rgba(20,20,30,.22)}
+.item{position:relative;width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:#fff;border:1px solid #ececf1;color:#52525b;cursor:pointer;transition:transform .18s cubic-bezier(.34,1.56,.64,1),width .18s ease,height .18s ease;transform-origin:bottom center}
+.item svg{width:19px;height:19px}
+.item .tip{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%) translateY(4px);padding:5px 9px;border-radius:6px;background:#18181b;color:#fff;font-size:9px;font-weight:600;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s ease,transform .15s ease}
+.item:hover .tip{opacity:1;transform:translateX(-50%) translateY(0)}
+</style></head>
+<body>
+<div class="dock" id="dock">
+  <div class="item" data-label="Home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="tip">Home</span></div>
+  <div class="item" data-label="Messages"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="tip">Messages</span></div>
+  <div class="item" data-label="Components"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg><span class="tip">Components</span></div>
+  <div class="item" data-label="Activity"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span class="tip">Activity</span></div>
+  <div class="item" data-label="Gallery"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg><span class="tip">Gallery</span></div>
+  <div class="item" data-label="Rewards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.5 13.5 17 22l-5-3-5 3 1.5-8.5"/></svg><span class="tip">Rewards</span></div>
+</div>
+<script>
+var dock = document.getElementById("dock"), items = dock.querySelectorAll(".item");
+dock.addEventListener("mousemove", function (e) {
+  items.forEach(function (item) {
+    var r = item.getBoundingClientRect();
+    var center = r.left + r.width / 2;
+    var dist = Math.abs(e.clientX - center);
+    var scale = Math.max(1, 1.55 - dist / 130);
+    item.style.width = 44 * scale + "px";
+    item.style.height = 44 * scale + "px";
+    item.style.transform = "translateY(" + (-(scale - 1) * 14) + "px)";
+  });
+});
+dock.addEventListener("mouseleave", function () {
+  items.forEach(function (item) {
+    item.style.width = "44px";
+    item.style.height = "44px";
+    item.style.transform = "none";
+  });
+});
+</script>
+</body></html>
+`,
+
+  "fluid-radial-menu": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Fluid Radial Menu</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#fafafa;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center}
+.wrap{position:relative;width:200px;height:220px;display:grid;place-items:end center}
+.trigger{position:relative;z-index:5;width:52px;height:52px;border-radius:50%;background:#18181b;color:#fff;border:none;display:grid;place-items:center;cursor:pointer;box-shadow:0 12px 26px -10px rgba(20,20,30,.4)}
+.trigger svg{width:18px;height:18px;transition:transform .3s ease}
+.trigger.open svg{transform:rotate(135deg)}
+.orb{position:absolute;left:50%;bottom:0;width:42px;height:42px;margin:0 0 0 -21px;border-radius:50%;background:#fff;border:1px solid #ececf1;color:#3f3f46;display:grid;place-items:center;box-shadow:0 8px 18px -8px rgba(20,20,30,.25);opacity:0;transform:translate(0,0) scale(.4);transition:transform .4s cubic-bezier(.34,1.56,.64,1),opacity .25s ease;pointer-events:none}
+.orb svg{width:16px;height:16px}
+.wrap.open .orb{opacity:1;pointer-events:auto}
+.wrap.open .o1{transform:translate(0,-78px) scale(1)}
+.wrap.open .o2{transform:translate(-62px,-52px) scale(1)}
+.wrap.open .o3{transform:translate(62px,-52px) scale(1)}
+.wrap.open .o4{transform:translate(-40px,10px) scale(1)}
+.wrap.open .o5{transform:translate(40px,10px) scale(1)}
+</style></head>
+<body>
+<div class="wrap" id="wrap">
+  <div class="orb o1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
+  <div class="orb o2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg></div>
+  <div class="orb o3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21a8 8 0 1 0-16 0"/><circle cx="12" cy="7" r="4"/></svg></div>
+  <div class="orb o4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6m11-11h-6M7 12H1m17.36-6.36-4.24 4.24m-8.24 0L1.64 5.64M18.36 18.36l-4.24-4.24m-8.24 0-4.24 4.24"/></svg></div>
+  <div class="orb o5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4a7 7 0 1 0 4.9 12L21 21"/></svg></div>
+  <button class="trigger" id="trigger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+</div>
+<script>
+var wrap = document.getElementById("wrap"), trigger = document.getElementById("trigger");
+trigger.addEventListener("click", function () {
+  wrap.classList.toggle("open");
+  trigger.classList.toggle("open");
+});
+</script>
+</body></html>
+`,
+
+  "3d-glossy-navbar": `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>3D Glossy Navbar</title><style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#eef0f3;font-family:Inter,ui-sans-serif,Arial,sans-serif;display:grid;place-items:center}
+.bar{position:relative;display:flex;align-items:center;gap:16px;height:46px;padding:0 20px;border-radius:100px;background:linear-gradient(180deg,#fdfdfe 0%,#e4e6ea 100%);box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 -6px 10px rgba(255,255,255,.6) inset,0 18px 30px -14px rgba(30,32,40,.35),0 2px 3px rgba(30,32,40,.15)}
+.bar::before{content:"";position:absolute;left:6%;right:6%;top:3px;height:40%;border-radius:100px 100px 60% 60% / 100px 100px 20px 20px;background:linear-gradient(180deg,rgba(255,255,255,.75),transparent);pointer-events:none}
+.bar a{position:relative;z-index:1;color:#3f3f46;font-size:11.5px;font-weight:600;text-decoration:none;transition:color .2s ease,transform .2s ease}
+.bar a:hover{color:#111114;transform:translateY(-1px)}
+.bar a.active{color:#111114}
+</style></head>
+<body>
+<nav class="bar">
+  <a href="#" class="active">Home</a>
+  <a href="#">Problem</a>
+  <a href="#">Solution</a>
+  <a href="#">Contact</a>
+</nav>
+</body></html>
+`,
+
   "drag-drop-upload-form": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Drag &amp; Drop Upload Form</title><style>
 :root{--bg:#f5f6fb;--ink:#191b29;--mut:#6b7086;--indigo:#4338ca;--line:#e2e4f0;--card:#fff;--green:#16a34a}
