@@ -1302,26 +1302,467 @@ e.addEventListener("input",function(){const v=e.value;const good=/^[^@\\s]+@[^@\
 </body></html>`,
 
   "faq-accordion-section": `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>FAQ Accordion Section</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:#f7f5fb;font-family:Inter,ui-sans-serif,Arial,sans-serif;padding:26px}
-.faq{width:min(460px,92vw)}
-.faq h2{margin:0 0 16px;font:700 22px "Space Grotesk",sans-serif;letter-spacing:-.03em}
-details{border-bottom:1px solid var(--line);padding:12px 4px;border-radius:8px;transition:background .25s}
-details[open]{background:#0e0d14}
-summary{cursor:pointer;list-style:none;font:700 11px "Space Grotesk",sans-serif;display:flex;justify-content:space-between;align-items:center}
-summary::-webkit-details-marker{display:none}
-summary:after{content:"+";width:20px;height:20px;border-radius:50%;background:#181425;color:var(--lav);display:grid;place-items:center;font-style:normal;transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .3s,color .3s}
-details[open] summary:after{transform:rotate(45deg);background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f}
-details p{margin:10px 0 2px;font-size:9px;color:#847e8f;line-height:1.75;animation:fade .35s ease both}
-@keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Vaultline Landing Page</title><style>
+:root{--bg:#060b10;--panel:#0c141c;--panel2:#101b25;--line:rgba(255,255,255,.08);--ink:#eef3f6;--mut:#7c8b98;--green:#3df2a4;--green-d:#22c880;--blue:#4d8cff;--amber:#ffb04d}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3{font-family:"Space Grotesk",Inter,sans-serif;margin:0;font-weight:600;letter-spacing:-.03em;color:#fff}
+p{margin:0;color:var(--mut)}
+button{font-family:inherit;cursor:pointer;border:0}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.wrap{max-width:1180px;margin:0 auto;padding:0 32px}
+.rv{opacity:0;transform:translateY(28px)}
+.eb{display:inline-flex;align-items:center;gap:9px;font-size:12.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--green);margin-bottom:16px;font-family:"JetBrains Mono",monospace}
+.eb:before{content:"";width:16px;height:1px;background:var(--green)}
+
+/* ---------- buttons ---------- */
+.btn{position:relative;display:inline-flex;align-items:center;gap:9px;border-radius:10px;padding:14px 24px;font-size:14.5px;font-weight:600;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s,border-color .3s}
+.btn svg{width:15px;height:15px;flex:none;transition:transform .3s}
+.btn:hover svg{transform:translateX(4px)}
+.btn-green{background:var(--green);color:#04170e;box-shadow:0 0 0 rgba(61,242,164,.4)}
+.btn-green:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(61,242,164,.28);background:var(--green-d)}
+.btn-line{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn-line:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.04)}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:60;transition:background .4s,box-shadow .4s,backdrop-filter .4s;border-bottom:1px solid transparent}
+.nav-in{max-width:1180px;margin:0 auto;padding:22px 32px;display:flex;align-items:center;gap:34px}
+.nav.on{background:rgba(6,11,16,.82);backdrop-filter:blur(18px) saturate(1.4);border-bottom-color:var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font-family:"Space Grotesk",sans-serif;font-size:20px;font-weight:700;color:#fff}
+.brand svg{width:22px;height:22px;color:var(--green)}
+.nav-links{display:flex;gap:30px;margin:0 auto;font-size:14px;color:var(--mut)}
+.nav-links a{position:relative;cursor:pointer;padding-bottom:4px}
+.nav-links a:after{content:"";position:absolute;left:0;bottom:0;width:100%;height:1.5px;background:var(--green);transform:scaleX(0);transform-origin:right;transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.nav-links a:hover{color:#fff}
+.nav-links a:hover:after{transform:scaleX(1);transform-origin:left}
+.nav-right{display:flex;align-items:center;gap:18px}
+.nav-right .lg{font-size:14px;color:var(--mut);cursor:pointer}
+.nav-right .btn{padding:10px 18px;font-size:13.5px}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding:100px 0 60px;overflow:hidden}
+.hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse 60% 50% at 50% 20%,#000,transparent)}
+.hero-glow{position:absolute;top:-260px;left:50%;transform:translateX(-50%);width:900px;height:600px;background:radial-gradient(ellipse,rgba(61,242,164,.16),transparent 68%);pointer-events:none}
+.hero-in{position:relative;text-align:center;max-width:780px;margin:0 auto}
+.hero h1{font-size:clamp(38px,5.2vw,66px);line-height:1.05}
+.hero h1 .grad{background:linear-gradient(100deg,var(--green),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{margin-top:22px;font-size:17.5px;line-height:1.65;max-width:560px;margin-left:auto;margin-right:auto}
+.hero .cta{display:flex;gap:14px;justify-content:center;margin-top:32px;flex-wrap:wrap}
+.hero .fine{margin-top:18px;font-size:13px;color:var(--mut)}
+
+/* dashboard mockup */
+.dash-wrap{position:relative;margin-top:60px}
+.dash{position:relative;z-index:1;background:var(--panel);border:1px solid var(--line);border-radius:20px;box-shadow:0 40px 100px rgba(0,0,0,.55);max-width:980px;margin:0 auto;overflow:hidden}
+.dash-top{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--line)}
+.dash-top .l{display:flex;gap:8px}
+.dash-top .l i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.12)}
+.dash-top .r{font-size:12px;color:var(--mut);font-family:"JetBrains Mono",monospace;display:flex;align-items:center;gap:7px}
+.dash-top .r b{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;box-shadow:0 0 8px var(--green)}
+.dash-body{display:grid;grid-template-columns:200px 1fr;min-height:340px}
+.dash-side{border-right:1px solid var(--line);padding:18px 14px;display:flex;flex-direction:column;gap:4px}
+.dash-side a{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;font-size:13px;color:var(--mut)}
+.dash-side a.on{background:rgba(61,242,164,.1);color:var(--green)}
+.dash-side a svg{width:15px;height:15px;flex:none}
+.dash-main{padding:22px}
+.bal-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}
+.bal-row .amt{font-family:"Space Grotesk",sans-serif;font-size:34px;font-weight:700;color:#fff}
+.bal-row .amt span{font-size:15px;color:var(--green);margin-left:8px;font-weight:600}
+.bal-row .pill{background:rgba(61,242,164,.1);color:var(--green);font-size:11.5px;font-weight:700;padding:5px 11px;border-radius:20px;font-family:"JetBrains Mono",monospace}
+.chart-box{position:relative;height:140px;margin-bottom:20px}
+.chart-box svg{width:100%;height:100%;overflow:visible}
+.chart-box path.line{fill:none;stroke:var(--green);stroke-width:2.4;stroke-linecap:round}
+.chart-box path.area{fill:url(#gradArea);opacity:.5}
+.row-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.mini-card{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px}
+.mini-card span{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
+.mini-card b{display:block;margin-top:8px;font-family:"Space Grotesk",sans-serif;font-size:19px;color:#fff}
+.mini-card .up{color:var(--green);font-size:11.5px;margin-top:4px;display:block}
+
+/* ---------- logos ---------- */
+.logos{padding:46px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.logos .lbl{text-align:center;font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut);margin-bottom:26px;font-family:"JetBrains Mono",monospace}
+.logo-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:30px;opacity:.5}
+.logo-row div{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:19px;color:#fff;transition:opacity .3s}
+.logo-row div:hover{opacity:1}
+
+/* ---------- feature grid ---------- */
+.feats{padding:130px 0}
+.feats-head{max-width:600px;margin:0 auto 60px;text-align:center}
+.feats-head h2{font-size:clamp(28px,3.4vw,42px)}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.fcard{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:28px;transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .35s,box-shadow .35s}
+.fcard:hover{transform:translateY(-6px);border-color:rgba(61,242,164,.35);box-shadow:0 20px 46px rgba(0,0,0,.4)}
+.fcard .ic{width:44px;height:44px;border-radius:12px;background:rgba(61,242,164,.1);display:flex;align-items:center;justify-content:center;margin-bottom:18px;transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .35s}
+.fcard:hover .ic{transform:rotate(-8deg) scale(1.08);background:rgba(61,242,164,.18)}
+.fcard .ic svg{width:22px;height:22px;color:var(--green)}
+.fcard h3{font-size:18px;margin-bottom:10px}
+.fcard p{font-size:14.5px;line-height:1.6}
+
+/* ---------- horizontal ledger scroll ---------- */
+.ledger-sec{padding:0 0 130px}
+.ledger-head{max-width:640px;margin:0 auto 46px;text-align:center}
+.ledger-track-wrap{overflow:hidden}
+.ledger-track{display:flex;gap:18px;width:max-content;padding:4px 32px}
+.txn{width:280px;flex:none;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;transition:transform .3s,border-color .3s}
+.txn:hover{transform:translateY(-4px);border-color:rgba(61,242,164,.35)}
+.txn .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.txn .merc{display:flex;align-items:center;gap:10px}
+.txn .merc span{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.txn .merc b{font-size:14px;color:#fff;display:block}
+.txn .merc i{font-style:normal;font-size:11.5px;color:var(--mut)}
+.txn .amt{font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:15px}
+.txn .amt.neg{color:#fff}
+.txn .amt.pos{color:var(--green)}
+.txn .bar{height:5px;background:var(--panel2);border-radius:4px;overflow:hidden}
+.txn .bar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--green),var(--blue))}
+
+/* ---------- pinned security ---------- */
+.sec-pin-sec{position:relative}
+.sec-head{text-align:center;padding:120px 0 0;max-width:600px;margin:0 auto}
+.sec-head h2{font-size:clamp(28px,3.4vw,42px)}
+.sec-pin{height:100vh;display:flex;align-items:center;justify-content:center;position:relative}
+.shield-vis{position:relative;width:300px;height:300px;display:flex;align-items:center;justify-content:center}
+.shield-ring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(61,242,164,.18)}
+.shield-ring.r2{inset:32px}
+.shield-ring.r3{inset:64px}
+.shield-core{width:150px;height:150px;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(61,242,164,.28),rgba(12,20,28,.9) 70%);border:1px solid rgba(61,242,164,.35);display:flex;align-items:center;justify-content:center;box-shadow:0 0 80px rgba(61,242,164,.18)}
+.shield-core svg{width:56px;height:56px;color:var(--green)}
+.sec-labels{position:absolute;inset:0;pointer-events:none}
+.sec-label{position:absolute;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 13px;font-size:12px;font-family:"JetBrains Mono",monospace;color:var(--ink);opacity:0;white-space:nowrap}
+.sec-label b{color:var(--green)}
+.l1{top:6%;left:8%}.l2{top:14%;right:6%}.l3{bottom:18%;left:2%}.l4{bottom:6%;right:10%}
+
+/* ---------- stats ---------- */
+.stats{padding:0 0 120px;text-align:center}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.stat b{display:block;font-family:"Space Grotesk",sans-serif;font-size:clamp(32px,3.8vw,48px);font-weight:700;color:#fff}
+.stat span{display:block;margin-top:8px;font-size:13px;color:var(--mut)}
+
+/* ---------- testimonial ---------- */
+.testi{padding:0 0 130px}
+.testi-card{max-width:760px;margin:0 auto;text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:56px 50px}
+.testi-card p{font-size:22px;line-height:1.5;color:#fff;font-family:"Space Grotesk",sans-serif;font-weight:500}
+.testi-card .who{margin-top:26px;font-size:14px;color:var(--mut)}
+.testi-card .who b{color:#fff}
+
+/* ---------- final cta ---------- */
+.final{padding:0 0 120px}
+.final-box{position:relative;background:linear-gradient(135deg,#0c1c16,#081018);border:1px solid rgba(61,242,164,.2);border-radius:28px;padding:90px 40px;text-align:center;overflow:hidden}
+.final-box:before{content:"";position:absolute;width:600px;height:400px;border-radius:50%;background:radial-gradient(ellipse,rgba(61,242,164,.2),transparent 70%);top:-140px;left:50%;transform:translateX(-50%)}
+.final-box h2{position:relative;font-size:clamp(30px,4.4vw,50px);max-width:640px;margin:0 auto}
+.final-box p{position:relative;margin:18px auto 0;max-width:440px;font-size:16px}
+.final-box .cta{position:relative;justify-content:center;margin-top:32px;display:flex;gap:14px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:60px 0 30px}
+.foot-top{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;padding-bottom:40px;border-bottom:1px solid var(--line)}
+.foot-brand p{max-width:280px;margin-top:14px;font-size:14px;line-height:1.6}
+.foot-cols{display:flex;gap:60px}
+.foot-col h6{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);margin-bottom:16px;font-family:"JetBrains Mono",monospace}
+.foot-col a{display:block;font-size:14px;color:var(--ink);margin-bottom:10px;text-decoration:none;opacity:.75}
+.foot-col a:hover{opacity:1;color:var(--green)}
+.foot-bottom{display:flex;justify-content:space-between;padding-top:26px;font-size:13px;color:var(--mut)}
+
+@media(max-width:900px){
+  .dash-body{grid-template-columns:1fr}
+  .dash-side{display:none}
+  .feat-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:30px}
+  .nav-links{display:none}
+  .sec-label{display:none}
+}
+@media(max-width:600px){
+  .row-cards{grid-template-columns:1fr}
+  .foot-top{flex-direction:column;gap:30px}
+  .foot-cols{gap:34px;flex-wrap:wrap}
+  .testi-card{padding:36px 24px}
+  .testi-card p{font-size:18px}
+}
+@media(prefers-reduced-motion:reduce){
+  .rv{opacity:1!important;transform:none!important}
+}
 </style></head>
-<body data-cf-keep-dark><div class="faq"><h2>Frequently asked</h2>
-<details open><summary>Can I use this commercially?</summary><p>Yes — every component ships with a commercial-use license included.</p></details>
-<details><summary>Do I need a framework?</summary><p>No. Everything is plain HTML, CSS and vanilla JS you can paste anywhere.</p></details>
-<details><summary>How do updates work?</summary><p>New components are added weekly and are included with an active plan.</p></details>
-</div>
-</body></html>`,
+<body data-cf-keep-dark>
+
+<nav class="nav" id="nav">
+  <div class="nav-in">
+    <div class="brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6z"/></svg>Vaultline</div>
+    <div class="nav-links"><a>Platform</a><a>Security</a><a>Pricing</a><a>Docs</a></div>
+    <div class="nav-right"><span class="lg">Sign in</span><button class="btn btn-green">Open account <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></button></div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="wrap hero-in">
+    <span class="eb rv" style="justify-content:center">Banking infrastructure, unbundled</span>
+    <h1 class="rv">Money management with <span class="grad">bank-grade</span> clarity.</h1>
+    <p class="lead rv">Vaultline gives finance teams a single real-time ledger — accounts, cards and cash flow, reconciled to the second.</p>
+    <div class="cta rv">
+      <button class="btn btn-green">Open an account <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></button>
+      <button class="btn btn-line">See it live</button>
+    </div>
+    <div class="fine rv">FDIC-insured up to $2.5M through partner banks · SOC 2 Type II</div>
+  </div>
+  <div class="wrap dash-wrap">
+    <div class="dash rv" id="heroDash">
+      <div class="dash-top">
+        <div class="l"><i></i><i></i><i></i></div>
+        <div class="r"><b></b>LIVE LEDGER — SYNCED 0.2S AGO</div>
+      </div>
+      <div class="dash-body">
+        <div class="dash-side">
+          <a class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>Overview</a>
+          <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/></svg>Cards</a>
+          <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Cash flow</a>
+          <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6z"/></svg>Security</a>
+        </div>
+        <div class="dash-main">
+          <div class="bal-row">
+            <div><span class="mono" style="font-size:12px;color:var(--mut)">TOTAL BALANCE</span><div class="amt" id="balAmt">$0<span id="balUp">+2.4%</span></div></div>
+            <div class="pill">Reconciled</div>
+          </div>
+          <div class="chart-box">
+            <svg viewBox="0 0 400 120" preserveAspectRatio="none">
+              <defs><linearGradient id="gradArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3df2a4" stop-opacity=".5"/><stop offset="100%" stop-color="#3df2a4" stop-opacity="0"/></linearGradient></defs>
+              <path class="area" id="areaPath" d="M0,110 L400,110 Z"/>
+              <path class="line" id="linePath" d="M0,110 L400,110"/>
+            </svg>
+          </div>
+          <div class="row-cards">
+            <div class="mini-card"><span>Inflow (30d)</span><b data-count="184200">$0</b><span class="up">↑ 12.4%</span></div>
+            <div class="mini-card"><span>Outflow (30d)</span><b data-count="96500">$0</b><span class="up" style="color:var(--amber)">↑ 4.1%</span></div>
+            <div class="mini-card"><span>Runway</span><b data-count="14" data-suffix=" mo">0</b><span class="up">Healthy</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="logos">
+  <div class="wrap">
+    <div class="lbl">// Powering finance teams at</div>
+    <div class="logo-row"><div>Ledgerline</div><div>Northbeam</div><div>Fenwick</div><div>Turnkey&nbsp;Co.</div><div>Argus</div><div>Portside</div></div>
+  </div>
+</section>
+
+<section class="feats">
+  <div class="wrap">
+    <div class="feats-head">
+      <span class="eb rv" style="justify-content:center">Platform</span>
+      <h2 class="rv">Everything finance touches, one ledger.</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="fcard"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></div><h3>Real-time reconciliation</h3><p>Every transaction posts to the ledger the instant it clears — no end-of-day batch jobs.</p></div>
+      <div class="fcard"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20"/></svg></div><h3>Instant virtual cards</h3><p>Spin up spend-limited cards per project or vendor in seconds, revoke just as fast.</p></div>
+      <div class="fcard"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6z"/></svg></div><h3>SOC 2 Type II security</h3><p>Encrypted at rest and in transit, with role-based access down to the account level.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="ledger-sec">
+  <div class="wrap ledger-head">
+    <span class="eb rv" style="justify-content:center">Live ledger</span>
+    <h2 class="rv">Every transaction, reconciled instantly.</h2>
+  </div>
+  <div class="ledger-track-wrap">
+    <div class="ledger-track" id="ledgerTrack">
+      <div class="txn"><div class="top"><div class="merc"><span style="background:#1c2d24;color:#3df2a4">◆</span><div><b>Stripe Payout</b><i>Today, 09:41</i></div></div><div class="amt pos">+$8,240</div></div><div class="bar"><i style="width:72%"></i></div></div>
+      <div class="txn"><div class="top"><div class="merc"><span style="background:#22242e;color:#8fa0ff">▣</span><div><b>AWS Infrastructure</b><i>Today, 06:12</i></div></div><div class="amt neg">-$1,120</div></div><div class="bar"><i style="width:38%"></i></div></div>
+      <div class="txn"><div class="top"><div class="merc"><span style="background:#2b241c;color:#ffb04d">●</span><div><b>Payroll — Eng</b><i>Yesterday</i></div></div><div class="amt neg">-$42,800</div></div><div class="bar"><i style="width:91%"></i></div></div>
+      <div class="txn"><div class="top"><div class="merc"><span style="background:#1c2d24;color:#3df2a4">◆</span><div><b>Client Invoice #4471</b><i>Yesterday</i></div></div><div class="amt pos">+$15,000</div></div><div class="bar"><i style="width:64%"></i></div></div>
+      <div class="txn"><div class="top"><div class="merc"><span style="background:#22242e;color:#8fa0ff">▣</span><div><b>Office Lease</b><i>2 days ago</i></div></div><div class="amt neg">-$6,400</div></div><div class="bar"><i style="width:45%"></i></div></div>
+      <div class="txn"><div class="top"><div class="merc"><span style="background:#1c2d24;color:#3df2a4">◆</span><div><b>Stripe Payout</b><i>3 days ago</i></div></div><div class="amt pos">+$5,910</div></div><div class="bar"><i style="width:55%"></i></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec-pin-sec">
+  <div class="sec-head">
+    <span class="eb rv" style="justify-content:center">Security</span>
+    <h2 class="rv">Defense in depth, by default.</h2>
+  </div>
+  <div class="sec-pin" id="secPin">
+    <div class="shield-vis">
+      <div class="shield-ring"></div>
+      <div class="shield-ring r2"></div>
+      <div class="shield-ring r3"></div>
+      <div class="shield-core"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6z"/></svg></div>
+      <div class="sec-labels">
+        <div class="sec-label l1"><b>256-bit</b> AES encryption</div>
+        <div class="sec-label l2">SOC 2 <b>Type II</b></div>
+        <div class="sec-label l3">Role-based <b>access control</b></div>
+        <div class="sec-label l4"><b>24/7</b> fraud monitoring</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="wrap stats-grid">
+    <div class="stat"><b data-count="48000000" data-suffix="+">0</b><span>Reconciled monthly</span></div>
+    <div class="stat"><b data-count="99" data-suffix=".99%">0</b><span>Ledger uptime</span></div>
+    <div class="stat"><b data-count="3200">0</b><span>Finance teams onboard</span></div>
+    <div class="stat"><b data-count="200" data-suffix="ms">0</b><span>Average settle time</span></div>
+  </div>
+</section>
+
+<section class="testi">
+  <div class="wrap">
+    <div class="testi-card rv">
+      <p>"We closed our books three days faster the first month on Vaultline. The ledger just... always matches now."</p>
+      <div class="who"><b>Elena Cho</b> — VP Finance, Turnkey Co.</div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <div class="final-box rv">
+      <h2>Reconcile in real time. Sleep at month-end.</h2>
+      <p>Onboard in a day — most teams are live before their next payroll run.</p>
+      <div class="cta"><button class="btn btn-green">Open an account <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></button><button class="btn btn-line">Talk to sales</button></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <div class="brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6z"/></svg>Vaultline</div>
+        <p>Real-time banking infrastructure for modern finance teams.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h6>Product</h6><a>Ledger</a><a>Cards</a><a>Security</a></div>
+        <div class="foot-col"><h6>Company</h6><a>About</a><a>Careers</a><a>Trust</a></div>
+        <div class="foot-col"><h6>Resources</h6><a>Docs</a><a>API</a><a>Status</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 Vaultline Financial Inc.</span><span>Privacy · Terms</span></div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  var nav = document.getElementById("nav");
+  document.addEventListener("scroll", function(){ nav.classList.toggle("on", window.scrollY > 14); }, { passive: true });
+
+  document.getElementById("ledgerTrack").innerHTML += document.getElementById("ledgerTrack").innerHTML;
+
+  function fmtMoney(n){ return "$" + Math.round(n).toLocaleString("en-US"); }
+  function fmt(n, suffix){
+    var v = Math.round(n);
+    var s = v >= 1000000 ? (v/1000000).toFixed(1).replace(/\.0$/,"") + "M" : v >= 1000 ? (v/1000).toFixed(1).replace(/\.0$/,"") + "K" : String(v);
+    return s + (suffix || "");
+  }
+
+  // Animated chart path: a believable up-trending line drawn as an SVG path.
+  var pts = [110,96,101,84,90,70,76,58,64,40,46,22,28,10];
+  function buildPath(pts, w){
+    var step = w / (pts.length - 1);
+    var d = "M0," + pts[0];
+    for (var i = 1; i < pts.length; i++) d += " L" + (i*step) + "," + pts[i];
+    return d;
+  }
+  var linePath = buildPath(pts, 400);
+  var areaPath = linePath + " L400,120 L0,120 Z";
+
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!window.gsap || !window.ScrollTrigger || reduced) {
+    document.querySelectorAll(".rv").forEach(function(el){ el.style.opacity = 1; el.style.transform = "none"; });
+    document.getElementById("linePath").setAttribute("d", linePath);
+    document.getElementById("areaPath").setAttribute("d", areaPath);
+    document.getElementById("balAmt").innerHTML = fmtMoney(482300) + '<span>+2.4%</span>';
+    document.querySelectorAll(".mini-card b[data-count]").forEach(function(el){ el.textContent = fmt(+el.dataset.count, el.dataset.suffix); });
+    document.querySelectorAll(".stat b[data-count]").forEach(function(el){ el.textContent = fmt(+el.dataset.count, el.dataset.suffix); });
+    document.querySelectorAll(".sec-label").forEach(function(el){ el.style.opacity = 1; });
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  var tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+  tl.to(".hero-in .rv", { opacity: 1, y: 0, duration: .8, stagger: .08 })
+    .fromTo("#heroDash", { opacity: 0, y: 46, scale: .97 }, { opacity: 1, y: 0, scale: 1, duration: 1 }, "-=.5");
+
+  gsap.to("#heroDash", { y: -6, duration: 3.4, ease: "sine.inOut", yoyo: true, repeat: -1, delay: 1.4 });
+
+  // Draw the balance chart line + fill area once the hero settles.
+  var lineEl = document.getElementById("linePath"), areaEl = document.getElementById("areaPath");
+  var flat = "M0,110 L400,110";
+  lineEl.setAttribute("d", flat);
+  gsap.delayedCall(1.1, function(){
+    var obj = { t: 0 };
+    gsap.to(obj, {
+      t: 1, duration: 1.6, ease: "power2.out",
+      onUpdate: function(){
+        var mixed = pts.map(function(p, i){ return 110 + (p - 110) * obj.t; });
+        lineEl.setAttribute("d", buildPath(mixed, 400));
+        areaEl.setAttribute("d", buildPath(mixed, 400) + " L400,120 L0,120 Z");
+      }
+    });
+    // Balance counts up alongside the chart draw.
+    var balObj = { v: 0 };
+    gsap.to(balObj, { v: 482300, duration: 1.6, ease: "power2.out", onUpdate: function(){
+      document.getElementById("balAmt").innerHTML = fmtMoney(balObj.v) + '<span id="balUp">+2.4%</span>';
+    }});
+    document.querySelectorAll(".mini-card b[data-count]").forEach(function(el){
+      var target = +el.dataset.count, suffix = el.dataset.suffix || "", o = { v: 0 };
+      gsap.to(o, { v: target, duration: 1.5, ease: "power2.out", onUpdate: function(){ el.textContent = fmt(o.v, suffix); } });
+    });
+  });
+
+  document.querySelectorAll(".rv").forEach(function(el){
+    if (el.closest(".hero-in")) return;
+    gsap.to(el, { opacity: 1, y: 0, duration: .85, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 85%" } });
+  });
+
+  gsap.from(".logo-row div", { opacity: 0, y: 12, stagger: .06, duration: .6, scrollTrigger: { trigger: ".logo-row", start: "top 88%" } });
+  gsap.from(".fcard", { opacity: 0, y: 30, stagger: .12, duration: .7, scrollTrigger: { trigger: ".feat-grid", start: "top 82%" } });
+
+  // Ledger strip: continuous marquee drift, pausing on hover.
+  var track = document.getElementById("ledgerTrack");
+  var marq = gsap.to(track, { x: -track.scrollWidth / 2, duration: 34, ease: "none", repeat: -1 });
+  track.addEventListener("mouseenter", function(){ marq.pause(); });
+  track.addEventListener("mouseleave", function(){ marq.resume(); });
+
+  // Pinned security shield: rings scale in, labels appear one by one as the
+  // section is pinned and scrubbed, then release back into normal flow.
+  gsap.set(".shield-core", { scale: .7, opacity: 0 });
+  gsap.set(".shield-ring", { scale: .5, opacity: 0 });
+  gsap.set(".sec-label", { opacity: 0, y: 10 });
+  var secTl = gsap.timeline({
+    scrollTrigger: { trigger: "#secPin", start: "top top", end: "+=180%", pin: true, scrub: .5 }
+  });
+  secTl.to(".shield-core", { scale: 1, opacity: 1, duration: .3 })
+    .to(".shield-ring", { scale: 1, opacity: 1, duration: .3, stagger: .1 }, "-=.15")
+    .to(".shield-ring", { rotation: 40, duration: 1, ease: "none" }, "<")
+    .to(".sec-label.l1", { opacity: 1, y: 0, duration: .2 }, "-=.5")
+    .to(".sec-label.l2", { opacity: 1, y: 0, duration: .2 }, "-=.35")
+    .to(".sec-label.l3", { opacity: 1, y: 0, duration: .2 }, "-=.35")
+    .to(".sec-label.l4", { opacity: 1, y: 0, duration: .2 }, "-=.35");
+
+  gsap.from(".stat", { opacity: 0, y: 24, stagger: .1, duration: .7, scrollTrigger: { trigger: ".stats-grid", start: "top 85%" } });
+  ScrollTrigger.create({
+    trigger: ".stats", start: "top 78%", once: true,
+    onEnter: function(){
+      document.querySelectorAll(".stat b[data-count]").forEach(function(el){
+        var target = +el.dataset.count, suffix = el.dataset.suffix || "", o = { v: 0 };
+        gsap.to(o, { v: target, duration: 1.8, ease: "power2.out", onUpdate: function(){ el.textContent = fmt(o.v, suffix); } });
+      });
+    }
+  });
+
+  window.addEventListener("load", function(){ ScrollTrigger.refresh(); });
+})();
+</script>
+</body></html>
+`,
 
   "logo-cloud-marquee": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Logo Cloud Marquee</title><style>
