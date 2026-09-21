@@ -4953,24 +4953,368 @@ footer{border-top:1px solid var(--line);padding:60px 0 30px}
 `,
 
   "newsletter-signup-split-section": `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Newsletter Signup Split Section</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.section{display:grid;grid-template-columns:1fr 1fr;gap:24px;width:min(460px,90vw);align-items:center}
-.section h2{color:#f7f5fb;font-size:20px;margin:0 0 8px}
-.section p{color:#a49dbc;font-size:11px;line-height:1.7;margin:0}
-form{display:grid;gap:8px}
-input{padding:12px;border:1px solid var(--line);border-radius:10px;background:#111017;color:#fff;font-size:11px;outline:0;transition:border-color .25s,box-shadow .25s}
-input:focus{border-color:#6d5f93;box-shadow:0 0 0 3px rgba(196,181,253,.2)}
-button{padding:12px;border:0;border-radius:10px;background:linear-gradient(135deg,#d7d0ff,#9b8aff);color:#0a090f;font-weight:800;font-size:11px;cursor:pointer;box-shadow:0 10px 24px -10px rgba(155,138,255,.6);transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
-button:active{transform:scale(.96)}
-.done{display:none;color:#5fd4a1;font-size:11px;animation:fade .3s ease}
-@keyframes fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Kindred Landing Page</title><style>
+:root{--bg:#f4f1ec;--lav:#c9b8f0;--lav-d:#a68ce0;--peach:#ffd0b8;--sage:#b9d3bb;--ink:#2c2620;--mut:#8a8073;--card:#fffdf9;--line:#e6ddd0}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"General Sans",Inter,ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3{font-family:"Fraunces",serif;margin:0;font-weight:500;letter-spacing:-.02em;color:var(--ink)}
+p{margin:0;color:var(--mut)}
+button{font-family:inherit;cursor:pointer;border:0}
+.wrap{max-width:1140px;margin:0 auto;padding:0 32px}
+.rv{opacity:0;transform:translateY(26px)}
+.eb{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;letter-spacing:.03em;color:var(--lav-d);margin-bottom:14px}
+.eb svg{width:15px;height:15px}
+
+/* ---------- buttons ---------- */
+.btn{position:relative;display:inline-flex;align-items:center;gap:9px;border-radius:999px;padding:16px 28px;font-size:15px;font-weight:600;transition:transform .4s cubic-bezier(.2,.8,.2,1),box-shadow .4s}
+.btn-lav{background:var(--lav);color:#2c2044;box-shadow:0 14px 30px rgba(166,140,224,.35)}
+.btn-lav:hover{transform:translateY(-3px);box-shadow:0 20px 42px rgba(166,140,224,.45);background:var(--lav-d)}
+.btn-line{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn-line:hover{transform:translateY(-3px);border-color:var(--ink)}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:60;transition:background .4s,box-shadow .4s}
+.nav-in{max-width:1140px;margin:0 auto;padding:24px 32px;display:flex;align-items:center;gap:34px}
+.nav.on{background:rgba(244,241,236,.88);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--line)}
+.brand{font-family:"Fraunces",serif;font-size:22px;font-weight:500}
+.nav-links{display:flex;gap:30px;margin:0 auto;font-size:14.5px;color:var(--mut)}
+.nav-links a{position:relative;cursor:pointer}
+.nav-links a:after{content:"";position:absolute;left:0;bottom:-5px;width:100%;height:1.5px;background:var(--lav-d);transform:scaleX(0);transform-origin:right;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a:hover:after{transform:scaleX(1);transform-origin:left}
+.nav-right .lg{font-size:14.5px;color:var(--mut);margin-right:18px}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding:70px 0 40px;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1fr .92fr;gap:56px;align-items:center}
+.breathe-blob{position:absolute;border-radius:50%;filter:blur(50px);pointer-events:none}
+.bb1{width:520px;height:520px;background:var(--peach);opacity:.55;top:-160px;right:-140px}
+.bb2{width:380px;height:380px;background:var(--sage);opacity:.45;bottom:-140px;left:-100px}
+.hero h1{font-size:clamp(38px,4.6vw,60px);line-height:1.08}
+.hero p.lead{margin-top:20px;font-size:17px;line-height:1.7;max-width:440px}
+.hero .cta{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap}
+.stars-row{display:flex;align-items:center;gap:10px;margin-top:28px;font-size:13.5px;color:var(--mut)}
+.stars-row .st{color:#e8a53d}
+
+/* phone mockup */
+.phone-wrap{position:relative;display:flex;justify-content:center}
+.phone{position:relative;z-index:1;width:280px;background:var(--card);border-radius:44px;border:8px solid #fff;box-shadow:0 40px 90px rgba(44,38,32,.18);overflow:hidden;aspect-ratio:9/18.5}
+.phone-screen{position:relative;height:100%;background:linear-gradient(165deg,#efe6ff,#fff)}
+.phone-top{padding:26px 22px 14px;text-align:center}
+.phone-top span{font-size:11.5px;color:var(--mut)}
+.phone-top h4{font-size:16px;margin-top:4px}
+.breath-ring{position:relative;width:150px;height:150px;margin:20px auto;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,var(--lav) 75%);display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 10px rgba(201,184,240,.25)}
+.breath-ring span{font-size:13px;color:#2c2044;font-weight:600}
+.phone-cards{padding:0 18px;display:flex;flex-direction:column;gap:10px}
+.phone-cards .pc{background:#fff;border-radius:14px;padding:11px 13px;display:flex;align-items:center;gap:10px;box-shadow:0 6px 16px rgba(44,38,32,.06)}
+.phone-cards .pc i{width:30px;height:30px;border-radius:9px;flex:none}
+.phone-cards .pc b{display:block;font-size:12.5px;color:var(--ink)}
+.phone-cards .pc span{font-size:11px;color:var(--mut)}
+.float-card{position:absolute;background:var(--card);border-radius:16px;padding:12px 15px;box-shadow:0 20px 44px rgba(44,38,32,.14);font-size:12.5px;display:flex;align-items:center;gap:9px;z-index:2}
+.fc1{top:14%;left:-8%}
+.fc2{bottom:18%;right:-10%}
+.float-card i{width:26px;height:26px;border-radius:50%;flex:none}
+
+/* ---------- logos ---------- */
+.press{padding:40px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.press .lbl{text-align:center;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);margin-bottom:22px}
+.press-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:26px;opacity:.55}
+.press-row div{font-family:"Fraunces",serif;font-weight:600;font-size:18px}
+
+/* ---------- feature story ---------- */
+.story{padding:120px 0}
+.story-row{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.story-row.rev .txt{order:2}
+.story-row.rev .vis{order:1}
+.story h2{font-size:clamp(28px,3.2vw,40px)}
+.story p.body{font-size:16px;line-height:1.75;max-width:420px;margin-top:16px}
+.mood-row{display:flex;gap:10px;margin-top:24px}
+.mood{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+.mood:hover{transform:scale(1.18) translateY(-4px)}
+.vis{position:relative;border-radius:32px;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.vis .ring{position:absolute;border-radius:50%;border:1px solid rgba(44,38,32,.1)}
+
+/* ---------- pinned breathing ---------- */
+.breath-sec{position:relative;background:var(--ink);color:#f4f1ec}
+.breath-head{text-align:center;padding:120px 0 0;max-width:520px;margin:0 auto}
+.breath-head h2{color:#f4f1ec;font-size:clamp(28px,3.4vw,40px)}
+.breath-head p{color:rgba(244,241,236,.55);margin-top:12px}
+.breath-pin{height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.breath-circle{width:220px;height:220px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,var(--lav) 70%);display:flex;align-items:center;justify-content:center;box-shadow:0 0 90px rgba(201,184,240,.3)}
+.breath-circle span{font-family:"Fraunces",serif;font-size:19px;color:#2c2044;font-weight:500}
+.breath-caption{margin-top:32px;font-size:14px;color:rgba(244,241,236,.5);letter-spacing:.04em;text-transform:uppercase}
+
+/* ---------- stats ---------- */
+.stats{padding:100px 0;text-align:center}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.stat b{display:block;font-family:"Fraunces",serif;font-size:clamp(30px,3.6vw,44px);font-weight:500}
+.stat span{display:block;margin-top:8px;font-size:13px;color:var(--mut)}
+
+/* ---------- testimonials ---------- */
+.testi{padding:0 0 120px}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.tcard{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:26px;transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s}
+.tcard:hover{transform:translateY(-7px);box-shadow:0 24px 48px rgba(44,38,32,.1)}
+.tcard p{font-size:14.5px;line-height:1.65;color:var(--ink)}
+.tcard .who{margin-top:16px;font-size:13px;color:var(--mut);display:flex;align-items:center;gap:9px}
+.tcard .who i{width:30px;height:30px;border-radius:50%}
+
+/* ---------- final cta ---------- */
+.final{padding:0 0 120px}
+.final-box{position:relative;background:linear-gradient(135deg,var(--lav),#f2c9de);border-radius:36px;padding:90px 40px;text-align:center;overflow:hidden}
+.final-box h2{position:relative;font-size:clamp(30px,4.2vw,48px);color:#2c2044}
+.final-box p{position:relative;margin:16px auto 0;max-width:420px;font-size:16px;color:rgba(44,32,68,.7)}
+.final-box .cta{position:relative;justify-content:center;margin-top:30px;display:flex;gap:14px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:56px 0 30px}
+.foot-top{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;padding-bottom:36px;border-bottom:1px solid var(--line)}
+.foot-brand p{max-width:280px;margin-top:12px;font-size:14px;line-height:1.6}
+.foot-cols{display:flex;gap:56px}
+.foot-col h6{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);margin-bottom:15px}
+.foot-col a{display:block;font-size:14px;color:var(--ink);margin-bottom:9px;text-decoration:none;opacity:.8}
+.foot-col a:hover{opacity:1;color:var(--lav-d)}
+.foot-bottom{display:flex;justify-content:space-between;padding-top:24px;font-size:12.5px;color:var(--mut)}
+
+@media(max-width:900px){
+  .hero-grid{grid-template-columns:1fr}
+  .phone{margin-top:20px}
+  .story-row{grid-template-columns:1fr}
+  .story-row.rev .txt{order:1}
+  .story-row.rev .vis{order:2}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:28px}
+  .testi-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+  .float-card{display:none}
+}
+@media(max-width:600px){
+  .foot-top{flex-direction:column;gap:28px}
+  .foot-cols{gap:30px;flex-wrap:wrap}
+}
+@media(prefers-reduced-motion:reduce){
+  .rv{opacity:1!important;transform:none!important}
+}
 </style></head>
-<body data-cf-keep-dark><div class="section"><div><h2>The weekly build note.</h2><p>One email a week with new components and release notes. No spam.</p></div>
-<form id="form"><input type="email" placeholder="you@company.com" required><button>Subscribe</button><div class="done" id="done">✓ You're subscribed.</div></form></div>
-<script>document.getElementById("form").addEventListener("submit",function(e){e.preventDefault();e.target.querySelector("button").style.display="none";document.getElementById("done").style.display="block"});</script>
-</body></html>`,
+<body data-cf-keep-dark>
+
+<nav class="nav" id="nav">
+  <div class="nav-in">
+    <div class="brand">Kindred</div>
+    <div class="nav-links"><a>Practices</a><a>Sleep</a><a>Community</a><a>Pricing</a></div>
+    <div class="nav-right" style="margin-left:auto"><span class="lg">Log in</span><button class="btn btn-lav">Try free</button></div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="breathe-blob bb1"></div>
+  <div class="breathe-blob bb2"></div>
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eb rv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-4-4 4 4 0 0 1-4-4 4 4 0 0 1-2-2"/></svg>A calmer way to begin the day</span>
+      <h1 class="rv">Find your quiet, one breath at a time.</h1>
+      <p class="lead rv">Kindred blends guided meditation, sleep stories and gentle mood tracking into five minutes you'll actually look forward to.</p>
+      <div class="cta rv"><button class="btn btn-lav">Try free for 14 days</button><button class="btn btn-line">See how it works</button></div>
+      <div class="stars-row rv"><span class="st">★★★★★</span>4.9 · 82,000+ mindful mornings</div>
+    </div>
+    <div class="phone-wrap rv">
+      <div class="float-card fc1"><i style="background:var(--sage)"></i>Streak: 12 days</div>
+      <div class="float-card fc2"><i style="background:var(--peach)"></i>Mood: calm</div>
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="phone-top"><span>Good morning, Asha</span><h4>Today's practice</h4></div>
+          <div class="breath-ring"><span id="heroBreathLabel">Breathe in</span></div>
+          <div class="phone-cards">
+            <div class="pc"><i style="background:var(--sage)"></i><div><b>Morning Calm</b><span>7 min · guided</span></div></div>
+            <div class="pc"><i style="background:var(--peach)"></i><div><b>Deep Sleep Story</b><span>18 min · narrated</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="press">
+  <div class="wrap">
+    <div class="lbl">Recommended by</div>
+    <div class="press-row"><div>Mindful Co.</div><div>Well+Good</div><div>Kinfolk</div><div>Headspace&nbsp;Health</div><div>The&nbsp;Gentle&nbsp;Press</div></div>
+  </div>
+</section>
+
+<section class="story">
+  <div class="wrap story-row">
+    <div class="txt">
+      <span class="eb rv">Track how you feel</span>
+      <h2 class="rv">Notice the pattern before it notices you.</h2>
+      <p class="body rv">A thirty-second mood check-in each day, quietly building a picture only you can see.</p>
+      <div class="mood-row rv">
+        <div class="mood" style="background:#ffe3cf">😊</div>
+        <div class="mood" style="background:#e3ddfa">😌</div>
+        <div class="mood" style="background:#d9ecd9">🙂</div>
+        <div class="mood" style="background:#fbe0e6">😔</div>
+      </div>
+    </div>
+    <div class="vis rv" style="background:linear-gradient(160deg,#efe6ff,#f9e9f2)">
+      <div class="ring" style="width:70%;height:70%"></div>
+      <div class="ring" style="width:46%;height:46%"></div>
+      <svg viewBox="0 0 24 24" width="30%" height="30%" fill="none" stroke="#a68ce0" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+    </div>
+  </div>
+</section>
+
+<section class="story">
+  <div class="wrap story-row rev">
+    <div class="txt">
+      <span class="eb rv">Sleep, gently</span>
+      <h2 class="rv">Stories that ease you out, not startle you awake.</h2>
+      <p class="body rv">Fifty-plus narrated sleep stories, mixed with rain, waves or nothing at all — your choice, every night.</p>
+    </div>
+    <div class="vis rv" style="background:linear-gradient(160deg,#dfe9e0,#eef2df)">
+      <div class="ring" style="width:70%;height:70%"></div>
+      <div class="ring" style="width:46%;height:46%"></div>
+      <svg viewBox="0 0 24 24" width="30%" height="30%" fill="none" stroke="#5f8a63" stroke-width="1.4"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+    </div>
+  </div>
+</section>
+
+<section class="breath-sec">
+  <div class="breath-head">
+    <span class="eb rv" style="justify-content:center;color:var(--lav)">A minute, together</span>
+    <h2 class="rv">Follow the circle. That's the whole exercise.</h2>
+    <p class="rv">Scroll to move through one full breathing cycle.</p>
+  </div>
+  <div class="breath-pin" id="breathPin">
+    <div class="breath-circle" id="breathCircle"><span id="breathLabel">Breathe in</span></div>
+    <div class="breath-caption" id="breathCaption">4 seconds in</div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="wrap stats-grid">
+    <div class="stat"><b data-count="82000" data-suffix="+">0</b><span>Mindful mornings logged</span></div>
+    <div class="stat"><b data-count="94" data-suffix="%">0</b><span>Report calmer sleep</span></div>
+    <div class="stat"><b data-count="50" data-suffix="+">0</b><span>Guided sleep stories</span></div>
+    <div class="stat"><b data-count="4" data-suffix=".9★">0</b><span>Average rating</span></div>
+  </div>
+</section>
+
+<section class="testi">
+  <div class="wrap">
+    <div class="testi-grid">
+      <div class="tcard rv2"><p>"The breathing exercise before bed genuinely changed how fast I fall asleep. No exaggeration."</p><div class="who"><i style="background:#ffe3cf"></i>Noor, 34</div></div>
+      <div class="tcard rv2"><p>"I've tried five meditation apps. This is the first one that doesn't feel like homework."</p><div class="who"><i style="background:#e3ddfa"></i>Leo, 27</div></div>
+      <div class="tcard rv2"><p>"The mood tracking quietly showed me a pattern I'd been ignoring for months."</p><div class="who"><i style="background:#d9ecd9"></i>Sam, 41</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <div class="final-box rv">
+      <h2>Your quietest five minutes could start now.</h2>
+      <p>14 days free, cancel any time — no gentle guilt trip, promise.</p>
+      <div class="cta"><button class="btn btn-lav" style="background:#2c2044;color:#fff">Try free for 14 days</button></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <div class="brand">Kindred</div>
+        <p>Guided meditation, sleep stories and mood tracking for quieter days.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h6>App</h6><a>Practices</a><a>Sleep</a><a>Mood tracker</a></div>
+        <div class="foot-col"><h6>Company</h6><a>About</a><a>Careers</a><a>Journal</a></div>
+        <div class="foot-col"><h6>Support</h6><a>Help center</a><a>Community</a><a>Contact</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 Kindred Wellness Inc.</span><span>Privacy · Terms</span></div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  var nav = document.getElementById("nav");
+  document.addEventListener("scroll", function(){ nav.classList.toggle("on", window.scrollY > 14); }, { passive: true });
+
+  function fmt(n, suffix){
+    var v = Math.round(n);
+    var s = v >= 1000 ? (v/1000).toFixed(1).replace(/\.0$/,"") + "K" : String(v);
+    return s + (suffix || "");
+  }
+
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!window.gsap || !window.ScrollTrigger || reduced) {
+    document.querySelectorAll(".rv,.rv2").forEach(function(el){ el.style.opacity = 1; el.style.transform = "none"; });
+    document.querySelectorAll(".stat b[data-count]").forEach(function(el){ el.textContent = fmt(+el.dataset.count, el.dataset.suffix); });
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  var tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+  tl.to(".hero .rv", { opacity: 1, y: 0, duration: .85, stagger: .09 })
+    .fromTo(".phone-wrap", { opacity: 0, y: 40, scale: .96 }, { opacity: 1, y: 0, scale: 1, duration: 1 }, "-=.6");
+
+  // Idle breathing loop on the hero phone's ring, echoing the app's own exercise.
+  gsap.to(".phone .breath-ring", { scale: 1.08, duration: 2.4, ease: "sine.inOut", yoyo: true, repeat: -1 });
+  gsap.to(".float-card", { y: -8, duration: 3, ease: "sine.inOut", yoyo: true, repeat: -1, stagger: .4 });
+
+  document.querySelectorAll(".rv").forEach(function(el){
+    if (el.closest(".hero")) return;
+    gsap.to(el, { opacity: 1, y: 0, duration: .85, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 85%" } });
+  });
+  document.querySelectorAll(".rv2").forEach(function(el){
+    gsap.from(el, { opacity: 0, y: 26, duration: .7, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 88%" } });
+  });
+  gsap.from(".press-row div", { opacity: 0, y: 10, stagger: .06, duration: .6, scrollTrigger: { trigger: ".press-row", start: "top 90%" } });
+
+  document.querySelectorAll(".story .vis").forEach(function(vis){
+    gsap.to(vis, { y: -24, ease: "none", scrollTrigger: { trigger: vis.closest(".story"), start: "top bottom", end: "bottom top", scrub: true } });
+  });
+
+  // Pinned breathing exercise: the circle scales through one guided cycle
+  // (in / hold / out / hold) with the label and caption swapping in sync,
+  // all driven by scroll scrub so the reader sets their own pace.
+  var phases = [
+    { label: "Breathe in", caption: "4 seconds in", scale: 1.35 },
+    { label: "Hold", caption: "4 seconds hold", scale: 1.35 },
+    { label: "Breathe out", caption: "4 seconds out", scale: .85 },
+    { label: "Hold", caption: "4 seconds hold", scale: .85 }
+  ];
+  var breathTl = gsap.timeline({
+    scrollTrigger: { trigger: "#breathPin", start: "top top", end: "+=220%", pin: true, scrub: .6 }
+  });
+  phases.forEach(function(phase, i){
+    breathTl.to("#breathCircle", {
+      scale: phase.scale, duration: 1, ease: "sine.inOut",
+      onStart: function(){
+        document.getElementById("breathLabel").textContent = phase.label;
+        document.getElementById("breathCaption").textContent = phase.caption;
+      }
+    }, i === 0 ? 0 : ">");
+  });
+
+  ScrollTrigger.create({
+    trigger: ".stats", start: "top 80%", once: true,
+    onEnter: function(){
+      document.querySelectorAll(".stat b[data-count]").forEach(function(el){
+        var target = +el.dataset.count, suffix = el.dataset.suffix || "", o = { v: 0 };
+        gsap.to(o, { v: target, duration: 1.8, ease: "power2.out", onUpdate: function(){ el.textContent = fmt(o.v, suffix); } });
+      });
+    }
+  });
+
+  window.addEventListener("load", function(){ ScrollTrigger.refresh(); });
+})();
+</script>
+</body></html>
+`,
 
   "social-share-cta-section": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Social Share CTA Section</title><style>
