@@ -1,6 +1,6 @@
 import { getCombinedSourceCode } from "../services/combinedSource";
 import { useEffect, useMemo, useState } from "react";
-import { Routes, Route, Link, useParams } from "react-router-dom";
+import { Routes, Route, Link, NavLink, useParams } from "react-router-dom";
 import {
   Boxes,
   Users,
@@ -12,6 +12,7 @@ import {
   Copy,
   Edit3,
   FolderKanban,
+  Layers,
   Tag,
   Settings as SettingsIcon,
   FileCode2,
@@ -19,6 +20,7 @@ import {
   Save,
   Eye,
   LogOut,
+  LayoutDashboard,
 } from "lucide-react";
 
 import { api } from "../services/api";
@@ -26,18 +28,18 @@ import ProductVisual from "../components/ProductVisual";
 import Modal from "../components/Modal";
 
 const menu = [
-  "Overview",
-  "Products",
-  "Categories",
-  "Collections",
-  "Prompts",
-  "Subscribers",
-  "Users",
-  "Reviews",
-  "Tokens",
-  "Analytics",
-  "Plan",
-  "Settings",
+  { label: "Overview", icon: LayoutDashboard, path: "/admin", end: true },
+  { label: "Products", icon: Boxes, path: "/admin/products" },
+  { label: "Categories", icon: FolderKanban, path: "/admin/categories" },
+  { label: "Collections", icon: Layers, path: "/admin/collections" },
+  { label: "Prompts", icon: FileCode2, path: "/admin/prompts" },
+  { label: "Subscribers", icon: CreditCard, path: "/admin/subscribers" },
+  { label: "Users", icon: Users, path: "/admin/users" },
+  { label: "Reviews", icon: Star, path: "/admin/reviews" },
+  { label: "Tokens", icon: Zap, path: "/admin/tokens" },
+  { label: "Analytics", icon: BarChart3, path: "/admin/analytics" },
+  { label: "Plan", icon: Tag, path: "/admin/plan" },
+  { label: "Settings", icon: SettingsIcon, path: "/admin/settings" },
 ];
 
 function Head({ eyebrow, title, children }) {
@@ -66,18 +68,19 @@ export default function Admin() {
           <span className="eyebrow">CODEFUSION ADMIN</span>
           <b>Control center</b>
 
-          {menu.map((item) => (
-            <Link
-              key={item}
-              to={
-                item === "Overview"
-                  ? "/admin"
-                  : `/admin/${item.toLowerCase()}`
-              }
-            >
-              {item}
-            </Link>
-          ))}
+          <nav className="admin-sidebar-nav">
+            {menu.map((item) => (
+              <NavLink
+                key={item.label}
+                to={item.path}
+                end={item.end}
+                className={({ isActive }) => (isActive ? "active" : "")}
+              >
+                <item.icon size={15} />
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
 
           <Link
             to="/products"
