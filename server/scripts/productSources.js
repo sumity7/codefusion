@@ -5317,22 +5317,360 @@ footer{border-top:1px solid var(--line);padding:56px 0 30px}
 `,
 
   "social-share-cta-section": `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Social Share CTA Section</title><style>
-:root{--bg:#050507;--line:#272632;--lav:#c4b5fd}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);font-family:Inter,ui-sans-serif,Arial,sans-serif}
-.wrap{text-align:center}
-.wrap h2{color:#f7f5fb;font-size:22px;margin:0 0 16px}
-.icons{display:flex;gap:10px;justify-content:center}
-.icons button{width:40px;height:40px;border:1px solid var(--line);border-radius:10px;background:#111017;color:#c9c4d6;font-size:13px;cursor:pointer;transition:transform .2s cubic-bezier(.34,1.56,.64,1),border-color .2s,color .2s,box-shadow .2s}
-.icons button:hover{color:#fff;border-color:#544c67;transform:translateY(-3px);box-shadow:0 10px 20px -10px rgba(155,138,255,.5)}
-.copy{margin-top:14px;display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--line);border-radius:9px;background:#0d0d12;color:#817d8a;font-size:10px;box-shadow:0 12px 30px -18px rgba(0,0,0,.6)}
-.copy button{border:0;background:none;color:var(--lav);cursor:pointer;font-size:10px;font-weight:700}
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Nexara Landing Page</title><style>
+:root{--bg:#0b0518;--panel:rgba(255,255,255,.04);--panel-b:rgba(255,255,255,.09);--ink:#f1edfb;--mut:#9184b8;--mag:#ff4fd8;--cyan:#4de1ff;--violet:#8b5cf6}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Space Grotesk",Inter,ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3{font-family:"Space Grotesk",sans-serif;margin:0;font-weight:600;letter-spacing:-.03em;color:#fff}
+p{margin:0;color:var(--mut);font-family:Inter,sans-serif}
+button{font-family:inherit;cursor:pointer;border:0}
+.wrap{max-width:1160px;margin:0 auto;padding:0 32px}
+.rv{opacity:0;transform:translateY(28px)}
+.eb{display:inline-flex;align-items:center;gap:9px;font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px}
+.eb .grad-txt{background:linear-gradient(90deg,var(--mag),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* ---------- buttons ---------- */
+.btn{position:relative;display:inline-flex;align-items:center;gap:9px;border-radius:13px;padding:15px 26px;font-size:14.5px;font-weight:600;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
+.btn svg{width:15px;height:15px;flex:none;transition:transform .3s}
+.btn:hover svg{transform:translateX(3px)}
+.btn-grad{background:linear-gradient(100deg,var(--mag),var(--violet) 55%,var(--cyan));color:#fff;box-shadow:0 14px 34px rgba(139,92,246,.35)}
+.btn-grad:hover{transform:translateY(-3px);box-shadow:0 20px 46px rgba(139,92,246,.5)}
+.btn-glass{background:var(--panel);color:var(--ink);border:1px solid var(--panel-b);backdrop-filter:blur(10px)}
+.btn-glass:hover{transform:translateY(-3px);background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2)}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:60;transition:background .4s,border-color .4s;border-bottom:1px solid transparent}
+.nav-in{max-width:1160px;margin:0 auto;padding:22px 32px;display:flex;align-items:center;gap:34px}
+.nav.on{background:rgba(11,5,24,.78);backdrop-filter:blur(20px);border-bottom-color:rgba(255,255,255,.08)}
+.brand{display:flex;align-items:center;gap:9px;font-size:19px;font-weight:700;color:#fff}
+.brand .mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--mag),var(--cyan))}
+.nav-links{display:flex;gap:28px;margin:0 auto;font-size:14px;color:var(--mut)}
+.nav-links a{position:relative;cursor:pointer}
+.nav-links a:after{content:"";position:absolute;left:0;bottom:-5px;width:100%;height:1.5px;background:linear-gradient(90deg,var(--mag),var(--cyan));transform:scaleX(0);transform-origin:right;transition:transform .3s}
+.nav-links a:hover{color:#fff}
+.nav-links a:hover:after{transform:scaleX(1);transform-origin:left}
+.nav-right{display:flex;align-items:center;gap:16px}
+.nav-right .lg{font-size:14px;color:var(--mut)}
+.nav-right .btn{padding:10px 18px;font-size:13.5px}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding:110px 0 80px;overflow:hidden}
+.hero:before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.06) 1px,transparent 1px);background-size:26px 26px;mask-image:radial-gradient(ellipse 70% 55% at 50% 20%,#000,transparent)}
+.hero-glow1{position:absolute;top:-200px;left:-140px;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(255,79,216,.22),transparent 68%);filter:blur(10px)}
+.hero-glow2{position:absolute;top:-120px;right:-160px;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle,rgba(77,225,255,.18),transparent 68%);filter:blur(10px)}
+.hero-in{position:relative;text-align:center;max-width:820px;margin:0 auto}
+.hero .eb{justify-content:center}
+.hero h1{font-size:clamp(40px,5.6vw,72px);line-height:1.03}
+.hero h1 .grad{background:linear-gradient(100deg,var(--mag),var(--violet) 55%,var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{margin-top:22px;font-size:17.5px;line-height:1.65;max-width:560px;margin-left:auto;margin-right:auto}
+.hero .cta{display:flex;gap:14px;justify-content:center;margin-top:32px;flex-wrap:wrap}
+
+/* orbit visual */
+.orbit-wrap{position:relative;margin-top:80px;height:380px;display:flex;align-items:center;justify-content:center}
+.orbit-ring{position:absolute;border:1px solid rgba(255,255,255,.09);border-radius:50%}
+.or1{width:640px;height:640px}
+.or2{width:460px;height:460px}
+.or3{width:300px;height:300px}
+.orbit-core{position:relative;z-index:2;width:150px;height:150px;border-radius:50%;background:linear-gradient(135deg,var(--mag),var(--violet) 60%,var(--cyan));display:flex;align-items:center;justify-content:center;box-shadow:0 0 100px rgba(139,92,246,.45)}
+.orbit-core svg{width:60px;height:60px;color:#fff}
+.orbit-token{position:absolute;width:56px;height:56px;border-radius:50%;background:var(--panel);border:1px solid var(--panel-b);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;box-shadow:0 14px 30px rgba(0,0,0,.4)}
+
+/* ---------- logos ---------- */
+.logos{padding:44px 0;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}
+.logos .lbl{text-align:center;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin-bottom:24px}
+.logo-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:28px;opacity:.5}
+.logo-row div{font-weight:700;font-size:18px;color:#fff}
+
+/* ---------- feature grid ---------- */
+.feats{padding:130px 0}
+.feats-head{max-width:600px;margin:0 auto 56px;text-align:center}
+.feats-head h2{font-size:clamp(28px,3.4vw,42px)}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.fcard{background:var(--panel);border:1px solid var(--panel-b);border-radius:20px;padding:28px;backdrop-filter:blur(10px);position:relative;overflow:hidden;transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .35s}
+.fcard:before{content:"";position:absolute;inset:0;background:linear-gradient(140deg,rgba(255,79,216,.12),transparent 50%);opacity:0;transition:opacity .35s}
+.fcard:hover{transform:translateY(-6px);border-color:rgba(255,255,255,.22)}
+.fcard:hover:before{opacity:1}
+.fcard .ic{width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,var(--mag),var(--cyan));display:flex;align-items:center;justify-content:center;margin-bottom:18px;position:relative}
+.fcard .ic svg{width:22px;height:22px;color:#fff}
+.fcard h3{font-size:17.5px;margin-bottom:10px;position:relative}
+.fcard p{font-size:14px;line-height:1.65;position:relative}
+
+/* ---------- pinned vault ---------- */
+.vault-sec{position:relative}
+.vault-head{text-align:center;padding:120px 0 0;max-width:580px;margin:0 auto}
+.vault-head h2{font-size:clamp(28px,3.4vw,42px)}
+.vault-pin{height:100vh;display:flex;align-items:center;justify-content:center}
+.vault-card{width:min(480px,88vw);background:var(--panel);border:1px solid var(--panel-b);border-radius:26px;padding:32px;backdrop-filter:blur(16px);box-shadow:0 40px 90px rgba(0,0,0,.5)}
+.vault-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+.vault-top span{font-size:12.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
+.vault-lock{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--mag),var(--cyan));display:flex;align-items:center;justify-content:center}
+.vault-lock svg{width:18px;height:18px;color:#fff}
+.vault-bal{font-size:38px;font-weight:700;color:#fff;margin-bottom:6px}
+.vault-bal span{font-size:14px;color:var(--cyan);margin-left:8px}
+.vault-rows{margin-top:24px;display:flex;flex-direction:column;gap:12px}
+.vault-row{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border-radius:12px;padding:12px 15px;opacity:0}
+.vault-row .l{display:flex;align-items:center;gap:10px;font-size:13.5px}
+.vault-row .l i{width:26px;height:26px;border-radius:50%;flex:none}
+.vault-row b{font-size:13.5px;color:#fff}
+
+/* ---------- stats ---------- */
+.stats{padding:0 0 120px;text-align:center}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.stat b{display:block;font-size:clamp(30px,3.6vw,46px);color:#fff}
+.stat span{display:block;margin-top:8px;font-size:12.5px;color:var(--mut)}
+
+/* ---------- testimonial ---------- */
+.testi{padding:0 0 130px}
+.testi-card{max-width:740px;margin:0 auto;text-align:center;background:var(--panel);border:1px solid var(--panel-b);border-radius:24px;padding:56px 48px;backdrop-filter:blur(10px)}
+.testi-card p{font-size:21px;line-height:1.55;color:#fff;font-weight:500}
+.testi-card .who{margin-top:24px;font-size:13.5px;color:var(--mut)}
+
+/* ---------- final cta ---------- */
+.final{padding:0 0 120px}
+.final-box{position:relative;border-radius:32px;padding:90px 40px;text-align:center;overflow:hidden;background:linear-gradient(135deg,#1a0b33,#0b0518)}
+.final-box:before{content:"";position:absolute;width:640px;height:400px;border-radius:50%;background:radial-gradient(ellipse,rgba(255,79,216,.28),transparent 70%);top:-160px;left:50%;transform:translateX(-50%)}
+.final-box h2{position:relative;font-size:clamp(30px,4.4vw,50px);max-width:640px;margin:0 auto}
+.final-box p{position:relative;margin:18px auto 0;max-width:440px;font-size:16px}
+.final-box .cta{position:relative;justify-content:center;margin-top:32px;display:flex;gap:14px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid rgba(255,255,255,.08);padding:60px 0 30px}
+.foot-top{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.08)}
+.foot-brand p{max-width:280px;margin-top:14px;font-size:14px;line-height:1.6}
+.foot-cols{display:flex;gap:60px}
+.foot-col h6{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);margin-bottom:16px}
+.foot-col a{display:block;font-size:14px;color:var(--ink);margin-bottom:10px;text-decoration:none;opacity:.75}
+.foot-col a:hover{opacity:1;color:var(--mag)}
+.foot-bottom{display:flex;justify-content:space-between;padding-top:26px;font-size:13px;color:var(--mut)}
+
+@media(max-width:900px){
+  .feat-grid{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr);gap:26px}
+  .nav-links{display:none}
+  .orbit-wrap{height:300px}
+  .or1{width:400px;height:400px}
+  .or2{width:290px;height:290px}
+  .or3{width:190px;height:190px}
+}
+@media(max-width:600px){
+  .foot-top{flex-direction:column;gap:28px}
+  .foot-cols{gap:30px;flex-wrap:wrap}
+  .testi-card{padding:36px 26px}
+  .testi-card p{font-size:18px}
+}
+@media(prefers-reduced-motion:reduce){
+  .rv{opacity:1!important;transform:none!important}
+}
 </style></head>
-<body data-cf-keep-dark><div class="wrap"><h2>Loved it? Share it.</h2>
-<div class="icons"><button>𝕏</button><button>in</button><button>f</button></div>
-<div class="copy"><span id="url">codefusion.dev/launch</span><button id="copy">Copy link</button></div></div>
-<script>document.getElementById("copy").addEventListener("click",function(e){e.target.textContent="Copied ✓";setTimeout(function(){e.target.textContent="Copy link"},1500)});</script>
-</body></html>`,
+<body data-cf-keep-dark>
+
+<nav class="nav" id="nav">
+  <div class="nav-in">
+    <div class="brand"><span class="mark"></span>Nexara</div>
+    <div class="nav-links"><a>Wallet</a><a>Swap</a><a>Stake</a><a>Docs</a></div>
+    <div class="nav-right"><span class="lg">Docs</span><button class="btn btn-grad">Launch app <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></button></div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-glow1"></div>
+  <div class="hero-glow2"></div>
+  <div class="wrap hero-in">
+    <span class="eb rv"><span class="grad-txt">Self-custody, actually simple</span></span>
+    <h1 class="rv">One wallet for every <span class="grad">chain</span> you touch.</h1>
+    <p class="lead rv">Nexara unifies swaps, staking and NFTs across twelve chains behind a single key you actually control.</p>
+    <div class="cta rv"><button class="btn btn-grad">Launch app <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></button><button class="btn btn-glass">Read the docs</button></div>
+  </div>
+  <div class="orbit-wrap rv" id="orbitWrap">
+    <div class="orbit-ring or1" id="or1"></div>
+    <div class="orbit-ring or2" id="or2"></div>
+    <div class="orbit-ring or3" id="or3"></div>
+    <div class="orbit-core"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6z"/></svg></div>
+    <div class="orbit-token" id="tok1" style="background:linear-gradient(135deg,#ff4fd8,#8b5cf6)">Ξ</div>
+    <div class="orbit-token" id="tok2" style="background:linear-gradient(135deg,#4de1ff,#8b5cf6)">◎</div>
+    <div class="orbit-token" id="tok3" style="background:linear-gradient(135deg,#8b5cf6,#ff4fd8)">₿</div>
+  </div>
+</section>
+
+<section class="logos">
+  <div class="wrap">
+    <div class="lbl">// audited &amp; integrated with</div>
+    <div class="logo-row"><div>ChainSafe</div><div>Aurora&nbsp;Labs</div><div>Prysm</div><div>Halborn</div><div>OpenZeppelin</div></div>
+  </div>
+</section>
+
+<section class="feats">
+  <div class="wrap">
+    <div class="feats-head">
+      <span class="eb rv" style="justify-content:center"><span class="grad-txt">Platform</span></span>
+      <h2 class="rv">Everything a self-custody wallet should be.</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="fcard rv2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg></div><h3>Non-custodial by design</h3><p>Your keys never touch our servers — full local encryption, always.</p></div>
+      <div class="fcard rv2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20 21 3M8 21H3v-5"/></svg></div><h3>Cross-chain swaps</h3><p>Route the best price across twelve chains in a single signed transaction.</p></div>
+      <div class="fcard rv2"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6z"/></svg></div><h3>Audited twice over</h3><p>Independently reviewed by Halborn and OpenZeppelin, reports public.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="vault-sec">
+  <div class="vault-head">
+    <span class="eb rv" style="justify-content:center"><span class="grad-txt">Live portfolio</span></span>
+    <h2 class="rv">Watch your holdings settle in.</h2>
+  </div>
+  <div class="vault-pin" id="vaultPin">
+    <div class="vault-card">
+      <div class="vault-top"><span>Total balance</span><div class="vault-lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div></div>
+      <div class="vault-bal" id="vaultBal">$0<span>+4.2%</span></div>
+      <div class="vault-rows" id="vaultRows">
+        <div class="vault-row"><div class="l"><i style="background:linear-gradient(135deg,#ff4fd8,#8b5cf6)"></i>Ethereum</div><b>$18,420</b></div>
+        <div class="vault-row"><div class="l"><i style="background:linear-gradient(135deg,#4de1ff,#8b5cf6)"></i>Solana</div><b>$9,150</b></div>
+        <div class="vault-row"><div class="l"><i style="background:linear-gradient(135deg,#8b5cf6,#ff4fd8)"></i>Bitcoin</div><b>$14,780</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="wrap stats-grid">
+    <div class="stat"><b data-count="2100000000" data-suffix="+">0</b><span>Total value secured</span></div>
+    <div class="stat"><b data-count="12">0</b><span>Chains supported</span></div>
+    <div class="stat"><b data-count="410000" data-suffix="+">0</b><span>Wallets created</span></div>
+    <div class="stat"><b data-count="0">0</b><span>Custodial breaches, ever</span></div>
+  </div>
+</section>
+
+<section class="testi">
+  <div class="wrap">
+    <div class="testi-card rv">
+      <p>"Moved my whole portfolio off three separate wallets. Nexara is the first one that felt like it was actually mine."</p>
+      <div class="who">— Reza Amiri, DeFi builder</div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <div class="final-box rv">
+      <h2>Your keys. Every chain. One wallet.</h2>
+      <p>Free to create, no seed phrase emailed to anyone — ever.</p>
+      <div class="cta"><button class="btn btn-grad">Launch app <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M7 17 17 7M7 7h10v10"/></svg></button><button class="btn btn-glass">Read the docs</button></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <div class="brand"><span class="mark"></span>Nexara</div>
+        <p>A self-custody wallet for every chain, behind one key.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h6>Product</h6><a>Wallet</a><a>Swap</a><a>Stake</a></div>
+        <div class="foot-col"><h6>Resources</h6><a>Docs</a><a>Audits</a><a>Status</a></div>
+        <div class="foot-col"><h6>Company</h6><a>About</a><a>Blog</a><a>Careers</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom"><span>© 2026 Nexara Labs.</span><span>Privacy · Terms</span></div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function(){
+  var nav = document.getElementById("nav");
+  document.addEventListener("scroll", function(){ nav.classList.toggle("on", window.scrollY > 14); }, { passive: true });
+
+  function fmt(n, suffix){
+    var v = Math.round(n);
+    var s = v >= 1000000000 ? (v/1000000000).toFixed(1).replace(/\.0$/,"") + "B" :
+            v >= 1000000 ? (v/1000000).toFixed(1).replace(/\.0$/,"") + "M" :
+            v >= 1000 ? (v/1000).toFixed(1).replace(/\.0$/,"") + "K" : String(v);
+    return "$" === suffix ? "$" + s : s + (suffix || "");
+  }
+
+  function positionTokens(){
+    var wrap = document.getElementById("orbitWrap");
+    var r2 = document.getElementById("or2").offsetWidth / 2;
+    var r3 = document.getElementById("or3").offsetWidth / 2;
+    var r1 = document.getElementById("or1").offsetWidth / 2;
+    var cx = wrap.offsetWidth / 2, cy = wrap.offsetHeight / 2;
+    place("tok1", cx, cy, r1, -20);
+    place("tok2", cx, cy, r2, 140);
+    place("tok3", cx, cy, r3, 260);
+  }
+  function place(id, cx, cy, r, deg){
+    var rad = deg * Math.PI / 180;
+    var el = document.getElementById(id);
+    el.style.left = (cx + r * Math.cos(rad) - el.offsetWidth / 2) + "px";
+    el.style.top = (cy + r * Math.sin(rad) - el.offsetHeight / 2) + "px";
+    el.style.position = "absolute";
+  }
+  positionTokens();
+  window.addEventListener("resize", positionTokens);
+
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!window.gsap || !window.ScrollTrigger || reduced) {
+    document.querySelectorAll(".rv,.rv2").forEach(function(el){ el.style.opacity = 1; el.style.transform = "none"; });
+    document.querySelectorAll(".stat b[data-count]").forEach(function(el){ el.textContent = fmt(+el.dataset.count, el.dataset.suffix); });
+    document.getElementById("vaultBal").innerHTML = '$42,350<span>+4.2%</span>';
+    document.querySelectorAll(".vault-row").forEach(function(el){ el.style.opacity = 1; });
+    return;
+  }
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  var tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+  tl.to(".hero-in .rv", { opacity: 1, y: 0, duration: .8, stagger: .08 })
+    .fromTo("#orbitWrap", { opacity: 0, y: 30, scale: .92 }, { opacity: 1, y: 0, scale: 1, duration: 1 }, "-=.5");
+
+  // Continuous orbit rotation for the ring system, each ring at a different
+  // speed for a layered, believable orbital feel.
+  gsap.to("#or1", { rotation: 360, duration: 60, ease: "none", repeat: -1, transformOrigin: "50% 50%" });
+  gsap.to("#or2", { rotation: -360, duration: 42, ease: "none", repeat: -1, transformOrigin: "50% 50%" });
+  gsap.to("#or3", { rotation: 360, duration: 26, ease: "none", repeat: -1, transformOrigin: "50% 50%" });
+  gsap.to(".orbit-core", { scale: 1.06, duration: 2.4, ease: "sine.inOut", yoyo: true, repeat: -1 });
+
+  document.querySelectorAll(".rv").forEach(function(el){
+    if (el.closest(".hero")) return;
+    gsap.to(el, { opacity: 1, y: 0, duration: .85, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 85%" } });
+  });
+  document.querySelectorAll(".rv2").forEach(function(el){
+    gsap.from(el, { opacity: 0, y: 26, duration: .7, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 88%" } });
+  });
+  gsap.from(".logo-row div", { opacity: 0, y: 10, stagger: .06, duration: .6, scrollTrigger: { trigger: ".logo-row", start: "top 90%" } });
+
+  // Pinned portfolio card: balance counts up and each holding row settles
+  // in one at a time, driven by scroll scrub through the pinned section.
+  var vaultTl = gsap.timeline({
+    scrollTrigger: { trigger: "#vaultPin", start: "top top", end: "+=170%", pin: true, scrub: .5 }
+  });
+  var balObj = { v: 0 };
+  vaultTl.to(balObj, { v: 42350, duration: .5, ease: "none", onUpdate: function(){
+    document.getElementById("vaultBal").innerHTML = fmt(balObj.v, "$") + '<span>+4.2%</span>';
+  }})
+  .to("#vaultRows .vault-row", { opacity: 1, y: 0, duration: .18, stagger: .15 }, "-=.15");
+  gsap.set("#vaultRows .vault-row", { y: 14 });
+
+  ScrollTrigger.create({
+    trigger: ".stats", start: "top 80%", once: true,
+    onEnter: function(){
+      document.querySelectorAll(".stat b[data-count]").forEach(function(el){
+        var target = +el.dataset.count, suffix = el.dataset.suffix || "", o = { v: 0 };
+        if (target === 0) { el.textContent = "0"; return; }
+        gsap.to(o, { v: target, duration: 1.8, ease: "power2.out", onUpdate: function(){ el.textContent = fmt(o.v, suffix); } });
+      });
+    }
+  });
+
+  window.addEventListener("load", function(){ ScrollTrigger.refresh(); positionTokens(); });
+})();
+</script>
+</body></html>
+`,
 
   "trust-badges-security-band": `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Trust Badges Security Band</title><style>
