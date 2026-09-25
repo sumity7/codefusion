@@ -6,7 +6,15 @@ const schema = new mongoose.Schema({
   productName: { type: String, default: "" },
   actionType: { type: String, enum: ["CODE_COPY", "PROMPT_COPY", "SUBSCRIPTION_GRANT", "MANUAL_ADJUSTMENT"], required: true },
   tokensUsed: { type: Number, required: true },
+  // Client-supplied key for one copy action. A retried or duplicated request
+  // carries the same key and must not be charged twice.
+  idempotencyKey: { type: String },
   createdAt: { type: Date, default: Date.now }
 });
+
+schema.index(
+  { userId: 1, idempotencyKey: 1 },
+  { unique: true, partialFilterExpression: { idempotencyKey: { $type: "string" } } }
+);
 
 export default mongoose.model("TokenTransaction", schema);

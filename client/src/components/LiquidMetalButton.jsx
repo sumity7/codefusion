@@ -1,6 +1,7 @@
 import { liquidMetalFragmentShader, ShaderMount } from "@paper-design/shaders";
 import { Sparkles } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useReducedMotion } from "../hooks/useReducedMotion";
 
 export default function LiquidMetalButton({
   label = "Get Started",
@@ -8,6 +9,8 @@ export default function LiquidMetalButton({
   onClick,
   viewMode = "text",
   ariaLabel,
+  ariaExpanded,
+  ariaControls,
   // Inner face sitting 2px inside the shader ring — the shader layer behind
   // it is what renders the animated metallic border, so this only paints
   // the flat surface in the middle. Defaults to the original dark metal.
@@ -27,6 +30,10 @@ export default function LiquidMetalButton({
   const shaderMount = useRef(null);
   const buttonRef = useRef(null);
   const rippleId = useRef(0);
+  // Reduced motion: the metal ring renders as a still frame and clicks skip
+  // the speed burst and ripple.
+  const reducedMotion = useReducedMotion();
+  const speed = (value) => (reducedMotion ? 0 : value);
 
   const dimensions = useMemo(() => {
     if (viewMode === "icon") {
@@ -77,7 +84,7 @@ export default function LiquidMetalButton({
           u_offsetY: -0.1,
         },
         undefined,
-        0.6,
+        speed(0.6),
       );
     }
 
@@ -92,20 +99,29 @@ export default function LiquidMetalButton({
       // mount/unmount cycle) stack up duplicate canvases in the same div.
       if (shaderRef.current) shaderRef.current.innerHTML = "";
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    shaderMount.current?.setSpeed?.(speed(isHovered ? 1 : 0.6));
+  }, [reducedMotion]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleMouseEnter() {
     setIsHovered(true);
-    shaderMount.current?.setSpeed?.(1);
+    shaderMount.current?.setSpeed?.(speed(1));
   }
 
   function handleMouseLeave() {
     setIsHovered(false);
     setIsPressed(false);
-    shaderMount.current?.setSpeed?.(0.6);
+    shaderMount.current?.setSpeed?.(speed(0.6));
   }
 
   function handleClick(e) {
+    if (reducedMotion) {
+      onClick?.();
+      return;
+    }
+
     if (shaderMount.current?.setSpeed) {
       shaderMount.current.setSpeed(2.4);
       setTimeout(() => {
@@ -265,6 +281,9 @@ export default function LiquidMetalButton({
               borderRadius: "100px",
             }}
             aria-label={ariaLabel || label}
+            aria-expanded={ariaExpanded}
+            aria-controls={ariaControls}
+            className="liquid-metal-btn"
           >
             {ripples.map((ripple) => (
               <span

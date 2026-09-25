@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Check } from "lucide-react";
 import { api } from "../services/api";
+import { getToken } from "../services/session";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
+import LoadError from "../components/LoadError";
 
 // Reference "was" price shown struck through next to the real (discounted) price.
 // Purely a marketing display value — the amount actually charged always comes
@@ -20,17 +23,36 @@ function loadRazorpay() {
 }
 
 export default function Subscription() {
-  const [plan, setPlan] = useState({ monthlyPrice: 499, monthlyTokens: 100, durationDays: 30 });
+  useDocumentTitle("Subscription");
+  // Starts empty: showing placeholder numbers until the real plan arrives (or
+  // forever, if the request failed) would quote a price that may be wrong.
+  const [plan, setPlan] = useState(null);
+  const [planStatus, setPlanStatus] = useState("loading");
+  const [attempt, setAttempt] = useState(0);
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.subscription.plans().then((x) => setPlan(x.plan)).catch(() => {});
-  }, []);
+    let active = true;
+    setPlanStatus("loading");
+    api.subscription
+      .plans()
+      .then((x) => {
+        if (!active) return;
+        setPlan(x.plan);
+        setPlanStatus("ready");
+      })
+      .catch(() => {
+        if (active) setPlanStatus("error");
+      });
+    return () => {
+      active = false;
+    };
+  }, [attempt]);
 
   async function subscribe() {
-    if (!localStorage.getItem("codefusion_token")) return navigate("/login?next=/subscription");
+    if (!getToken()) return navigate("/login?next=%2Fsubscription");
     setMsg("");
     setLoading(true);
     try {
@@ -77,6 +99,9 @@ export default function Subscription() {
       <span className="eyebrow">CODEFUSION PRO</span>
       <h1>Everything you need. One subscription.</h1>
       <p>Unlock every product's source code and premium prompts.</p>
+      {planStatus === "error" && <LoadError title="We couldn't load plan details" onRetry={() => setAttempt((n) => n + 1)} />}
+      {planStatus === "loading" && <section className="account-panel subscription-card" aria-busy="true"><p>Loading plan details…</p></section>}
+      {plan && planStatus === "ready" && (
       <section className="account-panel subscription-card">
         <h2>CodeFusion Monthly</h2>
         <div className="subscription-price">
@@ -97,11 +122,12 @@ export default function Subscription() {
             <Check size={15} /> {x}
           </p>
         ))}
-        <button className="button primary" onClick={subscribe} disabled={loading}>
+        <button className="button primary" onClick={subscribe} disabled={loading} aria-busy={loading}>
           {loading ? "Opening payment…" : "Subscribe Now"}
         </button>
-        {msg && <p className="form-error">{msg}</p>}
+        {msg && <p className="form-error" role="alert">{msg}</p>}
       </section>
+      )}
       <Link to="/products" className="text-link">
         Continue exploring products →
       </Link>

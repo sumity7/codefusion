@@ -1,8 +1,10 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { Search, Heart, UserRound, Menu, X, Sun, Moon, LogIn } from "lucide-react";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Search, Heart, UserRound, Menu, X, Sun, Moon, LogIn, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTheme } from "../hooks/useTheme";
 import { api } from "../services/api";
+import { useSessionToken } from "../services/session";
+import { loginPath } from "../utils/redirect";
 import Logo from "./Logo";
 import LiquidMetalButton from "./LiquidMetalButton";
 
@@ -27,13 +29,33 @@ export default function Navbar() {
   const [search, setSearch] = useState("");
   const [subActive, setSubActive] = useState(false);
   const [tokenBalance, setTokenBalance] = useState(0);
-  const loggedIn = Boolean(localStorage.getItem("codefusion_token"));
+  const loggedIn = Boolean(useSessionToken());
   const { theme, toggle } = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
+  const here = `${location.pathname}${location.search}`;
   const glass = theme === "light" ? BLUE_GLASS : DARK_GLASS;
 
+  // Any navigation — a menu link, an icon button, Back — closes the mobile menu.
   useEffect(() => {
-    if (!loggedIn) return;
+    setOpen(false);
+  }, [location.key]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (event) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  useEffect(() => {
+    if (!loggedIn) {
+      setSubActive(false);
+      setTokenBalance(0);
+      return;
+    }
     api.subscription
       .balance()
       .then((res) => {
@@ -57,12 +79,33 @@ export default function Navbar() {
         <Link to="/" className="brand">
           <Logo />
         </Link>
-        <nav className={open ? "open" : ""}>
-          <NavLink to="/" end>Home</NavLink>
-          <NavLink to="/products">Products</NavLink>
-          <NavLink to="/collections/trending">Collections</NavLink>
-          <NavLink to="/resources/docs">Resources</NavLink>
-          <NavLink to="/about">About</NavLink>
+        <nav id="primary-nav" className={open ? "open" : ""} aria-label="Primary">
+          <NavLink to="/" end onClick={() => setOpen(false)}>Home</NavLink>
+          <NavLink to="/products" onClick={() => setOpen(false)}>Products</NavLink>
+          <NavLink to="/collections/trending" onClick={() => setOpen(false)}>Collections</NavLink>
+          <NavLink to="/resources/docs" onClick={() => setOpen(false)}>Resources</NavLink>
+          <NavLink to="/about" onClick={() => setOpen(false)}>About</NavLink>
+          {/*
+            Below 1180px the header drops the Wishlist and Account icons, and
+            below 600px the Get Pro button too, so the menu carries them.
+          */}
+          <div className="nav-menu-account">
+            {loggedIn ? (
+              <NavLink to="/account" onClick={() => setOpen(false)}>
+                <UserRound size={15} aria-hidden="true" /> My account
+              </NavLink>
+            ) : (
+              <NavLink to={loginPath(here)} className="nav-menu-login" onClick={() => setOpen(false)}>
+                <LogIn size={15} aria-hidden="true" /> Log in
+              </NavLink>
+            )}
+            <NavLink to="/wishlist" onClick={() => setOpen(false)}>
+              <Heart size={15} aria-hidden="true" /> Wishlist
+            </NavLink>
+            <NavLink to={subActive ? "/account" : "/subscription"} className="nav-menu-pro" end onClick={() => setOpen(false)}>
+              <Sparkles size={15} aria-hidden="true" /> {subActive ? `${tokenBalance} tokens` : "Get Pro"}
+            </NavLink>
+          </div>
         </nav>
         <div className="nav-actions">
           <form className="nav-search" onSubmit={submitSearch}>
@@ -78,7 +121,7 @@ export default function Navbar() {
             viewMode="icon"
             icon={theme === "dark" ? <Sun size={16} style={{ color: glass.icon }} /> : <Moon size={16} style={{ color: glass.icon }} />}
             onClick={toggle}
-            ariaLabel="Toggle light/dark theme"
+            ariaLabel={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
             innerBackground={glass.surface}
             glow={glass.glow}
           />
@@ -117,7 +160,7 @@ export default function Navbar() {
             </>
           ) : (
             <>
-              <Link to="/login" className="nav-login">
+              <Link to={loginPath(here)} className="nav-login">
                 <LogIn size={14} />
                 Login
               </Link>
@@ -138,7 +181,9 @@ export default function Navbar() {
               viewMode="icon"
               icon={open ? <X size={18} style={{ color: "#666" }} /> : <Menu size={18} style={{ color: "#666" }} />}
               onClick={() => setOpen((v) => !v)}
-              ariaLabel="Toggle menu"
+              ariaLabel={open ? "Close menu" : "Open menu"}
+              ariaExpanded={open}
+              ariaControls="primary-nav"
             />
           </div>
         </div>

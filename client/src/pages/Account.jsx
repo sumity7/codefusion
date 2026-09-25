@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../services/api";
-import { useWishlist } from "../hooks/useWishlist";
+import { useWishlist, useWishlistToggle } from "../hooks/useWishlist";
+import { clearToken, useSessionToken } from "../services/session";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
+import PasswordField from "../components/PasswordField";
+import LoadError from "../components/LoadError";
 import {
   Heart,
   LogOut,
@@ -16,6 +20,7 @@ import {
   Gift,
   SlidersHorizontal,
   ArrowRight,
+  Loader2,
 } from "lucide-react";
 
 const ACTIVITY_META = {
@@ -25,7 +30,69 @@ const ACTIVITY_META = {
   MANUAL_ADJUSTMENT: { label: "Token balance adjusted", icon: SlidersHorizontal },
 };
 
+// Derived from the subscription fields. The user model has no separate account
+// status (suspended etc.) to report, so none is shown.
+function planStatus(subscription) {
+  if (subscription?.active) return { label: "Pro member", tone: "active" };
+  const sub = subscription?.subscription;
+  if (sub?.subscriptionStatus === "EXPIRED" || sub?.subscriptionEndDate) return { label: "Subscription expired", tone: "expired" };
+  return { label: "Free plan", tone: "free" };
+}
+
+function signOut() {
+  clearToken();
+  location.href = "/";
+}
+
+function PasswordForm({ onDone }) {
+  const [current, setCurrent] = useState("");
+  const [next, setNext] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  async function submit(event) {
+    event.preventDefault();
+    setError("");
+    if (next.length < 8) return setError("Your new password must be at least 8 characters.");
+    if (next !== confirm) return setError("The new passwords don't match.");
+    setSaving(true);
+    try {
+      await api.auth.changePassword({ currentPassword: current, newPassword: next });
+      onDone(true);
+    } catch (err) {
+      setError(err?.message || "Unable to change your password.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const describedBy = error ? "password-change-error" : undefined;
+  return (
+    <form className="account-edit-form" onSubmit={submit}>
+      <PasswordField label="Current password" value={current} onChange={(e) => setCurrent(e.target.value)} autoComplete="current-password" invalid={Boolean(error)} describedBy={describedBy} />
+      <PasswordField label="New password" value={next} onChange={(e) => setNext(e.target.value)} minLength={8} placeholder="Minimum 8 characters" autoComplete="new-password" invalid={Boolean(error)} describedBy={describedBy} />
+      <PasswordField label="Confirm new password" value={confirm} onChange={(e) => setConfirm(e.target.value)} minLength={8} autoComplete="new-password" invalid={Boolean(error)} describedBy={describedBy} />
+      {error && <div className="form-error" id="password-change-error" role="alert">{error}</div>}
+      <div className="modal-actions">
+        <button type="submit" className="button primary" disabled={saving} aria-busy={saving}>
+          <Check size={13} aria-hidden="true" /> {saving ? "Updating…" : "Update password"}
+        </button>
+        <button type="button" className="button ghost" onClick={() => onDone(false)} disabled={saving}>Cancel</button>
+      </div>
+      <Link to="/forgot-password" className="auth-link">Forgot your current password?</Link>
+    </form>
+  );
+}
+
 export default function Account() {
+  useDocumentTitle("My Account");
+  const token = useSessionToken();
+  // "loading" | "ready" | "signed-out" | "error"
+  const [status, setStatus] = useState(token ? "loading" : "signed-out");
+  const [attempt, setAttempt] = useState(0);
+  const [changingPassword, setChangingPassword] = useState(false);
+  const [passwordMessage, setPasswordMessage] = useState("");
   const [user, setUser] = useState(null);
   const [subscription, setSubscription] = useState(null);
   const [history, setHistory] = useState([]);
@@ -35,18 +102,38 @@ export default function Account() {
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
 
-  const { wishlist, toggle } = useWishlist();
-
+  const { slugs: wishlist, isPending } = useWishlist();
+  const toggleWishlist = useWishlistToggle();
   useEffect(() => {
+    if (!token) {
+      setStatus("signed-out");
+      return;
+    }
+    let active = true;
+    setStatus("loading");
     Promise.all([api.auth.me(), api.subscription.get(), api.subscription.history()])
       .then(([u, s, h]) => {
+        if (!active) return;
         setUser(u.user);
         setNameDraft(u.user?.name || "");
         setSubscription(s);
         setHistory(h.transactions || []);
+        setStatus("ready");
       })
-      .catch(() => {});
-  }, []);
+      .catch((error) => {
+        if (!active) return;
+        // An expired or revoked session: drop it rather than showing a broken page.
+        if (error?.status === 401) {
+          clearToken();
+          setStatus("signed-out");
+        } else {
+          setStatus("error");
+        }
+      });
+    return () => {
+      active = false;
+    };
+  }, [token, attempt]);
 
   useEffect(() => {
     if (!wishlist.length) {
@@ -77,13 +164,29 @@ export default function Account() {
     }
   }
 
-  if (!user)
+  if (status === "loading")
+    return (
+      <main className="simple-page container" aria-busy="true">
+        <span className="eyebrow">ACCOUNT</span>
+        <p className="account-loading">
+          <Loader2 size={16} className="spin" aria-hidden="true" /> Loading your account…
+        </p>
+      </main>
+    );
+  if (status === "error")
+    return (
+      <main className="simple-page container">
+        <span className="eyebrow">ACCOUNT</span>
+        <LoadError title="We couldn't load your account" onRetry={() => setAttempt((n) => n + 1)} />
+      </main>
+    );
+  if (status === "signed-out" || !user)
     return (
       <main className="simple-page container">
         <span className="eyebrow">ACCOUNT</span>
         <h1>Your workspace starts here.</h1>
         <p>Sign in to access your data.</p>
-        <Link to="/login" className="button primary">
+        <Link to="/login?next=%2Faccount" className="button primary">
           Sign in
         </Link>
       </main>
@@ -94,6 +197,7 @@ export default function Account() {
   const used = active ? Math.max(0, (sub?.monthlyTokenAllocation || 0) - (sub?.tokenBalance || 0)) : 0;
   const copyCount = history.filter((h) => h.actionType === "CODE_COPY" || h.actionType === "PROMPT_COPY").length;
   const initials = (user.name || "?").trim().slice(0, 1).toUpperCase();
+  const plan = planStatus(subscription);
 
   return (
     <main className="account-page container">
@@ -106,7 +210,7 @@ export default function Account() {
             <h1>Hello, {user.name}.</h1>
             <p>{user.email}</p>
             <div className="account-meta-row">
-              <span className="account-status-pill">Active</span>
+              <span className={`account-status-pill ${plan.tone}`}>{plan.label}</span>
               {user.createdAt && <small>Member since {new Date(user.createdAt).toLocaleDateString(undefined, { month: "long", year: "numeric" })}</small>}
             </div>
           </div>
@@ -117,10 +221,7 @@ export default function Account() {
           </button>
           <button
             className="button ghost"
-            onClick={() => {
-              localStorage.removeItem("codefusion_token");
-              location.href = "/";
-            }}
+            onClick={signOut}
           >
             <LogOut size={14} /> Sign out
           </button>
@@ -205,8 +306,8 @@ export default function Account() {
                   <small>{p.category}</small>
                 </div>
                 <div className="account-wishlist-actions">
-                  <Link to={`/products/${p.slug}`} className="icon-action" aria-label="View product"><ArrowRight size={13} /></Link>
-                  <button type="button" className="icon-action danger" aria-label="Remove from wishlist" onClick={() => toggle(p.slug).catch(() => {})}><X size={13} /></button>
+                  <Link to={`/products/${p.slug}`} className="icon-action" aria-label={`View ${p.name}`}><ArrowRight size={13} /></Link>
+                  <button type="button" className="icon-action danger" aria-label={`Remove ${p.name} from wishlist`} onClick={() => toggleWishlist(p.slug)} disabled={isPending(p.slug)}><X size={13} /></button>
                 </div>
               </div>
             ))}
@@ -280,14 +381,23 @@ export default function Account() {
           </div>
           <div className="account-settings-block">
             <h3>Security</h3>
-            <p><span>Account status</span><b>Active</b></p>
-            <Link to="/forgot-password" className="button ghost"><KeyRound size={13} /> Change password</Link>
+            <p><span>Plan</span><b>{plan.label}</b></p>
+            {passwordMessage && !changingPassword && <div className="success-state" role="status">{passwordMessage}</div>}
+            {changingPassword ? (
+              <PasswordForm
+                onDone={(changed) => {
+                  setChangingPassword(false);
+                  setPasswordMessage(changed ? "Your password has been updated." : "");
+                }}
+              />
+            ) : (
+              <button type="button" className="button ghost" onClick={() => { setPasswordMessage(""); setChangingPassword(true); }}>
+                <KeyRound size={13} aria-hidden="true" /> Change password
+              </button>
+            )}
             <button
               className="button ghost"
-              onClick={() => {
-                localStorage.removeItem("codefusion_token");
-                location.href = "/";
-              }}
+              onClick={signOut}
             >
               <LogOut size={13} /> Sign out
             </button>

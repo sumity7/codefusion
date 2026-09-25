@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
-export default function PasswordField({ label, value, onChange, placeholder, minLength, autoComplete }) {
+export default function PasswordField({ label, value, onChange, placeholder, minLength, autoComplete, invalid, describedBy }) {
   const [visible, setVisible] = useState(false);
 
   return (
@@ -16,6 +16,8 @@ export default function PasswordField({ label, value, onChange, placeholder, min
           onChange={onChange}
           placeholder={placeholder}
           autoComplete={autoComplete}
+          aria-invalid={invalid || undefined}
+          aria-describedby={describedBy}
         />
         <button
           type="button"

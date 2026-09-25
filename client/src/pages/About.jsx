@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import ScrollReveal from "../components/ScrollReveal";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 const OFFERS = [
   { icon: Layers, title: "UI Components", body: "Buttons, cards, navigation, loaders and more — small, focused pieces you can drop into any project." },
@@ -42,6 +43,7 @@ const WHY = [
 ];
 
 export default function About() {
+  useDocumentTitle("About");
   return (
     <main className="about-page">
       <ScrollReveal>

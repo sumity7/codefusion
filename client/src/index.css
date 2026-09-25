@@ -1269,3 +1269,169 @@ main{animation:pageIn .4s ease}
   .admin-logout:hover,
   .bars i:hover{transform:none}
 }
+
+/* =========================================================
+   STOREFRONT UX FIXES
+   ========================================================= */
+
+.visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* ---------- Home hero: live product in the showcase window's large tile ----------
+   `.window-grid div` styles every descendant div, so the preview's own wrapper
+   is reset here. The iframe never takes pointer events: hovering still drives
+   the preview's auto-scroll (the wrapper listens), and a click opens the product. */
+.window-grid .window-grid-product{position:relative;overflow:hidden;padding:0;background:#0b0b10}
+.window-grid-product-link{position:absolute;inset:0;display:block;border-radius:inherit;overflow:hidden}
+.window-grid .window-grid-product .source-preview-wrap{position:absolute;inset:0;border:0;border-radius:0;background:none;transform:none!important}
+.window-grid-product .source-preview-frame{pointer-events:none!important}
+.window-grid-product-link:focus-visible{outline:2px solid #a78bfa;outline-offset:2px}
+
+/* ---------- Toast (shared by every customer-facing notification) ---------- */
+.toast-region .copy-toast{display:flex;align-items:center;gap:12px;max-width:min(560px,calc(100vw - 32px));line-height:1.45}
+.toast-region .copy-toast>span{flex:1;min-width:0}
+.toast-error{border-color:#6b3440;color:#ffd6dc}
+[data-theme="light"] .toast-error{border-color:#f0c2ca;color:#8a1c2c}
+.toast-action{flex:none;padding:6px 11px;border-radius:8px;background:#c4b5fd;color:#100d18;font-weight:700;font-size:12px}
+[data-theme="light"] .toast-action{background:#4f46e5;color:#fff}
+.toast-close{flex:none;display:grid;place-items:center;width:26px;height:26px;border:0;border-radius:7px;background:transparent;color:inherit;opacity:.7}
+.toast-close:hover{opacity:1;background:rgba(255,255,255,.08)}
+.toast-action:focus-visible,.toast-close:focus-visible{outline:2px solid #a78bfa;outline-offset:2px}
+
+/* ---------- Loading skeletons & error state ---------- */
+.card-skeleton{min-height:340px;border:1px solid #1e1d27;border-radius:18px;background:linear-gradient(90deg,#0b0b10 25%,#111018 50%,#0b0b10 75%);background-size:200% 100%;animation:loadingShimmer 1.4s infinite linear}
+[data-theme="light"] .card-skeleton{border-color:#e7e4ee;background:linear-gradient(90deg,#f3f1fa 25%,#fbfafd 50%,#f3f1fa 75%);background-size:200% 100%}
+.card-skeleton.window-skeleton,.card-skeleton.editorial-skeleton{min-height:0;width:100%;height:100%;border:0;border-radius:0}
+.card-skeleton.editorial-skeleton{min-height:320px;border-radius:18px}
+.is-refreshing{opacity:.55;transition:opacity .2s}
+.load-error{padding:28px 20px}
+.load-error p{margin:0 0 8px;max-width:42ch}
+.account-loading{display:flex;align-items:center;gap:8px;color:#8b879a}
+.spin{animation:cfSpin 1s linear infinite}
+@keyframes cfSpin{to{transform:rotate(360deg)}}
+
+/* ---------- Product page: access / price label next to the copy actions ---------- */
+.detail-cta{display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.access-badge{display:flex;align-items:center;gap:9px;padding:7px 12px;border:1px solid #2d2b37;border-radius:999px;background:#0b0b10;color:#9c98a3;font-size:12px}
+.access-badge strong{padding:3px 9px;border-radius:999px;font-size:11px;letter-spacing:.04em;text-transform:uppercase}
+.access-badge.free strong{background:#101f14;border:1px solid #2f5a3a;color:#8fd9a0}
+.access-badge.pro strong{background:rgba(155,138,255,.14);border:1px solid rgba(155,138,255,.4);color:#d8cdfb}
+[data-theme="light"] .access-badge{border-color:#e4e1ec;background:#fff;color:#5f5a6b}
+[data-theme="light"] .access-badge.free strong{background:#eafaf0;border-color:#bfe3c4;color:#2c7a37}
+[data-theme="light"] .access-badge.pro strong{background:#eef0ff;border-color:#c7cdfa;color:#3730a3}
+.detail-actions>button:disabled,.wish:disabled{opacity:.6;cursor:progress}
+.review-area .section-head b{display:inline-flex;align-items:center;gap:5px}
+.review-area .section-head b small{color:#8b879a;font-weight:500}
+.review-area .section-head b.no-rating{color:#8b879a;font-weight:600}
+.breadcrumbs a:hover{color:#d8cdfb}
+
+/* ---------- Account plan pill tones (derived from subscription data) ---------- */
+.account-status-pill.free{background:#15131c;border-color:#3a3547;color:#c9c4d1}
+.account-status-pill.expired{background:#23140f;border-color:#5a3a2f;color:#f0b89c}
+[data-theme="light"] .account-status-pill.free{background:#f3f1fa;border-color:#e0dcec;color:#5f5a6b}
+[data-theme="light"] .account-status-pill.expired{background:#fff4ee;border-color:#f3d0bf;color:#9a4a22}
+.account-settings-block .account-edit-form{margin-top:8px}
+.account-settings-block .auth-link{display:inline-block;margin-top:4px}
+
+/* ---------- Mobile menu: account entries ----------
+   At <=1180px the header hides the Wishlist and Account icons (.nav-icon-wrap),
+   and at <=600px the Get Pro button (.nav-btn-wrap), so the open menu carries
+   them. Get Pro and Log in join the menu at phone width, where the header is
+   tightest. Desktop keeps using the header controls. */
+.nav-menu-account{display:none}
+@media(max-width:1180px){
+  .navbar nav.open .nav-menu-account{display:flex;flex-direction:column;gap:4px;margin-top:6px;padding-top:8px;border-top:1px solid rgba(167,139,250,.16)}
+  [data-theme="light"] .navbar nav.open .nav-menu-account{border-top-color:rgba(96,165,250,.28)}
+  .nav-menu-account a{display:flex;align-items:center;gap:8px}
+  .nav-menu-account .nav-menu-login,.nav-menu-account .nav-menu-pro{display:none}
+}
+@media(max-width:600px){
+  .navbar nav.open .nav-menu-account .nav-menu-pro,.navbar nav.open .nav-menu-account .nav-menu-login{display:flex}
+}
+
+/* ---------- Keyboard focus ---------- */
+/* LiquidMetalButton sets outline:none inline, so the ring needs !important. */
+.liquid-metal-btn:focus-visible{outline:2px solid #a78bfa!important;outline-offset:3px}
+[data-theme="light"] .liquid-metal-btn:focus-visible{outline-color:#4f46e5!important}
+.listing-search:focus-within,.auth-card input:focus-visible,.password-field-wrap input:focus-visible,.account-edit-form input:focus-visible{outline:2px solid #a78bfa;outline-offset:2px}
+[data-theme="light"] .listing-search:focus-within,[data-theme="light"] .auth-card input:focus-visible,[data-theme="light"] .password-field-wrap input:focus-visible,[data-theme="light"] .account-edit-form input:focus-visible{outline-color:#4f46e5}
+.preview-device-switcher button:focus-visible,.detail-actions>button:focus-visible,.breadcrumbs a:focus-visible,.collection-links a:focus-visible,.category-line a:focus-visible,.footer-grid a:focus-visible,.text-link:focus-visible,.auth-link:focus-visible{outline:2px solid #a78bfa;outline-offset:3px;border-radius:6px}
+.collection-links a[aria-current="page"]{color:#d8cdfb;text-decoration:underline;text-underline-offset:4px}
+[data-theme="light"] .collection-links a[aria-current="page"]{color:#3730a3}
+
+/* ---------- Quick view: reachable without a mouse ----------
+   Hover still reveals it on desktop. Keyboard focus anywhere in the card
+   reveals it too, and on touch screens (no hover) it is always shown. */
+.p-card:focus-within .quick-view,.quick-view:focus-visible{opacity:1;pointer-events:auto;transform:none}
+@media (hover:none),(pointer:coarse){
+  .p-card .quick-view{opacity:1;pointer-events:auto;transform:none}
+}
+
+/* ---------- Reduced motion: JS-driven transforms ---------- */
+@media (prefers-reduced-motion:reduce){
+  .hero-glow,.showcase-window{transform:none!important}
+  .is-refreshing{transition:none}
+}
+
+/* =========================================================
+   READABLE TYPE BELOW 1200px
+
+   Desktop (>=1200px) is scaled up by the body zoom above, which makes the
+   8-10px values read at roughly 10-12.5px. Nothing scaled tablet and phone,
+   so there the same values rendered literally. This sets a floor for the
+   storefront: ~14px body copy, 13px UI text, 11-12px for small uppercase
+   labels and metadata, and 16px form controls on phones so iOS does not
+   zoom in on focus. The miniature mockups inside product previews
+   (.card-v, .contact-v, .kpis, ...) are illustrations and keep their
+   scale; the admin area is untouched.
+   ========================================================= */
+@media(max-width:1199px){
+  /* Body copy */
+  .simple-page>p,.details-title p,.detail-grid p,.intro-line p,.about-story p,.about-values p,.auth-card p,.checkout-card p,.subscription-card p,.quick-copy p,.review-grid p,.docs-topic-card p,.offer-card p,.step-card p,.prompt-panel p,.locked-code p,.confirm-modal p,.access-panel p,.resources-head p,.account-head p,.account-empty-state p,.footer-grid p,.hero-copy>p,.collection-copy>p,.modal-content>p,.empty-state p{font-size:14px;line-height:1.6}
+
+  /* UI text */
+  .button,.access-panel .copy-code-btn,.access-panel .copy-prompt-btn{font-size:13px}
+  .navbar nav.open{font-size:15px}
+  .breadcrumbs,.text-link,.auth-link,.form-error,.success-state,.password-field,.auth-card label,.checkout-card label,.account-edit-form label,.settings-list label,
+  .cat-list button,.plan-tabs button,.filters button,.filters>span,.cat-sidebar-toggle,.cat-sidebar-head,
+  .preview-toolbar,.preview-toolbar button,.detail-actions>button,.check-grid div,.spec-panel div,
+  .review-grid strong,.review-grid span,.review-area .section-head b,.collection-links,.collection-proof,.collection-toolbar>span,
+  .category-line a,.feature-link,.p-body p,.p-body footer b,.quick-view,.p-hover,.trust-rail b,
+  .footer-grid>div>a:not(.brand),.footer-grid>div>b,.token-overview-rows div,.account-activity-row,.account-activity-row strong,
+  .account-settings-block p,.account-grid b,.resource-layout aside a,.subscription-card>strong,.purchase-row,
+  .code-secondary,.code-copy,.review-actions button,.pill,.nav-login{font-size:13px}
+
+  /* Small labels and metadata: still readable, kept visually secondary */
+  .eyebrow,.account-status-pill,.p-badge,.brand small,.listing-search kbd,.nav-search kbd,.subscription-discount,.access-badge strong{font-size:11px}
+  .chips span,.quick-meta span,.cat-list button span,.proof small,.trust-rail small,.footer-bottom,.account-activity-row small,.account-meta-row small,
+  .account-wishlist-info small,.account-stat span,.account-grid span,.code-heading small,.codebar{font-size:12px}
+
+  /* Form controls */
+  .auth-card input,.checkout-card input,.listing-search input,.nav-search input,.sort-select,.account-edit-form input,.password-field-wrap input{font-size:14px}
+
+  /* Let fixed-height rows grow with the larger text instead of clipping it */
+  .preview-toolbar{height:auto;min-height:49px;flex-wrap:wrap;gap:8px;padding:8px 10px}
+  .detail-actions{flex-wrap:wrap}
+  .detail-actions>button{height:auto;min-height:40px}
+  .quick-view,.p-hover{padding:8px 11px}
+  .wish{width:36px;height:36px}
+}
+
+@media(max-width:767px){
+  .auth-card input,.checkout-card input,.listing-search input,.nav-search input,.sort-select,.account-edit-form input,.password-field-wrap input{font-size:16px}
+  .sort-select{min-height:44px}
+  .detail-cta{align-items:stretch;width:100%}
+  .access-badge{border-radius:12px;flex-wrap:wrap}
+  .proof b{font-size:17px}
+}
+
+/* .simple-page .product-grid (Wishlist, Collections) fixes 4 columns with a
+   more specific selector than the responsive .product-grid rules, so it
+   never collapsed on smaller screens. */
+@media(max-width:1180px){.simple-page .product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.simple-page .product-grid{grid-template-columns:1fr}}
+
+@media(max-width:600px){
+  .hero-copy>p,.collection-copy>p{font-size:15px}
+  .plan-tabs button{padding:10px 14px}
+  .cat-list button{padding:11px 12px}
+}

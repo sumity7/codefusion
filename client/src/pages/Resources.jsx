@@ -1,4 +1,5 @@
-import { NavLink, Routes, Route, Link } from "react-router-dom";
+import { NavLink, Routes, Route, Link, useLocation } from "react-router-dom";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import {
   Rocket,
   BookOpen,
@@ -85,6 +86,9 @@ function DocsHub() {
 }
 
 export default function Resources() {
+  const { pathname } = useLocation();
+  const section = SIDEBAR.find((item) => pathname.startsWith(item.to));
+  useDocumentTitle(section ? section.label : "Resources");
   return (
     <main className="resources container">
       <div className="resources-head">

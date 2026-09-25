@@ -4,6 +4,7 @@ import Product from "../models/Product.js";
 import User from "../models/User.js";
 import TokenTransaction from "../models/TokenTransaction.js";
 import Category from "../models/Category.js";
+import Collection from "../models/Collection.js";
 
 import {
   authOptional,
@@ -12,6 +13,17 @@ import {
 } from "../middleware/auth.js";
 
 const router = Router();
+
+// Shown first, in this order, in the default ("newest") listing — which is what
+// the Home featured row and the top of /products use. An explicit sort (price,
+// rating, popular) keeps its own order. Products that don't match the current
+// filter simply aren't there to pin.
+const PINNED_SLUGS = [
+  "creative-agency-landing-page",
+  "enterprise-delivery-landing-page",
+  "ai-music-app-landing-page",
+  "editorial-saas-landing-page",
+];
 
 function buildPreviewCode(data) {
   const html = String(
@@ -440,6 +452,23 @@ router.get(
 );
 
 /*
+ * PUBLIC — ACTIVE COLLECTIONS
+ * Lets the storefront tell an unknown collection slug (404) apart from a real
+ * collection that happens to have no products yet.
+ */
+router.get(
+  "/collections",
+  async (_req, res, next) => {
+    try {
+      const collections = await Collection.find({ isActive: true }).sort({ name: 1 }).select("name slug description").lean();
+      res.json({ collections: collections.map(({ name, slug, description }) => ({ name, slug, description })) });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+/*
  * PUBLIC — PRODUCT LIST
  */
 router.get(
@@ -521,11 +550,19 @@ router.get(
             rating: -1,
           });
       } else if (
-        sort === "price"
+        sort === "price" ||
+        sort === "price-asc"
       ) {
         query =
           query.sort({
             priceAmount: 1,
+          });
+      } else if (
+        sort === "price-desc"
+      ) {
+        query =
+          query.sort({
+            priceAmount: -1,
           });
       } else {
         query =
@@ -536,6 +573,22 @@ router.get(
 
       const products =
         await query.lean();
+
+      // `rating` defaults to 5 before a product has any approved reviews, so a
+      // plain sort would rank unreviewed products above reviewed ones.
+      if (sort === "rating") {
+        const score = (p) => (Number(p.reviewCount) > 0 ? Number(p.rating) || 0 : -1);
+        products.sort((a, b) => score(b) - score(a) || (Number(b.reviewCount) || 0) - (Number(a.reviewCount) || 0));
+      }
+
+      if (!["popular", "rating", "price", "price-asc", "price-desc"].includes(sort)) {
+        const rank = (p) => {
+          const i = PINNED_SLUGS.indexOf(p.slug);
+          return i === -1 ? PINNED_SLUGS.length : i;
+        };
+        // Array#sort is stable, so everything unpinned keeps its newest-first order.
+        products.sort((a, b) => rank(a) - rank(b));
+      }
 
       const [
         categories,
@@ -631,6 +684,25 @@ async function copyContent(req, res, next, actionType) {
         return res.json({ content, remaining: null });
       }
 
+      const rawKey = req.get("Idempotency-Key");
+      const idempotencyKey = typeof rawKey === "string" && /^[A-Za-z0-9_-]{8,100}$/.test(rawKey) ? rawKey : null;
+
+      // A repeat of a request that was already charged gets the content again
+      // without spending another token.
+      const replay = async () => {
+        const previous = await TokenTransaction.findOne({ userId: req.user.id, idempotencyKey }).lean();
+        if (!previous) return false;
+        if (String(previous.productId) !== String(product._id) || previous.actionType !== actionType) {
+          res.status(409).json({ message: "This request key was already used for a different action." });
+          return true;
+        }
+        const current = await User.findById(req.user.id).select("tokenBalance").lean();
+        res.json({ content, remaining: current?.tokenBalance ?? 0 });
+        return true;
+      };
+
+      if (idempotencyKey && (await replay())) return;
+
       const now = new Date();
 
       // Single conditional update = atomic. Two concurrent copies can never spend
@@ -661,7 +733,18 @@ async function copyContent(req, res, next, actionType) {
         });
       }
 
-      await TokenTransaction.create({ userId: user._id, productId: product._id, productName: product.name, actionType, tokensUsed: 1 });
+      try {
+        await TokenTransaction.create({ userId: user._id, productId: product._id, productName: product.name, actionType, tokensUsed: 1, ...(idempotencyKey ? { idempotencyKey } : {}) });
+      } catch (error) {
+        // Two copies of the same request raced past the replay check and both
+        // took a token; the unique key index let only one record through. Give
+        // this one's token back and answer as a replay.
+        if (error?.code === 11000 && idempotencyKey) {
+          await User.updateOne({ _id: user._id }, { $inc: { tokenBalance: 1 } });
+          if (await replay()) return;
+        }
+        throw error;
+      }
       res.json({ content, remaining: user.tokenBalance });
     } catch (error) {
       next(error);
