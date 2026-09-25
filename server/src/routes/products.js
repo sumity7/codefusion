@@ -482,11 +482,24 @@ router.get(
         sort = "newest",
         featured,
         plan,
+        slugs,
+        limit,
       } = req.query;
 
       const filter = {
         isPublished: true,
       };
+
+      // A caller that only needs a specific handful of products (e.g. the Home
+      // hero + featured row) can ask for exactly those instead of paging through
+      // the full catalogue — each record carries its embedded preview source,
+      // so the unfiltered list is multiple hundred KB of JSON.
+      const requestedSlugs = typeof slugs === "string"
+        ? slugs.split(",").map((s) => s.trim().toLowerCase()).filter(Boolean)
+        : null;
+      if (requestedSlugs?.length) {
+        filter.slug = { $in: requestedSlugs };
+      }
 
       if (
         category &&
@@ -581,7 +594,11 @@ router.get(
         products.sort((a, b) => score(b) - score(a) || (Number(b.reviewCount) || 0) - (Number(a.reviewCount) || 0));
       }
 
-      if (!["popular", "rating", "price", "price-asc", "price-desc"].includes(sort)) {
+      if (requestedSlugs?.length) {
+        // Honor the order the caller asked for rather than DB/insertion order.
+        const rank = new Map(requestedSlugs.map((slug, i) => [slug, i]));
+        products.sort((a, b) => (rank.get(a.slug) ?? requestedSlugs.length) - (rank.get(b.slug) ?? requestedSlugs.length));
+      } else if (!["popular", "rating", "price", "price-asc", "price-desc"].includes(sort)) {
         const rank = (p) => {
           const i = PINNED_SLUGS.indexOf(p.slug);
           return i === -1 ? PINNED_SLUGS.length : i;
@@ -589,6 +606,9 @@ router.get(
         // Array#sort is stable, so everything unpinned keeps its newest-first order.
         products.sort((a, b) => rank(a) - rank(b));
       }
+
+      const cappedLimit = Number.parseInt(limit, 10);
+      const limited = Number.isFinite(cappedLimit) && cappedLimit > 0 ? products.slice(0, Math.min(cappedLimit, 100)) : products;
 
       const [
         categories,
@@ -608,7 +628,7 @@ router.get(
 
       res.json({
         products:
-          products.map(
+          limited.map(
             publicProduct
           ),
 
