@@ -398,3 +398,21 @@ ${themedScript}
   return output;
 }
 
+
+/*
+ * A still version of a preview document, for listing cards that have no
+ * thumbnail yet: scripts are removed (the frame is also sandboxed without
+ * allow-scripts), CSS animation and transitions are switched off, and media
+ * doesn't autoplay. It renders the product's markup and styles once, then sits
+ * idle, so a grid of them costs about as much as a grid of images.
+ */
+const FREEZE_CSS = `<style id="cf-frozen">*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}html,body{overflow:hidden!important}</style>`;
+
+export function freezeDocument(html) {
+  let out = String(html || "")
+    .replace(/<script\b[\s\S]*?<\/script>/gi, "")
+    .replace(/(<(?:video|audio)\b[^>]*?)\s+autoplay(?:=(?:"[^"]*"|'[^']*'|[^\s>]+))?/gi, "$1")
+    .replace(/<(video|audio)\b(?![^>]*\bpreload=)/gi, '<$1 preload="metadata"');
+  out = /<\/head>/i.test(out) ? out.replace(/<\/head>/i, `${FREEZE_CSS}</head>`) : FREEZE_CSS + out;
+  return out;
+}

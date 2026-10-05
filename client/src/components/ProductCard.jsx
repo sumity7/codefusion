@@ -99,7 +99,8 @@ export default function ProductCard({ product }) {
       <Modal open={quickOpen} title={product.name} onClose={() => setQuickOpen(false)} size="medium">
         <div className="quick-modal">
           <div className="quick-preview">
-            <ProductVisual product={product} mode="detail" />
+            {/* Static here too: the live preview is on the product page. */}
+            <ProductVisual product={product} mode="listing" />
           </div>
           <div className="quick-copy">
             <span className="eyebrow">{product.category}</span>

@@ -40,8 +40,12 @@ export default function HeroFlight({ products, total }) {
   const items = useMemo(() => products.slice(0, 7), [products]);
   const count = items.length;
 
+  // The flight is made of thumbnails; with fewer than three it would look empty,
+  // so the plain hero is used until they've been generated.
+  const flying = !reduced && count >= 3;
+
   useEffect(() => {
-    if (reduced || !count) return;
+    if (!flying) return;
     const section = sectionRef.current;
     let frame = 0;
 
@@ -111,7 +115,7 @@ export default function HeroFlight({ products, total }) {
       window.removeEventListener("resize", onScroll);
       cancelAnimationFrame(frame);
     };
-  }, [reduced, count]);
+  }, [flying, count]);
 
   const copy = (
     <>
@@ -130,11 +134,11 @@ export default function HeroFlight({ products, total }) {
     </>
   );
 
-  if (reduced || !count) {
+  if (!flying) {
     return (
       <section className="flight-static container">
         <div className="hero-copy">{copy}</div>
-        {count > 0 && (
+        {count >= 3 && (
           <div className="flight-static-grid">
             {items.slice(0, 3).map((product) => {
               const src = thumbnailFor(product, theme);

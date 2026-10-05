@@ -1974,3 +1974,5 @@ main{overflow-x:clip}
 .flight-panel.static b{padding:12px 14px;font-size:var(--fs-15)}
 @media(max-width:760px){.flight-static-grid{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){.flight-hint{animation:none}}
+/* Quick view sits on the image, clear of the card's title and tags. */
+.quick-view{top:12px;bottom:auto}

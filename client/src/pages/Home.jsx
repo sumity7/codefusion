@@ -63,7 +63,7 @@ export default function Home(){
  },[]);
 
  const retry=()=>setAttempt(n=>n+1);
- const flightProducts=[...products,...flight.filter(p=>!products.some(f=>f.slug===p.slug))].filter(p=>p.thumbnail||p.hasPreview).slice(0,7);
+ const flightProducts=[...products,...flight.filter(p=>!products.some(f=>f.slug===p.slug))].filter(p=>p.thumbnail).slice(0,7);
  const editorialProduct=products[1]||products[0];
 
  return <main>

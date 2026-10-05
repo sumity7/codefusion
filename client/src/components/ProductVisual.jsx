@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useTheme } from "../hooks/useTheme";
 import { api } from "../services/api";
-import { trackOnce } from "../services/analytics";
 import { thumbnailFor } from "../services/thumbnails";
 
 import {
   PREVIEW_DESIGN_WIDTH,
   buildPreviewSource,
+  freezeDocument,
   hasSourceCode,
   isFullPagePreview,
 } from "../services/previewSource";
@@ -14,6 +14,7 @@ import {
 export function SourcePreview({
   product,
   mode = "detail",
+  frozen = false,
 }) {
   const { theme } = useTheme() || {};
 
@@ -28,12 +29,8 @@ export function SourcePreview({
   // rather than only approximating them from outside the sandbox.
   const [hovering, setHovering] = useState(false);
 
-  const source =
-    buildPreviewSource(
-      product,
-      mode,
-      theme
-    );
+  const built = buildPreviewSource(product, mode, theme);
+  const source = frozen ? freezeDocument(built) : built;
 
   const listing = mode === "listing";
 
@@ -87,48 +84,36 @@ export function SourcePreview({
     );
   }
 
+  // Frozen (listing) frames are pictures: no scripts, no pointer events, so
+  // the card link gets every click. Only detail views run the live product.
   return (
     <div
       ref={wrapRef}
       className={`source-preview-wrap ${mode}`}
-      onMouseEnter={
-        listing
-          ? () => {
-              drive("start");
-              setHovering(true);
-            }
-          : undefined
-      }
-      onMouseLeave={
-        listing
-          ? () => {
-              drive("stop");
-              setHovering(false);
-            }
-          : undefined
-      }
+      onMouseEnter={listing && !frozen ? () => { drive("start"); setHovering(true); } : undefined}
+      onMouseLeave={listing && !frozen ? () => { drive("stop"); setHovering(false); } : undefined}
     >
       <iframe
         ref={frameRef}
-        title={`${
-          product?.name ||
-          "Product"
-        } preview`}
+        title={`${product?.name || "Product"} preview`}
         className={`source-preview-frame ${mode}`}
         srcDoc={source}
-        sandbox="allow-scripts allow-forms allow-modals"
-        style={listing ? { pointerEvents: hovering ? "auto" : "none" } : undefined}
+        sandbox={frozen ? "" : "allow-scripts allow-forms allow-modals"}
+        loading={frozen ? "lazy" : undefined}
+        tabIndex={frozen ? -1 : undefined}
+        aria-hidden={frozen ? "true" : undefined}
+        style={listing ? { pointerEvents: frozen ? "none" : hovering ? "auto" : "none" } : undefined}
       />
     </div>
   );
 }
 
 /*
- * Listings no longer ship preview source. Each card shows a light poster, and
- * only fetches its preview (GET /products/:slug/preview, cached per slug) once
- * it comes within reach of the viewport. Cards that scroll far away drop their
- * iframe again, so a long infinite-scroll list keeps only a screenful or two of
- * live documents. A product with a `thumbnail` image shows it until hovered.
+ * Cards are static. A card shows the product's generated thumbnail; a product
+ * without one yet shows a frozen render of its markup (no scripts, no motion),
+ * fetched only once the card nears the viewport and dropped again when it's far
+ * away. Nothing in a listing animates or runs product code — the live,
+ * interactive preview is on the product page.
  */
 const previewCache = new Map();
 
@@ -164,7 +149,6 @@ function LazyPreview({ product, mode }) {
   const [code, setCode] = useState(product?.previewCode || "");
   const [loaded, setLoaded] = useState(Boolean(product?.previewCode));
   const [failed, setFailed] = useState(false);
-  const [hovered, setHovered] = useState(false);
 
   // A full record arriving with its source replaces the lazily fetched copy
   // (same string in practice, so the iframe isn't reloaded).
@@ -198,8 +182,8 @@ function LazyPreview({ product, mode }) {
   }, [listing]);
 
   useEffect(() => {
-    // With a thumbnail on screen, the live source is only needed once hovered.
-    if (!near || loaded || !product?.slug || (thumb && !hovered)) return;
+    // A card with a thumbnail never needs the source at all.
+    if (!near || loaded || !product?.slug || thumb) return;
     let active = true;
     loadPreview(product.slug)
       .then((previewCode) => {
@@ -213,31 +197,17 @@ function LazyPreview({ product, mode }) {
     return () => {
       active = false;
     };
-  }, [near, loaded, product?.slug, thumb, hovered]);
+  }, [near, loaded, product?.slug, thumb]);
 
   // Loaded but the product has no source: use the built-in visual for its type.
   if (loaded && !code) return <StaticVisual product={product} />;
 
-  const live = near && code && (!thumb || hovered || !listing);
-
   return (
-    <div
-      ref={ref}
-      className={`lazy-preview ${mode}`}
-      onMouseEnter={
-        listing
-          ? () => {
-              setHovered(true);
-              if (product?.slug) trackOnce(`hover:${product.slug}`, "preview_interact", { product: product.slug });
-            }
-          : undefined
-      }
-      onMouseLeave={listing ? () => setHovered(false) : undefined}
-    >
-      {live ? (
-        <SourcePreview product={{ ...product, previewCode: code, previewMode: "source" }} mode={mode} />
-      ) : thumb ? (
+    <div ref={ref} className={`lazy-preview ${mode}`}>
+      {listing && thumb ? (
         <img className="preview-thumbnail" src={thumb} alt="" loading="lazy" decoding="async" width="720" height="540" />
+      ) : near && code ? (
+        <SourcePreview product={{ ...product, previewCode: code, previewMode: "source" }} mode={mode} frozen={listing} />
       ) : (
         <PreviewPoster product={product} failed={failed} />
       )}
