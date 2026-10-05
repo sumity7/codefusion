@@ -65,8 +65,12 @@ export default function LiquidMetalButton({
       document.head.appendChild(style);
     }
 
+    // Without WebGL (disabled, blocklisted GPU, some privacy browsers) the
+    // shader constructor throws. Inside an effect that would unmount the whole
+    // app, so the button just keeps its flat face instead.
     if (shaderRef.current) {
       if (shaderMount.current?.destroy) shaderMount.current.destroy();
+      try {
       shaderMount.current = new ShaderMount(
         shaderRef.current,
         liquidMetalFragmentShader,
@@ -86,6 +90,10 @@ export default function LiquidMetalButton({
         undefined,
         speed(0.6),
       );
+      } catch {
+        shaderMount.current = null;
+        if (shaderRef.current) shaderRef.current.innerHTML = "";
+      }
     }
 
     return () => {

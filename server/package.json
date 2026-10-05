@@ -7,7 +7,9 @@
     "dev": "node --watch src/index.js",
     "start": "node src/index.js",
     "seed": "node scripts/seed.js",
-    "make:admin": "node scripts/makeAdmin.js"
+    "make:admin": "node scripts/makeAdmin.js",
+    "enrich": "node scripts/enrich.js",
+    "backup": "node scripts/backup.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

@@ -1,0 +1,43 @@
+name: Database backup
+
+# Weekly export of every MongoDB collection (gzipped Extended JSON), kept as a
+# workflow artifact for 30 days. Requires the MONGODB_URI repository secret —
+# use a read-only database user for it.
+
+on:
+  schedule:
+    - cron: "30 2 * * 0" # Sundays 02:30 UTC
+  workflow_dispatch: {}
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+
+      - name: Install server dependencies
+        run: npm ci --prefix server --omit=dev
+
+      - name: Export collections
+        working-directory: server
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          BACKUP_DIR: ${{ runner.temp }}/backups
+        run: |
+          if [ -z "$MONGODB_URI" ]; then
+            echo "::error::MONGODB_URI secret is not set"
+            exit 1
+          fi
+          npm run backup
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: codefusion-db-${{ github.run_id }}
+          path: ${{ runner.temp }}/backups
+          retention-days: 30

@@ -1,5 +1,5 @@
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import { Search, Heart, UserRound, Menu, X, Sun, Moon, LogIn, Sparkles } from "lucide-react";
+import { Search, Heart, UserRound, Menu, X, Sun, Moon, LogIn, Sparkles, FolderOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTheme } from "../hooks/useTheme";
 import { api } from "../services/api";
@@ -83,6 +83,7 @@ export default function Navbar() {
           <NavLink to="/" end onClick={() => setOpen(false)}>Home</NavLink>
           <NavLink to="/products" onClick={() => setOpen(false)}>Products</NavLink>
           <NavLink to="/collections/trending" onClick={() => setOpen(false)}>Collections</NavLink>
+          <NavLink to="/packs" onClick={() => setOpen(false)}>Packs</NavLink>
           <NavLink to="/resources/docs" onClick={() => setOpen(false)}>Resources</NavLink>
           <NavLink to="/about" onClick={() => setOpen(false)}>About</NavLink>
           {/*
@@ -102,6 +103,11 @@ export default function Navbar() {
             <NavLink to="/wishlist" onClick={() => setOpen(false)}>
               <Heart size={15} aria-hidden="true" /> Wishlist
             </NavLink>
+            {loggedIn && (
+              <NavLink to="/account/collections" onClick={() => setOpen(false)}>
+                <FolderOpen size={15} aria-hidden="true" /> My collections
+              </NavLink>
+            )}
             <NavLink to={subActive ? "/account" : "/subscription"} className="nav-menu-pro" end onClick={() => setOpen(false)}>
               <Sparkles size={15} aria-hidden="true" /> {subActive ? `${tokenBalance} tokens` : "Get Pro"}
             </NavLink>

@@ -41,12 +41,12 @@ const DOC_TOPICS = [
   {
     icon: Zap,
     title: "Tokens",
-    body: "Free products don't cost tokens. Copying code or a prompt from a Pro or Premium product uses exactly 1 token per action, deducted atomically on the server so concurrent requests can't double-spend.",
+    body: "Free products don't cost tokens. Copying code or a prompt from a Pro or Premium product uses 1 token; once unlocked on the product page you can copy, download the ZIP or export to React, Next.js or Vue as often as you like during that visit. Retried requests are never charged twice.",
   },
   {
     icon: CreditCard,
     title: "Subscription",
-    body: "CodeFusion Pro is a single monthly subscription that refreshes your token allowance on a 30-day cycle and unlocks every non-free product in the library — no per-product purchases.",
+    body: "CodeFusion Pro is a one-time payment that sets your token balance for 30 days and unlocks every non-free product in the library — no per-product purchases and no auto-renewal. Unused tokens don't carry over when you renew.",
   },
   {
     icon: UserRound,

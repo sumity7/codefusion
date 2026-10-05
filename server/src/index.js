@@ -11,9 +11,21 @@ import reviews from "./routes/reviews.js";
 import subscription from "./routes/subscription.js";
 import analytics from "./routes/analytics.js";
 import admin from "./routes/admin.js";
+import userCollections from "./routes/userCollections.js";
+import mongoose from "mongoose";
 import { notFound, errorHandler } from "./middleware/error.js";
+import { installProcessHandlers } from "./utils/monitor.js";
+import { runMigrations } from "./jobs/migrate.js";
+import { startScoreJob } from "./jobs/scores.js";
+
+installProcessHandlers();
 
 const app = express();
+
+// Render (and Vercel) sit one proxy in front of the app. Without this every
+// request appears to come from the proxy, so per-IP rate limits would throttle
+// all users together.
+app.set("trust proxy", Number(process.env.TRUST_PROXY ?? 1));
 
 // CLIENT_URL may hold one origin or a comma-separated list (custom domain +
 // any Vercel deployment URL). Any *.vercel.app origin is allowed automatically
@@ -33,7 +45,9 @@ app.use(
       if (configuredOrigins.includes(origin) || vercelPreviewPattern.test(origin)) {
         return callback(null, true);
       }
-      return callback(new Error(`Origin ${origin} not allowed by CORS`));
+      const error = new Error(`Origin ${origin} not allowed by CORS`);
+      error.status = 403;
+      return callback(error);
     },
     credentials: false,
   })
@@ -52,10 +66,22 @@ app.use(
   })
 );
 
-app.get("/api/health", (req, res) => {
-  res.json({
-    ok: true,
+// Liveness + database check. Returns 503 when MongoDB is unreachable so the
+// uptime monitor (.github/workflows/keep-alive.yml) alerts on it.
+app.get("/api/health", async (req, res) => {
+  const dbUp = mongoose.connection.readyState === 1;
+  let dbPing = false;
+  if (dbUp) {
+    try {
+      await mongoose.connection.db.admin().ping();
+      dbPing = true;
+    } catch {}
+  }
+  res.status(dbPing ? 200 : 503).json({
+    ok: dbPing,
     service: "codefusion-api",
+    db: dbPing ? "up" : "down",
+    uptime: Math.round(process.uptime()),
   });
 });
 
@@ -66,28 +92,22 @@ app.use("/api/reviews", reviews);
 app.use("/api/subscription", subscription);
 app.use("/api/analytics", analytics);
 app.use("/api/admin", admin);
+app.use("/api/me/collections", userCollections);
 
 app.use(notFound);
 app.use(errorHandler);
 
 const port = Number(process.env.PORT || 5000);
 
-// Render's free tier spins the service down after 15 minutes without an
-// incoming request. Pinging our own public health endpoint every 11 minutes
-// keeps it under that threshold. Only runs in production — a local dev
-// server has no reason to ping itself.
-function startSelfPing() {
-  const selfUrl = process.env.RENDER_EXTERNAL_URL || "https://codefusion-f2yd.onrender.com";
-  setInterval(() => {
-    fetch(`${selfUrl}/api/health`).catch(() => {});
-  }, 11 * 60 * 1000);
-}
-
+// Keep-alive and uptime monitoring live in .github/workflows/keep-alive.yml.
+// The server used to ping itself too; one mechanism is enough, and an external
+// check also notices when the service is actually down.
 connectDB()
-  .then(() => {
+  .then(async () => {
+    await runMigrations().catch((err) => console.error(JSON.stringify({ level: "error", msg: "migrations failed", error: err?.message })));
+    startScoreJob();
     app.listen(port, "0.0.0.0", () => {
       console.log(`CodeFusion API listening on port ${port}`);
-      if (process.env.NODE_ENV === "production") startSelfPing();
     });
   })
   .catch((err) => {

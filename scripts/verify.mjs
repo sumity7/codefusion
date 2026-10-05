@@ -11,7 +11,6 @@ const required = [
   'client/src/pages/Subscription.jsx',
   'client/src/components/ProductCard.jsx',
   'client/src/components/ProductVisual.jsx',
-  'client/src/components/UnifiedCode.jsx',
   'client/src/components/CategorySidebar.jsx',
   'client/src/hooks/useTheme.jsx',
   'server/src/routes/auth.js',

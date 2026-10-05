@@ -1,18 +1,26 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, Heart, Share2, Monitor, Tablet, Smartphone, Check, Clipboard, FileText, Star } from "lucide-react";
+import { ArrowLeft, ArrowRight, Heart, Share2, Monitor, Tablet, Smartphone, Check, Clipboard, FileText, PackageOpen, FolderPlus, Columns2, ShieldCheck, History, Users, Rocket, RefreshCw } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
 import { api } from "../services/api";
+import { track } from "../services/analytics";
+import { getCombinedSourceCode } from "../services/combinedSource";
+import { useSessionToken } from "../services/session";
 import ProductVisual from "../components/ProductVisual";
 import ProductCard from "../components/ProductCard";
 import ScrollReveal from "../components/ScrollReveal";
 import Modal from "../components/Modal";
 import LoadError from "../components/LoadError";
+import ExportModal from "../components/ExportModal";
+import SaveToCollection from "../components/SaveToCollection";
+import ReviewSection from "../components/ReviewSection";
+import TokenExplainer from "../components/TokenExplainer";
 import NotFound from "./NotFound";
 import { useToast } from "../components/Toast";
 import { useWishlist, useWishlistToggle } from "../hooks/useWishlist";
+import { useCompare } from "../hooks/useCompare";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
-import { productAccess, productRating, reviewCountLabel } from "../utils/product";
+import { productAccess } from "../utils/product";
 
 const DEVICES = [
   { key: "desktop", label: "Desktop", icon: Monitor },
@@ -40,22 +48,36 @@ function requestKey() {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
 }
 
+function formatDate(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "" : date.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+}
+
 export default function ProductDetails() {
   const { slug } = useParams();
+  const signedIn = Boolean(useSessionToken());
 
   const [product, setProduct] = useState(null);
   // "loading" | "ready" | "not-found" | "error"
   const [status, setStatus] = useState("loading");
   const [attempt, setAttempt] = useState(0);
   const [device, setDevice] = useState("desktop");
-  const [reviews, setReviews] = useState([]);
   const [related, setRelated] = useState([]);
   const [copying, setCopying] = useState("");
   const [accessGate, setAccessGate] = useState(null);
+  const [exportOpen, setExportOpen] = useState(false);
+  const [saveOpen, setSaveOpen] = useState(false);
+  const [update, setUpdate] = useState(null);
+  const [reviewSummary, setReviewSummary] = useState(null);
+  // Content already paid for (or free) during this visit: { code, prompt }.
+  // Copying or exporting it again doesn't go back to the server.
+  const [unlocked, setUnlocked] = useState({});
 
   const { notify } = useToast();
   const { isSaved, isPending } = useWishlist();
   const toggleWishlist = useWishlistToggle();
+  const compare = useCompare();
 
   /*
    * Each copy spends a token, so a second click while the first request is in
@@ -73,6 +95,8 @@ export default function ProductDetails() {
     let mounted = true;
     setStatus("loading");
     setRelated([]);
+    setUnlocked({});
+    setUpdate(null);
     unfinishedKeys.current = {};
 
     api.products
@@ -82,10 +106,11 @@ export default function ProductDetails() {
         const remote = normalize(response.product);
         setProduct(remote);
         setStatus("ready");
+        track("product_view", { product: slug });
 
         if (remote.category) {
           api.products
-            .list(`?category=${encodeURIComponent(remote.category)}`)
+            .list(`?category=${encodeURIComponent(remote.category)}&limit=4`)
             .then((result) => {
               if (mounted) setRelated((result.products || []).filter((item) => item.slug !== slug).slice(0, 3));
             })
@@ -96,67 +121,100 @@ export default function ProductDetails() {
         if (mounted) setStatus(error?.status === 404 ? "not-found" : "error");
       });
 
-    api.reviews
-      .list(slug)
-      .then((response) => {
-        if (mounted) setReviews(response.reviews || []);
-      })
-      .catch(() => {
-        if (mounted) setReviews([]);
-      });
-
     return () => {
       mounted = false;
     };
   }, [slug, attempt]);
 
-  const copy = useCallback(
-    async (kind) => {
-      if (copyLock.current) return;
-      copyLock.current = true;
-      setCopying(kind);
+  // "Updated since you copied it" — only meaningful for signed-in users.
+  useEffect(() => {
+    if (!signedIn || status !== "ready") return;
+    let active = true;
+    api.products
+      .updates()
+      .then((result) => {
+        if (active) setUpdate((result.updates || []).find((item) => item.slug === slug) || null);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [signedIn, status, slug]);
 
+  // Fetches (and pays for, if needed) one kind of content. Resolves to the
+  // content, or null when access was refused (the gate modal is shown).
+  const fetchContent = useCallback(
+    async (kind) => {
+      if (unlocked[kind] !== undefined) return unlocked[kind];
       const key = unfinishedKeys.current[kind] || requestKey();
       unfinishedKeys.current[kind] = key;
-
+      track("copy_attempt", { product: slug, meta: { kind } });
       try {
         const response = await (kind === "code" ? api.products.copyCode(slug, key) : api.products.copyPrompt(slug, key));
-        const text =
-          kind === "code"
-            ? [response.content?.html, response.content?.css, response.content?.javascript].filter(Boolean).join("\n")
-            : response.content;
-
-        try {
-          await navigator.clipboard.writeText(text || "");
-        } catch {
-          notify({ message: "Your browser blocked clipboard access. Try again — you won't be charged twice.", tone: "error" });
-          return;
+        setUnlocked((current) => ({ ...current, [kind]: response.content }));
+        if (response.remaining !== null && response.remaining !== undefined) {
+          notify(`1 token used · ${response.remaining} remaining`);
         }
-
-        delete unfinishedKeys.current[kind];
-        const label = kind === "code" ? "Code" : "Prompt";
-        notify(
-          response.remaining === null || response.remaining === undefined
-            ? `${label} copied to clipboard.`
-            : `${label} copied to clipboard · 1 token used · ${response.remaining} remaining`
-        );
+        return response.content;
       } catch (error) {
         if (error?.code === "SUBSCRIPTION_REQUIRED" || error?.code === "NO_TOKENS") {
           delete unfinishedKeys.current[kind];
           setAccessGate({ code: error.code, message: error.message });
         } else if (error?.status === 401) {
           delete unfinishedKeys.current[kind];
-          setAccessGate({ code: "SIGN_IN", message: "Sign in to copy source code and prompts." });
+          setAccessGate({ code: "SIGN_IN", message: "Sign in to copy source code and prompts. Free products just need a free account." });
         } else {
           notify({ message: error?.message || "Unable to copy.", tone: "error" });
         }
+        return null;
+      }
+    },
+    [slug, notify, unlocked]
+  );
+
+  const copy = useCallback(
+    async (kind) => {
+      if (copyLock.current) return;
+      copyLock.current = true;
+      setCopying(kind);
+      try {
+        const content = await fetchContent(kind);
+        if (content === null) return;
+        const text = kind === "code" ? getCombinedSourceCode({ ...product, code: content }) : content;
+        try {
+          await navigator.clipboard.writeText(text || "");
+        } catch {
+          notify({ message: "Your browser blocked clipboard access. Try again — you won't be charged twice.", tone: "error" });
+          return;
+        }
+        delete unfinishedKeys.current[kind];
+        notify(`${kind === "code" ? "Code" : "Prompt"} copied to clipboard.`);
       } finally {
         copyLock.current = false;
         setCopying("");
       }
     },
-    [slug, notify]
+    [fetchContent, notify, product]
   );
+
+  async function unlockForExport() {
+    if (copyLock.current) return;
+    copyLock.current = true;
+    setCopying("export");
+    try {
+      const content = await fetchContent("code");
+      if (content !== null) delete unfinishedKeys.current.code;
+      else setExportOpen(false);
+    } finally {
+      copyLock.current = false;
+      setCopying("");
+    }
+  }
+
+  function openExport() {
+    setExportOpen(true);
+    track("export_open", { product: slug });
+  }
 
   async function share() {
     try {
@@ -170,6 +228,11 @@ export default function ProductDetails() {
       // Closing the native share sheet rejects with AbortError — not a failure.
       if (error?.name !== "AbortError") notify({ message: "Unable to share this link.", tone: "error" });
     }
+  }
+
+  async function dismissUpdate() {
+    setUpdate(null);
+    api.products.markUpdateSeen(slug).catch(() => {});
   }
 
   if (status === "loading") {
@@ -206,11 +269,18 @@ export default function ProductDetails() {
   }
 
   const access = productAccess(product);
-  const rating = productRating(product);
   const saved = isSaved(slug);
   const savePending = isPending(slug);
   const busy = Boolean(copying);
   const features = product.features || [];
+  const compatibility = product.compatibility || [];
+  const changelog = product.changelog || [];
+  const stats = product.stats || {};
+  const production = reviewSummary?.productionCount || 0;
+  const comparing = compare.has(slug);
+  const unlockedCode = unlocked.code !== undefined;
+
+  const copyLabel = (kind, idle) => (copying === kind ? "Copying…" : idle);
 
   return (
     <main>
@@ -226,36 +296,68 @@ export default function ProductDetails() {
           ) : null}
         </nav>
 
+        {update && (
+          <div className="update-banner" role="status">
+            <RefreshCw size={14} aria-hidden="true" />
+            <span>
+              Updated since you copied it: <b>v{update.copiedVersion}</b> → <b>v{update.currentVersion}</b>. Copy again to get the latest.
+            </span>
+            <a href="#version-history">What changed</a>
+            <button type="button" onClick={dismissUpdate}>Dismiss</button>
+          </div>
+        )}
+
         <div className="details-title">
           <div>
             <div className="chips">
               {product.badge && <span>{product.badge}</span>}
-              {(product.tags || []).map((tag) => (
-                <span key={tag}>{tag}</span>
+              {(product.discoveryTags || []).slice(0, 6).map((tag) => (
+                <Link key={tag} to={`/products?tag=${encodeURIComponent(tag)}`}>{tag}</Link>
               ))}
             </div>
 
             <h1>{product.name}</h1>
             <p>{product.description}</p>
+
+            {compatibility.length > 0 && (
+              <ul className="compat-badges" aria-label="Compatibility">
+                {compatibility.map((item) => (
+                  <li key={item}><Check size={11} aria-hidden="true" /> {item}</li>
+                ))}
+              </ul>
+            )}
+
+            <div className="proof-row">
+              {stats.copiers > 0 ? (
+                <span><Users size={13} aria-hidden="true" /> Copied by {stats.copiers} {stats.copiers === 1 ? "builder" : "builders"}</span>
+              ) : (
+                <span><Users size={13} aria-hidden="true" /> New — be one of the first to use it</span>
+              )}
+              {production > 0 && <span><Rocket size={13} aria-hidden="true" /> {production} in production</span>}
+              {product.isVerified && <span><ShieldCheck size={13} aria-hidden="true" /> CodeFusion verified</span>}
+            </div>
           </div>
 
           <div className="detail-cta">
             <div className={`access-badge ${access.free ? "free" : "pro"}`}>
               <strong>{access.label}</strong>
-              <span>{access.detail}</span>
+              <span>{unlockedCode ? "Unlocked for this visit — copy and export freely" : access.detail}</span>
             </div>
 
             <div className="detail-actions">
-              <button
-                type="button"
-                onClick={() => toggleWishlist(slug)}
-                className={saved ? "saved" : ""}
-                aria-pressed={saved}
-                aria-label={saved ? "Remove from wishlist" : "Save to wishlist"}
-                disabled={savePending}
-              >
+              <button type="button" onClick={() => toggleWishlist(slug)} className={saved ? "saved" : ""} aria-pressed={saved} aria-label={saved ? "Remove from wishlist" : "Save to wishlist"} disabled={savePending}>
                 <Heart size={15} fill={saved ? "currentColor" : "none"} aria-hidden="true" />
                 {saved ? "Saved" : "Save"}
+              </button>
+
+              <button type="button" onClick={() => setSaveOpen(true)}>
+                <FolderPlus size={15} aria-hidden="true" />
+                Collect
+              </button>
+
+              <button type="button" onClick={() => compare.toggle(product)} aria-pressed={comparing}>
+                <Columns2 size={15} aria-hidden="true" />
+                {comparing ? "Comparing" : "Compare"}
               </button>
 
               <button type="button" onClick={share}>
@@ -265,16 +367,30 @@ export default function ProductDetails() {
 
               <button type="button" className="button primary" onClick={() => copy("code")} disabled={busy} aria-busy={copying === "code"}>
                 <Clipboard size={15} aria-hidden="true" />
-                {copying === "code" ? "Copying…" : "Copy All Code"}
+                {copyLabel("code", "Copy All Code")}
               </button>
 
               {product.hasPrompt !== false && (
                 <button type="button" className="button ghost" onClick={() => copy("prompt")} disabled={busy} aria-busy={copying === "prompt"}>
                   <FileText size={15} aria-hidden="true" />
-                  {copying === "prompt" ? "Copying…" : "Copy Prompt"}
+                  {copyLabel("prompt", "Copy Prompt")}
                 </button>
               )}
+
+              <button type="button" className="button ghost" onClick={openExport} disabled={busy}>
+                <PackageOpen size={15} aria-hidden="true" />
+                Export…
+              </button>
             </div>
+
+            <p className="license-line">
+              <ShieldCheck size={12} aria-hidden="true" />
+              <span>
+                License: <b>{product.license || "Personal & commercial use"}</b> · v{product.version || "1.0.0"}
+                {product.lastUpdated ? ` · updated ${formatDate(product.lastUpdated)}` : ""}
+              </span>
+              <Link to="/resources/license">Terms</Link>
+            </p>
           </div>
         </div>
       </section>
@@ -328,43 +444,45 @@ export default function ProductDetails() {
                 <strong>{value}</strong>
               </div>
             ))}
+            <div>
+              <span>License</span>
+              <strong>{product.license || "Personal & commercial use"}</strong>
+            </div>
           </div>
         </ScrollReveal>
       </section>
 
       <ScrollReveal className="container">
-        <section className="review-area">
+        <section className="version-history" id="version-history" aria-labelledby="version-title">
           <div className="section-head">
             <div>
-              <span className="eyebrow">REVIEWS</span>
-              <h2>What builders are saying.</h2>
+              <span className="eyebrow">VERSION HISTORY</span>
+              <h2 id="version-title">v{product.version || "1.0.0"}</h2>
             </div>
-            {rating ? (
-              <b aria-label={`Rated ${rating.value} out of 5 from ${reviewCountLabel(rating.count)}`}>
-                {rating.value} <Star size={14} fill="currentColor" aria-hidden="true" /> <small>{reviewCountLabel(rating.count)}</small>
-              </b>
-            ) : (
-              <b className="no-rating">No reviews yet</b>
-            )}
+            {product.lastUpdated && <small><History size={13} aria-hidden="true" /> Last updated {formatDate(product.lastUpdated)}</small>}
           </div>
-
-          <div className="review-grid">
-            {reviews.length ? (
-              reviews.map((review) => (
-                <article key={review._id}>
-                  <strong>{review.user?.name || "Builder"}</strong>
-                  {review.rating ? <span aria-label={`${review.rating} out of 5 stars`}>{"★".repeat(review.rating)}</span> : null}
-                  <p>{review.body}</p>
-                </article>
-              ))
-            ) : (
-              <article>
-                <strong>Be the first reviewer.</strong>
-                <p>Build with it and share your feedback.</p>
-              </article>
-            )}
-          </div>
+          {changelog.length ? (
+            <ol>
+              {[...changelog].reverse().map((entry, index) => (
+                <li key={`${index}-${entry}`} className={index === 0 ? "latest" : ""}>
+                  {index === 0 && <b>Latest</b>}
+                  <span>{entry}</span>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <p>No changes recorded yet.</p>
+          )}
+          <p className="version-note">
+            {signedIn
+              ? "When a product you've copied gets a new version, it's flagged here and on your Account page."
+              : "Sign in and copy a product to be told when it gets a new version."}
+          </p>
         </section>
+      </ScrollReveal>
+
+      <ScrollReveal className="container">
+        <ReviewSection product={product} onSummary={setReviewSummary} />
       </ScrollReveal>
 
       <section className="container code-wrap">
@@ -373,27 +491,35 @@ export default function ProductDetails() {
             <>
               <span className="eyebrow">FREE PRODUCT</span>
               <h2>Free to copy</h2>
-              <p>Copy the complete source and prompt without spending any tokens.</p>
+              <p>Copy the complete source and prompt, download a ZIP or export to React, Next.js or Vue — no tokens needed.</p>
             </>
           ) : (
             <>
               <span className="eyebrow">CODEFUSION PRO ACCESS</span>
               <h2>Included with CodeFusion Pro</h2>
-              <p>Source code and premium prompts are delivered securely after spending 1 token per copy.</p>
+              <p>1 token unlocks this product's source for your visit — then copy, download and export in any format.</p>
             </>
           )}
           <div className="modal-actions">
             <button className="button primary copy-code-btn" onClick={() => copy("code")} disabled={busy} aria-busy={copying === "code"}>
               <Clipboard size={15} aria-hidden="true" />
-              {copying === "code" ? "Copying…" : "Copy All Code"}
+              {copyLabel("code", "Copy All Code")}
             </button>
             {product.hasPrompt !== false && (
               <button className="button ghost copy-prompt-btn" onClick={() => copy("prompt")} disabled={busy} aria-busy={copying === "prompt"}>
                 <FileText size={15} aria-hidden="true" />
-                {copying === "prompt" ? "Copying…" : "Copy Prompt"}
+                {copyLabel("prompt", "Copy Prompt")}
               </button>
             )}
+            <button className="button ghost" onClick={openExport} disabled={busy}>
+              <PackageOpen size={15} aria-hidden="true" />
+              Export…
+            </button>
           </div>
+          <details className="token-details">
+            <summary>How tokens work</summary>
+            <TokenExplainer compact />
+          </details>
         </div>
       </section>
 
@@ -418,6 +544,18 @@ export default function ProductDetails() {
         </section>
       )}
 
+      <ExportModal
+        open={exportOpen}
+        onClose={() => setExportOpen(false)}
+        product={product}
+        content={unlocked.code}
+        access={access}
+        unlocking={copying === "export"}
+        onUnlock={unlockForExport}
+      />
+
+      <SaveToCollection product={product} open={saveOpen} onClose={() => setSaveOpen(false)} />
+
       <Modal
         open={Boolean(accessGate)}
         title={accessGate?.code === "NO_TOKENS" ? "You're out of tokens" : accessGate?.code === "SIGN_IN" ? "Sign in to copy" : "Subscription required"}
@@ -425,6 +563,7 @@ export default function ProductDetails() {
         size="small"
       >
         <p>{accessGate?.message}</p>
+        {accessGate?.code !== "SIGN_IN" && <TokenExplainer compact />}
         <div className="modal-actions">
           {accessGate?.code === "SIGN_IN" ? (
             <Link to={`/login?next=${encodeURIComponent(`/products/${slug}`)}`} className="button primary" onClick={() => setAccessGate(null)}>
@@ -432,7 +571,7 @@ export default function ProductDetails() {
             </Link>
           ) : (
             <Link to="/subscription" className="button primary" onClick={() => setAccessGate(null)}>
-              {accessGate?.code === "NO_TOKENS" ? "View Subscription" : "Subscribe Now"}
+              {accessGate?.code === "NO_TOKENS" ? "View Subscription" : "See plans"}
             </Link>
           )}
           <button type="button" className="button ghost" onClick={() => setAccessGate(null)}>

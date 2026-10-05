@@ -1,7 +1,8 @@
-import { ArrowUpRight, Heart, Eye } from "lucide-react";
+import { ArrowUpRight, Heart, Eye, Columns2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useWishlist, useWishlistToggle } from "../hooks/useWishlist";
+import { useCompare } from "../hooks/useCompare";
 import { productAccess, productRating, reviewCountLabel } from "../utils/product";
 import ProductVisual from "./ProductVisual";
 import Modal from "./Modal";
@@ -10,6 +11,8 @@ export default function ProductCard({ product }) {
   const { isSaved, isPending } = useWishlist();
   const toggleWishlist = useWishlistToggle();
   const [quickOpen, setQuickOpen] = useState(false);
+  const compare = useCompare();
+  const comparing = compare.has(product.slug);
   const saved = isSaved(product.slug);
   const access = productAccess(product);
   const rating = productRating(product);
@@ -34,6 +37,12 @@ export default function ProductCard({ product }) {
             <div>
               <h3>{product.name}</h3>
               <ArrowUpRight size={15} aria-hidden="true" />
+            </div>
+            <div className="p-meta">
+              <span className={access.free ? "free" : "pro"}>{access.label}</span>
+              {(product.discoveryTags || []).filter((tag) => !/^(Dark|Light) UI$/.test(tag)).slice(0, 2).map((tag) => (
+                <span key={tag}>{tag}</span>
+              ))}
             </div>
           </div>
         </Link>
@@ -60,6 +69,20 @@ export default function ProductCard({ product }) {
         >
           <Eye size={13} aria-hidden="true" /> Quick view
         </button>
+        <button
+          type="button"
+          className={`card-compare${comparing ? " on" : ""}`}
+          aria-pressed={comparing}
+          aria-label={comparing ? `Remove ${product.name} from comparison` : `Compare ${product.name}`}
+          title={comparing ? "Remove from comparison" : "Compare"}
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            compare.toggle(product);
+          }}
+        >
+          <Columns2 size={13} aria-hidden="true" />
+        </button>
       </article>
       <Modal open={quickOpen} title={product.name} onClose={() => setQuickOpen(false)} size="medium">
         <div className="quick-modal">
@@ -75,6 +98,11 @@ export default function ProductCard({ product }) {
               <span>{rating ? `${rating.value} ★ · ${reviewCountLabel(rating.count)}` : "No reviews yet"}</span>
               {product.version && <span>v{product.version}</span>}
             </div>
+            {product.compatibility?.length > 0 && (
+              <ul className="compat-badges small" aria-label="Compatibility">
+                {product.compatibility.slice(0, 4).map((item) => <li key={item}>{item}</li>)}
+              </ul>
+            )}
             <div className="quick-actions">
               <Link className="button primary" to={`/products/${product.slug}`} onClick={() => setQuickOpen(false)}>
                 Open product <ArrowUpRight size={14} aria-hidden="true" />

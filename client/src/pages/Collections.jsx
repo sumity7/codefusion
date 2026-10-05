@@ -80,8 +80,9 @@ export default function Collections() {
 
   return (
     <main className="simple-page container">
-      <span className="eyebrow">COLLECTION</span>
+      <span className="eyebrow">{current?.kind === "pack" ? "CURATED PACK" : "COLLECTION"}</span>
       <h1>{label}</h1>
+      {current?.description && <p className="collection-description">{current.description}</p>}
       <p aria-live="polite">
         {status === "loading" ? "Loading products…" : status === "ready" ? `${data.length} ${data.length === 1 ? "product" : "products"} in this collection.` : ""}
       </p>

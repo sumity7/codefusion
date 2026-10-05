@@ -89,14 +89,60 @@ const productSchema = new mongoose.Schema(
       default: 0
     },
 
+    // Real counters, maintained by the server (copy, wishlist, view events).
+    // These used to be strings, which made "Most popular" sort alphabetically.
     usageCount: {
-      type: String,
-      default: "0"
+      type: Number,
+      default: 0
     },
 
     downloadCount: {
+      type: Number,
+      default: 0
+    },
+
+    copyCount: {
+      type: Number,
+      default: 0
+    },
+
+    viewCount: {
+      type: Number,
+      default: 0
+    },
+
+    wishlistCount: {
+      type: Number,
+      default: 0
+    },
+
+    // Recomputed by jobs/scores.js from recorded events. Popular is all-time
+    // engagement; trending is the last 7 days.
+    popularityScore: {
+      type: Number,
+      default: 0,
+      index: true
+    },
+
+    trendingScore: {
+      type: Number,
+      default: 0,
+      index: true
+    },
+
+    // Use-case and style tags used for discovery ("SaaS", "animated",
+    // "no dependencies"...). Derived by scripts/enrich.js, editable in admin.
+    discoveryTags: {
+      type: [String],
+      default: [],
+      index: true
+    },
+
+    // Optional static poster image for listing cards. When present, cards show
+    // it until hovered instead of booting a live iframe.
+    thumbnail: {
       type: String,
-      default: "0"
+      default: ""
     },
 
     tags: {
@@ -227,7 +273,8 @@ productSchema.index({
   name: "text",
   description: "text",
   shortDescription: "text",
-  tags: "text"
+  tags: "text",
+  discoveryTags: "text"
 });
 
 export default mongoose.model(

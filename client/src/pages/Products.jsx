@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Search, SlidersHorizontal, Sparkles } from "lucide-react";
+import { ArrowUpRight, Layers, Search, SlidersHorizontal, Sparkles, X } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
 import { api } from "../services/api";
 import ProductCard from "../components/ProductCard";
@@ -9,6 +9,7 @@ import CategorySidebar from "../components/CategorySidebar";
 import LoadError from "../components/LoadError";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import { prefersReducedMotion } from "../hooks/useReducedMotion";
+import { track } from "../services/analytics";
 
 const PLAN_TABS = [
   { key: "all", label: "All" },
@@ -19,29 +20,27 @@ const PLAN_TABS = [
 
 const SORTS = [
   { value: "newest", label: "Newest" },
+  { value: "trending", label: "Trending this week" },
   { value: "popular", label: "Most popular" },
   { value: "rating", label: "Top rated" },
   { value: "price-asc", label: "Price: Low to High" },
   { value: "price-desc", label: "Price: High to Low" },
 ];
 
-const IS_MAC = typeof navigator !== "undefined" && /Mac|iPhone|iPad|iPod/i.test(navigator.platform || navigator.userAgent || "");
+const PAGE_SIZE = 24;
+// Use-case and style tags offered as quick filters, in this order, when the
+// catalogue has products for them. Other tags still work from links (?tag=).
+const FEATURED_TAGS = ["SaaS", "E-commerce", "Portfolio", "Fintech", "Developer tools", "Animated", "Interactive", "Minimal", "Glassmorphism", "3D", "GSAP", "No dependencies", "CSS only", "Responsive", "Mobile-first"];
 
-// Weighted by each product's approved review count. Null when nobody has
-// reviewed anything yet — the model defaults `rating` to 5 before that.
-function catalogRating(products) {
-  let total = 0;
-  let count = 0;
-  for (const product of products) {
-    const n = Number(product.reviewCount) || 0;
-    const r = Number(product.rating);
-    if (n > 0 && Number.isFinite(r) && r > 0) {
-      total += r * n;
-      count += n;
-    }
-  }
-  return count ? { value: (total / count).toFixed(1), count } : null;
-}
+/*
+ * Results already loaded for a given filter set, kept for the session's SPA
+ * navigation. Coming Back from a product restores every page that was loaded,
+ * so the scroll position the ScrollManager restores still exists.
+ */
+const resultCache = new Map();
+const CACHE_MS = 5 * 60 * 1000;
+
+const IS_MAC = typeof navigator !== "undefined" && /Mac|iPhone|iPad|iPod/i.test(navigator.platform || navigator.userAgent || "");
 
 export default function Products() {
   useDocumentTitle("Products");
@@ -59,17 +58,27 @@ export default function Products() {
   const rawSort = searchParams.get("sort") || "newest";
   const sort = rawSort === "price" ? "price-asc" : rawSort;
   const urlSearch = searchParams.get("search") || "";
+  const tagParam = searchParams.get("tag") || "";
+  const activeTags = tagParam ? tagParam.split(",").filter(Boolean) : [];
 
   // The text input stays local so typing feels immediate; the URL catches up on
   // the same debounce as the fetch.
   const [query, setQuery] = useState(urlSearch);
   const [data, setData] = useState([]);
-  // "loading" | "ready" | "error"
+  // "loading" | "ready" | "error" — for the first page of the current filters.
   const [status, setStatus] = useState("loading");
   const [attempt, setAttempt] = useState(0);
-  const [categories, setCategories] = useState({ list: [], total: null });
-  const [rating, setRating] = useState(null);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [hasMore, setHasMore] = useState(false);
+  // "idle" | "loading" | "error" — for pages after the first.
+  const [moreStatus, setMoreStatus] = useState("idle");
+  const [categories, setCategories] = useState({ list: [], total: null, rating: null });
+  const [tags, setTags] = useState([]);
+  const [packs, setPacks] = useState([]);
   const searchRef = useRef(null);
+  const sentinelRef = useRef(null);
+  const lastSearchTracked = useRef("");
 
   useEffect(() => {
     setQuery((current) => (current === urlSearch ? current : urlSearch));
@@ -80,7 +89,18 @@ export default function Products() {
   useEffect(() => {
     api.products
       .categories()
-      .then((result) => setCategories({ list: result.categories || [], total: result.total ?? null }))
+      .then((result) => setCategories({ list: result.categories || [], total: result.total ?? null, rating: result.rating || null }))
+      .catch(() => {});
+    api.products
+      .tags()
+      .then((result) => {
+        const counts = new Map((result.tags || []).map((tag) => [tag.name, tag.count]));
+        setTags(FEATURED_TAGS.filter((name) => counts.get(name)).map((name) => ({ name, count: counts.get(name) })));
+      })
+      .catch(() => {});
+    api.products
+      .collections()
+      .then((result) => setPacks((result.collections || []).filter((item) => item.kind === "pack" && item.count > 0)))
       .catch(() => {});
   }, []);
 
@@ -94,25 +114,58 @@ export default function Products() {
     setSearchParams(next, { replace: true });
   }
 
+  function queryFor(pageNumber) {
+    const params = new URLSearchParams();
+    if (category !== "All") params.set("category", category);
+    if (query) params.set("search", query);
+    if (plan !== "all") params.set("plan", plan);
+    if (sort !== "newest") params.set("sort", sort);
+    if (tagParam) params.set("tag", tagParam);
+    params.set("page", String(pageNumber));
+    params.set("limit", String(PAGE_SIZE));
+    return params;
+  }
+  const filterKey = (() => {
+    const params = queryFor(1);
+    params.delete("page");
+    return params.toString();
+  })();
+
+  // First page whenever the filters change (debounced for typing). A fresh
+  // cache entry for the same filters — e.g. coming Back from a product —
+  // restores every page that had been loaded instead.
   useEffect(() => {
     let active = true;
-    const timeout = setTimeout(() => {
-      const params = new URLSearchParams();
-      if (category !== "All") params.set("category", category);
-      if (query) params.set("search", query);
-      if (plan !== "all") params.set("plan", plan);
-      if (sort !== "newest") params.set("sort", sort);
+    const cached = resultCache.get(filterKey);
+    if (cached && Date.now() - cached.at < CACHE_MS && attempt === 0) {
+      setData(cached.products);
+      setPage(cached.page);
+      setTotal(cached.total);
+      setHasMore(cached.hasMore);
+      setStatus("ready");
+      setMoreStatus("idle");
+      return () => {};
+    }
 
+    const timeout = setTimeout(() => {
       setStatus("loading");
+      setMoreStatus("idle");
       api.products
-        .list(`?${params}`)
+        .list(`?${queryFor(1)}`)
         .then((result) => {
           if (!active) return;
           const products = result.products || [];
           setData(products);
+          setPage(1);
+          setTotal(result.total ?? products.length);
+          setHasMore(Boolean(result.hasMore));
           setStatus("ready");
-          // Only the unfiltered catalogue speaks for the whole library.
-          if (category === "All" && !query && plan === "all") setRating(catalogRating(products));
+          resultCache.set(filterKey, { products, page: 1, total: result.total ?? products.length, hasMore: Boolean(result.hasMore), at: Date.now() });
+          // Searches feed the admin's "top searches" and "no results" lists.
+          if (query && lastSearchTracked.current !== `${query}|${filterKey}`) {
+            lastSearchTracked.current = `${query}|${filterKey}`;
+            track("search", { meta: { query: query.slice(0, 100), results: result.total ?? products.length, category, plan, tag: tagParam } });
+          }
         })
         .catch(() => {
           if (active) setStatus("error");
@@ -123,7 +176,45 @@ export default function Products() {
       active = false;
       clearTimeout(timeout);
     };
-  }, [category, query, plan, sort, attempt]);
+  }, [filterKey, attempt]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  function loadMore() {
+    if (moreStatus === "loading" || !hasMore || status !== "ready") return;
+    const next = page + 1;
+    const key = filterKey;
+    setMoreStatus("loading");
+    api.products
+      .list(`?${queryFor(next)}`)
+      .then((result) => {
+        if (key !== filterKey) return;
+        setData((current) => {
+          const seen = new Set(current.map((p) => p.slug));
+          const merged = [...current, ...(result.products || []).filter((p) => !seen.has(p.slug))];
+          resultCache.set(key, { products: merged, page: next, total: result.total ?? merged.length, hasMore: Boolean(result.hasMore), at: Date.now() });
+          return merged;
+        });
+        setPage(next);
+        setTotal(result.total ?? total);
+        setHasMore(Boolean(result.hasMore));
+        setMoreStatus("idle");
+      })
+      .catch(() => setMoreStatus("error"));
+  }
+
+  // Infinite scroll: the next page loads as the end of the grid approaches.
+  // The "Load more" button below stays as the keyboard / no-observer fallback.
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el || !hasMore || typeof IntersectionObserver === "undefined") return;
+    const observer = new IntersectionObserver(([entry]) => entry.isIntersecting && loadMore(), { rootMargin: "900px 0px" });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }); // re-bound each render so loadMore sees current state
+
+  function toggleTag(name) {
+    const next = activeTags.includes(name) ? activeTags.filter((t) => t !== name) : [...activeTags, name];
+    setParam("tag", next.join(","), "");
+  }
 
   // Mirror the debounced search term into the URL so it survives Back as well.
   useEffect(() => {
@@ -150,6 +241,7 @@ export default function Products() {
   }, []);
 
   const shown = data;
+  const rating = categories.rating;
   const spotlight = shown[0];
   const feature = shown[2];
 
@@ -232,6 +324,27 @@ export default function Products() {
         </section>
       )}
 
+      {packs.length > 0 && (
+        <section className="container packs-strip" aria-labelledby="packs-title">
+          <div className="section-head">
+            <div>
+              <span className="eyebrow">CURATED PACKS</span>
+              <h2 id="packs-title">Start from a set.</h2>
+            </div>
+            <Link to="/packs" className="text-link">All packs <ArrowUpRight size={14} aria-hidden="true" /></Link>
+          </div>
+          <div className="packs-row">
+            {packs.map((pack) => (
+              <Link key={pack.slug} to={`/collections/${pack.slug}`} className="pack-chip">
+                <Layers size={15} aria-hidden="true" />
+                <b>{pack.name}</b>
+                <small>{pack.count} products</small>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
       <section className="container">
         <div className="browse-shell">
           <CategorySidebar category={category} onSelect={handleCategorySelect} categories={categories.list} total={categories.total ?? 0} />
@@ -245,7 +358,7 @@ export default function Products() {
                 </div>
                 <span aria-live="polite">
                   <SlidersHorizontal size={14} aria-hidden="true" />{" "}
-                  {status === "ready" ? `${shown.length} ${shown.length === 1 ? "product" : "products"}` : status === "loading" ? "Loading…" : ""}
+                  {status === "ready" ? `${total} ${total === 1 ? "product" : "products"}` : status === "loading" ? "Loading…" : ""}
                 </span>
               </div>
             </ScrollReveal>
@@ -276,6 +389,23 @@ export default function Products() {
               </div>
             </ScrollReveal>
 
+            {tags.length > 0 && (
+              <div className="tag-filter" role="group" aria-label="Filter by use case and style">
+                {tags.map((tag) => {
+                  const on = activeTags.includes(tag.name);
+                  return (
+                    <button key={tag.name} type="button" className={on ? "active" : ""} aria-pressed={on} onClick={() => toggleTag(tag.name)}>
+                      {tag.name}
+                      {on ? <X size={11} aria-hidden="true" /> : <small>{tag.count}</small>}
+                    </button>
+                  );
+                })}
+                {activeTags.length > 0 && (
+                  <button type="button" className="tag-clear" onClick={() => setParam("tag", "", "")}>Clear tags</button>
+                )}
+              </div>
+            )}
+
             {status === "error" ? (
               <LoadError title="We couldn't load products" onRetry={() => setAttempt((n) => n + 1)} />
             ) : status === "loading" && !shown.length ? (
@@ -293,6 +423,18 @@ export default function Products() {
                     </ScrollReveal>
                   ))}
                 </div>
+
+                {status === "ready" && hasMore && (
+                  <div className="load-more" ref={sentinelRef}>
+                    {moreStatus === "error" ? (
+                      <LoadError compact title="We couldn't load more products" onRetry={loadMore} />
+                    ) : (
+                      <button type="button" className="button ghost" onClick={loadMore} disabled={moreStatus === "loading"} aria-busy={moreStatus === "loading"}>
+                        {moreStatus === "loading" ? "Loading…" : `Load more · showing ${shown.length} of ${total}`}
+                      </button>
+                    )}
+                  </div>
+                )}
 
                 {status === "ready" && !shown.length && (
                   <div className="empty-state">

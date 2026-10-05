@@ -6,9 +6,8 @@ For any product marked as source-synchronized:
 Product record
 → complete standalone HTML/CSS/JS source
 → iframe preview
-→ unified code viewer
-→ Copy all code
-→ Download
+→ Copy All Code / Copy Prompt (metered)
+→ Export: split files, ZIP, React / Next.js / Vue wrappers, StackBlitz / CodeSandbox
 
 The preview is never a separately invented React mock for those products.
 

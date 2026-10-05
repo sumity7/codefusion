@@ -21,12 +21,14 @@ import {
   SlidersHorizontal,
   ArrowRight,
   Loader2,
+  RefreshCw,
+  FolderOpen,
 } from "lucide-react";
 
 const ACTIVITY_META = {
   CODE_COPY: { label: "Copied code", icon: Clipboard },
   PROMPT_COPY: { label: "Copied prompt", icon: FileText },
-  SUBSCRIPTION_GRANT: { label: "Subscription renewed", icon: Gift },
+  SUBSCRIPTION_GRANT: { label: "Subscription activated", icon: Gift },
   MANUAL_ADJUSTMENT: { label: "Token balance adjusted", icon: SlidersHorizontal },
 };
 
@@ -101,6 +103,7 @@ export default function Account() {
   const [nameDraft, setNameDraft] = useState("");
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
+  const [updates, setUpdates] = useState([]);
 
   const { slugs: wishlist, isPending } = useWishlist();
   const toggleWishlist = useWishlistToggle();
@@ -140,11 +143,30 @@ export default function Account() {
       setWishProducts([]);
       return;
     }
+    // Only the saved products, by slug — not the whole catalogue.
     api.products
-      .list("")
-      .then((result) => setWishProducts((result.products || []).filter((p) => wishlist.includes(p.slug))))
+      .list(`?slugs=${encodeURIComponent(wishlist.slice(0, 4).join(","))}`)
+      .then((result) => setWishProducts(result.products || []))
       .catch(() => {});
   }, [wishlist]);
+
+  // New versions of products this user has copied.
+  useEffect(() => {
+    if (!token) return;
+    let active = true;
+    api.products
+      .updates()
+      .then((result) => active && setUpdates(result.updates || []))
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [token]);
+
+  function dismissUpdate(slug) {
+    setUpdates((list) => list.filter((item) => item.slug !== slug));
+    api.products.markUpdateSeen(slug).catch(() => {});
+  }
 
   async function saveProfile() {
     if (!nameDraft.trim() || nameDraft === user.name) {
@@ -252,6 +274,34 @@ export default function Account() {
         </div>
       </div>
 
+      {updates.length > 0 && (
+        <section className="account-panel updates-panel" aria-labelledby="updates-title">
+          <span className="eyebrow" id="updates-title"><RefreshCw size={12} aria-hidden="true" /> UPDATES AVAILABLE</span>
+          <p>New versions of products you've copied. Copy again from the product page to get the latest.</p>
+          <ul>
+            {updates.map((item) => (
+              <li key={item.slug}>
+                <div>
+                  <strong>{item.name}</strong>
+                  <small>v{item.copiedVersion} → v{item.currentVersion}{item.changelog?.length ? ` · ${item.changelog[item.changelog.length - 1]}` : ""}</small>
+                </div>
+                <Link to={`/products/${item.slug}`} className="button ghost">View</Link>
+                <button type="button" className="icon-action" aria-label={`Dismiss update for ${item.name}`} onClick={() => dismissUpdate(item.slug)}><X size={13} /></button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <Link to="/account/collections" className="account-panel account-link-panel">
+        <FolderOpen size={16} aria-hidden="true" />
+        <div>
+          <strong>My collections</strong>
+          <small>Group products for a project and share them by link.</small>
+        </div>
+        <ArrowRight size={14} aria-hidden="true" />
+      </Link>
+
       {/* Subscription + token overview */}
       <div className="account-two-col">
         <section className="account-panel subscription-card">
@@ -259,7 +309,7 @@ export default function Account() {
           {active ? (
             <>
               <h2>{sub.subscriptionPlan}</h2>
-              <p>Renews on {new Date(sub.subscriptionEndDate).toLocaleDateString()}</p>
+              <p>Active until {new Date(sub.subscriptionEndDate).toLocaleDateString()} · doesn't renew automatically</p>
               <strong>{sub.tokenBalance} of {sub.monthlyTokenAllocation} tokens remaining</strong>
               <Link to="/subscription" className="button ghost account-panel-cta">
                 Manage subscription <ArrowRight size={13} />
@@ -282,7 +332,7 @@ export default function Account() {
             <div><span>Current balance</span><b>{sub?.tokenBalance ?? 0}</b></div>
             <div><span>Used this cycle</span><b>{used}</b></div>
             <div><span>Monthly allowance</span><b>{sub?.monthlyTokenAllocation ?? 0}</b></div>
-            {active && <div><span>Renews</span><b>{new Date(sub.subscriptionEndDate).toLocaleDateString()}</b></div>}
+            {active && <div><span>Expires</span><b>{new Date(sub.subscriptionEndDate).toLocaleDateString()}</b></div>}
           </div>
           <Link to="/subscription" className="button ghost account-panel-cta">
             Get more tokens <ArrowRight size={13} />

@@ -6,6 +6,7 @@ import Category from "../src/models/Category.js";
 import Collection from "../src/models/Collection.js";
 import { productSources as coreSources } from "./productSources.js";
 import { boilerplateSources } from "./boilerplateSources.js";
+import { enrich } from "./enrich.js";
 
 const productSources = { ...coreSources, ...boilerplateSources };
 
@@ -221,8 +222,8 @@ for(const p of products){
       collections:[
         "New",
         ...(p.productType==="FREE"?["Free"]:[]),
-        ...(p.productType==="PREMIUM"?["Premium"]:[]),
-        ...((p.isVerified||p.isFeatured)?["Trending"]:[])
+        ...(p.productType==="PREMIUM"?["Premium"]:[])
+        // Trending isn't assigned here: it's computed from real engagement.
       ],
       previewLayout: p.previewLayout || (p.category==="Boilerplates" ? "page" : "auto"),
       isFeatured:p.isFeatured ?? (p.slug==="magnetic-cta-button"),
@@ -241,14 +242,14 @@ for(const p of products){
       lastUpdated:new Date(),
       changelog:["Initial CodeFusion release"],
       gallery:["Overview","Desktop","Mobile"],
-      isPublished:true,
-      rating:4.9,
-      reviewCount:0,
-      usageCount:"0",
-      downloadCount:"0"
+      isPublished:true
+      // Ratings, review counts and usage counters are left alone: they're real
+      // data now, and re-seeding must not overwrite them. New products get the
+      // schema defaults (0) on insert.
     },
     {upsert:true,new:true,setDefaultsOnInsert:true}
   );
 }
 console.log(`Seeded/updated ${products.length} source-synchronized CodeFusion products.`);
+console.log(JSON.stringify(await enrich(),null,2));
 process.exit(0);

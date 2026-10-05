@@ -1,10 +1,16 @@
-name: Keep Render backend awake
+name: Uptime monitor & keep-alive
+
+# The single keep-alive mechanism for the Render API (the server no longer pings
+# itself). Render's free tier spins the service down after 15 minutes idle, so
+# this runs every 10 minutes, which also makes it an uptime monitor: /api/health
+# returns 503 when MongoDB is unreachable, the job fails, and GitHub emails the
+# repository's watchers about the failed run.
+#
+# Optional: set the ALERT_WEBHOOK_URL repository secret (Slack or Discord
+# incoming webhook) to get a message as well.
 
 on:
   schedule:
-    # Render's free tier spins the service down after 15 minutes idle.
-    # Pinging every 10 minutes keeps it under that threshold even with
-    # GitHub Actions' scheduling jitter.
     - cron: "*/10 * * * *"
   workflow_dispatch: {}
 
@@ -12,5 +18,25 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping health endpoint
-        run: curl -fsS https://codefusion-f2yd.onrender.com/api/health
+      - name: Check API and database health
+        id: health
+        run: |
+          # A cold start can take ~50s on the free tier; retry before calling it down.
+          for attempt in 1 2 3; do
+            if curl -fsS --max-time 60 https://codefusion-f2yd.onrender.com/api/health; then
+              exit 0
+            fi
+            sleep 20
+          done
+          exit 1
+
+      - name: Alert
+        if: failure()
+        env:
+          ALERT_WEBHOOK_URL: ${{ secrets.ALERT_WEBHOOK_URL }}
+        run: |
+          if [ -n "$ALERT_WEBHOOK_URL" ]; then
+            msg="CodeFusion API health check failed: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            curl -fsS -X POST -H "Content-Type: application/json" \
+              -d "{\"text\":\"$msg\",\"content\":\"$msg\"}" "$ALERT_WEBHOOK_URL" || true
+          fi

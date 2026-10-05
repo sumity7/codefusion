@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Check } from "lucide-react";
+import { Check, Minus } from "lucide-react";
 import { api } from "../services/api";
 import { getToken } from "../services/session";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import LoadError from "../components/LoadError";
+import TokenExplainer from "../components/TokenExplainer";
+import { track } from "../services/analytics";
 
 // Reference "was" price shown struck through next to the real (discounted) price.
 // Purely a marketing display value — the amount actually charged always comes
@@ -32,6 +34,10 @@ export default function Subscription() {
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    track("checkout_view");
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -80,10 +86,16 @@ export default function Subscription() {
             setLoading(false);
           }
         },
-        modal: { ondismiss: () => setLoading(false) },
+        modal: {
+          ondismiss: () => {
+            setLoading(false);
+            track("checkout_dismiss");
+          },
+        },
       };
       const rzp = new window.Razorpay(options);
       rzp.on("payment.failed", (response) => {
+        track("checkout_failed", { meta: { reason: String(response.error?.reason || response.error?.code || "unknown") } });
         setMsg(response.error?.description || "Payment failed.");
         setLoading(false);
       });
@@ -117,7 +129,7 @@ export default function Subscription() {
         <strong>
           {plan.monthlyTokens} tokens every {plan.durationDays} days
         </strong>
-        {["Access to all products", "Copy complete source code", "Copy premium prompts", "New products added regularly", "Cancel anytime"].map((x) => (
+        {["Access to every Pro and Premium product", "Copy complete source code and premium prompts", "ZIP download and React / Next.js / Vue exports", "One-time payment — no auto-renewal, renew when you need to"].map((x) => (
           <p key={x}>
             <Check size={15} /> {x}
           </p>
@@ -128,6 +140,45 @@ export default function Subscription() {
         {msg && <p className="form-error" role="alert">{msg}</p>}
       </section>
       )}
+      <section className="plan-compare" aria-labelledby="plan-compare-title">
+        <h2 id="plan-compare-title">Free vs Pro</h2>
+        <div className="compare-table-wrap">
+          <table className="compare-table">
+            <thead>
+              <tr>
+                <th scope="col"><span className="visually-hidden">Feature</span></th>
+                <th scope="col">Free account</th>
+                <th scope="col">CodeFusion Pro</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ["Price", "₹0", plan ? `₹${plan.monthlyPrice} for ${plan.durationDays} days` : "—"],
+                ["Live previews of every product", true, true],
+                ["Copy, download & export Free products", true, true],
+                ["Copy, download & export Pro and Premium products", false, plan ? `${plan.monthlyTokens} unlocks (1 token each)` : true],
+                ["Premium build prompts", "Free products only", true],
+                ["Wishlist, collections & sharing", true, true],
+                ["Compare products side by side", true, true],
+                ["Update notices for products you've copied", true, true],
+                ["Auto-renewal", "—", "None — renew manually"],
+              ].map(([label, free, pro]) => (
+                <tr key={label}>
+                  <th scope="row">{label}</th>
+                  {[free, pro].map((value, i) => (
+                    <td key={i}>
+                      {value === true ? <Check size={15} aria-label="Included" /> : value === false ? <Minus size={15} aria-label="Not included" /> : value}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <TokenExplainer plan={plan} />
+
       <Link to="/products" className="text-link">
         Continue exploring products →
       </Link>

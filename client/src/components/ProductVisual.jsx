@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { getCombinedSourceCode } from "../services/combinedSource";
 import { useTheme } from "../hooks/useTheme";
+import { api } from "../services/api";
+import { trackOnce } from "../services/analytics";
 
 /*
  * Light-mode preview canvas.
@@ -508,7 +510,131 @@ export function SourcePreview({
   );
 }
 
+/*
+ * Listings no longer ship preview source. Each card shows a light poster, and
+ * only fetches its preview (GET /products/:slug/preview, cached per slug) once
+ * it comes within reach of the viewport. Cards that scroll far away drop their
+ * iframe again, so a long infinite-scroll list keeps only a screenful or two of
+ * live documents. A product with a `thumbnail` image shows it until hovered.
+ */
+const previewCache = new Map();
+
+function loadPreview(slug) {
+  if (!previewCache.has(slug)) {
+    previewCache.set(
+      slug,
+      api.products.preview(slug).then((result) => result.previewCode || "").catch((error) => {
+        previewCache.delete(slug);
+        throw error;
+      })
+    );
+  }
+  return previewCache.get(slug);
+}
+
+function PreviewPoster({ product, failed }) {
+  return (
+    <div className={`preview-poster${failed ? " failed" : ""}`} aria-hidden="true">
+      <small>{product?.category}</small>
+      <b>{product?.name}</b>
+      {failed && <span>Preview unavailable</span>}
+    </div>
+  );
+}
+
+function LazyPreview({ product, mode }) {
+  const listing = mode === "listing";
+  const ref = useRef(null);
+  const [near, setNear] = useState(false);
+  const [code, setCode] = useState(product?.previewCode || "");
+  const [loaded, setLoaded] = useState(Boolean(product?.previewCode));
+  const [failed, setFailed] = useState(false);
+  const [hovered, setHovered] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setNear(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Listing cards come and go; a detail-size preview, once shown, stays.
+        if (listing) setNear(entry.isIntersecting);
+        else if (entry.isIntersecting) {
+          setNear(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: listing ? "700px 0px" : "200px 0px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [listing]);
+
+  useEffect(() => {
+    if (!near || loaded || !product?.slug) return;
+    let active = true;
+    loadPreview(product.slug)
+      .then((previewCode) => {
+        if (!active) return;
+        setCode(previewCode);
+        setLoaded(true);
+      })
+      .catch(() => {
+        if (active) setFailed(true);
+      });
+    return () => {
+      active = false;
+    };
+  }, [near, loaded, product?.slug]);
+
+  // Loaded but the product has no source: use the built-in visual for its type.
+  if (loaded && !code) return <StaticVisual product={product} />;
+
+  const live = near && code && (!product?.thumbnail || hovered || !listing);
+
+  return (
+    <div
+      ref={ref}
+      className={`lazy-preview ${mode}`}
+      onMouseEnter={
+        listing
+          ? () => {
+              setHovered(true);
+              if (product?.slug) trackOnce(`hover:${product.slug}`, "preview_interact", { product: product.slug });
+            }
+          : undefined
+      }
+      onMouseLeave={listing ? () => setHovered(false) : undefined}
+    >
+      {live ? (
+        <SourcePreview product={{ ...product, previewCode: code, previewMode: "source" }} mode={mode} />
+      ) : product?.thumbnail ? (
+        <img className="preview-thumbnail" src={product.thumbnail} alt="" loading="lazy" decoding="async" />
+      ) : (
+        <PreviewPoster product={product} failed={failed} />
+      )}
+    </div>
+  );
+}
+
 export default function ProductVisual({
+  product,
+  mode = "listing",
+}) {
+  const sourceAvailable = hasSourceCode(product);
+  if (product?.hasPreview || product?.thumbnail || (mode === "listing" && sourceAvailable)) {
+    // Detail views of a product that already carries its source render at once.
+    if (!(mode !== "listing" && sourceAvailable)) {
+      return <LazyPreview product={product} mode={mode} />;
+    }
+  }
+  return <StaticVisual product={product} mode={mode} />;
+}
+
+function StaticVisual({
   product,
   mode = "listing",
 }) {

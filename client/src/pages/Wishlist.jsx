@@ -15,15 +15,23 @@ export default function Wishlist() {
   const [catalogError, setCatalogError] = useState(false);
   const [attempt, setAttempt] = useState(0);
 
-  // The wishlist API returns slugs only, so the cards need the catalogue.
+  // The wishlist API returns slugs only, so the cards are fetched separately.
+  // Refetch only when a saved slug isn't in hand yet (or on retry) — removing a
+  // card just filters what's already loaded.
+  const missing = slugs.filter((slug) => !catalog?.some((product) => product.slug === slug)).join(",");
   useEffect(() => {
-    if (status !== "ready" || !slugs.length) return;
+    if (status !== "ready" || !missing) return;
     let active = true;
     setCatalogError(false);
+    // Just the saved products, by slug, rather than the whole catalogue.
     api.products
-      .list()
+      .list(`?slugs=${encodeURIComponent(slugs.slice(0, 100).join(","))}`)
       .then((result) => {
-        if (active) setCatalog(result.products || []);
+        if (active) setCatalog((current) => {
+          const known = new Map((current || []).map((product) => [product.slug, product]));
+          for (const product of result.products || []) known.set(product.slug, product);
+          return [...known.values()];
+        });
       })
       .catch(() => {
         if (active) setCatalogError(true);
@@ -31,9 +39,7 @@ export default function Wishlist() {
     return () => {
       active = false;
     };
-    // Refetch only when the list goes from empty to non-empty or on retry —
-    // removing a card filters the catalogue already in hand.
-  }, [status, slugs.length > 0, attempt]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [status, missing, attempt]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const items = (catalog || []).filter((product) => slugs.includes(product.slug));
   const loading = status === "loading" || (status === "ready" && slugs.length > 0 && !catalog && !catalogError);

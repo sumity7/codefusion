@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 
 import { api } from "../services/api";
+import { clearToken } from "../services/session";
 import ProductVisual from "../components/ProductVisual";
 import Modal from "../components/Modal";
 
@@ -42,6 +43,11 @@ const menu = [
   { label: "Settings", icon: SettingsIcon, path: "/admin/settings" },
 ];
 
+// Verified payments only (see server/src/models/Payment.js).
+function inr(value) {
+  return `₹${Number(value || 0).toLocaleString("en-IN", { maximumFractionDigits: 2 })}`;
+}
+
 function Head({ eyebrow, title, children }) {
   return (
     <div className="admin-head">
@@ -57,7 +63,7 @@ function Head({ eyebrow, title, children }) {
 
 export default function Admin() {
   function logout() {
-    localStorage.removeItem("codefusion_token");
+    clearToken();
     window.location.href = "/admin/login";
   }
 
@@ -249,8 +255,14 @@ function Overview() {
 
         <K
           icon={<BarChart3 />}
-          label="Revenue"
-          value={stats.revenue}
+          label={`Revenue · ${stats.paidOrders || 0} paid orders`}
+          value={inr(stats.revenue)}
+        />
+
+        <K
+          icon={<BarChart3 />}
+          label={`Last 30 days · ${stats.paidOrders30 || 0} orders`}
+          value={inr(stats.revenue30)}
         />
 
         <K
@@ -626,6 +638,8 @@ function Editor() {
     isFeatured: false,
     isVerified: false,
     previewType: "card",
+    thumbnail: "",
+    discoveryTags: [],
     tags: [],
     features: [],
     specifications: [],
@@ -670,14 +684,12 @@ function Editor() {
       return;
     }
 
+    // Just this product, with its full source — not the whole catalogue.
     api.products
-      .adminAll()
+      .adminOne(id)
       .then((result) => {
         const product =
-          result.products?.find(
-            (item) =>
-              item._id === id
-          );
+          result.product;
 
         if (!product) {
           return;
@@ -1194,6 +1206,30 @@ function Editor() {
                       event.target.value
                     )
                   }
+                />
+              </label>
+
+              <label>
+                Discovery tags
+                <small>Use cases and styles shown as filters, e.g. SaaS, E-commerce, Animated, Minimal, GSAP, No dependencies</small>
+                <input
+                  value={(form.discoveryTags || []).join(", ")}
+                  onChange={(event) =>
+                    setField(
+                      "discoveryTags",
+                      event.target.value.split(",").map((item) => item.trim()).filter(Boolean)
+                    )
+                  }
+                />
+              </label>
+
+              <label>
+                Thumbnail image URL
+                <small>Optional. Listing cards show this image until hovered, instead of starting a live preview.</small>
+                <input
+                  value={form.thumbnail || ""}
+                  placeholder="https://…/poster.webp"
+                  onChange={(event) => setField("thumbnail", event.target.value.trim())}
                 />
               </label>
 
@@ -1984,9 +2020,13 @@ function Reviews() {
                 </strong>
 
                 <small>
-                  {review.user?.name}
+                  {review.user?.name} · {review.status}
+                  {review.verifiedCopier ? " · verified user" : ""}
+                  {review.usedInProduction ? " · used in production" : ""}
+                  {review.helpfulCount ? ` · ${review.helpfulCount} helpful` : ""}
                 </small>
 
+                {review.title && <b>{review.title}</b>}
                 <p>{review.body}</p>
               </div>
 
@@ -2118,94 +2158,126 @@ function TokenActivity() {
   );
 }
 
+function Funnel({ title, steps }) {
+  const top = Math.max(1, steps[0]?.count || 0);
+  return (
+    <div className="analytics-card">
+      <b>{title}</b>
+      {steps.map((step) => (
+        <div className="funnel-step" key={step.step}>
+          <span>{step.step}</span>
+          <div className="funnel-bar"><i style={{ width: `${Math.min(100, (step.count / top) * 100)}%` }} /></div>
+          <strong>{step.count}</strong>
+          <small>{steps[0]?.count ? `${Math.round((step.count / steps[0].count) * 100)}%` : "—"}</small>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function Analytics() {
-  const [data, setData] =
-    useState({
-      totals: [],
-      top: [],
-      days: [],
-    });
+  const [days, setDays] = useState(30);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    api.admin
-      .analytics()
-      .then(setData)
-      .catch(() => {});
-  }, []);
+    let active = true;
+    setError("");
+    api.analytics
+      .admin(days)
+      .then((result) => active && setData(result))
+      .catch((err) => active && setError(err.message));
+    return () => {
+      active = false;
+    };
+  }, [days]);
 
-  const max = Math.max(
-    1,
-    ...data.days.map(
-      (item) => item.count
-    )
-  );
+  const daily = data?.daily || [];
+  const max = Math.max(1, ...daily.map((item) => item.count));
 
   return (
     <>
-      <Head
-        eyebrow="ANALYTICS"
-        title="Library performance."
-      />
+      <Head eyebrow="ANALYTICS" title="Library performance.">
+        <select className="sort-select" value={days} onChange={(e) => setDays(Number(e.target.value))} aria-label="Time range">
+          <option value={7}>Last 7 days</option>
+          <option value={30}>Last 30 days</option>
+          <option value={90}>Last 90 days</option>
+        </select>
+      </Head>
 
-      <div className="analytics-grid">
-        <div className="analytics-card">
-          <b>Event totals</b>
+      {error && <div className="form-error">{error}</div>}
+      {!data && !error && <div className="admin-placeholder">Loading analytics…</div>}
 
-          {data.totals.map((item) => (
-            <div
-              className="analytics-line"
-              key={item._id}
-            >
-              <span>
-                {item._id}
-              </span>
+      {data && (
+        <div className="analytics-grid">
+          <Funnel title="Copy funnel" steps={data.funnels.copy} />
+          <Funnel title="Checkout funnel" steps={data.funnels.checkout} />
 
-              <strong>
-                {item.count}
-              </strong>
-            </div>
-          ))}
-        </div>
+          <div className="analytics-card">
+            <b>Top products</b>
+            <div className="analytics-line head"><span>Product</span><strong>Views · Saves · Copies</strong></div>
+            {data.top.map((item) => (
+              <div className="analytics-line" key={item.slug}>
+                <span><Link to={`/products/${item.slug}`}>{item.name}</Link></span>
+                <strong>{item.views} · {item.saves} · {item.copies}</strong>
+              </div>
+            ))}
+            {!data.top.length && <small>No product activity yet.</small>}
+          </div>
 
-        <div className="analytics-card">
-          <b>Top products</b>
+          <div className="analytics-card">
+            <b>Top searches</b>
+            {data.searches.map((item) => (
+              <div className="analytics-line" key={item._id || "(empty)"}>
+                <span>{item._id || "(empty)"}</span>
+                <strong>{item.count} · ~{Math.round(item.avgResults || 0)} results</strong>
+              </div>
+            ))}
+            {!data.searches.length && <small>No searches yet.</small>}
+          </div>
 
-          {data.top.map((item) => (
-            <div
-              className="analytics-line"
-              key={item.slug}
-            >
-              <span>
-                {item.name}
-              </span>
+          <div className="analytics-card">
+            <b>Searches with no results</b>
+            {data.zeroSearches.map((item) => (
+              <div className="analytics-line" key={item._id || "(empty)"}>
+                <span>{item._id || "(empty)"}</span>
+                <strong>{item.count}</strong>
+              </div>
+            ))}
+            {!data.zeroSearches.length && <small>None — every search found something.</small>}
+          </div>
 
-              <strong>
-                {item.views}
-              </strong>
-            </div>
-          ))}
-        </div>
-
-        <div className="analytics-card full">
-          <b>Daily activity</b>
-
-          <div className="bars">
-            {data.days.map((item) => (
-              <i
-                key={item._id}
-                title={`${item._id}: ${item.count}`}
-                style={{
-                  height: `${Math.max(
-                    8,
-                    (item.count / max) *
-                      100
-                  )}%`,
-                }}
-              />
+          <div className="analytics-card">
+            <b>All events</b>
+            {data.totals.map((item) => (
+              <div className="analytics-line" key={item._id}>
+                <span>{item._id}</span>
+                <strong>{item.count}{item.users ? ` · ${item.users} users` : ""}</strong>
+              </div>
             ))}
           </div>
+
+          <div className="analytics-card full">
+            <b>Daily activity</b>
+            <div className="bars">
+              {daily.map((item) => (
+                <i key={item._id} title={`${item._id}: ${item.count}`} style={{ height: `${Math.max(8, (item.count / max) * 100)}%` }} />
+              ))}
+            </div>
+          </div>
+
+          <div className="analytics-card full">
+            <b>Recent client errors</b>
+            {data.errors.map((item) => (
+              <div className="analytics-line" key={item._id}>
+                <span>{item.meta?.message} <small>{item.meta?.path} {item.meta?.source}</small></span>
+                <strong>{new Date(item.createdAt).toLocaleString()}</strong>
+              </div>
+            ))}
+            {!data.errors.length && <small>No browser errors reported.</small>}
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

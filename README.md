@@ -33,4 +33,18 @@ A source-based product renders its preview from its own HTML/CSS/JS source. The 
 
 ## Payment
 
-The starter checkout remains demo-only until a real payment provider is configured. Do not accept live payments against the demo endpoint.
+Checkout uses Razorpay when `PAYMENT_PROVIDER=razorpay` (otherwise it returns 503). Every order is stored in the `payments` collection; `/subscription/verify` accepts an order only once and only for the user who created it, so a replayed payment can't grant tokens again. Admin revenue is the sum of verified paid orders.
+
+## Discovery and analytics
+
+- `npm run enrich --prefix server` derives discovery tags ("SaaS", "Animated", "No dependencies"…), compatibility badges and curated packs. It runs automatically after `seed`; `-- --force` recomputes everything.
+- Trending and Popular sorts are computed from recorded events (views, saves, copies) every 15 minutes.
+- Admin → Analytics shows copy and checkout funnels, top searches, searches with no results and recent browser errors.
+
+## Operations
+
+- Startup runs idempotent migrations (string counters → numbers, text index, one-review-per-user index).
+- Sign-in, OTP and registration have their own rate limits (per IP + email).
+- `ERROR_WEBHOOK_URL` (optional) posts server errors to Slack/Discord; all errors are logged as JSON lines.
+- `.github/workflows/keep-alive.yml` keeps the Render API awake and doubles as an uptime monitor (`/api/health` checks MongoDB). Optional secret: `ALERT_WEBHOOK_URL`.
+- `.github/workflows/backup.yml` exports every collection weekly as a 30-day artifact. Requires the `MONGODB_URI` repository secret (use a read-only user). Run locally with `npm run backup --prefix server`.
