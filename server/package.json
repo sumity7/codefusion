@@ -9,7 +9,8 @@
     "seed": "node scripts/seed.js",
     "make:admin": "node scripts/makeAdmin.js",
     "enrich": "node scripts/enrich.js",
-    "backup": "node scripts/backup.js"
+    "backup": "node scripts/backup.js",
+    "thumbnails": "node scripts/thumbnails.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -20,5 +21,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.5",
     "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.63.0"
   }
 }

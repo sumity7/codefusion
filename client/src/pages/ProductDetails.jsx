@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Heart, Share2, Monitor, Tablet, Smartphone, Check, Clipboard, FileText, PackageOpen, FolderPlus, Columns2, ShieldCheck, History, Users, Rocket, RefreshCw } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
+import { PRODUCT_MEDIA } from "../utils/viewTransition";
 
 import { api } from "../services/api";
 import { track } from "../services/analytics";
@@ -32,6 +33,7 @@ function normalize(remote) {
   const hasPreview = Boolean(remote?.previewCode);
   return {
     ...remote,
+    hasPreview: hasPreview || Boolean(remote?.hasPreview),
     productType: remote?.productType || remote?.product_type || "FREE",
     previewMode: hasPreview ? "source" : remote?.previewMode,
     previewCode: remote?.previewCode || "",
@@ -56,11 +58,17 @@ function formatDate(value) {
 
 export default function ProductDetails() {
   const { slug } = useParams();
+  const location = useLocation();
   const signedIn = Boolean(useSessionToken());
 
-  const [product, setProduct] = useState(null);
+  // A card hands over its listing data as route state, so the page renders
+  // immediately (and the preview can morph into place) while the full record —
+  // features, specs, changelog, stats — loads.
+  const handedOver = location.state?.preview?.slug === slug ? location.state.preview : null;
+  const [product, setProduct] = useState(() => (handedOver ? normalize(handedOver) : null));
   // "loading" | "ready" | "not-found" | "error"
-  const [status, setStatus] = useState("loading");
+  const [status, setStatus] = useState(handedOver ? "ready" : "loading");
+  const [complete, setComplete] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const [device, setDevice] = useState("desktop");
   const [related, setRelated] = useState([]);
@@ -93,7 +101,14 @@ export default function ProductDetails() {
 
   useEffect(() => {
     let mounted = true;
-    setStatus("loading");
+    const partial = location.state?.preview?.slug === slug ? location.state.preview : null;
+    if (partial) {
+      setProduct(normalize(partial));
+      setStatus("ready");
+    } else {
+      setStatus("loading");
+    }
+    setComplete(false);
     setRelated([]);
     setUnlocked({});
     setUpdate(null);
@@ -106,6 +121,7 @@ export default function ProductDetails() {
         const remote = normalize(response.product);
         setProduct(remote);
         setStatus("ready");
+        setComplete(true);
         track("product_view", { product: slug });
 
         if (remote.category) {
@@ -119,12 +135,13 @@ export default function ProductDetails() {
       })
       .catch((error) => {
         if (mounted) setStatus(error?.status === 404 ? "not-found" : "error");
+        if (mounted) setComplete(true);
       });
 
     return () => {
       mounted = false;
     };
-  }, [slug, attempt]);
+  }, [slug, attempt]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // "Updated since you copied it" — only meaningful for signed-in users.
   useEffect(() => {
@@ -241,7 +258,7 @@ export default function ProductDetails() {
         <div className="product-loading-shell">
           <div className="loading-line large" />
           <div className="loading-line" />
-          <div className="loading-preview" />
+          <div className="loading-preview" style={{ viewTransitionName: PRODUCT_MEDIA }} />
         </div>
         <span className="visually-hidden">Loading product…</span>
       </main>
@@ -396,7 +413,7 @@ export default function ProductDetails() {
       </section>
 
       <section className="container product-showcase">
-        <div className="preview-frame">
+        <div className="preview-frame" style={{ viewTransitionName: PRODUCT_MEDIA }}>
           <div className="preview-toolbar">
             <div className="preview-device-switcher" role="group" aria-label="Preview size">
               {DEVICES.map(({ key, label, icon: Icon }) => (
@@ -415,6 +432,14 @@ export default function ProductDetails() {
         </div>
       </section>
 
+      {!complete && (
+        <section className="container detail-grid" aria-busy="true">
+          <div className="card-skeleton section-skeleton" />
+          <div className="card-skeleton section-skeleton" />
+        </section>
+      )}
+
+      {complete && <>
       <section className="container detail-grid">
         <ScrollReveal>
           <div>
@@ -480,6 +505,8 @@ export default function ProductDetails() {
           </p>
         </section>
       </ScrollReveal>
+
+      </>}
 
       <ScrollReveal className="container">
         <ReviewSection product={product} onSummary={setReviewSummary} />

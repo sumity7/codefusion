@@ -639,6 +639,7 @@ function Editor() {
     isVerified: false,
     previewType: "card",
     thumbnail: "",
+    thumbnailLight: "",
     discoveryTags: [],
     tags: [],
     features: [],
@@ -1225,11 +1226,20 @@ function Editor() {
 
               <label>
                 Thumbnail image URL
-                <small>Optional. Listing cards show this image until hovered, instead of starting a live preview.</small>
+                <small>Listing cards show this image until hovered. Generated automatically by <code>npm run thumbnails</code>; paste a URL to use your own.</small>
                 <input
                   value={form.thumbnail || ""}
                   placeholder="https://…/poster.webp"
                   onChange={(event) => setField("thumbnail", event.target.value.trim())}
+                />
+              </label>
+
+              <label>
+                Thumbnail image URL (light theme)
+                <input
+                  value={form.thumbnailLight || ""}
+                  placeholder="Falls back to the image above"
+                  onChange={(event) => setField("thumbnailLight", event.target.value.trim())}
                 />
               </label>
 

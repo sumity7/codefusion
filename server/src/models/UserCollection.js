@@ -7,6 +7,9 @@ const userCollectionSchema = new mongoose.Schema({
   description: { type: String, default: "", maxlength: 400 },
   shareId: { type: String, required: true, unique: true },
   isPublic: { type: Boolean, default: false },
+  // Board presentation: which product is the cover, and mood-board vs grid.
+  coverSlug: { type: String, default: "" },
+  layout: { type: String, enum: ["board", "grid"], default: "board" },
   products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }]
 }, { timestamps: true });
 

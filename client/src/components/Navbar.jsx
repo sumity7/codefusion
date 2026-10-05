@@ -6,6 +6,7 @@ import { api } from "../services/api";
 import { useSessionToken } from "../services/session";
 import { loginPath } from "../utils/redirect";
 import Logo from "./Logo";
+import { PALETTE_SHORTCUT, useCommandPalette } from "./CommandPalette";
 import LiquidMetalButton from "./LiquidMetalButton";
 
 // Inner face + ambient glow for the Get Pro CTA — the one control that keeps
@@ -24,12 +25,12 @@ const DARK_GLASS = {
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState("");
   const [subActive, setSubActive] = useState(false);
   const [tokenBalance, setTokenBalance] = useState(0);
   const loggedIn = Boolean(useSessionToken());
   const { theme, toggle } = useTheme();
   const navigate = useNavigate();
+  const palette = useCommandPalette();
   const location = useLocation();
   const here = `${location.pathname}${location.search}`;
   const glass = theme === "light" ? BLUE_GLASS : DARK_GLASS;
@@ -63,13 +64,6 @@ export default function Navbar() {
       .catch(() => {});
   }, [loggedIn]);
 
-  function submitSearch(event) {
-    event.preventDefault();
-    const params = new URLSearchParams();
-    if (search.trim()) params.set("search", search.trim());
-    navigate(`/products${params.toString() ? `?${params}` : ""}`);
-    setOpen(false);
-  }
 
   return (
     <header className="navbar">
@@ -88,6 +82,9 @@ export default function Navbar() {
             Below 1180px the header drops the Wishlist and Account icons, and
             below 600px the Get Pro button too, so the menu carries them.
           */}
+          <button type="button" className="nav-menu-search" onClick={() => { setOpen(false); palette.open(); }}>
+            <Search size={15} aria-hidden="true" /> Search
+          </button>
           <div className="nav-menu-account">
             {loggedIn ? (
               <NavLink to="/account" onClick={() => setOpen(false)}>
@@ -112,15 +109,11 @@ export default function Navbar() {
           </div>
         </nav>
         <div className="nav-actions">
-          <form className="nav-search" onSubmit={submitSearch}>
-            <Search size={14} />
-            <input
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search"
-              aria-label="Search products"
-            />
-          </form>
+          <button type="button" className="nav-search" onClick={palette.open} aria-label={`Search (${PALETTE_SHORTCUT})`} aria-haspopup="dialog">
+            <Search size={14} aria-hidden="true" />
+            <span>Search</span>
+            <kbd aria-hidden="true">{PALETTE_SHORTCUT}</kbd>
+          </button>
           <button type="button" className="nav-icon-btn" onClick={toggle} aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}>
             {theme === "dark" ? <Sun size={17} aria-hidden="true" /> : <Moon size={17} aria-hidden="true" />}
           </button>

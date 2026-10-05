@@ -145,6 +145,33 @@ const productSchema = new mongoose.Schema(
       default: ""
     },
 
+    // Light-theme counterpart of `thumbnail`. Generated images live at
+    // /products/:slug/thumbnail?theme=...; an admin may also paste any image URL.
+    creator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Creator",
+      default: null,
+      index: true
+    },
+
+    // One entry per shipped version, newest last. Powers /new and update emails.
+    releases: {
+      type: [
+        {
+          version: String,
+          date: Date,
+          notes: [String],
+          kind: { type: String, enum: ["new", "update"], default: "update" }
+        }
+      ],
+      default: []
+    },
+
+    thumbnailLight: {
+      type: String,
+      default: ""
+    },
+
     tags: {
       type: [String],
       default: []

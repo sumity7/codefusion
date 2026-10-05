@@ -12,6 +12,8 @@ const copyRecordSchema = new mongoose.Schema({
   count: { type: Number, default: 0 },
   // The user dismissed the update notice for this version.
   seenVersion: { type: String, default: "" },
+  // The version we last emailed this user about.
+  notifiedVersion: { type: String, default: "" },
   firstCopiedAt: { type: Date, default: Date.now },
   lastCopiedAt: { type: Date, default: Date.now }
 });

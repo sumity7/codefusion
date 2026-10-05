@@ -5,6 +5,7 @@ import crypto from "crypto";
 import User from "../models/User.js";
 import { authRequired } from "../middleware/auth.js";
 import { signToken } from "../utils/token.js";
+import { sendEmail, layout } from "../utils/mailer.js";
 import { loginLimit, otpSendLimit, otpVerifyLimit, registerLimit, passwordChangeLimit } from "../middleware/limits.js";
 
 const router = Router();
@@ -16,12 +17,8 @@ function safeUser(user){return {id:user._id,name:user.name,email:user.email,role
 function normalizeEmail(value){return String(value||"").trim().toLowerCase();}
 function makeOtp(){return String(crypto.randomInt(100000,1000000));}
 async function sendOtpEmail(email,otp){
-  if(process.env.RESEND_API_KEY && process.env.MAIL_FROM){
-    const response=await fetch("https://api.resend.com/emails",{method:"POST",headers:{Authorization:`Bearer ${process.env.RESEND_API_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({from:process.env.MAIL_FROM,to:[email],subject:"Your CodeFusion password reset code",html:`<div style="font-family:Arial,sans-serif;max-width:520px;margin:auto"><h2>CodeFusion password reset</h2><p>Your verification code is:</p><div style="font-size:32px;font-weight:700;letter-spacing:8px">${otp}</div><p>This code expires in 5 minutes.</p><p>If you did not request a password reset, you can ignore this email.</p></div>`})});
-    if(!response.ok){const text=await response.text();throw new Error(`Email provider failed: ${text}`);}
-    return;
-  }
-  console.log(`[CodeFusion OTP] ${email}: ${otp}`);
+  const result=await sendEmail({to:email,subject:"Your CodeFusion password reset code",html:layout({title:"CodeFusion password reset",body:`<p>Your verification code is:</p><div style="font-size:32px;font-weight:700;letter-spacing:8px">${otp}</div><p>This code expires in 5 minutes.</p>`,footer:"If you did not request a password reset, you can ignore this email."})});
+  if(!result.sent)console.log(`[CodeFusion OTP] ${email}: ${otp}`);
 }
 
 router.post("/register",registerLimit,async(req,res,next)=>{try{const{name,email,password}=req.body;const normalized=normalizeEmail(email);if(!name||!normalized||!password||password.length<8)return res.status(400).json({message:"Name, email and an 8+ character password are required."});if(await User.findOne({email:normalized}))return res.status(409).json({message:"An account with this email already exists."});const passwordHash=await bcrypt.hash(password,12);const user=await User.create({name:name.trim(),email:normalized,passwordHash});res.status(201).json({token:signToken(user),user:safeUser(user)});}catch(e){next(e)}});
@@ -39,7 +36,9 @@ router.post("/verify-otp",otpVerifyLimit,async(req,res,next)=>{try{const{email,o
 router.post("/reset-password",otpVerifyLimit,async(req,res,next)=>{try{const{resetToken,password}=req.body;if(!resetToken||!password||password.length<8)return res.status(400).json({message:"A valid reset token and an 8+ character password are required."});let payload;try{payload=jwt.verify(resetToken,process.env.JWT_SECRET)}catch{return res.status(401).json({message:"Reset session expired. Start again."})}if(payload.purpose!=="password-reset")return res.status(401).json({message:"Invalid reset session."});const user=await User.findById(payload.id);if(!user)return res.status(404).json({message:"User not found."});user.passwordHash=await bcrypt.hash(password,12);await user.save();res.json({message:"Password changed successfully."});}catch(e){next(e)}});
 
 router.get("/me",authRequired,async(req,res,next)=>{try{const user=await User.findById(req.user.id).select("-passwordHash -resetOtpHash -resetOtpExpires -resetOtpAttempts -resetOtpSentAt");if(!user)return res.status(404).json({message:"User not found."});res.json({user});}catch(e){next(e)}});
-router.put("/me",authRequired,async(req,res,next)=>{try{const user=await User.findByIdAndUpdate(req.user.id,{name:req.body.name,avatarUrl:req.body.avatarUrl},{new:true}).select("-passwordHash");res.json({user});}catch(e){next(e)}});
+router.put("/me",authRequired,async(req,res,next)=>{try{const update={};if(typeof req.body.name==="string"&&req.body.name.trim())update.name=req.body.name.trim().slice(0,60);if(typeof req.body.avatarUrl==="string")update.avatarUrl=req.body.avatarUrl;if(typeof req.body.emailUpdates==="boolean")update.emailUpdates=req.body.emailUpdates;const user=await User.findByIdAndUpdate(req.user.id,update,{new:true}).select("-passwordHash -resetOtpHash");res.json({user});}catch(e){next(e)}});
+// One-click unsubscribe from product update emails (link in every update email).
+router.get("/unsubscribe",async(req,res)=>{let ok=false;try{const payload=jwt.verify(String(req.query.token||""),process.env.JWT_SECRET);if(payload.purpose==="unsubscribe"){await User.updateOne({_id:payload.id},{$set:{emailUpdates:false}});ok=true;}}catch{}res.status(ok?200:400).type("html").send(`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CodeFusion</title><div style="font-family:Arial,sans-serif;max-width:480px;margin:15vh auto;padding:0 20px;color:#15131c"><h2>${ok?"You're unsubscribed.":"This link has expired."}</h2><p>${ok?"You won't get product update emails any more. You can turn them back on from your Account page.":"Turn update emails off from your Account page instead."}</p></div>`);});
 // Signed-in password change. Requires the current password, so a borrowed
 // session alone can't lock the owner out.
 router.put("/password",authRequired,passwordChangeLimit,async(req,res,next)=>{try{const{currentPassword,newPassword}=req.body||{};if(typeof currentPassword!=="string"||!currentPassword)return res.status(400).json({message:"Enter your current password."});if(typeof newPassword!=="string"||newPassword.length<8)return res.status(400).json({message:"Your new password must be at least 8 characters."});if(newPassword===currentPassword)return res.status(400).json({message:"Choose a password different from your current one."});const user=await User.findById(req.user.id);if(!user)return res.status(404).json({message:"User not found."});if(!(await bcrypt.compare(currentPassword,user.passwordHash)))return res.status(401).json({code:"WRONG_PASSWORD",message:"Your current password is incorrect."});user.passwordHash=await bcrypt.hash(newPassword,12);await user.save();res.json({message:"Password updated."});}catch(e){next(e)}});

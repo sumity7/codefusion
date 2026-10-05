@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { api } from "../services/api";
-import ProductCard from "../components/ProductCard";
+import CollectionBoard from "../components/CollectionBoard";
 import LoadError from "../components/LoadError";
 import NotFound from "./NotFound";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
@@ -43,7 +43,7 @@ export default function SharedCollection() {
   }
 
   return (
-    <main className="simple-page container">
+    <main className="simple-page container board-page">
       <span className="eyebrow">SHARED COLLECTION</span>
       <h1>{status === "ready" ? collection.name : "Loading…"}</h1>
       {status === "ready" && (
@@ -53,11 +53,7 @@ export default function SharedCollection() {
         </p>
       )}
       {status === "error" && <LoadError title="We couldn't load this collection" onRetry={() => setAttempt((n) => n + 1)} />}
-      {status === "ready" && (
-        <div className="product-grid">
-          {collection.products.map((product) => <ProductCard key={product.slug} product={product} />)}
-        </div>
-      )}
+      {status === "ready" && <CollectionBoard collection={collection} />}
     </main>
   );
 }

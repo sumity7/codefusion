@@ -8,7 +8,7 @@ import { authRequired } from "../middleware/auth.js";
 const router = Router();
 const MAX_COLLECTIONS = 50;
 const MAX_ITEMS = 200;
-const CARD_FIELDS = "slug name category productType badge previewType previewLayout thumbnail version rating reviewCount compatibility discoveryTags isPublished";
+const CARD_FIELDS = "slug name category productType badge previewType previewLayout thumbnail thumbnailLight version rating reviewCount compatibility discoveryTags isPublished";
 
 function shareId() {
   return crypto.randomBytes(9).toString("base64url");
@@ -22,6 +22,8 @@ function present(collection) {
     description: obj.description,
     isPublic: obj.isPublic,
     shareId: obj.shareId,
+    coverSlug: obj.coverSlug || "",
+    layout: obj.layout || "board",
     updatedAt: obj.updatedAt,
     products: (obj.products || [])
       .filter((p) => p && (p.isPublished ?? true))
@@ -57,6 +59,15 @@ router.get("/", async (req, res, next) => {
   try {
     const collections = await UserCollection.find({ user: req.user.id }).sort({ updatedAt: -1 }).populate("products", CARD_FIELDS).lean();
     res.json({ collections: collections.map(present) });
+  } catch (e) { next(e); }
+});
+
+router.get("/:id", async (req, res, next) => {
+  try {
+    const collection = await own(req, res);
+    if (!collection) return;
+    await collection.populate("products", CARD_FIELDS);
+    res.json({ collection: present(collection) });
   } catch (e) { next(e); }
 });
 
@@ -96,6 +107,8 @@ router.put("/:id", async (req, res, next) => {
     }
     if (typeof req.body?.description === "string") collection.description = req.body.description.slice(0, 400);
     if (typeof req.body?.isPublic === "boolean") collection.isPublic = req.body.isPublic;
+    if (req.body?.layout === "board" || req.body?.layout === "grid") collection.layout = req.body.layout;
+    if (typeof req.body?.coverSlug === "string") collection.coverSlug = req.body.coverSlug.slice(0, 120);
     await collection.save();
     await collection.populate("products", CARD_FIELDS);
     res.json({ collection: present(collection) });

@@ -16,6 +16,8 @@ const userSchema = new mongoose.Schema({
   subscriptionPlan: { type: String, default: "CodeFusion Monthly" },
   tokenBalance: { type: Number, default: 0, min: 0 },
   monthlyTokenAllocation: { type: Number, default: 100, min: 0 },
+  // Emails when a product you've copied ships a new version.
+  emailUpdates: { type: Boolean, default: true },
   createdAt: { type: Date, default: Date.now }
 });
 

@@ -1,11 +1,12 @@
 import { ArrowUpRight, Heart, Eye, Columns2 } from "lucide-react";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useRef, useState } from "react";
 import { useWishlist, useWishlistToggle } from "../hooks/useWishlist";
 import { useCompare } from "../hooks/useCompare";
 import { productAccess, productRating, reviewCountLabel } from "../utils/product";
 import ProductVisual from "./ProductVisual";
 import Modal from "./Modal";
+import { isPlainClick, navigateWithTransition } from "../utils/viewTransition";
 
 export default function ProductCard({ product }) {
   const { isSaved, isPending } = useWishlist();
@@ -13,6 +14,17 @@ export default function ProductCard({ product }) {
   const [quickOpen, setQuickOpen] = useState(false);
   const compare = useCompare();
   const comparing = compare.has(product.slug);
+  const navigate = useNavigate();
+  const mediaRef = useRef(null);
+  const href = `/products/${product.slug}`;
+
+  // The card's preview morphs into the product page's preview. The listing data
+  // travels along as route state so the product page can render at once.
+  function open(event) {
+    if (!isPlainClick(event)) return;
+    event.preventDefault();
+    navigateWithTransition(navigate, href, { state: { preview: product } }, mediaRef.current);
+  }
   const saved = isSaved(product.slug);
   const access = productAccess(product);
   const rating = productRating(product);
@@ -26,8 +38,8 @@ export default function ProductCard({ product }) {
   return (
     <>
       <article className="p-card">
-        <Link to={`/products/${product.slug}`} className="p-card-link">
-          <div className="p-media">
+        <Link to={href} state={{ preview: product }} className="p-card-link" onClick={open}>
+          <div className="p-media" ref={mediaRef}>
             <ProductVisual product={product} mode="listing" />
             <span className="p-hover" aria-hidden="true">
               View product <ArrowUpRight size={14} />

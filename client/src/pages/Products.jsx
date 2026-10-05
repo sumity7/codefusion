@@ -40,7 +40,6 @@ const FEATURED_TAGS = ["SaaS", "E-commerce", "Portfolio", "Fintech", "Developer 
 const resultCache = new Map();
 const CACHE_MS = 5 * 60 * 1000;
 
-const IS_MAC = typeof navigator !== "undefined" && /Mac|iPhone|iPad|iPod/i.test(navigator.platform || navigator.userAgent || "");
 
 export default function Products() {
   useDocumentTitle("Products");
@@ -223,22 +222,6 @@ export default function Products() {
     return () => clearTimeout(timeout);
   }, [query, urlSearch]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Cmd+K (macOS) / Ctrl+K (elsewhere) jumps to search. Left alone while the
-  // reader is typing in some other field, where the combo may mean something.
-  useEffect(() => {
-    function onKey(event) {
-      if (event.key?.toLowerCase() !== "k" || event.altKey || event.shiftKey) return;
-      if (!(IS_MAC ? event.metaKey : event.ctrlKey)) return;
-      const target = event.target;
-      const editing = target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
-      if (editing && target !== searchRef.current) return;
-      event.preventDefault();
-      searchRef.current?.focus();
-      searchRef.current?.select();
-    }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
 
   const shown = data;
   const rating = categories.rating;
@@ -274,9 +257,7 @@ export default function Products() {
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search by component, style or stack..."
               aria-label="Search products"
-              aria-keyshortcuts={IS_MAC ? "Meta+K" : "Control+K"}
             />
-            <kbd aria-hidden="true">{IS_MAC ? "⌘ K" : "Ctrl K"}</kbd>
           </div>
           {(categories.total !== null || rating) && (
             <div className="collection-proof">
@@ -349,7 +330,7 @@ export default function Products() {
         <div className="browse-shell">
           <CategorySidebar category={category} onSelect={handleCategorySelect} categories={categories.list} total={categories.total ?? 0} />
 
-          <div ref={browseRef} style={{ scrollMarginTop: "88px" }}>
+          <div ref={browseRef} style={{ scrollMarginTop: "5.5rem" }}>
             <ScrollReveal>
               <div className="collection-toolbar">
                 <div>

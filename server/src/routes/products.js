@@ -7,6 +7,9 @@ import Category from "../models/Category.js";
 import Collection from "../models/Collection.js";
 import CopyRecord from "../models/CopyRecord.js";
 import { recordEvent } from "../utils/events.js";
+import Thumbnail from "../models/Thumbnail.js";
+import Creator from "../models/Creator.js";
+import { notifyProductUpdate } from "../jobs/notify.js";
 
 import {
   authOptional,
@@ -174,7 +177,7 @@ function listingProduct(product) {
 // Fields the server owns. The admin editor posts back the whole record it
 // loaded, so without this a save would overwrite live counters and ratings
 // with whatever they were when the editor was opened.
-const SERVER_MANAGED = ["_id", "__v", "createdAt", "updatedAt", "copyCount", "viewCount", "wishlistCount", "usageCount", "downloadCount", "popularityScore", "trendingScore", "rating", "reviewCount", "stats"];
+const SERVER_MANAGED = ["_id", "__v", "createdAt", "updatedAt", "copyCount", "viewCount", "wishlistCount", "usageCount", "downloadCount", "popularityScore", "trendingScore", "rating", "reviewCount", "stats", "releases"];
 function editableFields(body) {
   const out = { ...(body || {}) };
   for (const key of SERVER_MANAGED) delete out[key];
@@ -271,6 +274,7 @@ router.post(
           new Date(),
       };
 
+      data.releases = [{ version: data.version || "1.0.0", date: new Date(), notes: (data.changelog || []).slice(-3), kind: "new" }];
       const product =
         await Product.create(
           data
@@ -328,6 +332,24 @@ router.put(
           new Date(),
       };
 
+      // A generated thumbnail of the old source would now be wrong. Drop the
+      // generated URLs (not admin-pasted ones) so cards fall back to the live
+      // preview until the next `npm run thumbnails`.
+      const before = await Product.findById(req.params.id).select("previewCode thumbnail thumbnailLight slug version changelog").lean();
+      // A changed version is a release: record it (with the changelog lines
+      // added in this save) and tell the people who copied an older version.
+      let releaseNotes = null;
+      if (before && data.version && data.version !== before.version) {
+        const previous = new Set(before.changelog || []);
+        releaseNotes = (data.changelog || []).filter((line) => !previous.has(line)).slice(-5);
+        data.$push = { releases: { version: data.version, date: new Date(), notes: releaseNotes, kind: "update" } };
+      }
+      if (before && before.previewCode !== previewCode) {
+        const generated = (url) => typeof url === "string" && url.startsWith("/products/");
+        if (generated(before.thumbnail) && (data.thumbnail === undefined || data.thumbnail === before.thumbnail)) data.thumbnail = "";
+        if (generated(before.thumbnailLight) && (data.thumbnailLight === undefined || data.thumbnailLight === before.thumbnailLight)) data.thumbnailLight = "";
+      }
+
       const product =
         await Product.findByIdAndUpdate(
           req.params.id,
@@ -350,6 +372,7 @@ router.put(
       res.json({
         product,
       });
+      if (releaseNotes && product.isPublished) notifyProductUpdate(product, releaseNotes);
     } catch (error) {
       next(error);
     }
@@ -535,6 +558,26 @@ router.get(
     }
   }
 );
+
+/*
+ * PUBLIC — SEARCH INDEX FOR THE COMMAND PALETTE
+ * Just enough per product to match and label results (~80 bytes each), so the
+ * palette can search the whole catalogue on the client without the list payload.
+ */
+router.get("/search-index", async (_req, res, next) => {
+  try {
+    const rows = await Product.find({ isPublished: true })
+      .select("slug name category productType discoveryTags tags -_id")
+      .sort({ popularityScore: -1, createdAt: -1 })
+      .lean();
+    res.set("Cache-Control", "public, max-age=300");
+    res.json({
+      products: rows.map((p) => ({ s: p.slug, n: p.name, c: p.category, t: p.productType, k: [...(p.discoveryTags || []), ...(p.tags || [])] })),
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
 /*
  * PUBLIC — DISCOVERY TAGS WITH COUNTS
@@ -758,6 +801,27 @@ router.post("/me/updates/:slug/seen", authRequired, async (req, res, next) => {
     if (!product) return res.status(404).json({ message: "Product not found." });
     await CopyRecord.updateOne({ user: req.user.id, product: product._id }, { $set: { seenVersion: product.version } });
     res.json({ ok: true });
+  } catch (error) {
+    next(error);
+  }
+});
+
+/*
+ * PUBLIC — GENERATED THUMBNAIL IMAGE
+ * Immutable per version: the URL stored on the product carries ?v=<sourceHash>,
+ * so it can be cached for a year and a new render gets a new URL.
+ */
+router.get("/:slug/thumbnail", async (req, res, next) => {
+  try {
+    const theme = req.query.theme === "light" ? "light" : "dark";
+    const thumb = await Thumbnail.findOne({ slug: req.params.slug, theme }).select("data contentType sourceHash").lean();
+    if (!thumb) return res.status(404).json({ message: "No thumbnail." });
+    res.set("Content-Type", thumb.contentType || "image/jpeg");
+    res.set("Cache-Control", req.query.v ? "public, max-age=31536000, immutable" : "public, max-age=3600");
+    res.set("ETag", `"${thumb.sourceHash}-${theme}"`);
+    // The storefront and API are on different origins.
+    res.set("Cross-Origin-Resource-Policy", "cross-origin");
+    res.send(Buffer.from(thumb.data.buffer || thumb.data));
   } catch (error) {
     next(error);
   }

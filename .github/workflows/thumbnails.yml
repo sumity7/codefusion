@@ -1,0 +1,44 @@
+name: Product thumbnails
+
+# Renders listing thumbnails (both themes) for products that are missing one or
+# whose preview source changed since the last render. Admin edits to a product's
+# source clear its generated thumbnail, so cards use the live preview until this
+# runs again. Requires the MONGODB_URI repository secret (write access).
+
+on:
+  schedule:
+    - cron: "15 */6 * * *" # every 6 hours
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Re-render every thumbnail"
+        type: boolean
+        default: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+
+      - name: Install server dependencies
+        run: npm ci --prefix server
+
+      - name: Install headless Chromium
+        working-directory: server
+        run: npx playwright-core install --with-deps chromium-headless-shell
+
+      - name: Render thumbnails
+        working-directory: server
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        run: |
+          if [ -z "$MONGODB_URI" ]; then echo "::error::MONGODB_URI secret is not set"; exit 1; fi
+          npm run thumbnails -- ${{ github.event.inputs.force == 'true' && '--force' || '' }}

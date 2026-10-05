@@ -42,6 +42,29 @@ router.post("/event",eventLimiter,authOptional,async(req,res,next)=>{
   }catch(e){next(e)}
 });
 
+// Public: what people search for and find (last 30 days), for search
+// suggestions. Only queries that returned results, searched by 2+ people.
+let popularCache={at:0,data:[]};
+router.get("/popular-searches",async(req,res,next)=>{
+  try{
+    if(Date.now()-popularCache.at>10*60*1000){
+      const since=new Date(Date.now()-30*86400000);
+      const rows=await AnalyticsEvent.aggregate([
+        {$match:{type:"search",createdAt:{$gte:since},"meta.results":{$gt:0}}},
+        {$group:{_id:{$toLower:{$trim:{input:"$meta.query"}}},count:{$sum:1},people:{$addToSet:{$ifNull:["$user","anon"]}}}},
+        {$match:{_id:{$ne:""}}},
+        {$project:{count:1,people:{$size:"$people"}}},
+        // A query only becomes a public suggestion once 2+ different people searched it.
+        {$match:{people:{$gte:2}}},
+        {$sort:{count:-1}},{$limit:8}
+      ]);
+      popularCache={at:Date.now(),data:rows.filter(r=>r._id.length<=40).map(r=>r._id)};
+    }
+    res.set("Cache-Control","public, max-age=600");
+    res.json({searches:popularCache.data});
+  }catch(e){next(e)}
+});
+
 // Funnels, top searches, top products and daily activity for the admin view.
 router.get("/admin",authRequired,adminRequired,async(req,res,next)=>{
   try{
