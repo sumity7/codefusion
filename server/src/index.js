@@ -12,6 +12,7 @@ import subscription from "./routes/subscription.js";
 import analytics from "./routes/analytics.js";
 import admin from "./routes/admin.js";
 import userCollections from "./routes/userCollections.js";
+import creators from "./routes/creators.js";
 import mongoose from "mongoose";
 import { notFound, errorHandler } from "./middleware/error.js";
 import { installProcessHandlers } from "./utils/monitor.js";
@@ -93,6 +94,7 @@ app.use("/api/subscription", subscription);
 app.use("/api/analytics", analytics);
 app.use("/api/admin", admin);
 app.use("/api/me/collections", userCollections);
+app.use("/api/creators", creators);
 
 app.use(notFound);
 app.use(errorHandler);

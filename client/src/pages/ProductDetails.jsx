@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, Heart, Share2, Monitor, Tablet, Smartphone, Check, Clipboard, FileText, PackageOpen, FolderPlus, Columns2, ShieldCheck, History, Users, Rocket, RefreshCw } from "lucide-react";
+import { SlidersHorizontal, ArrowLeft, ArrowRight, Heart, Share2, Monitor, Tablet, Smartphone, Check, Clipboard, FileText, PackageOpen, FolderPlus, Columns2, ShieldCheck, History, Users, Rocket, RefreshCw } from "lucide-react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { PRODUCT_MEDIA } from "../utils/viewTransition";
 
@@ -15,6 +15,8 @@ import LoadError from "../components/LoadError";
 import ExportModal from "../components/ExportModal";
 import SaveToCollection from "../components/SaveToCollection";
 import ReviewSection from "../components/ReviewSection";
+import Playground from "../components/Playground";
+import { DEFAULT_TWEAKS, applyTweaks, isCustomized } from "../utils/playground";
 import TokenExplainer from "../components/TokenExplainer";
 import NotFound from "./NotFound";
 import { useToast } from "../components/Toast";
@@ -78,6 +80,21 @@ export default function ProductDetails() {
   const [saveOpen, setSaveOpen] = useState(false);
   const [update, setUpdate] = useState(null);
   const [reviewSummary, setReviewSummary] = useState(null);
+  // Playground: live colour/scale tweaks, applied to the preview and to
+  // whatever is copied or exported. The preview follows after a short pause so
+  // dragging a slider doesn't reload the iframe on every step.
+  const [tweaks, setTweaks] = useState(DEFAULT_TWEAKS);
+  const [previewTweaks, setPreviewTweaks] = useState(DEFAULT_TWEAKS);
+  const [playgroundOpen, setPlaygroundOpen] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setPreviewTweaks(tweaks), 180);
+    return () => clearTimeout(timer);
+  }, [tweaks]);
+  useEffect(() => {
+    setTweaks(DEFAULT_TWEAKS);
+    setPlaygroundOpen(false);
+  }, [slug]);
+
   // Content already paid for (or free) during this visit: { code, prompt }.
   // Copying or exporting it again doesn't go back to the server.
   const [unlocked, setUnlocked] = useState({});
@@ -197,7 +214,7 @@ export default function ProductDetails() {
       try {
         const content = await fetchContent(kind);
         if (content === null) return;
-        const text = kind === "code" ? getCombinedSourceCode({ ...product, code: content }) : content;
+        const text = kind === "code" ? applyTweaks(getCombinedSourceCode({ ...product, code: content }), tweaks) : content;
         try {
           await navigator.clipboard.writeText(text || "");
         } catch {
@@ -205,13 +222,13 @@ export default function ProductDetails() {
           return;
         }
         delete unfinishedKeys.current[kind];
-        notify(`${kind === "code" ? "Code" : "Prompt"} copied to clipboard.`);
+        notify(`${kind === "code" ? (isCustomized(tweaks) ? "Customised code" : "Code") : "Prompt"} copied to clipboard.`);
       } finally {
         copyLock.current = false;
         setCopying("");
       }
     },
-    [fetchContent, notify, product]
+    [fetchContent, notify, product, tweaks]
   );
 
   async function unlockForExport() {
@@ -292,10 +309,15 @@ export default function ProductDetails() {
   const features = product.features || [];
   const compatibility = product.compatibility || [];
   const changelog = product.changelog || [];
+  // Dated release history (newest first); older records fall back to the changelog.
+  const releases = [...(product.releases || [])].reverse();
   const stats = product.stats || {};
   const production = reviewSummary?.productionCount || 0;
   const comparing = compare.has(slug);
   const unlockedCode = unlocked.code !== undefined;
+  const previewProduct = isCustomized(previewTweaks) && product.previewCode ? { ...product, previewCode: applyTweaks(product.previewCode, previewTweaks) } : product;
+  // Exports carry the customisation as one combined document.
+  const exportContent = unlocked.code && isCustomized(tweaks) ? { html: applyTweaks(getCombinedSourceCode({ ...product, code: unlocked.code }), tweaks), css: "", javascript: "" } : unlocked.code;
 
   const copyLabel = (kind, idle) => (copying === kind ? "Copying…" : idle);
 
@@ -334,6 +356,11 @@ export default function ProductDetails() {
             </div>
 
             <h1>{product.name}</h1>
+            {product.creator?.slug && (
+              <Link to={`/creators/${product.creator.slug}`} className="creator-credit">
+                by <b>{product.creator.name}</b>
+              </Link>
+            )}
             <p>{product.description}</p>
 
             {compatibility.length > 0 && (
@@ -423,11 +450,23 @@ export default function ProductDetails() {
                 </button>
               ))}
             </div>
-            <span>Live product preview</span>
+            <div className="preview-toolbar-end">
+              <span>{isCustomized(tweaks) ? "Customised preview" : "Live product preview"}</span>
+              {complete && product.previewCode && (
+                <button type="button" className={playgroundOpen ? "active" : ""} aria-pressed={playgroundOpen} onClick={() => setPlaygroundOpen((v) => !v)}>
+                  <SlidersHorizontal size={13} aria-hidden="true" /> Customize
+                </button>
+              )}
+            </div>
           </div>
 
-          <div className={`preview-canvas ${device}`}>
-            <ProductVisual product={product} mode="detail" />
+          <div className={`preview-body${playgroundOpen ? " with-playground" : ""}`}>
+            <div className={`preview-canvas ${device}`}>
+              <ProductVisual product={previewProduct} mode="detail" />
+            </div>
+            {playgroundOpen && (
+              <Playground source={product.previewCode} tweaks={tweaks} onChange={setTweaks} onClose={() => setPlaygroundOpen(false)} />
+            )}
           </div>
         </div>
       </section>
@@ -486,11 +525,27 @@ export default function ProductDetails() {
             </div>
             {product.lastUpdated && <small><History size={13} aria-hidden="true" /> Last updated {formatDate(product.lastUpdated)}</small>}
           </div>
-          {changelog.length ? (
+          {releases.length ? (
+            <ol>
+              {releases.map((release, index) => (
+                <li key={`${release.version}-${index}`} className={index === 0 ? "latest" : ""}>
+                  <div className="release-line">
+                    <b>v{release.version}</b>
+                    {index === 0 && <span className="release-kind update">Latest</span>}
+                    <small>{formatDate(release.date)}</small>
+                  </div>
+                  {release.notes?.length > 0 && (
+                    <ul>
+                      {release.notes.map((note) => <li key={note}>{note}</li>)}
+                    </ul>
+                  )}
+                </li>
+              ))}
+            </ol>
+          ) : changelog.length ? (
             <ol>
               {[...changelog].reverse().map((entry, index) => (
                 <li key={`${index}-${entry}`} className={index === 0 ? "latest" : ""}>
-                  {index === 0 && <b>Latest</b>}
                   <span>{entry}</span>
                 </li>
               ))}
@@ -500,7 +555,7 @@ export default function ProductDetails() {
           )}
           <p className="version-note">
             {signedIn
-              ? "When a product you've copied gets a new version, it's flagged here and on your Account page."
+              ? "When a product you've copied gets a new version, it's flagged here and on your Account page, and we email you (you can turn that off in Account settings)."
               : "Sign in and copy a product to be told when it gets a new version."}
           </p>
         </section>
@@ -575,7 +630,7 @@ export default function ProductDetails() {
         open={exportOpen}
         onClose={() => setExportOpen(false)}
         product={product}
-        content={unlocked.code}
+        content={exportContent}
         access={access}
         unlocking={copying === "export"}
         onUnlock={unlockForExport}

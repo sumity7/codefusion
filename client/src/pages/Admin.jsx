@@ -21,6 +21,7 @@ import {
   Eye,
   LogOut,
   LayoutDashboard,
+  UserRound,
 } from "lucide-react";
 
 import { api } from "../services/api";
@@ -33,6 +34,7 @@ const menu = [
   { label: "Products", icon: Boxes, path: "/admin/products" },
   { label: "Categories", icon: FolderKanban, path: "/admin/categories" },
   { label: "Collections", icon: Layers, path: "/admin/collections" },
+  { label: "Creators", icon: UserRound, path: "/admin/creators" },
   { label: "Prompts", icon: FileCode2, path: "/admin/prompts" },
   { label: "Subscribers", icon: CreditCard, path: "/admin/subscribers" },
   { label: "Users", icon: Users, path: "/admin/users" },
@@ -135,6 +137,11 @@ export default function Admin() {
             <Route
               path="collections"
               element={<Collections />}
+            />
+
+            <Route
+              path="creators"
+              element={<CreatorsAdmin />}
             />
 
             <Route
@@ -668,6 +675,11 @@ function Editor() {
 
   const [categoryOptions, setCategoryOptions] =
     useState([]);
+
+  const [creatorOptions, setCreatorOptions] = useState([]);
+  useEffect(() => {
+    api.admin.creators().then((r) => setCreatorOptions(r.creators || [])).catch(() => {});
+  }, []);
 
   useEffect(() => {
     api.admin
@@ -1208,6 +1220,19 @@ function Editor() {
                     )
                   }
                 />
+              </label>
+
+              <label>
+                Creator
+                <select
+                  value={form.creator || ""}
+                  onChange={(event) => setField("creator", event.target.value || null)}
+                >
+                  <option value="">— None —</option>
+                  {creatorOptions.map((c) => (
+                    <option key={c._id} value={c._id}>{c.name}</option>
+                  ))}
+                </select>
               </label>
 
               <label>
@@ -1816,6 +1841,94 @@ function Collections() {
             </button>
           </div>
         ))}
+      </div>
+    </>
+  );
+}
+
+function CreatorsAdmin() {
+  const blank = { name: "", tagline: "", bio: "", avatarUrl: "", website: "", github: "", twitter: "", isActive: true };
+  const [creators, setCreators] = useState([]);
+  const [form, setForm] = useState(blank);
+  const [editingId, setEditingId] = useState(null);
+  const [error, setError] = useState("");
+
+  const load = () => api.admin.creators().then((r) => setCreators(r.creators || [])).catch((e) => setError(e.message));
+  useEffect(() => {
+    load();
+  }, []);
+
+  async function submit(event) {
+    event.preventDefault();
+    setError("");
+    try {
+      if (editingId) await api.admin.updateCreator(editingId, form);
+      else await api.admin.createCreator(form);
+      setForm(blank);
+      setEditingId(null);
+      load();
+    } catch (e) {
+      setError(e.message);
+    }
+  }
+
+  async function remove(creator) {
+    if (!window.confirm(`Delete ${creator.name}?`)) return;
+    try {
+      await api.admin.removeCreator(creator._id);
+      load();
+    } catch (e) {
+      setError(e.message);
+    }
+  }
+
+  const field = (key, label, props = {}) => (
+    <label>
+      {label}
+      {props.textarea ? (
+        <textarea rows="4" value={form[key]} onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))} />
+      ) : (
+        <input value={form[key]} onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))} {...props} />
+      )}
+    </label>
+  );
+
+  return (
+    <>
+      <Head eyebrow="CREATORS" title="Credit the makers." />
+      {error && <div className="form-error">{error}</div>}
+      <div className="admin-overview-grid">
+        <form className="admin-editor" onSubmit={submit}>
+          <b>{editingId ? "Edit creator" : "New creator"}</b>
+          {field("name", "Name", { required: true, maxLength: 80 })}
+          {field("tagline", "Tagline", { maxLength: 140 })}
+          {field("bio", "Bio", { textarea: true })}
+          {field("avatarUrl", "Avatar image URL")}
+          <div className="editor-grid">
+            {field("website", "Website")}
+            {field("github", "GitHub username")}
+          </div>
+          {field("twitter", "X / Twitter handle")}
+          <label className="check-label">
+            <input type="checkbox" checked={form.isActive} onChange={(e) => setForm((f) => ({ ...f, isActive: e.target.checked }))} /> Listed on /creators
+          </label>
+          <div className="modal-actions">
+            <button type="submit" className="button primary"><Save size={13} /> {editingId ? "Save" : "Add creator"}</button>
+            {editingId && <button type="button" className="button ghost" onClick={() => { setEditingId(null); setForm(blank); }}>Cancel</button>}
+          </div>
+        </form>
+        <div className="admin-panel">
+          {creators.map((creator) => (
+            <div className="admin-row" key={creator._id}>
+              <strong>{creator.name}</strong>
+              <small>{creator.productCount} products{creator.isActive ? "" : " · hidden"}</small>
+              <em>/{creator.slug}</em>
+              <button type="button" aria-label={`Edit ${creator.name}`} onClick={() => { setEditingId(creator._id); setForm({ ...blank, ...Object.fromEntries(Object.keys(blank).map((k) => [k, creator[k] ?? blank[k]])) }); }}><Edit3 size={13} /></button>
+              <button type="button" aria-label={`Delete ${creator.name}`} onClick={() => remove(creator)}><Trash2 size={13} /></button>
+            </div>
+          ))}
+          {!creators.length && <div className="admin-placeholder">No creators yet.</div>}
+        </div>
       </div>
     </>
   );

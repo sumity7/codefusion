@@ -7,6 +7,7 @@ import Category from "../models/Category.js";
 import Collection from "../models/Collection.js";
 import SiteSetting from "../models/SiteSetting.js";
 import Payment from "../models/Payment.js";
+import Creator from "../models/Creator.js";
 import { authRequired, adminRequired } from "../middleware/auth.js";
 const router=Router();
 router.use(authRequired,adminRequired);
@@ -24,4 +25,11 @@ router.put("/collections/:id",async(req,res,next)=>{try{const collection=await C
 router.delete("/collections/:id",async(req,res,next)=>{try{const collection=await Collection.findByIdAndDelete(req.params.id);if(!collection)return res.status(404).json({message:"Collection not found."});res.json({message:"Collection deleted."})}catch(e){next(e)}});
 router.get("/settings",async(req,res,next)=>{try{res.json({settings:await SiteSetting.find().sort({key:1})})}catch(e){next(e)}});
 router.put("/settings",async(req,res,next)=>{try{const entries=Array.isArray(req.body.settings)?req.body.settings:[];for(const entry of entries){if(!entry.key)continue;await SiteSetting.findOneAndUpdate({key:entry.key},{value:entry.value},{upsert:true,new:true,setDefaultsOnInsert:true})}res.json({settings:await SiteSetting.find().sort({key:1})})}catch(e){next(e)}});
+// Creators: the studios/people products are credited to.
+const CREATOR_FIELDS=["name","tagline","bio","avatarUrl","website","github","twitter","isActive"];
+const pickCreator=(body)=>Object.fromEntries(CREATOR_FIELDS.filter(k=>body[k]!==undefined).map(k=>[k,k==="isActive"?Boolean(body[k]):String(body[k]).slice(0,k==="bio"?1200:200)]));
+router.get("/creators",async(req,res,next)=>{try{const [creators,counts]=await Promise.all([Creator.find().sort({name:1}).lean(),Product.aggregate([{$group:{_id:"$creator",count:{$sum:1}}}])]);const map=Object.fromEntries(counts.map(c=>[String(c._id),c.count]));res.json({creators:creators.map(c=>({...c,productCount:map[String(c._id)]||0}))})}catch(e){next(e)}});
+router.post("/creators",async(req,res,next)=>{try{const data=pickCreator(req.body||{});if(!data.name?.trim())return res.status(400).json({message:"Creator name is required."});data.slug=data.name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");res.status(201).json({creator:await Creator.create(data)})}catch(e){next(e)}});
+router.put("/creators/:id",async(req,res,next)=>{try{const creator=await Creator.findByIdAndUpdate(req.params.id,pickCreator(req.body||{}),{new:true,runValidators:true});if(!creator)return res.status(404).json({message:"Creator not found."});res.json({creator})}catch(e){next(e)}});
+router.delete("/creators/:id",async(req,res,next)=>{try{if(await Product.exists({creator:req.params.id}))return res.status(409).json({message:"Reassign this creator's products first."});const creator=await Creator.findByIdAndDelete(req.params.id);if(!creator)return res.status(404).json({message:"Creator not found."});res.json({message:"Creator deleted."})}catch(e){next(e)}});
 export default router;

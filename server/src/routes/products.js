@@ -599,7 +599,7 @@ router.get("/tags", async (_req, res, next) => {
 // Everything a listing card needs. The heavy fields (previewCode is often
 // 5–60KB per product) are fetched per card, only once it's on screen; detail-page
 // fields (features, specs, changelog) come with the product page.
-const LISTING_DROP = ["previewCode", "code", "prompt", "seoTitle", "seoDescription", "changelog", "gallery", "features", "specifications", "shortDescription"];
+const LISTING_DROP = ["previewCode", "code", "prompt", "releases", "seoTitle", "seoDescription", "changelog", "gallery", "features", "specifications", "shortDescription"];
 const hasText = (field) => ({ $gt: [{ $strLenCP: { $ifNull: [field, ""] } }, 0] });
 
 // "trending" is computed from real engagement, so the collection of that name
@@ -771,6 +771,42 @@ router.get(
 );
 
 /*
+ * PUBLIC — RELEASE FEED ("New this week")
+ * Every release (new product or version update) in the window, newest first.
+ * When the window is quiet, `recent` carries the latest releases regardless of
+ * age so the page is never empty.
+ */
+router.get("/releases", async (req, res, next) => {
+  try {
+    const days = Math.min(Math.max(Number(req.query.days) || 7, 1), 90);
+    const since = new Date(Date.now() - days * 86400000);
+    const base = [
+      { $match: { isPublished: true } },
+      { $unwind: "$releases" },
+      { $sort: { "releases.date": -1 } },
+      { $lookup: { from: "creators", localField: "creator", foreignField: "_id", as: "creatorDoc" } },
+      {
+        $project: {
+          _id: 0,
+          slug: 1, name: 1, category: 1, productType: 1, thumbnail: 1, thumbnailLight: 1, description: 1, discoveryTags: 1, version: 1,
+          hasPreview: { $gt: [{ $strLenCP: { $ifNull: ["$previewCode", ""] } }, 0] },
+          release: "$releases",
+          creator: { $let: { vars: { c: { $arrayElemAt: ["$creatorDoc", 0] } }, in: { name: "$$c.name", slug: "$$c.slug" } } },
+        },
+      },
+    ];
+    const [inWindow, recent] = await Promise.all([
+      Product.aggregate([...base.slice(0, 2), { $match: { "releases.date": { $gte: since } } }, ...base.slice(2), { $limit: 60 }]),
+      Product.aggregate([...base, { $limit: 12 }]),
+    ]);
+    res.set("Cache-Control", "public, max-age=120");
+    res.json({ days, since, releases: inWindow, recent: inWindow.length < 6 ? recent : [] });
+  } catch (error) {
+    next(error);
+  }
+});
+
+/*
  * SIGNED IN — UPDATES FOR PRODUCTS I'VE COPIED
  * Products whose current version differs from the version the user copied
  * (and hasn't dismissed).
@@ -866,11 +902,15 @@ router.get(
       }
 
       // Real usage, shown as proof on the product page. Never estimated.
-      const copiers = await CopyRecord.countDocuments({ product: product._id });
+      const [copiers, creator] = await Promise.all([
+        CopyRecord.countDocuments({ product: product._id }),
+        product.creator ? Creator.findById(product.creator).select("name slug tagline avatarUrl -_id").lean() : null,
+      ]);
 
       res.json({
         product: {
           ...publicProduct(product),
+          creator: creator || null,
           stats: {
             copyCount: product.copyCount || 0,
             copiers,

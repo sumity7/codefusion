@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Product from "../models/Product.js";
 import Review from "../models/Review.js";
+import Creator from "../models/Creator.js";
 
 /*
  * Idempotent, cheap startup migrations for schema changes that Mongoose can't
@@ -36,6 +37,22 @@ export async function runMigrations() {
     await Review.deleteMany({ _id: { $in: group.ids.slice(1) } });
   }
   await Review.createIndexes();
+
+  // 4. Every product gets a release history; existing ones start with their
+  //    current version, dated when they were created.
+  await products.updateMany({ $or: [{ releases: { $exists: false } }, { releases: { $size: 0 } }] }, [
+    { $set: { releases: [{ version: { $ifNull: ["$version", "1.0.0"] }, date: { $ifNull: ["$createdAt", "$$NOW"] }, notes: { $slice: [{ $ifNull: ["$changelog", []] }, -3] }, kind: "new" }] } },
+  ]);
+
+  // 5. Products without a creator belong to the house studio.
+  if (await Product.exists({ creator: null })) {
+    const studio = await Creator.findOneAndUpdate(
+      { slug: "codefusion-studio" },
+      { $setOnInsert: { name: "CodeFusion Studio", slug: "codefusion-studio", tagline: "The in-house team behind the CodeFusion library.", bio: "We design and build every CodeFusion component, page and boilerplate in-house — original work, tested across screen sizes and themes, written to be copied straight into real projects." } },
+      { upsert: true, new: true }
+    );
+    await Product.updateMany({ creator: null }, { $set: { creator: studio._id } });
+  }
 
   if (mongoose.connection.readyState === 1) {
     console.log(JSON.stringify({ level: "info", msg: "migrations complete", reviewDupesRemoved: dupes.length }));

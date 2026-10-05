@@ -41,6 +41,16 @@ Checkout uses Razorpay when `PAYMENT_PROVIDER=razorpay` (otherwise it returns 50
 - Trending and Popular sorts are computed from recorded events (views, saves, copies) every 15 minutes.
 - Admin → Analytics shows copy and checkout funnels, top searches, searches with no results and recent browser errors.
 
+## Thumbnails
+
+`npm run thumbnails --prefix server` renders a light and dark listing image for every product (using the storefront's own preview builder in `client/src/services/previewSource.js`) and stores them in MongoDB; cards show the image and only start the live preview on hover. Re-runs skip images whose source hasn't changed (`-- --force` re-renders all). Needs a Chromium: `npx playwright-core install chromium-headless-shell` (or set `CHROME_PATH`). `.github/workflows/thumbnails.yml` runs it every 6 hours with the `MONGODB_URI` secret. Saving a product with changed source clears its generated thumbnail until the next run.
+
+## Releases, creators and update emails
+
+- Every product has a creator (`/creators`, `/creators/:slug`; managed in Admin → Creators). Existing products are assigned to "CodeFusion Studio" on startup.
+- Saving a product with a new version records a release (version, date, the changelog lines added in that save). `/new` lists releases from the last 7 or 30 days.
+- People who copied an earlier version get one email per version via Resend (set `PUBLIC_SITE_URL` and `PUBLIC_API_URL` so links work). Each email has a one-click unsubscribe; users can also toggle it on their Account page.
+
 ## Operations
 
 - Startup runs idempotent migrations (string counters → numbers, text index, one-review-per-user index).

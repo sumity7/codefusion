@@ -430,6 +430,23 @@ export default function Account() {
             )}
           </div>
           <div className="account-settings-block">
+            <h3>Email</h3>
+            <label className="check-label toggle-row">
+              <input
+                type="checkbox"
+                checked={user.emailUpdates !== false}
+                onChange={async (e) => {
+                  const emailUpdates = e.target.checked;
+                  setUser((u) => ({ ...u, emailUpdates }));
+                  try {
+                    await api.auth.update({ emailUpdates });
+                  } catch {
+                    setUser((u) => ({ ...u, emailUpdates: !emailUpdates }));
+                  }
+                }}
+              />
+              <span>Email me when a product I've copied gets a new version</span>
+            </label>
             <h3>Security</h3>
             <p><span>Plan</span><b>{plan.label}</b></p>
             {passwordMessage && !changingPassword && <div className="success-state" role="status">{passwordMessage}</div>}
