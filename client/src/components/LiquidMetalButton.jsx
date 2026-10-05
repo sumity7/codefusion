@@ -39,7 +39,7 @@ export default function LiquidMetalButton({
     if (viewMode === "icon") {
       return { width: 46, height: 46, innerWidth: 42, innerHeight: 42, shaderWidth: 46, shaderHeight: 46 };
     }
-    return { width: 142, height: 46, innerWidth: 138, innerHeight: 42, shaderWidth: 142, shaderHeight: 46 };
+    return { width: 128, height: 38, innerWidth: 124, innerHeight: 34, shaderWidth: 128, shaderHeight: 38 };
   }, [viewMode]);
 
   useEffect(() => {
@@ -181,9 +181,9 @@ export default function LiquidMetalButton({
             {viewMode === "text" && (
               <span
                 style={{
-                  fontSize: "14px",
+                  fontSize: "var(--fs-14)",
                   color: textColor,
-                  fontWeight: 400,
+                  fontWeight: 600,
                   textShadow: "0px 1px 2px rgba(0, 0, 0, 0.5)",
                   whiteSpace: "nowrap",
                 }}

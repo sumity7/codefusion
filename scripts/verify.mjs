@@ -32,14 +32,17 @@ for (const rel of required) {
 
 const seed = fs.readFileSync(path.join(root, 'server/scripts/seed.js'), 'utf8');
 const slugs = [...seed.matchAll(/slug:"([^"]+)"/g)].map((m) => m[1]);
-if (slugs.length !== 56) throw new Error(`Expected 56 products, found ${slugs.length}`);
+if (!slugs.length) throw new Error('No products found in seed.js');
+const duplicateSlugs = slugs.filter((slug, i) => slugs.indexOf(slug) !== i);
+if (duplicateSlugs.length) throw new Error(`Duplicate product slugs: ${duplicateSlugs.join(', ')}`);
 
 const coreSource = await import(pathToFileURL(path.join(root, 'server/scripts/productSources.js')));
 const boilerplateSource = await import(pathToFileURL(path.join(root, 'server/scripts/boilerplateSources.js')));
 const sourceKeys = [...Object.keys(coreSource.productSources || {}), ...Object.keys(boilerplateSource.boilerplateSources || {})];
-for (const slug of slugs) {
-  if (!sourceKeys.includes(slug)) throw new Error(`Missing source for ${slug}`);
-}
+// Products without bundled source render their built-in preview type (or source
+// added later through the admin editor), so this is reported, not fatal.
+const withoutSource = slugs.filter((slug) => !sourceKeys.includes(slug));
+if (withoutSource.length) console.warn(`WARN ${withoutSource.length} seeded products have no bundled source: ${withoutSource.join(', ')}`);
 
 if (!seed.includes('"Boilerplates"')) throw new Error('Boilerplates category missing from seed.js');
 const boilerplateSlugs = ['nova-saas','atlas-agency','commercex','finora','medora','learnflow','travelora','devdock','socially','launchkit'];

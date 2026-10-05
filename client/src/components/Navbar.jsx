@@ -8,14 +8,12 @@ import { loginPath } from "../utils/redirect";
 import Logo from "./Logo";
 import LiquidMetalButton from "./LiquidMetalButton";
 
-// Inner face + ambient glow for the 4 primary nav controls (Theme,
-// Wishlist, Get Pro, Profile) — the shader ring itself is untouched by
-// either of these, they only paint the flat centre and add a colour glow
-// around it, matching the navbar's Blue Glass (light) / Dark Glass (dark)
-// treatment.
+// Inner face + ambient glow for the Get Pro CTA — the one control that keeps
+// the liquid-metal shader ring, so the navbar has a single focal action. The
+// theme, wishlist, account and menu controls are plain .nav-icon-btn buttons.
 const BLUE_GLASS = {
-  surface: "linear-gradient(180deg, rgba(255,255,255,.95) 0%, rgba(219,234,254,.8) 100%)",
-  glow: "rgba(56,189,248,.4)",
+  surface: "linear-gradient(180deg, rgba(255,255,255,.95) 0%, rgba(238,242,255,.85) 100%)",
+  glow: "rgba(79,70,229,.3)",
   icon: "#3b4256",
 };
 const DARK_GLASS = {
@@ -109,7 +107,7 @@ export default function Navbar() {
               </NavLink>
             )}
             <NavLink to={subActive ? "/account" : "/subscription"} className="nav-menu-pro" end onClick={() => setOpen(false)}>
-              <Sparkles size={15} aria-hidden="true" /> {subActive ? `${tokenBalance} tokens` : "Get Pro"}
+              <Sparkles size={15} aria-hidden="true" /> {subActive ? `${tokenBalance} ${tokenBalance === 1 ? "token" : "tokens"}` : "Get Pro"}
             </NavLink>
           </div>
         </nav>
@@ -123,30 +121,20 @@ export default function Navbar() {
               aria-label="Search products"
             />
           </form>
-          <LiquidMetalButton
-            viewMode="icon"
-            icon={theme === "dark" ? <Sun size={16} style={{ color: glass.icon }} /> : <Moon size={16} style={{ color: glass.icon }} />}
-            onClick={toggle}
-            ariaLabel={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
-            innerBackground={glass.surface}
-            glow={glass.glow}
-          />
+          <button type="button" className="nav-icon-btn" onClick={toggle} aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}>
+            {theme === "dark" ? <Sun size={17} aria-hidden="true" /> : <Moon size={17} aria-hidden="true" />}
+          </button>
           <div className="nav-icon-wrap">
-            <LiquidMetalButton
-              viewMode="icon"
-              icon={<Heart size={16} style={{ color: glass.icon }} />}
-              onClick={() => navigate("/wishlist")}
-              ariaLabel="Wishlist"
-              innerBackground={glass.surface}
-              glow={glass.glow}
-            />
+            <button type="button" className="nav-icon-btn" onClick={() => navigate("/wishlist")} aria-label="Wishlist">
+              <Heart size={17} aria-hidden="true" />
+            </button>
           </div>
           {loggedIn ? (
             <>
               <div className="nav-btn-wrap">
                 <LiquidMetalButton
                   viewMode="text"
-                  label={subActive ? `${tokenBalance} Tokens` : "Get Pro"}
+                  label={subActive ? `${tokenBalance} ${tokenBalance === 1 ? "token" : "tokens"}` : "Get Pro"}
                   onClick={() => navigate(subActive ? "/account" : "/subscription")}
                   innerBackground={glass.surface}
                   glow={glass.glow}
@@ -154,14 +142,9 @@ export default function Navbar() {
                 />
               </div>
               <div className="nav-icon-wrap">
-                <LiquidMetalButton
-                  viewMode="icon"
-                  icon={<UserRound size={16} style={{ color: glass.icon }} />}
-                  onClick={() => navigate("/account")}
-                  ariaLabel="Account"
-                  innerBackground={glass.surface}
-                  glow={glass.glow}
-                />
+                <button type="button" className="nav-icon-btn" onClick={() => navigate("/account")} aria-label="Account">
+                  <UserRound size={17} aria-hidden="true" />
+                </button>
               </div>
             </>
           ) : (
@@ -183,14 +166,16 @@ export default function Navbar() {
             </>
           )}
           <div className="mobile-toggle-wrap">
-            <LiquidMetalButton
-              viewMode="icon"
-              icon={open ? <X size={18} style={{ color: "#666" }} /> : <Menu size={18} style={{ color: "#666" }} />}
+            <button
+              type="button"
+              className="nav-icon-btn"
               onClick={() => setOpen((v) => !v)}
-              ariaLabel={open ? "Close menu" : "Open menu"}
-              ariaExpanded={open}
-              ariaControls="primary-nav"
-            />
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              aria-controls="primary-nav"
+            >
+              {open ? <X size={18} aria-hidden="true" /> : <Menu size={18} aria-hidden="true" />}
+            </button>
           </div>
         </div>
       </div>
